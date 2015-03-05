@@ -1,3 +1,3 @@
-COMPUTACION GRAFICA
-
-RAY TRACER
+# COMPUTACION GRAFICA #
+## Yet another Ray Tracer ##
+### ITBA ###
