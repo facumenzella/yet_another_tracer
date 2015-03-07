@@ -8,7 +8,7 @@ import ar.edu.itba.it.cg.yart.geometry.GeometricObject;
 public class Tracer {
 
 	public Color traceRay(final Ray ray, List<GeometricObject> objects) {
-		Color ret = new Color(0.0f, 0.0f, 0.0f, 0.0f);
+		Color ret = null;
 		double tMin = Double.POSITIVE_INFINITY;		
 		
 		for (int i = 0; i < objects.size(); i++) {

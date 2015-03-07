@@ -10,8 +10,17 @@ import ar.edu.itba.it.cg.yart.geometry.Vector3;
 
 public class World {
 
+	private Color backgroundColor;
 	public Tracer tracer = new Tracer();
 	public List<GeometricObject> objects = new ArrayList<GeometricObject>();
+	
+	public World() {
+		backgroundColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+	}
+	
+	public void setBackgroundColor(final Color color) {
+		backgroundColor = new Color(color.r, color.g, color.b, color.a);
+	}
 	
 	public void addObject(final GeometricObject object) {
 		if (object != null) {
@@ -34,6 +43,11 @@ public class World {
 				ray.origin.y = y;
 				
 				Color pixelColor = tracer.traceRay(ray, objects);
+				
+				if (pixelColor == null) {
+					pixelColor = backgroundColor;
+				}
+				
 				ret[col][vp.vRes - row - 1] = pixelColor.toInt();
 			}
 		}

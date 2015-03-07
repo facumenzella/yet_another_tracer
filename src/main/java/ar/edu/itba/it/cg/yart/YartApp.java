@@ -19,6 +19,7 @@ public class YartApp {
 	public static void main(String[] args) {
 		World w = new World();
 		ViewPlane vp = new ViewPlane(400, 400);
+		w.setBackgroundColor(new Color(0.0f, 0.0f, 0.0f, 0.0f));
 		
 		Sphere s1 = new Sphere(new Point3(0, 0, 0), 85);
 		Sphere s2 = new Sphere(new Point3(60, 60, 60), 40);
