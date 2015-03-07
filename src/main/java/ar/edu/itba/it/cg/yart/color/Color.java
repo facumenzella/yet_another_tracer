@@ -20,12 +20,12 @@ public class Color {
 	
 	public int toInt() {
 		int ret = 0;
+		int alpha = (int) (a * 255);
 		int red = (int) (r * 255);
 		int green = (int) (g * 255);
 		int blue = (int) (b * 255);
-		int alpha = (int) (a * 255);
 		
-		ret = red << 24 | green << 16 | blue << 8 | alpha;
+		ret = alpha << 24 | red << 16 | green << 8 | blue;
 		
 		return ret;
 	}

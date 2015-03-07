@@ -1,4 +1,4 @@
-package ar.edu.itba.it.cg.yart.math;
+package ar.edu.itba.it.cg.yart.geometry;
 
 public class Vector3 {
 
