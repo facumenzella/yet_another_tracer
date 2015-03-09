@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import ar.edu.itba.it.cg.yart.color.Color;
+import ar.edu.itba.it.cg.yart.exceptions.WrongParametersException;
 import ar.edu.itba.it.cg.yart.geometry.Plane;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Sphere;
@@ -17,32 +18,39 @@ import ar.edu.itba.it.cg.yart.raytracer.World;
 public class YartApp {
 	
 	public static void main(String[] args) {
+		
+		if (args.length < 2) {
+			throw new WrongParametersException("You fool!! Introduce a name & extension for the image");
+		}
+		final String imageName = args[0];
+		final String imageExtension = args[1];
+		
 		World w = new World();
 		ViewPlane vp = new ViewPlane(400, 400);
 		w.setBackgroundColor(new Color(0.0f, 0.0f, 0.0f, 0.0f));
 		
 		Sphere s1 = new Sphere(new Point3(0, 0, 0), 85);
 		Sphere s2 = new Sphere(new Point3(70, 60, 60), 40);
-//		Plane p1 = new Plane(new Point3(0,40,0), new Vector3(0, 0.4041, 0.4041));
+		Plane p1 = new Plane(new Point3(0,40,0), new Vector3(0, 0.4041, 0.4041));
 		
 		s1.color = new Color(1.0f, 0.0f, 0.0f);
 		s2.color = new Color(1.0f, 1.0f, 0.0f);
-//		p1.color = new Color(0.0f, 1.0f, 0.5f);
+		p1.color = new Color(0.0f, 1.0f, 0.5f);
 		
 		w.addObject(s1);
 		w.addObject(s2);
-//		w.addObject(p1);
+		w.addObject(p1);
 		
 		long startTime = System.currentTimeMillis();
 		int[][] result = w.render(vp);
 		long endTime = System.currentTimeMillis();
 		long timeTaken = endTime - startTime;
 		
-		saveImage(result);
+		saveImage(result, imageName, imageExtension);
 		System.out.println("Finished rendering the scene in " + timeTaken + "ms");
 	}
 	
-	public static void saveImage(final int[][] pixels) {
+	public static void saveImage(final int[][] pixels, final String imageName, final String imageExtension) {
 		int w = pixels.length;
 		int h = pixels[0].length;
 		
@@ -54,7 +62,10 @@ public class YartApp {
 			}
 		}
 
-		File outputfile = new File("saved.png");
+		StringBuilder nameBuilder = new StringBuilder();
+		final String base = "./images/";
+		nameBuilder.append(base).append(imageName).append(".").append(imageExtension);
+		File outputfile = new File(nameBuilder.toString());
 		
 		try {
 			ImageIO.write(image, "png", outputfile);
