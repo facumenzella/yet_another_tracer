@@ -22,16 +22,16 @@ public class YartApp {
 		w.setBackgroundColor(new Color(0.0f, 0.0f, 0.0f, 0.0f));
 		
 		Sphere s1 = new Sphere(new Point3(0, 0, 0), 85);
-		Sphere s2 = new Sphere(new Point3(60, 60, 60), 40);
-		Plane p1 = new Plane(new Point3(0,40,0), new Vector3(0, 0.4041, 0.4041));
+		Sphere s2 = new Sphere(new Point3(70, 60, 60), 40);
+//		Plane p1 = new Plane(new Point3(0,40,0), new Vector3(0, 0.4041, 0.4041));
 		
 		s1.color = new Color(1.0f, 0.0f, 0.0f);
 		s2.color = new Color(1.0f, 1.0f, 0.0f);
-		p1.color = new Color(0.0f, 1.0f, 0.5f);
+//		p1.color = new Color(0.0f, 1.0f, 0.5f);
 		
 		w.addObject(s1);
 		w.addObject(s2);
-		w.addObject(p1);
+//		w.addObject(p1);
 		
 		long startTime = System.currentTimeMillis();
 		int[][] result = w.render(vp);

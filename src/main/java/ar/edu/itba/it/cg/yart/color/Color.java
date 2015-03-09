@@ -31,7 +31,7 @@ public class Color {
 	}
 	
 	public static Color blackColor() {
-		return new Color(255,255,255,0);
+		return new Color(1.0f,1.0f,1.0f,0);
 	}
 	
 	public static Color whiteColor() {
@@ -39,19 +39,19 @@ public class Color {
 	}
 	
 	public static Color redColor() {
-		return new Color(255,0,0,0);
+		return new Color(1.0f,0,0,0);
 	}
 	
 	public static Color greenColor() {
-		return new Color(0,255,0,0);
+		return new Color(0,1.0f,0,0);
 	}
 	
 	public static Color blueColor() {
-		return new Color(0,0,255,0);
+		return new Color(0,0,1.0f,0);
 	}
 	
 	public static Color yellowColor() {
-		return new Color(255,255,0,0);
+		return new Color(1.0f,1.0f,0,0);
 	}
 	
 	@Override
