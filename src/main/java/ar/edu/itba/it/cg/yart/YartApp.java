@@ -26,22 +26,19 @@ public class YartApp {
 		}
 		final String imageName = args[0];
 		final String imageExtension = args[1];
-		
-		World w = new World();
+
 		ViewPlane vp = new ViewPlane(400, 400);
-		w.setBackgroundColor(new Color(0.0f, 0.0f, 0.0f, 0.0f));
+		World w = new World(vp);
+		w.setBackgroundColor(Color.blackColor());
 		
 		Triangle s1 = new Triangle(new Point3(0,0,70), new Point3(0, 70, 70), new Point3(70, 0, 70));
 		Sphere s2 = new Sphere(new Point3(60, 50, 50), 40);
 //		Disc d1 = new Disc(new Point3(20,0,10), new Vector3d(0.4041, 0, 0.4041), 120);
+//		s1.color = Color.redColor();
+//		s2.color = Color.yellowColor();
 		
-		s1.color = new Color(1.0f, 0.0f, 0.0f);
-		s2.color = new Color(1.0f, 1.0f, 0.0f);
-//		d1.color = new Color(0.0f, 0.0f, 1.0f);
-		
-		w.addObject(s1);
-		w.addObject(s2);
-//		w.addObject(d1);
+//		w.addObject(s1);
+//		w.addObject(s2);
 		
 		long startTime = System.currentTimeMillis();
 		ArrayIntegerMatrix matrix = w.render(vp);
