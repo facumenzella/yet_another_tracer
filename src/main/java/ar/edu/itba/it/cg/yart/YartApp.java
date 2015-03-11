@@ -12,6 +12,7 @@ import ar.edu.itba.it.cg.yart.geometry.Plane;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Sphere;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
+import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.World;
 
@@ -42,23 +43,23 @@ public class YartApp {
 		w.addObject(p1);
 		
 		long startTime = System.currentTimeMillis();
-		int[][] result = w.render(vp);
+		ArrayIntegerMatrix matrix = w.render(vp);
 		long endTime = System.currentTimeMillis();
 		long timeTaken = endTime - startTime;
 		
-		saveImage(result, imageName, imageExtension);
+		saveImage(matrix, imageName, imageExtension);
 		System.out.println("Finished rendering the scene in " + timeTaken + "ms");
 	}
 	
-	public static void saveImage(final int[][] pixels, final String imageName, final String imageExtension) {
-		int w = pixels.length;
-		int h = pixels[0].length;
+	public static void saveImage(final ArrayIntegerMatrix pixels, final String imageName, final String imageExtension) {
+		int w = pixels.cols();
+		int h = pixels.rows();
 		
 		BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 
 		for (int y = 0; y < h; y++) {
 			for (int x = 0; x < w; x++) {
-				image.setRGB(x, y, pixels[x][y]);
+				image.setRGB(x, y, pixels.get(x, y));
 			}
 		}
 
