@@ -5,9 +5,9 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 public class Plane extends GeometricObject {
 	
 	private Point3 p;
-	private Vector3 normal;
+	private Vector3d normal;
 	
-	public Plane(final Point3 p, final Vector3 normal) {
+	public Plane(final Point3 p, final Vector3d normal) {
 		this.p = p;
 		this.normal = normal;
 	}

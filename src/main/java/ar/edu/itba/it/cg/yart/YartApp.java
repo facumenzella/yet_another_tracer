@@ -11,7 +11,7 @@ import ar.edu.itba.it.cg.yart.exceptions.WrongParametersException;
 import ar.edu.itba.it.cg.yart.geometry.Plane;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Sphere;
-import ar.edu.itba.it.cg.yart.geometry.Vector3;
+import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.World;
 
@@ -31,7 +31,7 @@ public class YartApp {
 		
 		Sphere s1 = new Sphere(new Point3(0, 0, 0), 85);
 		Sphere s2 = new Sphere(new Point3(70, 60, 60), 40);
-		Plane p1 = new Plane(new Point3(0,40,0), new Vector3(0, 0.4041, 0.4041));
+		Plane p1 = new Plane(new Point3(0,40,0), new Vector3d(0, 0.4041, 0.4041));
 		
 		s1.color = new Color(1.0f, 0.0f, 0.0f);
 		s2.color = new Color(1.0f, 1.0f, 0.0f);

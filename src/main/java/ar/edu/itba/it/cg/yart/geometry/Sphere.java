@@ -15,7 +15,7 @@ public class Sphere extends GeometricObject {
 	@Override
 	public double hit(final Ray ray) {
 		double t;
-		Vector3 tmp = ray.origin.sub(center);
+		Vector3d tmp = ray.origin.sub(center);
 		double a = ray.direction.dot(ray.direction);
 		double b = 2.0 * tmp.dot(ray.direction);
 		double c = tmp.dot(tmp)  - radius * radius;

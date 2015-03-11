@@ -12,8 +12,8 @@ public class Point3 {
 		this.z = z;
 	}
 	
-	public Vector3 sub(final Point3 other) {
-		return new Vector3(x - other.x, y - other.y, z - other.z);
+	public Vector3d sub(final Point3 other) {
+		return new Vector3d(x - other.x, y - other.y, z - other.z);
 	}
 
 }

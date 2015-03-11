@@ -1,64 +1,64 @@
 package ar.edu.itba.it.cg.yart.geometry;
 
-public class Vector3 {
+public final class Vector3d {
 
-	public double x;
-	public double y;
-	public double z;
-	public double length;
+	public final double x;
+	public final double y;
+	public final double z;
+	public final double length;
 	
-	public Vector3(double x, double y, double z) {
+	public Vector3d(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.length = this.length();
 	}
 	
-	public static Vector3 xAxis() {
-		return new Vector3(1, 0, 0);
+	public static Vector3d xAxis() {
+		return new Vector3d(1, 0, 0);
 	}
 	
-	public static Vector3 yAxis() {
-		return new Vector3(0, 1, 0);
+	public static Vector3d yAxis() {
+		return new Vector3d(0, 1, 0);
 	}
 	
-	public static Vector3 zAxis() {
-		return new Vector3(0, 0, 1);
+	public static Vector3d zAxis() {
+		return new Vector3d(0, 0, 1);
 	}
 	
 	public double length() {
 		return Math.sqrt(x * x + y * y + z * z);
 	}
 	
-	public Vector3 direction() {
+	public Vector3d direction() {
 		return scale(1/length());
 	}
 	
-	public Vector3 inverse() {
-		return new Vector3(-x, -y, -z);
+	public Vector3d inverse() {
+		return new Vector3d(-x, -y, -z);
 	}
 	
-	public Vector3 scale(final double factor) {
-		return new Vector3(x * factor, y * factor, z * factor);
+	public Vector3d scale(final double factor) {
+		return new Vector3d(x * factor, y * factor, z * factor);
 	}
 	
-	public Vector3 add(final Vector3 other) {
-		return new Vector3(x + other.x, y + other.y, z + other.z);
+	public Vector3d add(final Vector3d other) {
+		return new Vector3d(x + other.x, y + other.y, z + other.z);
 	}
 	
-	public Vector3 sub(final Vector3 other) {
-		return new Vector3(x - other.x, y - other.y, z - other.z);
+	public Vector3d sub(final Vector3d other) {
+		return new Vector3d(x - other.x, y - other.y, z - other.z);
 	}
 	
-	public double dot(final Vector3 other) {
+	public double dot(final Vector3d other) {
 		return x * other.x + y * other.y + z * other.z;
 	}
 	
-	public Vector3 cross(final Vector3 other) {
-		return new Vector3(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x);
+	public Vector3d cross(final Vector3d other) {
+		return new Vector3d(y * other.z - z * other.y, z * other.x - x * other.z, x * other.y - y * other.x);
 	}
 	
-	public double angleWith(final Vector3 other) {
+	public double angleWith(final Vector3d other) {
 		return Math.acos(this.dot(other) / (this.length() * other.length()));
 	}
 	
@@ -89,7 +89,7 @@ public class Vector3 {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Vector3 other = (Vector3) obj;
+		Vector3d other = (Vector3d) obj;
 		if (Double.doubleToLongBits(x) != Double.doubleToLongBits(other.x))
 			return false;
 		if (Double.doubleToLongBits(y) != Double.doubleToLongBits(other.y))

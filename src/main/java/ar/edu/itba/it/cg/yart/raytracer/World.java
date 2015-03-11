@@ -6,7 +6,7 @@ import java.util.List;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.GeometricObject;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
-import ar.edu.itba.it.cg.yart.geometry.Vector3;
+import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 
 public class World {
 
@@ -31,7 +31,7 @@ public class World {
 	public int[][] render(final ViewPlane vp) {
 		double zw = 100;
 		double x, y;
-		Ray ray = new Ray(new Point3(0, 0, zw), new Vector3(0, 0, -1));
+		Ray ray = new Ray(new Point3(0, 0, zw), new Vector3d(0, 0, -1));
 		
 		int[][] ret = new int[vp.hRes][vp.vRes];
 		
