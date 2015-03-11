@@ -31,27 +31,27 @@ public class Color {
 	}
 	
 	public static Color blackColor() {
-		return new Color(1.0f,1.0f,1.0f,0);
+		return new Color(1.0f,1.0f,1.0f,1.0f);
 	}
 	
 	public static Color whiteColor() {
-		return new Color(0,0,0,0);
+		return new Color(0,0,0,1.0f);
 	}
 	
 	public static Color redColor() {
-		return new Color(1.0f,0,0,0);
+		return new Color(1.0f,0,0,1.0f);
 	}
 	
 	public static Color greenColor() {
-		return new Color(0,1.0f,0,0);
+		return new Color(0,1.0f,0,1.0f);
 	}
 	
 	public static Color blueColor() {
-		return new Color(0,0,1.0f,0);
+		return new Color(0,0,1.0f,1.0f);
 	}
 	
 	public static Color yellowColor() {
-		return new Color(1.0f,1.0f,0,0);
+		return new Color(1.0f,1.0f,0,1.0f);
 	}
 	
 	@Override
