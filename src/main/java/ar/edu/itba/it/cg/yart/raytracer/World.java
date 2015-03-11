@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.itba.it.cg.yart.color.Color;
-import ar.edu.itba.it.cg.yart.geometry.GeometricObject;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
+import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 
 public class World {

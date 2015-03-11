@@ -1,4 +1,4 @@
-package ar.edu.itba.it.cg.yart.geometry;
+package ar.edu.itba.it.cg.yart.geometry.primitives;
 
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;

@@ -8,10 +8,10 @@ import javax.imageio.ImageIO;
 
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.exceptions.WrongParametersException;
-import ar.edu.itba.it.cg.yart.geometry.Plane;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
-import ar.edu.itba.it.cg.yart.geometry.Sphere;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
+import ar.edu.itba.it.cg.yart.geometry.primitives.Disc;
+import ar.edu.itba.it.cg.yart.geometry.primitives.Sphere;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.World;
@@ -31,16 +31,16 @@ public class YartApp {
 		w.setBackgroundColor(new Color(0.0f, 0.0f, 0.0f, 0.0f));
 		
 		Sphere s1 = new Sphere(new Point3(0, 0, 0), 85);
-		Sphere s2 = new Sphere(new Point3(70, 60, 60), 40);
-		Plane p1 = new Plane(new Point3(0,40,0), new Vector3d(0, 0.4041, 0.4041));
+		Sphere s2 = new Sphere(new Point3(60, 50, 50), 40);
+		Disc d1 = new Disc(new Point3(20,0,10), new Vector3d(0.4041, 0, 0.4041), 120);
 		
 		s1.color = new Color(1.0f, 0.0f, 0.0f);
 		s2.color = new Color(1.0f, 1.0f, 0.0f);
-		p1.color = new Color(0.0f, 1.0f, 0.5f);
+		d1.color = new Color(0.0f, 0.0f, 1.0f);
 		
 		w.addObject(s1);
 		w.addObject(s2);
-		w.addObject(p1);
+		w.addObject(d1);
 		
 		long startTime = System.currentTimeMillis();
 		ArrayIntegerMatrix matrix = w.render(vp);

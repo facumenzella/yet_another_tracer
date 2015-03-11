@@ -3,7 +3,7 @@ package ar.edu.itba.it.cg.yart.raytracer;
 import java.util.List;
 
 import ar.edu.itba.it.cg.yart.color.Color;
-import ar.edu.itba.it.cg.yart.geometry.GeometricObject;
+import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 
 public class Tracer {
 
