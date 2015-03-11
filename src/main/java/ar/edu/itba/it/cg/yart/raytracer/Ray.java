@@ -12,5 +12,9 @@ public class Ray {
 		this.origin = origin;
 		this.direction = direction;
 	}
+	
+	public Ray(final Point3 origin) {
+		this.origin = origin;
+	}
 
 }

@@ -62,6 +62,10 @@ public final class Vector3d {
 		return Math.acos(this.dot(other) / (this.length() * other.length()));
 	}
 	
+	public static Vector3d normalize(final Vector3d v) {
+		return new Vector3d(v.x / v.length , v.y / v.length, v.z / v.length);
+	}
+	
 	@Override
 	public String toString() {
 		return "(" + x + ", " + y + ", " + z + ")";
