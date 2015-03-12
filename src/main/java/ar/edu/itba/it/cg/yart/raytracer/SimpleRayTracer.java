@@ -12,6 +12,7 @@ public class SimpleRayTracer implements RayTracer {
 	private final ViewPlane vp;
 	
 	private SimpleRayTracer(final int hRes, final int vRes) {
+		// TODO : change how we create the world
 		this.vp = new ViewPlane(hRes, vRes);
 		this.world = World.spheresWorld(vp);
 		this.world.setBackgroundColor(Color.whiteColor());
@@ -29,6 +30,7 @@ public class SimpleRayTracer implements RayTracer {
 	}
 	
 	public static RayTracer scenario1() {
+		// TODO : fix hRes, vRes from file
 		final RayTracer simpleRayTracer = new SimpleRayTracer(400, 400);
 		return simpleRayTracer;
 	}

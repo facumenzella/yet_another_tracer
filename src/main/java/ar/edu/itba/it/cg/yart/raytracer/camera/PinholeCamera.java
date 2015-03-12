@@ -17,6 +17,8 @@ public class PinholeCamera extends CameraAbstract {
 
 	@Override
 	public void renderScene(World world) {
+		// TODO : i don't care about up and lookat factors. I am the king of the world
+		// Its almost working, but its not finished
 		Color color;
 		ViewPlane vp = world.vp;
 		Ray ray = new Ray(this.eye);
@@ -36,11 +38,6 @@ public class PinholeCamera extends CameraAbstract {
 			}
 		}
 
-	}
-
-	public Vector3d rayDirection(final Point3 point) {
-
-		return null;
 	}
 
 }
