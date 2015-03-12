@@ -12,6 +12,7 @@ import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Disc;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Sphere;
+import ar.edu.itba.it.cg.yart.geometry.primitives.Triangle;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.World;
@@ -30,17 +31,17 @@ public class YartApp {
 		ViewPlane vp = new ViewPlane(400, 400);
 		w.setBackgroundColor(new Color(0.0f, 0.0f, 0.0f, 0.0f));
 		
-		Sphere s1 = new Sphere(new Point3(0, 0, 0), 85);
+		Triangle s1 = new Triangle(new Point3(0,0,70), new Point3(0, 70, 70), new Point3(70, 0, 70));
 		Sphere s2 = new Sphere(new Point3(60, 50, 50), 40);
-		Disc d1 = new Disc(new Point3(20,0,10), new Vector3d(0.4041, 0, 0.4041), 120);
+//		Disc d1 = new Disc(new Point3(20,0,10), new Vector3d(0.4041, 0, 0.4041), 120);
 		
 		s1.color = new Color(1.0f, 0.0f, 0.0f);
 		s2.color = new Color(1.0f, 1.0f, 0.0f);
-		d1.color = new Color(0.0f, 0.0f, 1.0f);
+//		d1.color = new Color(0.0f, 0.0f, 1.0f);
 		
 		w.addObject(s1);
 		w.addObject(s2);
-		w.addObject(d1);
+//		w.addObject(d1);
 		
 		long startTime = System.currentTimeMillis();
 		ArrayIntegerMatrix matrix = w.render(vp);
