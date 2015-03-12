@@ -22,3 +22,7 @@ dependency-reduced-pom.xml
 .settings
 .project
 .classpath
+
+# Images #
+
+./images/*
