@@ -7,6 +7,8 @@ import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
+import ar.edu.itba.it.cg.yart.light.AmbientLight;
+import ar.edu.itba.it.cg.yart.light.Light;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 
 public class World {
@@ -14,9 +16,12 @@ public class World {
 	private Color backgroundColor;
 	public Tracer tracer = new Tracer();
 	public List<GeometricObject> objects = new ArrayList<GeometricObject>();
+	public Light ambientLight;
+	public List<Light> lights = new ArrayList<Light>();
 	
 	public World() {
 		backgroundColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+		ambientLight = new AmbientLight();
 	}
 	
 	public void setBackgroundColor(final Color color) {
@@ -27,6 +32,10 @@ public class World {
 		if (object != null) {
 			objects.add(object);
 		}
+	}
+	
+	public void addLight(final Light light) {
+		lights.add(light);
 	}
 	
 	public ArrayIntegerMatrix render(final ViewPlane vp) {
