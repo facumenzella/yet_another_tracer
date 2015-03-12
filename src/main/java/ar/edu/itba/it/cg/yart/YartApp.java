@@ -1,21 +1,7 @@
 package ar.edu.itba.it.cg.yart;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-
-import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.exceptions.WrongParametersException;
-import ar.edu.itba.it.cg.yart.geometry.Point3;
-import ar.edu.itba.it.cg.yart.geometry.Vector3d;
-import ar.edu.itba.it.cg.yart.geometry.primitives.Disc;
-import ar.edu.itba.it.cg.yart.geometry.primitives.Sphere;
-import ar.edu.itba.it.cg.yart.geometry.primitives.Triangle;
-import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
-import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
-import ar.edu.itba.it.cg.yart.raytracer.World;
+import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer;
 
 public class YartApp {
 	
@@ -27,49 +13,8 @@ public class YartApp {
 		final String imageName = args[0];
 		final String imageExtension = args[1];
 
-		ViewPlane vp = new ViewPlane(400, 400);
-		World w = new World(vp);
-		w.setBackgroundColor(Color.blackColor());
-		
-		Triangle s1 = new Triangle(new Point3(0,0,70), new Point3(0, 70, 70), new Point3(70, 0, 70));
-		Sphere s2 = new Sphere(new Point3(60, 50, 50), 40);
-//		Disc d1 = new Disc(new Point3(20,0,10), new Vector3d(0.4041, 0, 0.4041), 120);
-//		s1.color = Color.redColor();
-//		s2.color = Color.yellowColor();
-		
-//		w.addObject(s1);
-//		w.addObject(s2);
-		
-		long startTime = System.currentTimeMillis();
-		ArrayIntegerMatrix matrix = w.render(vp);
-		long endTime = System.currentTimeMillis();
-		long timeTaken = endTime - startTime;
-		
-		saveImage(matrix, imageName, imageExtension);
-		System.out.println("Finished rendering the scene in " + timeTaken + "ms");
+		SimpleRayTracer.scenario1().start(imageName, imageExtension);
 	}
 	
-	public static void saveImage(final ArrayIntegerMatrix pixels, final String imageName, final String imageExtension) {
-		int w = pixels.cols();
-		int h = pixels.rows();
-		
-		BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-
-		for (int y = 0; y < h; y++) {
-			for (int x = 0; x < w; x++) {
-				image.setRGB(x, y, pixels.get(x, y));
-			}
-		}
-
-		StringBuilder nameBuilder = new StringBuilder();
-		final String base = "./images/";
-		nameBuilder.append(base).append(imageName).append(".").append(imageExtension);
-		File outputfile = new File(nameBuilder.toString());
-		
-		try {
-			ImageIO.write(image, "png", outputfile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+	
 }

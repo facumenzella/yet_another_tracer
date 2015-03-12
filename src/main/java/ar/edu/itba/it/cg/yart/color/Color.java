@@ -30,11 +30,11 @@ public class Color {
 		return ret;
 	}
 	
-	public static Color blackColor() {
+	public static Color whiteColor() {
 		return new Color(1.0f,1.0f,1.0f,1.0f);
 	}
 	
-	public static Color whiteColor() {
+	public static Color blackColor() {
 		return new Color(0,0,0,1.0f);
 	}
 	
