@@ -20,7 +20,7 @@ public class SimpleRayTracer implements RayTracer {
 	@Override
 	public void start(final String imageName, final String imageExtension) {
 		long startTime = System.currentTimeMillis();
-		ArrayIntegerMatrix matrix = this.world.render(vp);
+		ArrayIntegerMatrix matrix = this.world.render();
 		long endTime = System.currentTimeMillis();
 		long timeTaken = endTime - startTime;
 		
