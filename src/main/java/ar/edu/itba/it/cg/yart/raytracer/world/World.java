@@ -18,15 +18,15 @@ import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 public class World {
 
 	private Color backgroundColor;
-	private ViewPlane view;
+	private ViewPlane vp;
 	public Tracer tracer = new Tracer();
 	public List<GeometricObject> objects = new ArrayList<GeometricObject>();
 	public Light ambientLight;
 	public List<Light> lights = new ArrayList<Light>();
 
 	private World(final ViewPlane view) {
-		this.view = view;
 		ambientLight = new AmbientLight();
+		this.vp = view;
 	}
 
 	public void setBackgroundColor(final Color color) {
