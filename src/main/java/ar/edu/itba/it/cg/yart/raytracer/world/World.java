@@ -14,19 +14,25 @@ import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.Tracer;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
+import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
+import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
 
 public class World {
 
-	private Color backgroundColor;
-	private ViewPlane vp;
-	public Tracer tracer = new Tracer();
+	public Color backgroundColor;
+	public ViewPlane vp;
+	public Tracer tracer;
 	public List<GeometricObject> objects = new ArrayList<GeometricObject>();
 	public Light ambientLight;
 	public List<Light> lights = new ArrayList<Light>();
-
-	private World(final ViewPlane view) {
-		ambientLight = new AmbientLight();
+	public final ArrayIntegerMatrix ret;
+	public final Camera camera;
+	
+	private World(final ViewPlane view, final Camera camera, final Tracer tracer) {
+		this.ambientLight = new AmbientLight();
 		this.vp = view;
+		this.ret = new ArrayIntegerMatrix(vp.hRes, vp.vRes);
+		this.camera = camera;
 	}
 
 	public void setBackgroundColor(final Color color) {
@@ -42,33 +48,18 @@ public class World {
 	public void addLight(final Light light) {
 		lights.add(light);
 	}
-	
-	public ArrayIntegerMatrix render(final ViewPlane vp) {
 
-		ArrayIntegerMatrix ret = new ArrayIntegerMatrix(vp.hRes, vp.vRes);
-		Ray ray = new Ray(new Point3(0, 0, 30));
-
-		for (int row = 0; row < vp.vRes; row++) { // up
-			for (int col = 0; col < vp.hRes; col++) { // across
-				final Vector3d vector = new Vector3d(vp.pixelSize
-						* (col - 0.5 * (vp.hRes - 1.0)), vp.pixelSize
-						* (row - 0.5 * (vp.vRes - 1.0)), -60);
-				ray.direction = Vector3d.normalize(vector);
-
-				Color pixelColor = tracer.traceRay(ray, objects);
-				if (pixelColor == null) {
-					pixelColor = backgroundColor;
-				}
-
-				ret.put(col, vp.hRes - row - 1, pixelColor.toInt());
-			}
-		}
-
-		return ret;
+	public ArrayIntegerMatrix render() {
+		this.camera.renderScene(this);
+		return this.ret;
 	}
 	
 	public static World spheresWorld(final ViewPlane vp) {
-		final World world = new World(vp);
+		final Tracer tracer = new Tracer();
+		final Point3 eye = new Point3(0,100,30);
+		final Point3 lookat = new Point3(0,0,1);
+		final Vector3d up = new Vector3d(0,0,0);
+		final World world = new World(vp, new PinholeCamera(tracer, eye, lookat, up), tracer);
 		final Sphere s1 = new Sphere(new Point3(0,0.0f,-30), 30.0f);
 		s1.color = Color.redColor();
 		final Sphere s2 = new Sphere(new Point3(10,50,-50), 10.0f);
