@@ -25,4 +25,4 @@ dependency-reduced-pom.xml
 
 # Images #
 
-./images/*
+images/
