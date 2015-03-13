@@ -1,6 +1,5 @@
 package ar.edu.itba.it.cg.yart.raytracer;
 
-import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
@@ -11,11 +10,17 @@ public class SimpleRayTracer implements RayTracer {
 	private final World world;
 	private final ViewPlane vp;
 	
-	private SimpleRayTracer(final int hRes, final int vRes) {
+	private SimpleRayTracer(final Scenario scenario, final int hRes, final int vRes) {
 		// TODO : change how we create the world
 		this.vp = new ViewPlane(hRes, vRes);
-		this.world = World.spheresWorld(vp);
-		this.world.setBackgroundColor(Color.whiteColor());
+		switch (scenario) {
+		case SPHERE_WORLD_1:
+			this.world = World.spheresWorld(vp);
+			break;
+		default:
+			this.world = World.spheresWorld(vp);
+			break;
+		}
 	}
 	
 	@Override
@@ -29,11 +34,14 @@ public class SimpleRayTracer implements RayTracer {
 		System.out.println("Finished rendering the scene in " + timeTaken + "ms");
 	}
 	
-	public static RayTracer scenario1() {
+	public static RayTracer buildScenario(final Scenario scenario) {
 		// TODO : fix hRes, vRes from file
-		final RayTracer simpleRayTracer = new SimpleRayTracer(400, 400);
+		final RayTracer simpleRayTracer = new SimpleRayTracer(scenario, 400, 400);
 		return simpleRayTracer;
 	}
 	
-	
+	public enum Scenario {
+		// TODO : add scenarios
+		SPHERE_WORLD_1;
+	}
 }

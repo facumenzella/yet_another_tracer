@@ -11,7 +11,6 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.Sphere;
 import ar.edu.itba.it.cg.yart.light.AmbientLight;
 import ar.edu.itba.it.cg.yart.light.Light;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
-import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.Tracer;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
@@ -61,6 +60,7 @@ public class World {
 		final Vector3d up = new Vector3d(0,1,0); // up vector, rotates around the camera z-axis
 		final double distance = 40;
 		final World world = new World(vp, new PinholeCamera(tracer, eye, lookat, up, distance), tracer);
+		world.setBackgroundColor(Color.whiteColor());
 		final Sphere s1 = new Sphere(new Point3(-30,0.0f,-30), 30.0f);
 		s1.color = Color.redColor();
 		final Sphere s2 = new Sphere(new Point3(30,0,-30), 30.0f);
