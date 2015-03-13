@@ -18,5 +18,22 @@ public class Lambertian extends BRDF {
 	public double rho(ShadeRec sr, Vector3d wi, Vector3d wo) {
 		return kd*cd;
 	}
+
+	public double getKd() {
+		return kd;
+	}
+
+	public void setKd(double kd) {
+		this.kd = kd;
+	}
+
+	public int getCd() {
+		return cd;
+	}
+
+	public void setCd(int cd) {
+		this.cd = cd;
+	}
+	
 	
 }

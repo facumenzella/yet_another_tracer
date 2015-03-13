@@ -21,15 +21,15 @@ public class ShadeRec {
 	}
 	
 	public ShadeRec(final ShadeRec sr) {
-		hitObject = sr.hitObject;
-		hitPoint = sr.hitPoint;
-		localHitPoint = sr.localHitPoint;
-		normal = sr.normal;
-		ray = sr.ray;
-//		material = sr.material;
-		depth = sr.depth;
-		dir = sr.dir;
-		world = sr.world;
+		this.hitObject = sr.hitObject;
+		this.hitPoint = sr.hitPoint;
+		this.localHitPoint = sr.localHitPoint;
+		this.normal = sr.normal;
+		this.ray = sr.ray;
+//		this.material = sr.material;
+		this.depth = sr.depth;
+		this.dir = sr.dir;
+		this.world = sr.world;
 	}
 	
 
