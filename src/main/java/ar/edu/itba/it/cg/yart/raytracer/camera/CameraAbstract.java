@@ -21,9 +21,19 @@ public abstract class CameraAbstract implements Camera{
 		this.lookat = lookat;
 		this.up = up;
 		computeUVW();
+		checkForSingularity();
+	}
+	
+	private void checkForSingularity() {
+		// we check if the camera is pointing exactly down
+		if (eye.x == lookat.x && eye.z == lookat.z) {
+			this.u = new Vector3d(0, 0, 1);
+			this.v = new Vector3d(1, 1, 0);
+			this.w = new Vector3d(0, 1, 0);
+		}
 	}
 
-	public void computeUVW() {
+	private void computeUVW() {
 		this.w = eye.sub(lookat);
 		this.w = Vector3d.normalize(w);
 		this.u = up.cross(w);
