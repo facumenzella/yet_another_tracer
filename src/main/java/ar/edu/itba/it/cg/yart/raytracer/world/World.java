@@ -78,4 +78,8 @@ public class World {
 		return world;
 	}
 
+	public enum Scenario {
+		// TODO : add scenarios
+		SPHERE_WORLD_1;
+	}
 }

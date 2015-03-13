@@ -3,6 +3,7 @@ package ar.edu.itba.it.cg.yart.raytracer;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
+import ar.edu.itba.it.cg.yart.raytracer.world.World.Scenario;
 import ar.edu.itba.it.cg.yart.utils.ImageSaver;
 
 public class SimpleRayTracer implements RayTracer {
@@ -40,8 +41,4 @@ public class SimpleRayTracer implements RayTracer {
 		return simpleRayTracer;
 	}
 	
-	public enum Scenario {
-		// TODO : add scenarios
-		SPHERE_WORLD_1;
-	}
 }
