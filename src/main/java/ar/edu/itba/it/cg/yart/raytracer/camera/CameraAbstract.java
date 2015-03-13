@@ -27,8 +27,8 @@ public abstract class CameraAbstract implements Camera{
 		this.w = eye.sub(lookat);
 		this.w = Vector3d.normalize(w);
 		this.u = up.cross(w);
-		u = Vector3d.normalize(u);
-		v = w.cross(u);
+		this.u = Vector3d.normalize(this.u);
+		this.v = this.w.cross(this.u);
 	}
 
 	public abstract void renderScene(final World world);
