@@ -2,7 +2,7 @@ package ar.edu.itba.it.cg.yart;
 
 import ar.edu.itba.it.cg.yart.exceptions.WrongParametersException;
 import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer;
-import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer.Scenario;
+import ar.edu.itba.it.cg.yart.raytracer.world.World.Scenario;
 
 public class YartApp {
 	
