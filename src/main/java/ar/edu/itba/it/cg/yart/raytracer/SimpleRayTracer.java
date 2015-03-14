@@ -37,7 +37,7 @@ public class SimpleRayTracer implements RayTracer {
 	
 	public static RayTracer buildScenario(final Scenario scenario) {
 		// TODO : fix hRes, vRes from file
-		final RayTracer simpleRayTracer = new SimpleRayTracer(scenario, 400, 400);
+		final RayTracer simpleRayTracer = new SimpleRayTracer(scenario, 1024, 1024);
 		return simpleRayTracer;
 	}
 	
