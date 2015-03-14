@@ -15,6 +15,7 @@ import ar.edu.itba.it.cg.yart.raytracer.Tracer;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
+import ar.edu.itba.it.cg.yart.ui.RenderWindow;
 
 public class World {
 
@@ -59,12 +60,20 @@ public class World {
 		final Point3 lookat = new Point3(-30,0,-30); // point where we look at
 		final Vector3d up = new Vector3d(0,1,0); // up vector, rotates around the camera z-axis
 		final double distance = 40;
-		final World world = new World(vp, new PinholeCamera(tracer, eye, lookat, up, distance), tracer);
+		final PinholeCamera camera = new PinholeCamera(tracer, eye, lookat, up, distance);
+		final World world = new World(vp, camera, tracer);
 		world.setBackgroundColor(Color.whiteColor());
 		final Sphere s1 = new Sphere(new Point3(-30,0.0f,-30), 30.0f);
 		s1.color = Color.redColor();
-		final Sphere s2 = new Sphere(new Point3(30,0,-30), 30.0f);
+		final Sphere s2 = new Sphere(new Point3(30,30,-30), 30.0f);
 		s2.color = Color.blueColor();
+		
+		
+		
+		/*RenderWindow window = new RenderWindow(vp.hRes, vp.vRes, 32);
+		camera.setCallbacks(window);*/
+		
+		
 //		final Sphere s3 = new Sphere(new Point3(0,-50,-30), 40.0f);
 //		s3.color = Color.greenColor();
 //		final Sphere s4 = new Sphere(new Point3(-20,0,-100), 5.0f);

@@ -6,18 +6,18 @@ public final class ArrayIntegerMatrix {
 	private final int cols;
 	private final int rows;
 	
-	public ArrayIntegerMatrix(final int rows, final int cols) {
+	public ArrayIntegerMatrix(final int cols, final int rows) {
 		this.cols = cols;
 		this.rows = rows;
 		this.matrix = new int[rows * cols];
 	}
 	
-	public void put(final int row, final int col, final int value) {
+	public void put(final int col, final int row, final int value) {
 		final int index =  (row * cols) + col;
 		this.matrix[index] = value;
 	}
 	
-	public int get(final int row, final int col) {
+	public int get(final int col, final int row) {
 		final int index = (row * cols) + col;
 		return this.matrix[index];
 	}
