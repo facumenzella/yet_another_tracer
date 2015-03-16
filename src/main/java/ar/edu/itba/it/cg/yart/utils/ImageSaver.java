@@ -9,7 +9,8 @@ import javax.imageio.ImageIO;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 
 public class ImageSaver {
-	public static void saveImage(final ArrayIntegerMatrix pixels, final String imageName, final String imageExtension) {
+	
+	public void saveImage(final ArrayIntegerMatrix pixels, final String imageName, final String imageExtension) {
 		int w = pixels.cols();
 		int h = pixels.rows();
 		

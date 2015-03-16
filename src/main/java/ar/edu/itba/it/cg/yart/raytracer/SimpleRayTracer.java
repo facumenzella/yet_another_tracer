@@ -30,9 +30,10 @@ public class SimpleRayTracer implements RayTracer {
 		ArrayIntegerMatrix matrix = this.world.render();
 		long endTime = System.currentTimeMillis();
 		long timeTaken = endTime - startTime;
-		
-		ImageSaver.saveImage(matrix, imageName, imageExtension);
 		System.out.println("Finished rendering the scene in " + timeTaken + "ms");
+
+		ImageSaver imageSaver = new ImageSaver();
+		imageSaver.saveImage(matrix, imageName, imageExtension);
 	}
 	
 	public static RayTracer buildScenario(final Scenario scenario) {
