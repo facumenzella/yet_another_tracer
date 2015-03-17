@@ -5,7 +5,7 @@ import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
-public class AmbientLight extends Light {
+public class AmbientLight extends LightAbstract {
 	
 	private double ls;
 	private Color color;
