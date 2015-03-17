@@ -16,10 +16,12 @@ public class Plane extends GeometricObject {
 	}
 	
 	@Override
-	public double hit(final Ray ray, ShadeRec s) {
+	public double hit(final Ray ray, final ShadeRec sr) {
 		double t = (p.sub(ray.origin)).dot(normal) / ray.direction.dot(normal);
 		
 		if (t > EPSILON) {
+			sr.normal = normal;
+			sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
 			return t;
 		}
 		else {
