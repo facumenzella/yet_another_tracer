@@ -60,7 +60,8 @@ public class World {
 		final Point3 lookat = new Point3(-30,0,-30); // point where we look at
 		final Vector3d up = new Vector3d(0,1,0); // up vector, rotates around the camera z-axis
 		final double distance = 40;
-		final PinholeCamera camera = new PinholeCamera(tracer, eye, lookat, up, distance);
+		final double zoom = 1;
+		final PinholeCamera camera = new PinholeCamera(tracer, eye, lookat, up, distance, zoom);
 		final World world = new World(vp, camera, tracer);
 		world.setBackgroundColor(Color.whiteColor());
 		final Sphere s1 = new Sphere(new Point3(-30,0.0f,-30), 30.0f);
