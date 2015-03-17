@@ -8,6 +8,6 @@ public abstract class Light {
 	
 	protected boolean shadows;
 	
-	public abstract Vector3d getDirection();
+	public abstract Vector3d getDirection(final ShadeRec sr);
 	public abstract Color L(final ShadeRec sr);
 }

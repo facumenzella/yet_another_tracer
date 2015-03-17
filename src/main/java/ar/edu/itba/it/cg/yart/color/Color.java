@@ -2,16 +2,16 @@ package ar.edu.itba.it.cg.yart.color;
 
 public class Color {
 	
-	public float r;
-	public float g;
-	public float b;
-	public float a;
+	public double r;
+	public double g;
+	public double b;
+	public double a;
 	
-	public Color(final float r, final float g, final float b) {
-		this(r, g, b, 1.0f);
+	public Color(final double r, final double g, final double b) {
+		this(r, g, b, 1.0);
 	}
 	
-	public Color(final float r, final float g, final float b, final float a) {
+	public Color(final double r, final double g, final double b, final double a) {
 		this.r = r;
 		this.g = g;
 		this.b = b;
@@ -30,28 +30,42 @@ public class Color {
 		return ret;
 	}
 	
+	public Color multiply(final double f) {
+		return new Color(this.r*f, this.g*f, this.b*f);
+	}
+	
+	public Color multiply(final Color f) {
+		return new Color(this.r*f.r, this.g*f.g, this.b*f.b);
+	}
+	
+	public void addEquals(final Color color) {
+		this.r+= color.r;
+		this.g+= color.g;
+		this.b+= color.b;
+	}
+	
 	public static Color whiteColor() {
-		return new Color(1.0f,1.0f,1.0f,1.0f);
+		return new Color(1.0,1.0,1.0,1.0);
 	}
 	
 	public static Color blackColor() {
-		return new Color(0,0,0,1.0f);
+		return new Color(0,0,0,1.0);
 	}
 	
 	public static Color redColor() {
-		return new Color(1.0f,0,0,1.0f);
+		return new Color(1.0,0,0,1.0);
 	}
 	
 	public static Color greenColor() {
-		return new Color(0,1.0f,0,1.0f);
+		return new Color(0,1.0,0,1.0);
 	}
 	
 	public static Color blueColor() {
-		return new Color(0,0,1.0f,1.0f);
+		return new Color(0,0,1.0,1.0);
 	}
 	
 	public static Color yellowColor() {
-		return new Color(1.0f,1.0f,0,1.0f);
+		return new Color(1.0,1.0,0,1.0);
 	}
 	
 	@Override

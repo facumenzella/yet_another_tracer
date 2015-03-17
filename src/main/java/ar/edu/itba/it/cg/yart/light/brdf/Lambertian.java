@@ -1,37 +1,38 @@
 package ar.edu.itba.it.cg.yart.light.brdf;
 
+import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
 public class Lambertian extends BRDF {
 	
 	private double kd;
-	private int cd;
+	private Color cd;
 	private final double invPi = 1/Math.PI;
 
 	@Override
-	public double f(ShadeRec sr, Vector3d wi, Vector3d wo) {
-		return kd*cd*invPi;
+	public Color f(ShadeRec sr, Vector3d wo, Vector3d wi) {
+		return cd.multiply(kd).multiply(invPi);
 	}
 
 	@Override
-	public double rho(ShadeRec sr, Vector3d wi, Vector3d wo) {
-		return kd*cd;
+	public Color rho(ShadeRec sr, Vector3d wo) {
+		return cd.multiply(kd);
 	}
 
 	public double getKd() {
 		return kd;
 	}
 
-	public void setKd(double kd) {
+	public void setKd(final double kd) {
 		this.kd = kd;
 	}
 
-	public int getCd() {
+	public Color getCd() {
 		return cd;
 	}
 
-	public void setCd(int cd) {
+	public void setCd(final Color cd) {
 		this.cd = cd;
 	}
 	
