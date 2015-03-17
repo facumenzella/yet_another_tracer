@@ -16,19 +16,21 @@ import ar.edu.itba.it.cg.yart.raytracer.world.World;
 public class PinholeCamera extends CameraAbstract {
 
 	private final double distance;
+	private final double zoom;
 	
 	public PinholeCamera(final Tracer tracer, final Point3 eye, 
-			final Point3 lookat, final Vector3d up, final double distance) {
+			final Point3 lookat, final Vector3d up, final double distance, final double zoom) {
 		super(tracer, eye, lookat, up);
 		this.distance = distance;
+		this.zoom = zoom;
 	}
 
 	@Override
 	public void renderScene(World world) {
-		// TODO : i don't care about up and lookat factors. I am the king of the world
-		// Its almost working, but its not finished
+		// TODO : Its almost working, but its not finished
 		Color color;
 		ViewPlane vp = world.vp;
+		vp.pixelSize /= zoom;
 		Point2d sp = new Point2d(0, 0);
 		Point2d pp;
 		Ray ray = new Ray(this.eye);
