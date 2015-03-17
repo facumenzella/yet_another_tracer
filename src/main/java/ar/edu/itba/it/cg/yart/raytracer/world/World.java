@@ -95,6 +95,7 @@ public class World {
 		camera.setCallbacks(window);
 
 		
+		
 		/*RenderWindow window = new RenderWindow(vp.hRes, vp.vRes, 32);
 		camera.setCallbacks(window);*/
 		
