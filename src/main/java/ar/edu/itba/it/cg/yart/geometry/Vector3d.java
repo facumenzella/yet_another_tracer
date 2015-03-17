@@ -6,12 +6,14 @@ public final class Vector3d {
 	public final double y;
 	public final double z;
 	public final double length;
+	public final Vector3d normalized;
 	
 	public Vector3d(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.length = this.length();
+		this.normalized = this.normalize();
 	}
 	
 	public static Vector3d xAxis() {
@@ -62,8 +64,12 @@ public final class Vector3d {
 		return Math.acos(this.dot(other) / (this.length() * other.length()));
 	}
 	
-	public static Vector3d normalize(final Vector3d v) {
-		return new Vector3d(v.x / v.length , v.y / v.length, v.z / v.length);
+	public Vector3d normalizedVector() {
+		return this.normalized;
+	}
+	
+	private Vector3d normalize() {
+		return new Vector3d(this.x / this.length , this.y / this.length, this.z / this.length);
 	}
 	
 	@Override

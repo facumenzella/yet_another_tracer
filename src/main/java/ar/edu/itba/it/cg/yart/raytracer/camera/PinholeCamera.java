@@ -82,7 +82,7 @@ public class PinholeCamera extends CameraAbstract {
 	
 	private Vector3d rayDirection(final Point2d p) {
 		final Vector3d dir = (u.scale(p.x)).add(v.scale(p.y)).sub(w.scale(distance));
-		return Vector3d.normalize(dir);
+		return dir.normalized;
 	}
 
 }
