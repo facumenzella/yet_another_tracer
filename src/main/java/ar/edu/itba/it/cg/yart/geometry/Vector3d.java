@@ -37,7 +37,7 @@ public final class Vector3d {
 	}
 	
 	public Vector3d direction() {
-		return scale(1/length());
+		return scale(1/length);
 	}
 	
 	public Vector3d inverse() {
@@ -65,7 +65,7 @@ public final class Vector3d {
 	}
 	
 	public double angleWith(final Vector3d other) {
-		return Math.acos(this.dot(other) / (this.length() * other.length()));
+		return Math.acos(this.dot(other) / (this.length * other.length));
 	}
 	
 	public Vector3d normalizedVector() {
