@@ -19,5 +19,9 @@ public class Point3 {
 	public Point3 add(final Point3 other) {
 		return new Point3(x + other.x, y + other.y, z + other.z);
 	}
+	
+	public Point3 add(final Vector3d other) {
+		return new Point3(x + other.x, y + other.y, z + other.z);
+	}
 
 }

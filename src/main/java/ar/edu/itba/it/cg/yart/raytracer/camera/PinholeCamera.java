@@ -8,6 +8,7 @@ import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Bucket;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
+import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.Tracer;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
@@ -52,9 +53,13 @@ public class PinholeCamera extends CameraAbstract {
 					final double y = vp.pixelSize * (0.5 * vp.vRes - row + sp.y);
 					pp = new Point2d(x,y);
 					ray.direction = this.rayDirection(pp);
-
-					color = tracer.traceRay(ray, world.objects);
-					if (color == null) {
+					ShadeRec sr = new ShadeRec(world);
+					//TODO: check for better style
+					sr = new ShadeRec(tracer.traceRay(ray, world.objects, sr));
+					if(sr.hitObject) {
+						sr.ray = ray;
+						color = sr.material.shade(sr);
+					} else {
 						color = world.backgroundColor;
 					}
 
