@@ -13,7 +13,15 @@ public final class Vector3d {
 		this.y = y;
 		this.z = z;
 		this.length = this.length();
-		this.normalized = this.normalize();
+		this.normalized = new Vector3d(this.x, this.y, this.z, this.length);
+	}
+	
+	private Vector3d(double x, double y, double z, double length) {
+		this.length = length;
+		this.x = x / length;
+		this.y = y / length;
+		this.z = z / length;
+		this.normalized = this;
 	}
 	
 	public static Vector3d xAxis() {
@@ -66,10 +74,6 @@ public final class Vector3d {
 	
 	public Vector3d normalizedVector() {
 		return this.normalized;
-	}
-	
-	private Vector3d normalize() {
-		return new Vector3d(this.x / this.length , this.y / this.length, this.z / this.length);
 	}
 	
 	@Override
