@@ -58,15 +58,16 @@ public class World {
 	
 	public static World spheresWorld(final ViewPlane vp) {
 		final Tracer tracer = new Tracer();
-		final Point3 eye = new Point3(0,0,30);
-		final Point3 lookat = new Point3(-30,0,-30); // point where we look at
+		final Point3 eye = new Point3(0,0,100);
+		final Point3 lookat = new Point3(0,0,-30); // point where we look at
 		final Vector3d up = new Vector3d(0,1,0); // up vector, rotates around the camera z-axis
 
 		final double distance = 40;
-		final double zoom = 1;
+		final double zoom = 2;
 		final PinholeCamera camera = new PinholeCamera(tracer, eye, lookat, up, distance, zoom);
 
 		final World world = new World(vp, camera, tracer);
+		
 		world.setBackgroundColor(Color.blackColor());
 		final Sphere s1 = new Sphere(new Point3(-30,0.0,-30), 40.0f);
 		Matte s1m = new Matte();
@@ -92,6 +93,10 @@ public class World {
 		
 		RenderWindow window = new RenderWindow(vp.hRes, vp.vRes, 32);
 		camera.setCallbacks(window);
+
+		
+		/*RenderWindow window = new RenderWindow(vp.hRes, vp.vRes, 32);
+		camera.setCallbacks(window);*/
 		
 		
 //		final Sphere s3 = new Sphere(new Point3(0,-50,-30), 40.0f);
