@@ -3,6 +3,7 @@ package ar.edu.itba.it.cg.yart.geometry.primitives;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
+import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
 public class Disc extends Plane{
 	
@@ -14,8 +15,8 @@ public class Disc extends Plane{
 	}
 	
 	@Override
-	public double hit(final Ray ray) {
-		double t = super.hit(ray);
+	public double hit(final Ray ray, ShadeRec rs) {
+		double t = super.hit(ray, rs);
 		if (t<= EPSILON) {
 			return Double.NEGATIVE_INFINITY;
 		}

@@ -3,6 +3,7 @@ package ar.edu.itba.it.cg.yart.geometry.primitives;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
+import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
 public class Plane extends GeometricObject {
 	
@@ -15,7 +16,7 @@ public class Plane extends GeometricObject {
 	}
 	
 	@Override
-	public double hit(final Ray ray) {
+	public double hit(final Ray ray, ShadeRec s) {
 		double t = (p.sub(ray.origin)).dot(normal) / ray.direction.dot(normal);
 		
 		if (t > EPSILON) {

@@ -3,6 +3,7 @@ package ar.edu.itba.it.cg.yart.geometry.primitives;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
+import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
 public class Triangle extends GeometricObject{
 
@@ -25,7 +26,7 @@ public class Triangle extends GeometricObject{
 	}
 
 	@Override
-	public double hit(Ray ray) {
+	public double hit(Ray ray, ShadeRec sr) {
 		// This is too much
 		// Check out Ray Tracing from the ground up (page 367)
 		final double a = this.pointA.x - this.pointB.x, b = this.pointA.x - this.pointC.x;

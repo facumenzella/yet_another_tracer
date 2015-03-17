@@ -3,6 +3,7 @@ package ar.edu.itba.it.cg.yart.geometry.primitives;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
+import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
 public class Sphere extends GeometricObject {
 	
@@ -15,7 +16,7 @@ public class Sphere extends GeometricObject {
 	}
 
 	@Override
-	public double hit(final Ray ray) {
+	public double hit(final Ray ray, final ShadeRec sr) {
 		double t;
 		Vector3d tmp = ray.origin.sub(center);
 		double a = ray.direction.dot(ray.direction);
@@ -34,12 +35,16 @@ public class Sphere extends GeometricObject {
 		t = (-b - e) / denom;
 		
 		if (t > EPSILON) {
+			sr.normal = tmp.add(ray.direction.scale(t)).scale(1/radius);
+			sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
 			return t;
 		}
 		
 		t = (-b + e) / denom;
 		
 		if (t > EPSILON) {
+			sr.normal = tmp.add(ray.direction.scale(t)).scale(1/radius);
+			sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
 			return t;
 		}
 		

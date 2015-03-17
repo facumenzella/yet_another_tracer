@@ -9,7 +9,9 @@ import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Sphere;
 import ar.edu.itba.it.cg.yart.light.AmbientLight;
+import ar.edu.itba.it.cg.yart.light.Directional;
 import ar.edu.itba.it.cg.yart.light.Light;
+import ar.edu.itba.it.cg.yart.light.Matte;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.Tracer;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
@@ -59,19 +61,34 @@ public class World {
 		final Point3 eye = new Point3(0,0,30);
 		final Point3 lookat = new Point3(-30,0,-30); // point where we look at
 		final Vector3d up = new Vector3d(0,1,0); // up vector, rotates around the camera z-axis
-		final double distance = 40;
+		final double distance = 200;
 		final PinholeCamera camera = new PinholeCamera(tracer, eye, lookat, up, distance);
 		final World world = new World(vp, camera, tracer);
-		world.setBackgroundColor(Color.whiteColor());
-		final Sphere s1 = new Sphere(new Point3(-30,0.0f,-30), 30.0f);
-		s1.color = Color.redColor();
-		final Sphere s2 = new Sphere(new Point3(30,30,-30), 30.0f);
-		s2.color = Color.blueColor();
+		world.setBackgroundColor(Color.blackColor());
+		final Sphere s1 = new Sphere(new Point3(-30,0.0,-30), 40.0f);
+		Matte s1m = new Matte();
+		s1m.setCd(Color.whiteColor());
+		s1m.setKd(0.75);
+		s1m.setKa(0.30);		
+		s1.setMaterial(s1m);
+		final Sphere s2 = new Sphere(new Point3(-30,15,5), 10.0f);
+		Matte s2m = new Matte();
+		s2m.setCd(Color.yellowColor());
+		s2m.setKd(0.65);
+		s2m.setKa(0.25);		
+		s2.setMaterial(s2m);
+		final Sphere s3 = new Sphere(new Point3(-10,-15,0), 7.0f);
+		Matte s3m = new Matte();
+		s3m.setCd(Color.blueColor());
+		s3m.setKd(0.85);
+		s3m.setKa(0.25);		
+		s3.setMaterial(s3m);
+
 		
 		
 		
-		/*RenderWindow window = new RenderWindow(vp.hRes, vp.vRes, 32);
-		camera.setCallbacks(window);*/
+		RenderWindow window = new RenderWindow(vp.hRes, vp.vRes, 32);
+		camera.setCallbacks(window);
 		
 		
 //		final Sphere s3 = new Sphere(new Point3(0,-50,-30), 40.0f);
@@ -81,7 +98,8 @@ public class World {
 		
 		world.addObject(s1);
 		world.addObject(s2);
-//		world.addObject(s3);
+		world.addLight(new Directional());
+		world.addObject(s3);
 //		world.addObject(s4);
 		
 		return world;

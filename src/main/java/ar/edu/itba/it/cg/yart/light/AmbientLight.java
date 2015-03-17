@@ -7,11 +7,11 @@ import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
 public class AmbientLight extends Light {
 	
-	private float ls;
+	private double ls;
 	private Color color;
 	
 	public AmbientLight() {
-		this.ls = 1;
+		this.ls = 0.2;
 		this.color = Color.whiteColor();
 		
 	}
