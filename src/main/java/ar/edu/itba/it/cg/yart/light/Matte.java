@@ -8,7 +8,7 @@ import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.light.brdf.Lambertian;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
-public class Matte extends Material {
+public class Matte extends MaterialAbstract {
 	
 	private Lambertian ambientBRDF = new Lambertian();
 	private Lambertian diffuseBRDF = new Lambertian();
