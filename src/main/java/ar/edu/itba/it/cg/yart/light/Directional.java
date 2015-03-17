@@ -4,7 +4,7 @@ import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
-public class Directional extends Light{
+public class Directional extends LightAbstract{
 	
 	private final double ls = 2.0;
 	private final Color color = Color.whiteColor();
