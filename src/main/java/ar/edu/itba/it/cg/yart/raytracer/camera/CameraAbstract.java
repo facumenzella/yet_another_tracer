@@ -47,9 +47,9 @@ public abstract class CameraAbstract implements Camera {
 
 	private void computeUVW() {
 		this.w = eye.sub(lookat);
-		this.w = Vector3d.normalize(w);
+		this.w = w.normalized;
 		this.u = up.cross(w);
-		this.u = Vector3d.normalize(this.u);
+		this.u = u.normalized;
 		this.v = this.w.cross(this.u);
 	}
 
