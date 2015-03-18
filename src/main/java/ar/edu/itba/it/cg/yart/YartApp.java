@@ -4,6 +4,7 @@ import ar.edu.itba.it.cg.yart.exceptions.WrongParametersException;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
+import ar.edu.itba.it.cg.yart.ui.RenderWindow;
 import ar.edu.itba.it.cg.yart.utils.ImageSaver;
 
 public class YartApp {
@@ -19,7 +20,9 @@ public class YartApp {
 		World w = new World("jaja");
 		ArrayIntegerMatrix result;
 		
-		SimpleRayTracer raytracer = new SimpleRayTracer(640, 480, 999);
+		SimpleRayTracer raytracer = new SimpleRayTracer(640, 480, 32);
+		new RenderWindow(raytracer);
+		
 		result = raytracer.render(w);
 		
 		ImageSaver imageSaver = new ImageSaver();

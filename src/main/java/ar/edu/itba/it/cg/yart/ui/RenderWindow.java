@@ -12,9 +12,10 @@ import javax.swing.JScrollPane;
 
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.Bucket;
-import ar.edu.itba.it.cg.yart.raytracer.camera.CameraAbstract.Callbacks;
+import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer;
+import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer.RaytracerCallbacks;
 
-public class RenderWindow extends JFrame implements Callbacks {
+public class RenderWindow extends JFrame implements RaytracerCallbacks {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -24,14 +25,17 @@ public class RenderWindow extends JFrame implements Callbacks {
 	private static final int MAX_HEIGHT = 600;
 	
 	private final BufferedImage bi;
-	private final int bucketSize;
 	
 	RenderResult resultPanel;
 	JScrollPane scrollPane;
 	
-	public RenderWindow(final int width, final int height, final int bucketSize) {
+	public RenderWindow(SimpleRayTracer raytracer) {
+		int width = raytracer.getHorizontalRes();
+		int height = raytracer.getVerticalRes();
+		
+		raytracer.setCallbacks(this);
+		
 		bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		this.bucketSize = bucketSize;
 		
 		BorderLayout borderLayout = new BorderLayout();
 		borderLayout.setHgap(0);
@@ -80,22 +84,24 @@ public class RenderWindow extends JFrame implements Callbacks {
 		setMaximumSize(new Dimension(MAX_WIDTH, MAX_HEIGHT));
 		
 		pack();
+		setLocationRelativeTo(null);
 		
 		setVisible(true);
 	}
 
 	@Override
-	public void onBucketFinished(ArrayIntegerMatrix result, Bucket bucket) {
-		int xStart = bucket.getX() * bucketSize;
-		int xFinish = bucket.getX() * bucketSize + bucket.getWidth();
-		int yStart = bucket.getY() * bucketSize;
-		int yFinish = bucket.getY() * bucketSize + bucket.getHeight();
+	public void onBucketFinished(final Bucket bucket, final ArrayIntegerMatrix result) {
+		int xStart = bucket.getX();
+		int xFinish = bucket.getX() + bucket.getWidth();
+		int yStart = bucket.getY();
+		int yFinish = bucket.getY() + bucket.getHeight();
 		
 		for (int y = yStart; y < yFinish; y++) {
 			for (int x = xStart; x < xFinish; x++) {
 				bi.setRGB(x, y, result.get(x, y));
 			}
 		}
+		
 		resultPanel.repaint();
 	}
 

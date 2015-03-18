@@ -15,6 +15,12 @@ public class SimpleRayTracer implements RayTracer {
 	private int hRes;
 	private int vRes;
 	private int bucketSize;
+	private RaytracerCallbacks callbacks;
+	
+	public interface RaytracerCallbacks {
+		public void onBucketFinished(final Bucket bucket, final ArrayIntegerMatrix result);
+		public void onRenderFinished(final ArrayIntegerMatrix result);
+	}
 	
 	public SimpleRayTracer(final int hRes, final int vRes, final int bucketSize) {
 		// TODO : change how we create the world
@@ -27,6 +33,10 @@ public class SimpleRayTracer implements RayTracer {
 		this.world = world;
 	}
 	
+	public void setCallbacks(final RaytracerCallbacks callbacks) {
+		this.callbacks = callbacks;
+	}
+	
 	@Override
 	public void start(final String imageName, final String imageExtension) {
 		long startTime = System.currentTimeMillis();
@@ -37,6 +47,18 @@ public class SimpleRayTracer implements RayTracer {
 
 		ImageSaver imageSaver = new ImageSaver();
 		imageSaver.saveImage(result, imageName, imageExtension);
+	}
+	
+	public int getHorizontalRes() {
+		return hRes;
+	}
+	
+	public int getVerticalRes() {
+		return vRes;
+	}
+	
+	public int getBucketSize() {
+		return bucketSize;
 	}
 
 	@Override
@@ -74,6 +96,14 @@ public class SimpleRayTracer implements RayTracer {
 			buckets.remove(0);
 			
 			world.getActiveCamera().renderScene(bucket, world, result, viewPlane);
+			
+			if (callbacks != null) {
+				callbacks.onBucketFinished(bucket, result);
+			}
+		}
+		
+		if (callbacks != null) {
+			callbacks.onRenderFinished(result);
 		}
 		
 		return result;
