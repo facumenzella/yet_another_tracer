@@ -1,8 +1,10 @@
 package ar.edu.itba.it.cg.yart;
 
 import ar.edu.itba.it.cg.yart.exceptions.WrongParametersException;
+import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer;
-import ar.edu.itba.it.cg.yart.raytracer.world.World.Scenario;
+import ar.edu.itba.it.cg.yart.raytracer.world.World;
+import ar.edu.itba.it.cg.yart.utils.ImageSaver;
 
 public class YartApp {
 	
@@ -13,8 +15,15 @@ public class YartApp {
 		}
 		final String imageName = args[0];
 		final String imageExtension = args[1];
-
-		SimpleRayTracer.buildScenario(Scenario.SPHERE_WORLD_1).start(imageName, imageExtension);
+		
+		World w = new World("jaja");
+		ArrayIntegerMatrix result;
+		
+		SimpleRayTracer raytracer = new SimpleRayTracer(640, 480, 999);
+		result = raytracer.render(w);
+		
+		ImageSaver imageSaver = new ImageSaver();
+		imageSaver.saveImage(result, imageName, imageExtension);
 	}
 	
 	
