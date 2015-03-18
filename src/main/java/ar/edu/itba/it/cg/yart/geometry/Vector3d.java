@@ -12,7 +12,7 @@ public final class Vector3d {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-		this.length = this.length();
+		this.length = Math.sqrt(x * x + y * y + z * z);
 		this.normalized = new Vector3d(this.x, this.y, this.z, this.length);
 	}
 	
@@ -36,12 +36,8 @@ public final class Vector3d {
 		return new Vector3d(0, 0, 1);
 	}
 	
-	public double length() {
-		return Math.sqrt(x * x + y * y + z * z);
-	}
-	
 	public Vector3d direction() {
-		return scale(1/length());
+		return scale(1/length);
 	}
 	
 	public Vector3d inverse() {
@@ -69,7 +65,7 @@ public final class Vector3d {
 	}
 	
 	public double angleWith(final Vector3d other) {
-		return Math.acos(this.dot(other) / (this.length() * other.length()));
+		return Math.acos(this.dot(other) / (this.length * other.length));
 	}
 	
 	public Vector3d normalizedVector() {
