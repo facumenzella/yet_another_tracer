@@ -17,8 +17,8 @@ public class Matte extends MaterialAbstract {
 	@Override
 	public Color shade(ShadeRec sr) {
 		final Vector3d wo = sr.ray.direction.inverse();
-		final Color colorL = ambientBRDF.rho(sr, wo).multiply(sr.world.ambientLight.L(sr));
-		final List<Light> lights = sr.world.lights;
+		final Color colorL = ambientBRDF.rho(sr, wo).multiply(sr.world.getAmbientLight().L(sr));
+		final List<Light> lights = sr.world.getLights();
 		
 		for(final Light light : lights) {
 			final Vector3d wi = light.getDirection(sr);

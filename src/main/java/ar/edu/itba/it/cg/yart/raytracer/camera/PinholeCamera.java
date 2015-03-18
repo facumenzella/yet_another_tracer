@@ -1,11 +1,10 @@
 package ar.edu.itba.it.cg.yart.raytracer.camera;
 
-import java.util.List;
-
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Point2d;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
+import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.Bucket;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
@@ -26,58 +25,41 @@ public class PinholeCamera extends CameraAbstract {
 	}
 
 	@Override
-	public void renderScene(World world) {
+	public void renderScene(final Bucket bucket, final World world,
+			final ArrayIntegerMatrix result, final ViewPlane viewPlane) {
 		// TODO : Its almost working, but its not finished
 		Color color;
-		ViewPlane vp = world.vp;
-		vp.pixelSize /= zoom;
+		double adjustedPixelSize = viewPlane.pixelSize / zoom;
 		Point2d sp = new Point2d(0, 0);
 		Point2d pp;
 		Ray ray = new Ray(this.eye);
 		
-		int bucketSize = 32;
-		
-		List<Bucket> buckets = vp.dividePlane(bucketSize);
-		
-		while (!buckets.isEmpty()) {
-			Bucket bucket = buckets.get(0);
-			buckets.remove(0);
-			
-			int xStart = bucket.getX() * bucketSize;
-			int xFinish = bucket.getX() * bucketSize + bucket.getWidth();
-			int yStart = bucket.getY() * bucketSize;
-			int yFinish = bucket.getY() * bucketSize + bucket.getHeight();
-			
-			
-			for (int row = yStart; row < yFinish; row++) { // up
-				for (int col = xStart; col < xFinish; col++) { // across
-					final double x = vp.pixelSize * (col - 0.5 * vp.hRes + sp.x);
-					final double y = vp.pixelSize * (0.5 * vp.vRes - row + sp.y);
-					pp = new Point2d(x,y);
-					ray.direction = this.rayDirection(pp);
-					ShadeRec sr = new ShadeRec(world);
-					//TODO: check for better style
-					sr = new ShadeRec(tracer.traceRay(ray, world.objects, sr));
-					if(sr.hitObject) {
-						sr.ray = ray;
-						color = sr.material.shade(sr);
-					} else {
-						color = world.backgroundColor;
-					}
+		int xStart = bucket.getX();
+		int xFinish = xStart + bucket.getWidth();
+		int yStart = bucket.getY();
+		int yFinish = yStart + bucket.getHeight();
 
-					world.ret.put(col, row, color.toInt());
+		for (int row = yStart; row < yFinish; row++) { // up
+			for (int col = xStart; col < xFinish; col++) { // across
+				final double x = adjustedPixelSize * (col - 0.5 * viewPlane.hRes + sp.x);
+				final double y = adjustedPixelSize * (0.5 * viewPlane.vRes - row + sp.y);
+				
+				pp = new Point2d(x, y);
+				ray.direction = this.rayDirection(pp);
+				ShadeRec sr = new ShadeRec(world);
+				// TODO: check for better style
+				sr = new ShadeRec(tracer.traceRay(ray, world.getObjects(), sr));
+				if (sr.hitObject) {
+					sr.ray = ray;
+					color = sr.material.shade(sr);
+				} else {
+					color = world.getBackgroundColor();
 				}
-			}
-			
-			if (callbacks != null) {
-				callbacks.onBucketFinished(world.ret, bucket);
+
+				result.put(col, row, color.toInt());
 			}
 		}
-	
-		if (callbacks != null) {
-			callbacks.onRenderFinished(world.ret);
-		}
-		
+
 	}
 	
 	private Vector3d rayDirection(final Point2d p) {

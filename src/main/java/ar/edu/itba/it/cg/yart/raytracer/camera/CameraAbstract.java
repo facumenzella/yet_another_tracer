@@ -5,7 +5,6 @@ import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.Bucket;
 import ar.edu.itba.it.cg.yart.raytracer.Tracer;
-import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
 public abstract class CameraAbstract implements Camera {
 
@@ -52,7 +51,5 @@ public abstract class CameraAbstract implements Camera {
 		this.u = u.normalized;
 		this.v = this.w.cross(this.u);
 	}
-
-	public abstract void renderScene(final World world);
 
 }
