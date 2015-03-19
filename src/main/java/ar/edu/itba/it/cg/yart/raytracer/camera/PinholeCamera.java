@@ -16,9 +16,10 @@ public class PinholeCamera extends CameraAbstract {
 
 	private final double distance;
 	private final double zoom;
-	
-	public PinholeCamera(final Tracer tracer, final Point3 eye, 
-			final Point3 lookat, final Vector3d up, final double distance, final double zoom) {
+
+	public PinholeCamera(final Tracer tracer, final Point3 eye,
+			final Point3 lookat, final Vector3d up, final double distance,
+			final double zoom) {
 		super(tracer, eye, lookat, up);
 		this.distance = distance;
 		this.zoom = zoom;
@@ -33,7 +34,7 @@ public class PinholeCamera extends CameraAbstract {
 		Point2d sp = new Point2d(0, 0);
 		Point2d pp;
 		Ray ray = new Ray(this.eye);
-		
+
 		int xStart = bucket.getX();
 		int xFinish = xStart + bucket.getWidth();
 		int yStart = bucket.getY();
@@ -41,9 +42,11 @@ public class PinholeCamera extends CameraAbstract {
 
 		for (int row = yStart; row < yFinish; row++) { // up
 			for (int col = xStart; col < xFinish; col++) { // across
-				final double x = adjustedPixelSize * (col - 0.5 * viewPlane.hRes + sp.x);
-				final double y = adjustedPixelSize * (0.5 * viewPlane.vRes - row + sp.y);
-				
+				final double x = adjustedPixelSize
+						* (col - 0.5 * viewPlane.hRes + sp.x);
+				final double y = adjustedPixelSize
+						* (0.5 * viewPlane.vRes - row + sp.y);
+
 				pp = new Point2d(x, y);
 				ray.direction = this.rayDirection(pp);
 				ShadeRec sr = new ShadeRec(world);
@@ -56,15 +59,32 @@ public class PinholeCamera extends CameraAbstract {
 					color = world.getBackgroundColor();
 				}
 
-				result.put(col, row, color.toInt());
+				displayPixel(col, row, color, result);
 			}
 		}
 
 	}
-	
+
 	private Vector3d rayDirection(final Point2d p) {
-		final Vector3d dir = (u.scale(p.x)).add(v.scale(p.y)).sub(w.scale(distance));
+		final Vector3d dir = (u.scale(p.x)).add(v.scale(p.y)).sub(
+				w.scale(distance));
 		return dir.normalized;
+	}
+
+	private void displayPixel(final int col, final int row, final Color color,
+			final ArrayIntegerMatrix result) {
+		if (color.r > 1.0) {
+			color.r = 1.0;
+		}
+
+		if (color.g > 1.0) {
+			color.g = 1.0;
+		}
+
+		if (color.b > 1.0) {
+			color.b = 1.0;
+		}
+		result.put(col, row, color.toInt());
 	}
 
 }
