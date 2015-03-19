@@ -7,8 +7,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public final class YartExecutorFactory {
 
-	private static final int NUMBER_OF_THREADS = 4;
-
 	public static ExecutorService newCachedThreadPool() {
 		return Executors.newCachedThreadPool(new YartThreadFactory(
 				"JavaRayPool", "JavaRayThread"));
