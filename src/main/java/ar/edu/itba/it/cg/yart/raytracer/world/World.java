@@ -126,7 +126,7 @@ public class World {
 		
 		final Directional light1 = new Directional(2.0,Color.whiteColor(),new Vector3d(-2,7,3));
 		
-		final PointLight light2 = new PointLight(2.5,Color.whiteColor(),new Vector3d(40,40,40));
+		final PointLight light2 = new PointLight(2,Color.whiteColor(),new Vector3d(40,40,40));
 		//addLight(light1);
 		addLight(light2);
 		

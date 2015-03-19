@@ -73,18 +73,27 @@ public class PinholeCamera extends CameraAbstract {
 
 	private void displayPixel(final int col, final int row, final Color color,
 			final ArrayIntegerMatrix result) {
-		if (color.r > 1.0) {
-			color.r = 1.0;
+//		if (color.r > 1.0) {
+//			color.r = 1.0;
+//		}
+//
+//		if (color.g > 1.0) {
+//			color.g = 1.0;
+//		}
+//
+//		if (color.b > 1.0) {
+//			color.b = 1.0;
+//		}
+		final Color mappedColor = maxToOne(color);
+		result.put(col, row, mappedColor.toInt());
+	}
+	
+	private Color maxToOne(final Color c) {
+		final double maxValue = Math.max(c.r, Math.max(c.g, c.b));
+		if(maxValue > 1.0) {
+			return c.multiply(1/maxValue);
 		}
-
-		if (color.g > 1.0) {
-			color.g = 1.0;
-		}
-
-		if (color.b > 1.0) {
-			color.b = 1.0;
-		}
-		result.put(col, row, color.toInt());
+		return c;
 	}
 
 }
