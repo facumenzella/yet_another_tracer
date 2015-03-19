@@ -2,11 +2,15 @@ package ar.edu.itba.it.cg.yart.raytracer;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
 
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
+import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 import ar.edu.itba.it.cg.yart.utils.ImageSaver;
+import ar.edu.itba.it.cg.yart.utils.YartExecutorFactory;
 
 public class SimpleRayTracer implements RayTracer {
 
@@ -16,6 +20,7 @@ public class SimpleRayTracer implements RayTracer {
 	private int vRes;
 	private int bucketSize;
 	private RaytracerCallbacks callbacks;
+	private final ExecutorService executor;
 	
 	public interface RaytracerCallbacks {
 		public void onBucketFinished(final Bucket bucket, final ArrayIntegerMatrix result);
@@ -27,6 +32,7 @@ public class SimpleRayTracer implements RayTracer {
 		this.hRes = hRes;
 		this.vRes = vRes;
 		this.bucketSize = bucketSize;
+		this.executor = YartExecutorFactory.newFixedThreadPool(4); // TODO change after tests
 	}
 	
 	public void setWorld(final World world) {
@@ -91,20 +97,38 @@ public class SimpleRayTracer implements RayTracer {
 		List<Bucket> buckets = getBuckets();
 		ViewPlane viewPlane = new ViewPlane(hRes, vRes);
 		
+		int totals = (hRes / bucketSize) * (vRes / bucketSize);
+        final CountDownLatch latch = new CountDownLatch(totals);
+		
 		while (!buckets.isEmpty()) {
-			Bucket bucket = buckets.get(0);
+			final Bucket bucket = buckets.get(0);
 			buckets.remove(0);
 			
-			world.getActiveCamera().renderScene(bucket, world, result, viewPlane);
+			final Camera camera = world.getActiveCamera();
+			executor.submit(new BucketWorker(bucket, camera, world, viewPlane, result, new RaytracerCallbacks() {
+				
+				@Override
+				public void onRenderFinished(ArrayIntegerMatrix result) {
+					// TODO fix this
+					return;
+				}
+				
+				@Override
+				public void onBucketFinished(Bucket bucket, ArrayIntegerMatrix result) {
+					latch.countDown();
+					callbacks.onBucketFinished(bucket, result);
+				}
+			}));
 			
-			if (callbacks != null) {
-				callbacks.onBucketFinished(bucket, result);
-			}
 		}
 		
-		if (callbacks != null) {
-			callbacks.onRenderFinished(result);
-		}
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            System.out.println("We fucked up");
+        } finally {
+        	callbacks.onRenderFinished(result);
+        }
 		
 		return result;
 	}
