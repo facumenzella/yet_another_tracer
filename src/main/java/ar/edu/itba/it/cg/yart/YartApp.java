@@ -8,15 +8,16 @@ import ar.edu.itba.it.cg.yart.ui.RenderWindow;
 import ar.edu.itba.it.cg.yart.utils.ImageSaver;
 
 public class YartApp {
-	
+
 	public static void main(String[] args) {
-		
+
 		if (args.length < 2) {
-			throw new WrongParametersException("You fool!! Introduce a name & extension for the image");
+			throw new WrongParametersException(
+					"You fool!! Introduce a name & extension for the image");
 		}
 		final String imageName = args[0];
 		final String imageExtension = args[1];
-		
+
 		World w = new World("jaja");
 		ArrayIntegerMatrix result;
 		
@@ -26,10 +27,9 @@ public class YartApp {
 		result = raytracer.render(w);
 		long end = System.currentTimeMillis();
 		System.out.println(end - start);
-		
+	
 		ImageSaver imageSaver = new ImageSaver();
 		imageSaver.saveImage(result, imageName, imageExtension);
 	}
-	
-	
+
 }

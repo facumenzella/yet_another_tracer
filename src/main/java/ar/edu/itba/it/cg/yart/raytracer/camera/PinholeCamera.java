@@ -42,11 +42,10 @@ public class PinholeCamera extends CameraAbstract {
 
 		for (int row = yStart; row < yFinish; row++) { // up
 			for (int col = xStart; col < xFinish; col++) { // across
-				final double x = adjustedPixelSize
-						* (col - 0.5 * viewPlane.hRes + sp.x);
-				final double y = adjustedPixelSize
-						* (0.5 * viewPlane.vRes - row + sp.y);
-
+				color = world.getBackgroundColor();
+				final double x = adjustedPixelSize * (col - 0.5 * viewPlane.hRes + sp.x);
+				final double y = adjustedPixelSize * (0.5 * viewPlane.vRes - row + sp.y);
+				
 				pp = new Point2d(x, y);
 				ray.direction = this.rayDirection(pp);
 				ShadeRec sr = new ShadeRec(world);
@@ -55,8 +54,6 @@ public class PinholeCamera extends CameraAbstract {
 				if (sr.hitObject) {
 					sr.ray = ray;
 					color = sr.material.shade(sr);
-				} else {
-					color = world.getBackgroundColor();
 				}
 
 				displayPixel(col, row, color, result);
