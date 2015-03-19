@@ -32,7 +32,7 @@ public class SimpleRayTracer implements RayTracer {
 		this.hRes = hRes;
 		this.vRes = vRes;
 		this.bucketSize = bucketSize;
-		this.executor = YartExecutorFactory.newFixedThreadPool(4); // TODO change after tests
+		this.executor = YartExecutorFactory.newFixedThreadPool(5); // TODO change after tests
 	}
 	
 	public void setWorld(final World world) {
@@ -115,20 +115,11 @@ public class SimpleRayTracer implements RayTracer {
 				
 				@Override
 				public void onBucketFinished(Bucket bucket, ArrayIntegerMatrix result) {
-					latch.countDown();
 					callbacks.onBucketFinished(bucket, result);
+					latch.countDown();
 				}
 			}));
-			
 		}
-		
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            System.out.println("We fucked up");
-        } finally {
-        	callbacks.onRenderFinished(result);
-        }
 		
 		return result;
 	}
