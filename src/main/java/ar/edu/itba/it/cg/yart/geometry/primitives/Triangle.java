@@ -66,7 +66,8 @@ public class Triangle extends GeometricObject{
 		if (t < EPSILON) {
 			return Double.NEGATIVE_INFINITY;
 		}
-		
+		sr.normal = normal;
+		sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
 		return t;
 	}
 	
