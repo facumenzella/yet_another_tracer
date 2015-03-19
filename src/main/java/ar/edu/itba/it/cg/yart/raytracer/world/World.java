@@ -15,8 +15,9 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.Sphere;
 import ar.edu.itba.it.cg.yart.light.AmbientLight;
 import ar.edu.itba.it.cg.yart.light.Directional;
 import ar.edu.itba.it.cg.yart.light.Light;
-import ar.edu.itba.it.cg.yart.light.Matte;
 import ar.edu.itba.it.cg.yart.light.PointLight;
+import ar.edu.itba.it.cg.yart.light.materials.Matte;
+import ar.edu.itba.it.cg.yart.light.materials.Phong;
 import ar.edu.itba.it.cg.yart.raytracer.Tracer;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
@@ -46,8 +47,8 @@ public class World {
 	
 	private void buildTestWorld() {
 		final Tracer tracer = new Tracer();
-		final Point3 eye = new Point3(0,0,100);
-		final Point3 lookat = new Point3(0,0,-30); // point where we look at
+		final Point3 eye = new Point3(30,0,100);
+		final Point3 lookat = new Point3(0,0,0); // point where we look at
 		final Vector3d up = new Vector3d(0,1,0); // up vector, rotates around the camera z-axis
 
 		final double distance = 150;
@@ -57,22 +58,28 @@ public class World {
 		
 		setBackgroundColor(Color.blackColor());
 		final Sphere s1 = new Sphere(new Point3(0,0,0), 30.0f);
-		Matte s1m = new Matte();
+		Phong s1m = new Phong();
 		s1m.setCd(Color.redColor());
 		s1m.setKd(0.75);
-		s1m.setKa(0.30);		
+		s1m.setKs(0.3);
+		s1m.setKa(0.3);
+		s1m.setExp(20);
 		s1.setMaterial(s1m);
-		final Sphere s2 = new Sphere(new Point3(-30,-10,20), 13.0f);
-		Matte s2m = new Matte();
+		final Sphere s2 = new Sphere(new Point3(-45,-10,20), 20.0f);
+		Phong s2m = new Phong();
 		s2m.setCd(Color.greenColor());
 		s2m.setKd(0.65);
-		s2m.setKa(0.25);		
+		s2m.setKa(0.25);
+		s2m.setKs(0.4);
+		s2m.setExp(8);
 		s2.setMaterial(s2m);
-		final Sphere s3 = new Sphere(new Point3(35,-15,40), 9.0f);
-		Matte s3m = new Matte();	
+		final Sphere s3 = new Sphere(new Point3(25,-20,23), 10.0f);
+		Phong s3m = new Phong();	
 		s3m.setCd(Color.blueColor());
 		s3m.setKd(0.85);
-		s3m.setKa(0.25);		
+		s3m.setKa(0.25);
+		s3m.setKs(0.3);
+		s3m.setExp(10);
 		s3.setMaterial(s3m);
 		final Disc d1 = new Disc(new Point3(0, 0, 0), new Vector3d(5,2,2), 30);
 		Matte d1m = new Matte();
@@ -110,17 +117,24 @@ public class World {
 		right.setKd(0.50);
 		right.setKa(0.15);
 		backgroundRight.setMaterial(right);
+		final Plane floor = new Plane(new Point3(0,-30,0), new Vector3d(0,1,0));
+		Matte floorM = new Matte();
+		floorM.setCd(new Color(0.4, 0.4, 0.4));
+		floorM.setKd(0.50);
+		floorM.setKa(0.15);
+		floor.setMaterial(right);
 		
 		final Directional light1 = new Directional(2.0,Color.whiteColor(),new Vector3d(-2,7,3));
 		
-		final PointLight light2 = new PointLight(2,Color.whiteColor(),new Vector3d(35,10,40));
+		final PointLight light2 = new PointLight(2.5,Color.whiteColor(),new Vector3d(40,40,40));
 		//addLight(light1);
 		addLight(light2);
 		
 		addObject(s1);
 		addObject(s2);
 		addObject(s3);
-		//addObject(d1);
+//		addObject(d1);
+		addObject(floor);
 //		addObject(background);
 //		addObject(backgroundLeft);
 //		addObject(backgroundBottom);
