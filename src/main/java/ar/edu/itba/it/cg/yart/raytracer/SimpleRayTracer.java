@@ -90,6 +90,29 @@ public class SimpleRayTracer implements RayTracer {
 
 		return buckets;
 	}
+	
+	public ArrayIntegerMatrix serialRender(final World world) {
+		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
+		List<Bucket> buckets = getBuckets();
+		ViewPlane viewPlane = new ViewPlane(hRes, vRes);
+		
+		while (!buckets.isEmpty()) {
+			Bucket bucket = buckets.get(0);
+			buckets.remove(0);
+			
+			world.getActiveCamera().renderScene(bucket, world, result, viewPlane);
+			
+			if (callbacks != null) {
+				callbacks.onBucketFinished(bucket, result);
+			}
+		}
+		
+		if (callbacks != null) {
+			callbacks.onRenderFinished(result);
+		}
+		
+		return result;
+	}
 
 	@Override
 	public ArrayIntegerMatrix render(final World world) {
@@ -115,7 +138,7 @@ public class SimpleRayTracer implements RayTracer {
 				
 				@Override
 				public void onBucketFinished(Bucket bucket, ArrayIntegerMatrix result) {
-//					callbacks.onBucketFinished(bucket, result);
+					callbacks.onBucketFinished(bucket, result);
 					latch.countDown();
 				}
 			}));	
