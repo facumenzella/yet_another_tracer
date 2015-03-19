@@ -23,6 +23,7 @@ public class YartApp {
 		
 		SimpleRayTracer raytracer = new SimpleRayTracer(640, 480, 256);
 		new RenderWindow(raytracer);
+
 		long start = System.currentTimeMillis();
 		result = raytracer.render(w);
 		long end = System.currentTimeMillis();
