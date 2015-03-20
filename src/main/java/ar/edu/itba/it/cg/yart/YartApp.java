@@ -20,10 +20,12 @@ public class YartApp {
 		World w = new World("jaja");
 		ArrayIntegerMatrix result;
 		
-		SimpleRayTracer raytracer = new SimpleRayTracer(640, 480, 32);
+		SimpleRayTracer raytracer = new SimpleRayTracer(640, 480, 256);
 		new RenderWindow(raytracer);
-		
+		long start = System.currentTimeMillis();
 		result = raytracer.render(w);
+		long end = System.currentTimeMillis();
+		System.out.println(end - start);
 		
 		ImageSaver imageSaver = new ImageSaver();
 		imageSaver.saveImage(result, imageName, imageExtension);

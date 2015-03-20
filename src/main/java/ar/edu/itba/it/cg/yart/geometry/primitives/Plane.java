@@ -6,25 +6,34 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
 public class Plane extends GeometricObject {
-	
+
 	protected Point3 p;
 	private Vector3d normal;
-	
+
 	public Plane(final Point3 p, final Vector3d normal) {
 		this.p = p;
 		this.normal = normal;
 	}
-	
+
 	@Override
 	public double hit(final Ray ray, final ShadeRec sr) {
 		double t = (p.sub(ray.origin)).dot(normal) / ray.direction.dot(normal);
-		
+
 		if (t > EPSILON) {
 			sr.normal = normal;
 			sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
 			return t;
+		} else {
+			return Double.NEGATIVE_INFINITY;
 		}
-		else {
+	}
+
+	@Override
+	public double shadowHit(final Ray ray) {
+		double t = (p.sub(ray.origin)).dot(normal) / ray.direction.dot(normal);
+		if (t > EPSILON) {
+			return t;
+		} else {
 			return Double.NEGATIVE_INFINITY;
 		}
 	}

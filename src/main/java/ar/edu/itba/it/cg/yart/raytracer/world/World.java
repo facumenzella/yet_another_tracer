@@ -47,12 +47,12 @@ public class World {
 	
 	private void buildTestWorld() {
 		final Tracer tracer = new Tracer();
-		final Point3 eye = new Point3(30,0,100);
+		final Point3 eye = new Point3(0,0,200);
 		final Point3 lookat = new Point3(0,0,0); // point where we look at
 		final Vector3d up = new Vector3d(0,1,0); // up vector, rotates around the camera z-axis
 
-		final double distance = 150;
-		final double zoom = 2;
+		final double distance = 500;
+		final double zoom = 1;
 		final PinholeCamera camera = new PinholeCamera(tracer, eye, lookat, up, distance, zoom);
 		addCamera(camera);
 		
@@ -125,9 +125,9 @@ public class World {
 		floor.setMaterial(right);
 		
 		final Directional light1 = new Directional(2.0,Color.whiteColor(),new Vector3d(-2,7,3));
+		final PointLight light2 = new PointLight(2,Color.whiteColor(),new Vector3d(60,40,30));
 		
-		final PointLight light2 = new PointLight(2,Color.whiteColor(),new Vector3d(40,40,40));
-		//addLight(light1);
+		addLight(light1);
 		addLight(light2);
 		
 		addObject(s1);

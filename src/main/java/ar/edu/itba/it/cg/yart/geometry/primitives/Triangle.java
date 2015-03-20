@@ -80,5 +80,11 @@ public class Triangle extends GeometricObject{
 		
 		return new Vector3d(n.x / length, n.y / length, n.z / length);
 	}
+
+	@Override
+	public double shadowHit(final Ray ray) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 }

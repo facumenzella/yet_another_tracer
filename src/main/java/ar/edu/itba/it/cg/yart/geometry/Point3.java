@@ -23,5 +23,9 @@ public class Point3 {
 	public Point3 add(final Vector3d other) {
 		return new Point3(x + other.x, y + other.y, z + other.z);
 	}
+	
+	public double distance(final Point3 other) {
+		return this.sub(other).length;
+	}
 
 }

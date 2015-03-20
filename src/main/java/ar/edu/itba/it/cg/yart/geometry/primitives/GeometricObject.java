@@ -23,4 +23,6 @@ public abstract class GeometricObject {
 		this.material = material;
 	}
 	public abstract double hit(final Ray ray, final ShadeRec sr);
+	
+	public abstract double shadowHit(final Ray ray);
 }
