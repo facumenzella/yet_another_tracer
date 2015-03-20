@@ -7,6 +7,7 @@ import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.light.Light;
 import ar.edu.itba.it.cg.yart.light.brdf.GlossySpecular;
 import ar.edu.itba.it.cg.yart.light.brdf.Lambertian;
+import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
 public class Phong extends MaterialAbstract{
@@ -25,8 +26,16 @@ public class Phong extends MaterialAbstract{
 			double ndotwi = sr.normal.dot(wi);
 			
 			if (ndotwi > 0.0) {
-				final Color aux = (diffuseBRDF.f(sr, wo, wi).add(specularBRDF.f(sr, wo, wi))).multiply(light.L(sr)).multiply(ndotwi);
-				colorL.addEquals(aux);
+				boolean inShadow = false;
+				
+				if(light.castShadows()){
+					Ray shadowRay = new Ray(sr.hitPoint,wi);
+					inShadow = light.inShadow(shadowRay, sr);
+				}
+				if(!inShadow){
+					final Color aux = (diffuseBRDF.f(sr, wo, wi).add(specularBRDF.f(sr, wo, wi))).multiply(light.L(sr)).multiply(ndotwi);
+					colorL.addEquals(aux);					
+				}
 			}
 		}
 		
