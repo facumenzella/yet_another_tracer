@@ -20,7 +20,7 @@ public class YartApp {
 
 		World w = new World("jaja");
 		ArrayIntegerMatrix result;
-		
+
 		SimpleRayTracer raytracer = new SimpleRayTracer(640, 480, 256);
 		new RenderWindow(raytracer);
 
