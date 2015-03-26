@@ -21,6 +21,7 @@ public class SimpleRayTracer implements RayTracer {
 	private int bucketSize;
 	private RaytracerCallbacks callbacks;
 	private final ExecutorService executor;
+	private final List<Bucket> buckets;
 	
 	public interface RaytracerCallbacks {
 		public void onBucketFinished(final Bucket bucket, final ArrayIntegerMatrix result);
@@ -33,6 +34,7 @@ public class SimpleRayTracer implements RayTracer {
 		this.vRes = vRes;
 		this.bucketSize = bucketSize;
 		this.executor = YartExecutorFactory.newFixedThreadPool(3); // TODO change after tests
+		this.buckets = getBuckets();
 	}
 	
 	public void setWorld(final World world) {
@@ -117,7 +119,6 @@ public class SimpleRayTracer implements RayTracer {
 	@Override
 	public ArrayIntegerMatrix render(final World world) {
 		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
-		List<Bucket> buckets = getBuckets();
 		ViewPlane viewPlane = new ViewPlane(hRes, vRes);
 		
 		int totals = buckets.size();
