@@ -16,6 +16,7 @@ public class Triangle extends GeometricObject{
 		this.pointB = new Point3(0, 0, 1);
 		this.pointC = new Point3(1,0,0);
 		this.normal = this.normal(pointA, pointB, pointC);
+		updateBoundingBox();
 	}
 	
 	public Triangle(final Point3 pointA, final Point3 pointB, final Point3 pointC) {
@@ -23,10 +24,15 @@ public class Triangle extends GeometricObject{
 		this.pointB = pointB;
 		this.pointC = pointC;
 		this.normal = this.normal(pointA, pointB, pointC);
+		updateBoundingBox();
 	}
 
 	@Override
 	public double hit(Ray ray, ShadeRec sr) {
+		if (!getBoundingBox().hit(ray)) {
+			return Double.NEGATIVE_INFINITY;
+		}
+		
 		// This is too much
 		// Check out Ray Tracing from the ground up (page 367)
 		final double a = this.pointA.x - this.pointB.x, b = this.pointA.x - this.pointC.x;
@@ -83,8 +89,19 @@ public class Triangle extends GeometricObject{
 
 	@Override
 	public double shadowHit(final Ray ray) {
-		// TODO Auto-generated method stub
-		return 0;
+		return Double.NEGATIVE_INFINITY;
+	}
+
+	@Override
+	public BoundingBox createBoundingBox() {
+		return (new BoundingBox(new Point3(Math.min(
+				Math.min(pointA.x, pointB.x), pointC.x)
+				- EPSILON, Math.min(Math.min(pointA.y, pointB.y), pointC.y)
+				- EPSILON, Math.min(Math.min(pointA.z, pointB.z), pointC.z)
+				- EPSILON), new Point3(Math.max(Math.max(pointA.x, pointB.x),
+				pointC.x) + EPSILON, Math.max(Math.max(pointA.y, pointB.y),
+				pointC.y) + EPSILON, Math.max(Math.max(pointA.z, pointB.z),
+				pointC.z) + EPSILON)));
 	}
 	
 }
