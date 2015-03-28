@@ -13,10 +13,15 @@ public class Sphere extends GeometricObject {
 	public Sphere(final Point3 center, final double radius) {
 		this.center = center;
 		this.radius = radius;
+		updateBoundingBox();
 	}
 
 	@Override
 	public double hit(final Ray ray, final ShadeRec sr) {
+		if (!getBoundingBox().hit(ray)) {
+			return Double.NEGATIVE_INFINITY;
+		}
+		
 		double t;
 		Vector3d tmp = ray.origin.sub(center);
 		double a = ray.direction.dot(ray.direction);
@@ -81,6 +86,12 @@ public class Sphere extends GeometricObject {
 		}
 		
 		return Double.NEGATIVE_INFINITY;
+	}
+
+	@Override
+	public BoundingBox createBoundingBox() {
+		return new BoundingBox(new Point3(center.x - radius, center.y - radius, center.z - radius),
+				new Point3(center.x + radius, center.y + radius, center.z + radius));
 	}
 
 }

@@ -13,10 +13,11 @@ public class Plane extends GeometricObject {
 	public Plane(final Point3 p, final Vector3d normal) {
 		this.p = p;
 		this.normal = normal;
+		updateBoundingBox();
 	}
 
 	@Override
-	public double hit(final Ray ray, final ShadeRec sr) {
+	public double hit(final Ray ray, final ShadeRec sr) {		
 		double t = (p.sub(ray.origin)).dot(normal) / ray.direction.dot(normal);
 
 		if (t > EPSILON) {
@@ -36,6 +37,12 @@ public class Plane extends GeometricObject {
 		} else {
 			return Double.NEGATIVE_INFINITY;
 		}
+	}
+
+	@Override
+	public BoundingBox createBoundingBox() {
+		// Infinite plane has no Bounding Box
+		return null;
 	}
 
 }
