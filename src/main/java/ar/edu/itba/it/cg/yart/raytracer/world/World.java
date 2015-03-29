@@ -12,6 +12,7 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.Disc;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Plane;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Sphere;
+import ar.edu.itba.it.cg.yart.geometry.primitives.mesh.Mesh;
 import ar.edu.itba.it.cg.yart.light.AmbientLight;
 import ar.edu.itba.it.cg.yart.light.Directional;
 import ar.edu.itba.it.cg.yart.light.Light;
@@ -124,6 +125,15 @@ public class World {
 		floorM.setKa(0.15);
 		floor.setMaterial(right);
 		
+		Mesh mesh = new Mesh();
+		Phong mm = new Phong();
+		mm.setCd(Color.greenColor());
+		mm.setKd(0.65);
+		mm.setKa(0.25);
+		mm.setKs(0.4);
+		mm.setExp(8);
+		mesh.setMaterial(mm);
+		
 		final Directional light1 = new Directional(2.0,Color.whiteColor(),new Vector3d(-2,7,3));
 		final PointLight light2 = new PointLight(2,Color.whiteColor(),new Vector3d(60,40,30));
 		
@@ -133,6 +143,7 @@ public class World {
 		addObject(s1);
 		addObject(s2);
 		addObject(s3);
+		addObject(mesh);
 //		addObject(d1);
 		addObject(floor);
 //		addObject(background);
@@ -170,6 +181,14 @@ public class World {
 	public void addObject(final GeometricObject object) {
 		if (object != null) {
 			objects.add(object);
+		}
+	}
+	
+	public void addObject(final Mesh mesh) {
+		if (mesh != null) {
+			for (GeometricObject t : mesh.triangles) {
+				addObject(t);
+			}
 		}
 	}
 	
