@@ -1,6 +1,5 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives;
 
-import ar.edu.itba.it.cg.yart.acceleration_estructures.Side;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;

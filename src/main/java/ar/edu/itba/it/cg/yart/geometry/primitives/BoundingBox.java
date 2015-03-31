@@ -6,8 +6,8 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 public class BoundingBox {
 	
 	private static final double EPSILON = 0.0001;
-	private Point3 p0;
-	private Point3 p1;
+	public Point3 p0;
+	public Point3 p1;
 	
 	public BoundingBox(final Point3 p0, final Point3 p1) {
 		this.p0 = p0;
@@ -77,5 +77,11 @@ public class BoundingBox {
 		return (t0 < t1 && t1 > EPSILON);
 	}
 
-
+	public boolean boxIsInside(final BoundingBox box) {
+		if ( (box.p0.x >= this.p0.x && box.p0.z <= this.p0.z) || (box.p1.x <= this.p1.x && box.p1.y <= this.p1.y) ) {
+			return true;
+		}
+		return false;
+	}
+	
 }

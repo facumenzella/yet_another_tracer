@@ -50,32 +50,10 @@ public class Plane extends GeometricObject {
 		// check if the point belongs to the plane
 		final double belongs = (normal.x - point.x) + (normal.y - point.y) + (normal.z - point.z);
 		if (belongs == 0) {
-			return Side.INTERSECTION;
+			return Side.INSIDE;
 		}
 		
-		// We take the inner product and check the sign of it
-		Vector3d unitNormal = this.normal.normalized;
-		Vector3d vectorToPoint = this.p.sub(point);
-		
-		final double dot = unitNormal.dot(vectorToPoint);
-		// We arbitraty define >= 0 as RIGHT and <0 as LEFT
-		if (dot >= 0) {
-			 return Side.RIGHT;
-		} else {
-			return Side.LEFT;
-		}
-		
+		return Side.OUTSIDE;
 	}
-
-	@Override
-	public Side sideOfPlane(Plane plane) {
-		Vector3d aNormal = plane.normal.normalized;
-		Vector3d myNormal = this.normal.normalized;
-		
-		
-		
-		
-		
-	}
-
+	
 }
