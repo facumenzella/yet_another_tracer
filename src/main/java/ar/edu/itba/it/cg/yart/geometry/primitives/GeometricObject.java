@@ -1,11 +1,12 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives;
 
 import ar.edu.itba.it.cg.yart.color.Color;
+import ar.edu.itba.it.cg.yart.geometry.Body;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
-public abstract class GeometricObject {
+public abstract class GeometricObject implements Body{
 
 	protected static final double EPSILON = 0.0001;
 	public Color color;
