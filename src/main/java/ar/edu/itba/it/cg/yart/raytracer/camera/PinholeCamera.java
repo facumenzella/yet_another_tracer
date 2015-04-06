@@ -20,12 +20,13 @@ public class PinholeCamera extends CameraAbstract {
 
 	public PinholeCamera(final Tracer tracer, final Point3 eye,
 			final Point3 lookat, final Vector3d up, final double distance,
-			final double zoom, final int viewPlaneHRes, final int viewPlaneVRes, final double fov) {
+			final double zoom, final int viewPlaneHRes, final int viewPlaneVRes, final double fov, 
+			final int numSamples) {
 		super(tracer, eye, lookat, up);
 		this.distance = distance;
 		this.zoom = zoom;
 		final double pixelSize = this.getPixeSize(viewPlaneHRes, viewPlaneVRes, fov, distance);
-		this.vp = new ViewPlane(viewPlaneHRes, viewPlaneVRes, pixelSize);
+		this.vp = new ViewPlane(viewPlaneHRes, viewPlaneVRes, pixelSize, numSamples);
 	}
 
 	@Override
@@ -37,6 +38,8 @@ public class PinholeCamera extends CameraAbstract {
 		Point2d sp = new Point2d(0, 0);
 		Point2d pp;
 		Ray ray = new Ray(this.eye);
+		final int n = (int)Math.sqrt((double)viewPlane.numSamples);
+		final double invNumSamples = 1/(double)viewPlane.numSamples;
 
 		int xStart = bucket.getX();
 		int xFinish = xStart + bucket.getWidth();
@@ -45,20 +48,30 @@ public class PinholeCamera extends CameraAbstract {
 
 		for (int row = yStart; row < yFinish; row++) { // up
 			for (int col = xStart; col < xFinish; col++) { // across
-				color = world.getBackgroundColor();
-				final double x = adjustedPixelSize * (col - 0.5 * viewPlane.hRes + sp.x);
-				final double y = adjustedPixelSize * (0.5 * viewPlane.vRes - row + sp.y);
-				
-				pp = new Point2d(x, y);
-				ray.direction = this.rayDirection(pp);
-				ShadeRec sr = new ShadeRec(world);
-				// TODO: check for better style
-				sr = new ShadeRec(tracer.traceRay(ray, world.getObjects(), sr));
-				if (sr.hitObject) {
-					sr.ray = ray;
-					color = sr.material.shade(sr);
-				}
+				color = Color.blackColor();
+				for (int i = 0; i < n; i++) {
+					for (int j = 0; j < n; j++) {
+						final double x = adjustedPixelSize
+								* (col - 0.5 * viewPlane.hRes + sp.x + (j + Math.random())/n);
+						final double y = adjustedPixelSize
+								* (0.5 * viewPlane.vRes - row + sp.y + (i + Math.random())/n);
 
+						pp = new Point2d(x, y);
+						ray.direction = this.rayDirection(pp);
+						ShadeRec sr = new ShadeRec(world);
+						// TODO: check for better style
+						sr = new ShadeRec(tracer.traceRay(ray,
+								world.getObjects(), sr));
+						if (sr.hitObject) {
+							sr.ray = ray;
+							color.addEquals(sr.material.shade(sr));
+						} else {
+							color.addEquals(world.getBackgroundColor());
+						}
+						
+					}
+				}
+				color.multiplyEquals(invNumSamples);
 				displayPixel(col, row, color, result);
 			}
 		}
