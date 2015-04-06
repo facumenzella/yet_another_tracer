@@ -8,11 +8,14 @@ public class ViewPlane {
 	public int hRes;
 	public int vRes;
 	public double pixelSize;
+	public int numSamples;
 
-	public ViewPlane(final int hRes, final int vRes, final double pixelSize2) {
+	public ViewPlane(final int hRes, final int vRes, final double pixelSize2,
+			final int numSamples) {
 		this.hRes = hRes;
 		this.vRes = vRes;
 		this.pixelSize = pixelSize2;
+		this.numSamples = numSamples;
 	}
 
 	public List<Bucket> dividePlane(final int bucketSize) {

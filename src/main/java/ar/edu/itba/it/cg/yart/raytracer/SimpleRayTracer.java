@@ -17,7 +17,7 @@ import ar.edu.itba.it.cg.yart.utils.YartExecutorFactory;
 public class SimpleRayTracer implements RayTracer {
 
 	private World world;
-	
+
 	private int hRes;
 	private int vRes;
 	private int bucketSize;
@@ -25,27 +25,30 @@ public class SimpleRayTracer implements RayTracer {
 	private final ExecutorService executor;
 	private final List<Bucket> buckets;
 	final Camera camera;
-	
+
 	public interface RaytracerCallbacks {
-		public void onBucketFinished(final Bucket bucket, final ArrayIntegerMatrix result);
+		public void onBucketFinished(final Bucket bucket,
+				final ArrayIntegerMatrix result);
+
 		public void onRenderFinished(final ArrayIntegerMatrix result);
 	}
+
 	
 	public SimpleRayTracer(final int hRes, final int vRes, final double fov, final int bucketSize, 
-			final double tMax, final double distance, final int zoom) {
+			final double tMax, final double distance, final int zoom, final int numSamples) {
+
 		// TODO : change how we create the world
 		this.hRes = hRes;
 		this.vRes = vRes;
 		this.bucketSize = bucketSize;
 		this.executor = YartExecutorFactory.newFixedThreadPool(2); // TODO change after tests
-		this.buckets = getBuckets();
-		
+		this.buckets = getBuckets();		
 		final Tracer tracer = new Tracer();
 		final Point3 eye = new Point3(0,0,200);
 		final Point3 lookat = new Point3(0,0,0); // point where we look at
 		final Vector3d up = new Vector3d(0,1,0); // up vector, rotates around the camera z-axis
-
-		this.camera = new PinholeCamera(tracer, eye, lookat, up, distance, zoom, hRes, vRes, fov);
+		this.camera = new PinholeCamera(tracer, eye, 
+				lookat, up, distance, zoom, hRes, vRes, fov, numSamples);
 	}
 
 	public ArrayIntegerMatrix serialRender(final World world) {
@@ -55,18 +58,19 @@ public class SimpleRayTracer implements RayTracer {
 		while (!buckets.isEmpty()) {
 			Bucket bucket = buckets.get(0);
 			buckets.remove(0);
-			
-			world.getActiveCamera().renderScene(bucket, world, result, viewPlane);
-			
+
+			world.getActiveCamera().renderScene(bucket, world, result,
+					viewPlane);
+
 			if (callbacks != null) {
 				callbacks.onBucketFinished(bucket, result);
 			}
 		}
-		
+
 		if (callbacks != null) {
 			callbacks.onRenderFinished(result);
 		}
-		
+
 		return result;
 	}
 	
@@ -78,39 +82,41 @@ public class SimpleRayTracer implements RayTracer {
 	public ArrayIntegerMatrix render(final World world) {
 		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
 		ViewPlane viewPlane = camera.getViewPlane();
-		
+
 		int totals = buckets.size();
-        final CountDownLatch latch = new CountDownLatch(totals);
-		
+		final CountDownLatch latch = new CountDownLatch(totals);
+
 		while (!buckets.isEmpty()) {
 			final Bucket bucket = buckets.get(0);
 			buckets.remove(0);
-			
+
 			final Camera camera = world.getActiveCamera();
-			executor.submit(new BucketWorker(bucket, camera, world, viewPlane, result, new RaytracerCallbacks() {
-				
-				@Override
-				public void onRenderFinished(ArrayIntegerMatrix result) {
-					// TODO fix this
-					return;
-				}
-				
-				@Override
-				public void onBucketFinished(Bucket bucket, ArrayIntegerMatrix result) {
-					callbacks.onBucketFinished(bucket, result);
-					latch.countDown();
-				}
-			}));	
+			executor.submit(new BucketWorker(bucket, camera, world, viewPlane,
+					result, new RaytracerCallbacks() {
+
+						@Override
+						public void onRenderFinished(ArrayIntegerMatrix result) {
+							// TODO fix this
+							return;
+						}
+
+						@Override
+						public void onBucketFinished(Bucket bucket,
+								ArrayIntegerMatrix result) {
+							callbacks.onBucketFinished(bucket, result);
+							latch.countDown();
+						}
+					}));
 		}
-		
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            System.out.println("We fucked up");
-        } finally {
-        	callbacks.onRenderFinished(result);
-        }
-		
+
+		try {
+			latch.await();
+		} catch (InterruptedException e) {
+			System.out.println("We fucked up");
+		} finally {
+			callbacks.onRenderFinished(result);
+		}
+
 		return result;
 	}
 	

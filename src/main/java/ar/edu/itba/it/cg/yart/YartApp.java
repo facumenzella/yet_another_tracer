@@ -28,11 +28,12 @@ public class YartApp {
 		final double tMax = 1000;
 		final double distance = 500;
 		final int zoom = 1;
+		final int numSamples = 16;
 		
 		World w = new World("jaja");
 		ArrayIntegerMatrix result;
 
-		RayTracer raytracer = new SimpleRayTracer(hRes, vRes, fov, bucketSize, tMax, distance, zoom);
+		RayTracer raytracer = new SimpleRayTracer(hRes, vRes, fov, bucketSize, tMax, distance, zoom, numSamples);
 		raytracer.setWorld(w);
 		new RenderWindow(raytracer);
 
