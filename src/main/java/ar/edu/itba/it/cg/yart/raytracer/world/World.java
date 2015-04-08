@@ -36,6 +36,7 @@ public class World {
 	 */
 	public World() {
 		this.ambientLight = new AmbientLight();
+		this.cameras = new HashSet<Camera>();
 	}
 	
 	
@@ -45,17 +46,7 @@ public class World {
 		buildTestWorld();
 	}
 	
-	private void buildTestWorld() {
-		final Tracer tracer = new Tracer();
-		final Point3 eye = new Point3(0,0,200);
-		final Point3 lookat = new Point3(0,0,0); // point where we look at
-		final Vector3d up = new Vector3d(0,1,0); // up vector, rotates around the camera z-axis
-
-		final double distance = 500;
-		final double zoom = 1;
-		final PinholeCamera camera = new PinholeCamera(tracer, eye, lookat, up, distance, zoom);
-		addCamera(camera);
-		
+	private void buildTestWorld() {		
 		setBackgroundColor(Color.blackColor());
 		final Sphere s1 = new Sphere(new Point3(0,0,0), 30.0f);
 		Phong s1m = new Phong();
@@ -178,10 +169,6 @@ public class World {
 	}
 	
 	public void addCamera(final Camera camera) {
-		if (cameras == null) {
-			cameras = new HashSet<Camera>();
-		}
-		
 		if (cameras.isEmpty()) {
 			setActiveCamera(camera);
 		}
@@ -195,5 +182,9 @@ public class World {
 	
 	public List<Light> getLights() {
 		return lights;
+	}
+	
+	public void setCamera(final Camera camera) {
+		this.addCamera(camera);
 	}
 }
