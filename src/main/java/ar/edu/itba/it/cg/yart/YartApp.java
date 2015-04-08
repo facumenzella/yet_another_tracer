@@ -19,6 +19,8 @@ public class YartApp {
 		final String imageName = args[0];
 		final String imageExtension = args[1];
 
+		// Wanna see something cool?
+		// Try 1920 * 1080
 		final int hRes = 640;
 		final int vRes = 480;
 		final double fov = 30;

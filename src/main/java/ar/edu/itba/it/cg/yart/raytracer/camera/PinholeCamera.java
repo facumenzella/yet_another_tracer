@@ -75,6 +75,7 @@ public class PinholeCamera extends CameraAbstract {
 		double pixelSize = 1;
 		
 		final double min = Math.min(hRes, vRes);
+		// We need radians, not degrees!!!
 		final double radians = Math.PI * fov / 180;
 		final double length = 2 * distance * Math.tan(radians/2);
 
