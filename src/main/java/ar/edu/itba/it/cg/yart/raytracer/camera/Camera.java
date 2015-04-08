@@ -6,6 +6,8 @@ import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
 public interface Camera {
+	
+	public ViewPlane getViewPlane();
 	public void renderScene(final Bucket bucket, final World world,
 			final ArrayIntegerMatrix result, final ViewPlane viewPlane);
 }

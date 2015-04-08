@@ -7,11 +7,12 @@ public class ViewPlane {
 
 	public int hRes;
 	public int vRes;
-	public float pixelSize = 1;
+	public double pixelSize;
 
-	public ViewPlane(final int hRes, final int vRes) {
+	public ViewPlane(final int hRes, final int vRes, final double pixelSize2) {
 		this.hRes = hRes;
 		this.vRes = vRes;
+		this.pixelSize = pixelSize2;
 	}
 
 	public List<Bucket> dividePlane(final int bucketSize) {
