@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
+import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
+import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
-import ar.edu.itba.it.cg.yart.utils.ImageSaver;
 import ar.edu.itba.it.cg.yart.utils.YartExecutorFactory;
 
 public class SimpleRayTracer implements RayTracer {
@@ -22,6 +24,7 @@ public class SimpleRayTracer implements RayTracer {
 	private RaytracerCallbacks callbacks;
 	private final ExecutorService executor;
 	private final List<Bucket> buckets;
+	final Camera camera;
 	
 	public interface RaytracerCallbacks {
 		public void onBucketFinished(final Bucket bucket, final ArrayIntegerMatrix result);
@@ -35,64 +38,17 @@ public class SimpleRayTracer implements RayTracer {
 		this.bucketSize = bucketSize;
 		this.executor = YartExecutorFactory.newFixedThreadPool(3); // TODO change after tests
 		this.buckets = getBuckets();
-	}
-	
-	public void setWorld(final World world) {
-		this.world = world;
-	}
-	
-	public void setCallbacks(final RaytracerCallbacks callbacks) {
-		this.callbacks = callbacks;
-	}
-	
-	@Override
-	public void start(final String imageName, final String imageExtension) {
-		long startTime = System.currentTimeMillis();
-		ArrayIntegerMatrix result = render(world);
-		long endTime = System.currentTimeMillis();
-		long timeTaken = endTime - startTime;
-		System.out.println("Finished rendering the scene in " + timeTaken + "ms");
+		
+		final Tracer tracer = new Tracer();
+		final Point3 eye = new Point3(0,0,200);
+		final Point3 lookat = new Point3(0,0,0); // point where we look at
+		final Vector3d up = new Vector3d(0,1,0); // up vector, rotates around the camera z-axis
 
-		ImageSaver imageSaver = new ImageSaver();
-		imageSaver.saveImage(result, imageName, imageExtension);
-	}
-	
-	public int getHorizontalRes() {
-		return hRes;
-	}
-	
-	public int getVerticalRes() {
-		return vRes;
-	}
-	
-	public int getBucketSize() {
-		return bucketSize;
+		final double distance = 500;
+		final double zoom = 1;
+		this.camera = new PinholeCamera(tracer, eye, lookat, up, distance, zoom, hRes, vRes);
 	}
 
-	@Override
-	public List<Bucket> getBuckets() {
-		List<Bucket> buckets = new LinkedList<Bucket>();
-		int xBuckets = (int) Math.ceil(hRes / ((float) bucketSize));
-		int yBuckets = (int) Math.ceil(vRes / ((float) bucketSize));
-
-		for (int i = 0; i < yBuckets; i++) {
-			for (int j = 0; j < xBuckets; j++) {
-				int width = bucketSize;
-				int height = bucketSize;
-
-				if (j == (xBuckets - 1))
-					width = hRes - j * bucketSize;
-
-				if (i == (yBuckets - 1))
-					height = vRes - i * bucketSize;
-
-				buckets.add(new Bucket(j * bucketSize, i * bucketSize, width, height));
-			}
-		}
-
-		return buckets;
-	}
-	
 	public ArrayIntegerMatrix serialRender(final World world) {
 		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
 		List<Bucket> buckets = getBuckets();
@@ -114,6 +70,10 @@ public class SimpleRayTracer implements RayTracer {
 		}
 		
 		return result;
+	}
+	
+	public ArrayIntegerMatrix render() {
+		return this.render(this.world);
 	}
 
 	@Override
@@ -156,4 +116,54 @@ public class SimpleRayTracer implements RayTracer {
 		return result;
 	}
 	
+	@Override
+	public void setWorld(final World world) {
+		this.world = world;
+		world.addCamera(this.camera);
+	}
+	
+	@Override
+	public void setCallbacks(final RaytracerCallbacks callbacks) {
+		this.callbacks = callbacks;
+	}
+	
+	@Override
+	public int getHorizontalRes() {
+		return hRes;
+	}
+	
+	@Override
+	public int getVerticalRes() {
+		return vRes;
+	}
+	
+	
+	@Override	
+	public int getBucketSize() {
+		return bucketSize;
+	}
+
+	@Override
+	public List<Bucket> getBuckets() {
+		List<Bucket> buckets = new LinkedList<Bucket>();
+		int xBuckets = (int) Math.ceil(hRes / ((float) bucketSize));
+		int yBuckets = (int) Math.ceil(vRes / ((float) bucketSize));
+
+		for (int i = 0; i < yBuckets; i++) {
+			for (int j = 0; j < xBuckets; j++) {
+				int width = bucketSize;
+				int height = bucketSize;
+
+				if (j == (xBuckets - 1))
+					width = hRes - j * bucketSize;
+
+				if (i == (yBuckets - 1))
+					height = vRes - i * bucketSize;
+
+				buckets.add(new Bucket(j * bucketSize, i * bucketSize, width, height));
+			}
+		}
+
+		return buckets;
+	}
 }

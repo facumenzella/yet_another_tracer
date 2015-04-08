@@ -16,13 +16,15 @@ public class PinholeCamera extends CameraAbstract {
 
 	private final double distance;
 	private final double zoom;
+	public final ViewPlane vp;
 
 	public PinholeCamera(final Tracer tracer, final Point3 eye,
 			final Point3 lookat, final Vector3d up, final double distance,
-			final double zoom) {
+			final double zoom, final int viewPlaneHRes, final int viewPlaneVRes) {
 		super(tracer, eye, lookat, up);
 		this.distance = distance;
 		this.zoom = zoom;
+		this.vp = new ViewPlane(viewPlaneHRes, viewPlaneVRes);
 	}
 
 	@Override
