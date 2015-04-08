@@ -20,11 +20,12 @@ public class PinholeCamera extends CameraAbstract {
 
 	public PinholeCamera(final Tracer tracer, final Point3 eye,
 			final Point3 lookat, final Vector3d up, final double distance,
-			final double zoom, final int viewPlaneHRes, final int viewPlaneVRes) {
+			final double zoom, final int viewPlaneHRes, final int viewPlaneVRes, final double fov) {
 		super(tracer, eye, lookat, up);
 		this.distance = distance;
 		this.zoom = zoom;
-		this.vp = new ViewPlane(viewPlaneHRes, viewPlaneVRes);
+		final double pixelSize = this.getPixeSize(viewPlaneHRes, viewPlaneVRes, fov, distance);
+		this.vp = new ViewPlane(viewPlaneHRes, viewPlaneVRes, pixelSize);
 	}
 
 	@Override
@@ -69,6 +70,22 @@ public class PinholeCamera extends CameraAbstract {
 				w.scale(distance));
 		return dir.normalized;
 	}
+	
+	private double getPixeSize(final int hRes, final int vRes, final double fov, final double distance) {
+		double pixelSize = 1;
+		
+		final double min = Math.min(hRes, vRes);
+		final double radians = Math.PI * fov / 180;
+		final double length = 2 * distance * Math.tan(radians/2);
+
+		if (min == hRes) {
+			pixelSize = length / hRes;
+		} else {
+			pixelSize = length / vRes;
+		}
+		
+		return Math.abs(pixelSize);
+	}
 
 	private void displayPixel(final int col, final int row, final Color color,
 			final ArrayIntegerMatrix result) {
@@ -93,6 +110,11 @@ public class PinholeCamera extends CameraAbstract {
 			return c.multiply(1/maxValue);
 		}
 		return c;
+	}
+
+	@Override
+	public ViewPlane getViewPlane() {
+		return this.vp;
 	}
 
 }

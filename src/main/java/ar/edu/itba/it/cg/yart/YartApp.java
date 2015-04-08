@@ -19,10 +19,18 @@ public class YartApp {
 		final String imageName = args[0];
 		final String imageExtension = args[1];
 
+		final int hRes = 640;
+		final int vRes = 480;
+		final double fov = 30;
+		final int bucketSize = 512;
+		final double tMax = 1000;
+		final double distance = 500;
+		final int zoom = 1;
+		
 		World w = new World("jaja");
 		ArrayIntegerMatrix result;
 
-		RayTracer raytracer = new SimpleRayTracer(640, 480, 256);
+		RayTracer raytracer = new SimpleRayTracer(hRes, vRes, fov, bucketSize, tMax, distance, zoom);
 		raytracer.setWorld(w);
 		new RenderWindow(raytracer);
 
