@@ -51,12 +51,18 @@ public class PinholeCamera extends CameraAbstract {
 				color = Color.blackColor();
 				for (int i = 0; i < n; i++) {
 					for (int j = 0; j < n; j++) {
+						final double distributionX;
+						final double distributionY;
+						if (n == 1) {
+							distributionX = distributionY = 0;
+						} else {
+							distributionX = (j + Math.random())/n;
+							distributionY = (i + Math.random())/n;
+						}
 						final double x = adjustedPixelSize
-								* (col - 0.5 * viewPlane.hRes + sp.x + (j + Math
-										.random()) / n);
+								* (col - 0.5 * viewPlane.hRes + sp.x + distributionX);
 						final double y = adjustedPixelSize
-								* (0.5 * viewPlane.vRes - row + sp.y + (i + Math
-										.random()) / n);
+								* (0.5 * viewPlane.vRes - row + sp.y + distributionY);
 
 						pp = new Point2d(x, y);
 						ray.direction = this.rayDirection(pp);
