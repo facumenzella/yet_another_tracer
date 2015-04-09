@@ -38,8 +38,8 @@ public class PinholeCamera extends CameraAbstract {
 		Point2d sp = new Point2d(0, 0);
 		Point2d pp;
 		Ray ray = new Ray(this.eye);
-		final int n = (int)Math.sqrt((double)viewPlane.numSamples);
-		final double invNumSamples = 1/(double)viewPlane.numSamples;
+		final int n = (int) Math.sqrt((double) viewPlane.numSamples);
+		final double invNumSamples = 1 / (double) viewPlane.numSamples;
 
 		int xStart = bucket.getX();
 		int xFinish = xStart + bucket.getWidth();
@@ -52,23 +52,17 @@ public class PinholeCamera extends CameraAbstract {
 				for (int i = 0; i < n; i++) {
 					for (int j = 0; j < n; j++) {
 						final double x = adjustedPixelSize
-								* (col - 0.5 * viewPlane.hRes + sp.x + (j + Math.random())/n);
+								* (col - 0.5 * viewPlane.hRes + sp.x + (j + Math
+										.random()) / n);
 						final double y = adjustedPixelSize
-								* (0.5 * viewPlane.vRes - row + sp.y + (i + Math.random())/n);
+								* (0.5 * viewPlane.vRes - row + sp.y + (i + Math
+										.random()) / n);
 
 						pp = new Point2d(x, y);
 						ray.direction = this.rayDirection(pp);
-						ShadeRec sr = new ShadeRec(world);
-						// TODO: check for better style
-						sr = new ShadeRec(tracer.traceRay(ray,
-								world.getObjects(), sr));
-						if (sr.hitObject) {
-							sr.ray = ray;
-							color.addEquals(sr.material.shade(sr));
-						} else {
-							color.addEquals(world.getBackgroundColor());
-						}
-						
+						color.addEquals(tracer.traceRay(ray,
+								world.getObjects(), world));
+
 					}
 				}
 				color.multiplyEquals(invNumSamples);
@@ -103,25 +97,25 @@ public class PinholeCamera extends CameraAbstract {
 
 	private void displayPixel(final int col, final int row, final Color color,
 			final ArrayIntegerMatrix result) {
-//		if (color.r > 1.0) {
-//			color.r = 1.0;
-//		}
-//
-//		if (color.g > 1.0) {
-//			color.g = 1.0;
-//		}
-//
-//		if (color.b > 1.0) {
-//			color.b = 1.0;
-//		}
+		// if (color.r > 1.0) {
+		// color.r = 1.0;
+		// }
+		//
+		// if (color.g > 1.0) {
+		// color.g = 1.0;
+		// }
+		//
+		// if (color.b > 1.0) {
+		// color.b = 1.0;
+		// }
 		final Color mappedColor = maxToOne(color);
 		result.put(col, row, mappedColor.toInt());
 	}
-	
+
 	private Color maxToOne(final Color c) {
 		final double maxValue = Math.max(c.r, Math.max(c.g, c.b));
-		if(maxValue > 1.0) {
-			return c.multiply(1/maxValue);
+		if (maxValue > 1.0) {
+			return c.multiply(1 / maxValue);
 		}
 		return c;
 	}

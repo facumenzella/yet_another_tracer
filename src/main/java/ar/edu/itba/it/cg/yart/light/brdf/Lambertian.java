@@ -35,6 +35,11 @@ public class Lambertian extends BRDF {
 	public void setCd(final Color cd) {
 		this.cd = cd;
 	}
+
+	@Override
+	public Color sample_f(ShadeRec sr, Vector3d wo, Vector3d wi) {
+		return Color.blackColor();
+	}
 	
 	
 }

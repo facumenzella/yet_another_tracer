@@ -26,6 +26,7 @@ public class SimpleRayTracer implements RayTracer {
 	private final List<Bucket> buckets;
 	final Camera camera;
 
+
 	public interface RaytracerCallbacks {
 		public void onBucketFinished(final Bucket bucket,
 				final ArrayIntegerMatrix result);
@@ -55,6 +56,7 @@ public class SimpleRayTracer implements RayTracer {
 		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
 		List<Bucket> buckets = getBuckets();
 		ViewPlane viewPlane = camera.getViewPlane();
+
 		while (!buckets.isEmpty()) {
 			Bucket bucket = buckets.get(0);
 			buckets.remove(0);

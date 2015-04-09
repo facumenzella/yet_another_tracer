@@ -39,5 +39,9 @@ public abstract class CameraAbstract implements Camera {
 		this.u = u.normalized;
 		this.v = this.w.cross(this.u);
 	}
+	
+	public Tracer getTracer() {
+		return tracer;
+	}
 
 }
