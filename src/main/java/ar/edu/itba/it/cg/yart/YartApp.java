@@ -35,6 +35,7 @@ public class YartApp {
 
 		RayTracer raytracer = new SimpleRayTracer(hRes, vRes, fov, bucketSize, tMax, distance, zoom, numSamples);
 		raytracer.setWorld(w);
+
 		new RenderWindow(raytracer);
 
 		long start = System.currentTimeMillis();

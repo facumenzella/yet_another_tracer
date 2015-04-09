@@ -2,11 +2,11 @@ package ar.edu.itba.it.cg.yart.geometry;
 
 public final class Vector3d {
 
-	public final double x;
-	public final double y;
-	public final double z;
-	public final double length;
-	public final Vector3d normalized;
+	public double x;
+	public double y;
+	public double z;
+	public double length;
+	public Vector3d normalized;
 	
 	public Vector3d(double x, double y, double z) {
 		this.x = x;
@@ -74,6 +74,14 @@ public final class Vector3d {
 	
 	public Vector3d normalizedVector() {
 		return this.normalized;
+	}
+	
+	public void copy(final Vector3d other) {
+		this.x = other.x;
+		this.y = other.y;
+		this.z = other.z;
+		this.length = other.length;
+		this.normalized = new Vector3d(this.x, this.y, this.z, this.length);
 	}
 	
 	@Override

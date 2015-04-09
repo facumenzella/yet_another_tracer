@@ -18,6 +18,7 @@ import ar.edu.itba.it.cg.yart.light.Light;
 import ar.edu.itba.it.cg.yart.light.PointLight;
 import ar.edu.itba.it.cg.yart.light.materials.Matte;
 import ar.edu.itba.it.cg.yart.light.materials.Phong;
+import ar.edu.itba.it.cg.yart.light.materials.Reflective;
 import ar.edu.itba.it.cg.yart.raytracer.Tracer;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
@@ -47,30 +48,37 @@ public class World {
 	}
 	
 	private void buildTestWorld() {		
+
 		setBackgroundColor(Color.blackColor());
-		final Sphere s1 = new Sphere(new Point3(0,0,0), 30.0f);
-		Phong s1m = new Phong();
+		final Sphere s1 = new Sphere(new Point3(20,0,-10), 30.0f);
+		Reflective s1m = new Reflective();
 		s1m.setCd(Color.redColor());
 		s1m.setKd(0.75);
 		s1m.setKs(0.3);
 		s1m.setKa(0.3);
 		s1m.setExp(20);
+		s1m.setCr(Color.whiteColor());
+		s1m.setKr(0.75);
 		s1.setMaterial(s1m);
-		final Sphere s2 = new Sphere(new Point3(-45,-10,20), 20.0f);
-		Phong s2m = new Phong();
+		final Sphere s2 = new Sphere(new Point3(-35,-10,5), 20.0f);
+		Reflective s2m = new Reflective();
 		s2m.setCd(Color.greenColor());
-		s2m.setKd(0.65);
-		s2m.setKa(0.25);
-		s2m.setKs(0.4);
-		s2m.setExp(8);
+		s2m.setKd(0.50);
+		s2m.setKa(0.3);
+		s2m.setKs(0.2);
+		s2m.setExp(10);
+		s2m.setCr(Color.whiteColor());
+		s2m.setKr(0.95);
 		s2.setMaterial(s2m);
-		final Sphere s3 = new Sphere(new Point3(25,-20,23), 10.0f);
-		Phong s3m = new Phong();	
+		final Sphere s3 = new Sphere(new Point3(5,-20,40), 10.0f);
+		Reflective s3m = new Reflective();	
 		s3m.setCd(Color.blueColor());
 		s3m.setKd(0.85);
 		s3m.setKa(0.25);
 		s3m.setKs(0.3);
 		s3m.setExp(10);
+		s3m.setCr(Color.whiteColor());
+		s3m.setKr(0.5);
 		s3.setMaterial(s3m);
 		final Disc d1 = new Disc(new Point3(0, 0, 0), new Vector3d(5,2,2), 30);
 		Matte d1m = new Matte();
@@ -118,9 +126,11 @@ public class World {
 		final Directional light1 = new Directional(2.0,Color.whiteColor(),new Vector3d(-2,7,3));
 		final PointLight light2 = new PointLight(2,Color.whiteColor(),new Vector3d(60,40,30));
 		
-		addLight(light1);
+//		addLight(light1);
 		addLight(light2);
-		
+//		light1.shadowsOff();
+//		light2.shadowsOff();
+				
 		addObject(s1);
 		addObject(s2);
 		addObject(s3);
