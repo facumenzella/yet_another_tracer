@@ -14,7 +14,8 @@ import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
 public class Reflective extends Phong {
 
 	private final PerfectSpecular reflectiveBRDF = new PerfectSpecular();
-
+	private final Tracer tracer = new SimpleTracer();
+	
 	public void setCr(final Color color) {
 		reflectiveBRDF.setCr(color);
 	}
@@ -33,8 +34,8 @@ public class Reflective extends Phong {
 		Ray reflectedRay = new Ray(sr.hitPoint, wi);
 		reflectedRay.depth = sr.depth + 1;
 		List<GeometricObject> objects = sr.world.getObjects();
-		final Tracer tracer = new SimpleTracer();
-		colorL.addEquals(fr.multiply(tracer.traceRay(reflectedRay, objects, new ShadeRec(sr.world), Double.POSITIVE_INFINITY)).multiply(sr.normal.dot(wi)));
+		colorL.addEquals(fr.multiply(tracer.traceRay(reflectedRay, objects, 
+				new ShadeRec(sr.world), Double.POSITIVE_INFINITY)).multiply(sr.normal.dot(wi)));
 		
 		return colorL;
 	}
