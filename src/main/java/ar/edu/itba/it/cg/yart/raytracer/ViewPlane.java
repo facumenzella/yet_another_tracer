@@ -3,6 +3,8 @@ package ar.edu.itba.it.cg.yart.raytracer;
 import java.util.LinkedList;
 import java.util.List;
 
+import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
+
 public class ViewPlane {
 
 	public int hRes;

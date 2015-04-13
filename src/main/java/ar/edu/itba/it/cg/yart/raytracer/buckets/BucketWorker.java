@@ -1,6 +1,8 @@
-package ar.edu.itba.it.cg.yart.raytracer;
+package ar.edu.itba.it.cg.yart.raytracer.buckets;
 
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
+import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer;
+import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer.RaytracerCallbacks;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
