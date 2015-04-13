@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.BSPAxisAligned;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
@@ -31,6 +32,7 @@ public class World {
 	private Set<Camera> cameras;
 	private AmbientLight ambientLight;
 	private Camera activeCamera;
+	BSPAxisAligned bspTree;
 	
 	/**
 	 * Creates a sad, empty World.
@@ -131,11 +133,14 @@ public class World {
 //		light1.shadowsOff();
 //		light2.shadowsOff();
 				
-		addObject(s1);
-		addObject(s2);
-		addObject(s3);
+		final List<GeometricObject> objects = new ArrayList<GeometricObject>();
+		
+		objects.add(s1);
+		objects.add(s2);
+		objects.add(s3);
 //		addObject(d1);
-		addObject(floor);
+		objects.add(floor);
+		this.addObjects(objects);
 //		addObject(background);
 //		addObject(backgroundLeft);
 //		addObject(backgroundBottom);
@@ -167,11 +172,10 @@ public class World {
 	public Color getBackgroundColor() {
 		return backgroundColor;
 	}
-
-	public void addObject(final GeometricObject object) {
-		if (object != null) {
-			objects.add(object);
-		}
+	
+	public void addObjects(final List<GeometricObject> objects) {
+		this.objects = objects;
+		this.bspTree = new BSPAxisAligned(200, 1000, 0, 1000);
 	}
 	
 	public List<GeometricObject> getObjects() {
@@ -197,4 +201,5 @@ public class World {
 	public void setCamera(final Camera camera) {
 		this.addCamera(camera);
 	}
+
 }

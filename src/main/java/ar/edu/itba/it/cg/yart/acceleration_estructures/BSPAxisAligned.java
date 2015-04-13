@@ -56,7 +56,6 @@ public class BSPAxisAligned{
 		}
 		
 		if (currentDepth == DEPTH) {
-			// We reached the depth
 			return new LeafNode(currentObjects);
 		}
 		
@@ -86,7 +85,6 @@ public class BSPAxisAligned{
 		}
 		
 		if (currentDepth == DEPTH) {
-			// We reached the depth
 			return new LeafNode(currentObjects);
 		}
 		
@@ -117,7 +115,6 @@ public class BSPAxisAligned{
 		}
 		
 		if (currentDepth == DEPTH) {
-			// We reached the depth
 			return new LeafNode(currentObjects);
 		}
 		
@@ -181,8 +178,7 @@ public class BSPAxisAligned{
 				// its on the far node
 				return p_traceObjectsForRay(ray, far, min, max, tracer, sr);
 			} else {
-				// the ray might hit in both nodes
-				// so we split the ray
+				// the ray might hit in both nodes, so we split the ray
 				Color nearColor = p_traceObjectsForRay(ray, near, min, t, tracer, sr);
 				if (tracer.hitObject()) {
 					return nearColor;

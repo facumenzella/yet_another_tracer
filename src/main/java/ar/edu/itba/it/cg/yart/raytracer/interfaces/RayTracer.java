@@ -3,8 +3,8 @@ package ar.edu.itba.it.cg.yart.raytracer.interfaces;
 import java.util.List;
 
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
-import ar.edu.itba.it.cg.yart.raytracer.Bucket;
 import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer.RaytracerCallbacks;
+import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
 public interface RayTracer {
