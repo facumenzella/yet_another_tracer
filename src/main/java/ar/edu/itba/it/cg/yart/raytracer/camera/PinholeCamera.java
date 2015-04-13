@@ -8,8 +8,8 @@ import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.Bucket;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.raytracer.Tracer;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
 public class PinholeCamera extends CameraAbstract {
@@ -18,11 +18,10 @@ public class PinholeCamera extends CameraAbstract {
 	private final double zoom;
 	public final ViewPlane vp;
 
-	public PinholeCamera(final Tracer tracer, final Point3 eye,
-			final Point3 lookat, final Vector3d up, final double distance,
+	public PinholeCamera(final Point3 eye, final Point3 lookat, final Vector3d up, final double distance,
 			final double zoom, final int viewPlaneHRes, final int viewPlaneVRes, final double fov, 
 			final int numSamples) {
-		super(tracer, eye, lookat, up);
+		super(eye, lookat, up);
 		this.distance = distance;
 		this.zoom = zoom;
 		final double pixelSize = this.getPixeSize(viewPlaneHRes, viewPlaneVRes, fov, distance);
@@ -31,7 +30,7 @@ public class PinholeCamera extends CameraAbstract {
 
 	@Override
 	public void renderScene(final Bucket bucket, final World world,
-			final ArrayIntegerMatrix result, final ViewPlane viewPlane) {
+			final ArrayIntegerMatrix result, final ViewPlane viewPlane, final Tracer tracer) {
 		// TODO : Its almost working, but its not finished
 		Color color;
 		double adjustedPixelSize = viewPlane.pixelSize / zoom;
@@ -67,7 +66,7 @@ public class PinholeCamera extends CameraAbstract {
 						pp = new Point2d(x, y);
 						ray.direction = this.rayDirection(pp);
 						color.addEquals(tracer.traceRay(ray,
-								world.getObjects(), world));
+								world.getObjects(), new ShadeRec(world), Double.POSITIVE_INFINITY));
 
 					}
 				}

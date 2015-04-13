@@ -1,6 +1,5 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives;
 
-import ar.edu.itba.it.cg.yart.acceleration_estructures.Side;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
@@ -46,14 +45,8 @@ public class Plane extends GeometricObject {
 		return null;
 	}
 	
-	public Side sideOfPoint(final Point3 point) {
-		// check if the point belongs to the plane
-		final double belongs = (normal.x - point.x) + (normal.y - point.y) + (normal.z - point.z);
-		if (belongs == 0) {
-			return Side.INSIDE;
-		}
-		
-		return Side.OUTSIDE;
+	public double distanceFromRayOrigin(Ray ray) {
+		return (p.sub(ray.origin)).dot(normal) / ray.direction.dot(normal);
 	}
 	
 }
