@@ -1,4 +1,4 @@
-package ar.edu.itba.it.cg.yart.raytracer;
+package ar.edu.itba.it.cg.yart.raytracer.tracer;
 
 import java.util.List;
 
@@ -6,23 +6,23 @@ import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
-import ar.edu.itba.it.cg.yart.raytracer.world.World;
+import ar.edu.itba.it.cg.yart.raytracer.Ray;
+import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
-public class Tracer {
+public class SimpleTracer extends AbstractTracer {
+
+	private boolean hitObject;
 	
-	//TODO: temporary location, it would be best if it was saved in World
-	
-	private final int maxDepth = 4; 
-	
-	public Color traceRay(final Ray ray, List<GeometricObject> objects, final World world) {
-		if(ray.depth > maxDepth){
+	@Override
+	public Color traceRay(final Ray ray, List<GeometricObject> objects, final ShadeRec sr, final double tMax) {
+		
+		if (ray.depth > MAX_DEPTH) {
 			return Color.blackColor();
 		}
-		ShadeRec sr = new ShadeRec(world);
 		Vector3d normal = null;
 		Point3 localHitPoint = null;
-		double tMin = Double.POSITIVE_INFINITY;		
-		
+		double tMin = tMax;
+
 		for (int i = 0; i < objects.size(); i++) {
 			GeometricObject object = objects.get(i);
 			double t = object.hit(ray, sr);
@@ -35,6 +35,7 @@ public class Tracer {
 				tMin = t;
 			}
 		}
+		this.hitObject = sr.hitObject;
 		if (sr.hitObject) {
 			sr.depth = ray.depth;
 			sr.t = tMin;
@@ -46,5 +47,10 @@ public class Tracer {
 		
 		return sr.world.getBackgroundColor();
 	}
-	
+
+	@Override
+	public boolean hitObject() {
+		return this.hitObject;
+	}
+
 }

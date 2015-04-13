@@ -8,7 +8,8 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.light.brdf.PerfectSpecular;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.raytracer.Tracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleTracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
 
 public class Reflective extends Phong {
 
@@ -32,8 +33,8 @@ public class Reflective extends Phong {
 		Ray reflectedRay = new Ray(sr.hitPoint, wi);
 		reflectedRay.depth = sr.depth + 1;
 		List<GeometricObject> objects = sr.world.getObjects();
-		final Tracer tracer = sr.world.getActiveCamera().getTracer();
-		colorL.addEquals(fr.multiply(tracer.traceRay(reflectedRay, objects, sr.world)).multiply(sr.normal.dot(wi)));
+		final Tracer tracer = new SimpleTracer();
+		colorL.addEquals(fr.multiply(tracer.traceRay(reflectedRay, objects, new ShadeRec(sr.world), Double.POSITIVE_INFINITY)).multiply(sr.normal.dot(wi)));
 		
 		return colorL;
 	}

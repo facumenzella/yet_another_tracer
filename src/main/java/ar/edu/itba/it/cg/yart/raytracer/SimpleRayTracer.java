@@ -11,6 +11,7 @@ import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 import ar.edu.itba.it.cg.yart.utils.YartExecutorFactory;
 
@@ -44,12 +45,10 @@ public class SimpleRayTracer implements RayTracer {
 		this.bucketSize = bucketSize;
 		this.executor = YartExecutorFactory.newFixedThreadPool(2); // TODO change after tests
 		this.buckets = getBuckets();		
-		final Tracer tracer = new Tracer();
 		final Point3 eye = new Point3(0,0,200);
 		final Point3 lookat = new Point3(0,0,0); // point where we look at
 		final Vector3d up = new Vector3d(0,1,0); // up vector, rotates around the camera z-axis
-		this.camera = new PinholeCamera(tracer, eye, 
-				lookat, up, distance, zoom, hRes, vRes, fov, numSamples);
+		this.camera = new PinholeCamera(eye, lookat, up, distance, zoom, hRes, vRes, fov, numSamples);
 	}
 
 	public ArrayIntegerMatrix serialRender(final World world) {
@@ -62,7 +61,7 @@ public class SimpleRayTracer implements RayTracer {
 			buckets.remove(0);
 
 			world.getActiveCamera().renderScene(bucket, world, result,
-					viewPlane);
+					viewPlane, new SimpleTracer());
 
 			if (callbacks != null) {
 				callbacks.onBucketFinished(bucket, result);
@@ -108,7 +107,7 @@ public class SimpleRayTracer implements RayTracer {
 							callbacks.onBucketFinished(bucket, result);
 							latch.countDown();
 						}
-					}));
+					}, new SimpleTracer()));
 		}
 
 		try {
