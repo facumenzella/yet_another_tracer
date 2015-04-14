@@ -19,9 +19,11 @@ public class BSPAxisAligned{
 	private final double tMax;
 	private final double minZ;
 	private final double maxZ;
+	private final LeafNode emptyLeafNode;
+
 	private static final int DEPTH = 1;
 	protected static final double EPSILON = 0.00001;
-	private final LeafNode emptyLeafNode;
+
 	
 	public BSPAxisAligned(final double minZ, final double maxZ, final double tMin, final double tMax) {
 		this.tMin = tMin;
@@ -57,9 +59,11 @@ public class BSPAxisAligned{
 		
 		if (currentDepth == DEPTH) {
 			return new LeafNode(currentObjects);
-		}
+		}		
 		
-		final double nextMiddlePoint = (currentBox.p0.y + currentBox.p1.y) / 2 + EPSILON;
+		List<Double> candidates = this.planeCandidatesX(currentObjects);
+		final double nextMiddlePoint = this.bestXCandidate(candidates, currentBox, currentObjects) + EPSILON;
+		
 		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3(middlePoint, currentBox.p1.y, currentBox.p1.z));
 		final BoundingBox rightBox = new BoundingBox(new Point3(middlePoint, currentBox.p0.y, currentBox.p0.z), currentBox.p1);
 		
@@ -88,7 +92,9 @@ public class BSPAxisAligned{
 			return new LeafNode(currentObjects);
 		}
 		
-		final double nextMiddlePoint = (currentBox.p0.z + currentBox.p1.z) / 2 + EPSILON;
+		List<Double> candidates = this.planeCandidatesY(currentObjects);
+		final double nextMiddlePoint = this.bestYCandidate(candidates, currentBox, currentObjects) + EPSILON;
+		
 		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3(currentBox.p1.x, middlePoint, currentBox.p1.z));
 		final BoundingBox rightBox = new BoundingBox(new Point3(currentBox.p0.x, middlePoint, currentBox.p0.z), currentBox.p1);
 		
@@ -118,7 +124,9 @@ public class BSPAxisAligned{
 			return new LeafNode(currentObjects);
 		}
 		
-		final double nextMiddlePoint = (currentBox.p0.x + currentBox.p1.x) / 2 + EPSILON;
+		List<Double> candidates = this.planeCandidatesZ(currentObjects);
+		final double nextMiddlePoint = this.bestZCandidate(candidates, currentBox, currentObjects) + EPSILON;
+		
 		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3(currentBox.p1.x, currentBox.p1.y, middlePoint));
 		final BoundingBox rightBox = new BoundingBox(new Point3(currentBox.p0.x, currentBox.p0.y, middlePoint), currentBox.p1);
 
@@ -150,6 +158,141 @@ public class BSPAxisAligned{
 				rightObjects.add(o);
 			}
 		}
+	}
+	
+	public List<Double> planeCandidatesX(final List<GeometricObject> objects) {
+		List<Double> candidates = new ArrayList<Double>();
+		for (GeometricObject o : objects) {
+			BoundingBox b = o.getBoundingBox();
+			candidates.add(b.p0.x);
+			candidates.add(b.p1.x);
+		}
+		return candidates;
+	}
+	
+	public List<Double> planeCandidatesY(final List<GeometricObject> objects) {
+		List<Double> candidates = new ArrayList<Double>();
+		for (GeometricObject o : objects) {
+			BoundingBox b = o.getBoundingBox();
+			candidates.add(b.p0.y);
+			candidates.add(b.p1.y);
+		}
+		return candidates;
+	}
+	
+	public List<Double> planeCandidatesZ(final List<GeometricObject> objects) {
+		List<Double> candidates = new ArrayList<Double>();
+		for (GeometricObject o : objects) {
+			BoundingBox b = o.getBoundingBox();
+			candidates.add(b.p0.z);
+			candidates.add(b.p1.z);
+		}
+		return candidates;
+	}
+
+	public double planeCostX(final BoundingBox currentBox, final List<GeometricObject> objects, final double middlePoint) {
+		double left = 0;
+		double right = 0;
+		double stradding = 0;
+		for (GeometricObject o : objects) {
+			BoundingBox b = o.getBoundingBox();
+			if (b.p0.x > middlePoint) {
+				right ++;
+			} else if (b.p1.x < middlePoint) {
+				left ++;
+			} else {
+				stradding++;
+			}
+		}
+		
+		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3(middlePoint, currentBox.p1.y, currentBox.p1.z));
+		final BoundingBox rightBox = new BoundingBox(new Point3(middlePoint, currentBox.p0.y, currentBox.p0.z), currentBox.p1);
+		
+		return this.root.getBoundingBox().getSurfaceArea() * 
+				( (leftBox.getSurfaceArea() * 
+						(left + stradding)) + (rightBox.getSurfaceArea() * (right + stradding)) );
+	}
+	
+	public double planeCostY(final BoundingBox currentBox, final List<GeometricObject> objects, final double middlePoint) {
+		double under = 0;
+		double over = 0;
+		double stradding = 0;
+		for (GeometricObject o : objects) {
+			BoundingBox b = o.getBoundingBox();
+			if (b.p0.y > middlePoint) {
+				over ++;
+			} else if (b.p1.x < middlePoint) {
+				under ++;
+			} else {
+				stradding++;
+			}
+		}
+		
+		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3(currentBox.p1.x, middlePoint, currentBox.p1.z));
+		final BoundingBox rightBox = new BoundingBox(new Point3(currentBox.p0.x, middlePoint, currentBox.p0.z), currentBox.p1);
+		
+		return this.root.getBoundingBox().getSurfaceArea() * 
+				( (leftBox.getSurfaceArea() * 
+						(under + stradding)) + (rightBox.getSurfaceArea() * (over + stradding)) );
+	}
+	
+	public double planeCostZ(final BoundingBox currentBox, final List<GeometricObject> objects, final double middlePoint) {
+		double near = 0;
+		double far = 0;
+		double stradding = 0;
+		for (GeometricObject o : objects) {
+			BoundingBox b = o.getBoundingBox();
+			if (b.p0.z > middlePoint) {
+				near ++;
+			} else if (b.p1.x < middlePoint) {
+				far ++;
+			} else {
+				stradding++;
+			}
+		}
+		
+		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3(currentBox.p1.x, currentBox.p1.y, middlePoint));
+		final BoundingBox rightBox = new BoundingBox(new Point3(currentBox.p0.x, currentBox.p0.y, middlePoint), currentBox.p1);
+		
+		return this.root.getBoundingBox().getSurfaceArea() * 
+				( (leftBox.getSurfaceArea() * 
+						(near + stradding)) + (rightBox.getSurfaceArea() * (far + stradding)) );
+	}
+	
+	public double bestXCandidate(final List<Double> candidates, final BoundingBox currentBox, 
+			final List<GeometricObject> objects) {
+		double minCost = Double.POSITIVE_INFINITY;
+		for (Double d : candidates) {
+			final double cost = this.planeCostX(currentBox, objects, d);
+			if (cost < minCost) {
+				minCost = cost;
+			}
+		}
+		return minCost;
+	}
+	
+	public double bestYCandidate(final List<Double> candidates, final BoundingBox currentBox, 
+			final List<GeometricObject> objects) {
+		double minCost = Double.POSITIVE_INFINITY;
+		for (Double d : candidates) {
+			final double cost = this.planeCostY(currentBox, objects, d);
+			if (cost < minCost) {
+				minCost = cost;
+			}
+		}
+		return minCost;
+	}
+	
+	public double bestZCandidate(final List<Double> candidates, final BoundingBox currentBox, 
+			final List<GeometricObject> objects) {
+		double minCost = Double.POSITIVE_INFINITY;
+		for (Double d : candidates) {
+			final double cost = this.planeCostZ(currentBox, objects, d);
+			if (cost < minCost) {
+				minCost = cost;
+			}
+		}
+		return minCost;
 	}
 	
 	public Color traceRay(final Ray ray, final Tracer tracer, final ShadeRec sr) {

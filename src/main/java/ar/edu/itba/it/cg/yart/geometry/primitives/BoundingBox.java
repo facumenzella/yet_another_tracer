@@ -6,12 +6,17 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 public class BoundingBox {
 	
 	private static final double EPSILON = 0.0001;
-	public Point3 p0;
-	public Point3 p1;
+	public final Point3 p0;
+	public final Point3 p1;
+	public final double surfaceArea;
 	
 	public BoundingBox(final Point3 p0, final Point3 p1) {
 		this.p0 = p0;
 		this.p1 = p1;
+		
+		final double bottomAndTopArea = (p1.x - p0.x) * (p0.z - p1.z) * 2;
+		final double sidesArea = (p0.z - p1.z) * (p1.y - p0.y) * 4;
+		this.surfaceArea = bottomAndTopArea + sidesArea;
 	}
 	
 	public boolean hit(final Ray ray) {
@@ -82,6 +87,10 @@ public class BoundingBox {
 			return true;
 		}
 		return false;
+	}
+	
+	public double getSurfaceArea() {
+		return this.surfaceArea;
 	}
 	
 }
