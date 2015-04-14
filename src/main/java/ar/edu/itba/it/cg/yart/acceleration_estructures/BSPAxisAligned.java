@@ -21,7 +21,7 @@ public class BSPAxisAligned {
 	private final double maxZ;
 	private final LeafNode emptyLeafNode;
 
-	private static final int DEPTH = 1;
+	private static final int DEPTH = 5;
 	protected static final double EPSILON = 0.00001;
 
 	public BSPAxisAligned(final double minZ, final double maxZ,
@@ -61,10 +61,17 @@ public class BSPAxisAligned {
 		if (currentDepth == DEPTH) {
 			return new LeafNode(currentObjects);
 		}
-
+		
 		List<Double> candidates = this.planeCandidatesX(currentObjects);
 		final double splittingPoint = this.bestXCandidate(candidates,
 				currentBox, currentObjects);
+		
+		final double leafCost = this.leafCost(currentBox, currentObjects);
+		final double splittingCost = this.planeCostX(currentBox, currentObjects, splittingPoint);
+		
+		if (splittingCost / leafCost > 1) {
+			return new LeafNode(currentObjects);
+		}
 
 		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3(
 				splittingPoint, currentBox.p1.y, currentBox.p1.z));
@@ -101,6 +108,13 @@ public class BSPAxisAligned {
 		final double splittingPoint = this.bestYCandidate(candidates,
 				currentBox, currentObjects);
 
+		final double leafCost = this.leafCost(currentBox, currentObjects);
+		final double splittingCost = this.planeCostX(currentBox, currentObjects, splittingPoint);
+		
+		if (splittingCost / leafCost > 1) {
+			return new LeafNode(currentObjects);
+		}
+		
 		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3(
 				currentBox.p1.x, splittingPoint, currentBox.p1.z));
 		final BoundingBox rightBox = new BoundingBox(new Point3(
@@ -137,6 +151,13 @@ public class BSPAxisAligned {
 		final double splittingPoint = this.bestZCandidate(candidates,
 				currentBox, currentObjects);
 
+		final double leafCost = this.leafCost(currentBox, currentObjects);
+		final double splittingCost = this.planeCostX(currentBox, currentObjects, splittingPoint);
+		
+		if (splittingCost / leafCost > 1) {
+			return new LeafNode(currentObjects);
+		}
+		
 		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3(
 				currentBox.p1.x, currentBox.p1.y, splittingPoint));
 		final BoundingBox rightBox = new BoundingBox(new Point3(
@@ -294,6 +315,10 @@ public class BSPAxisAligned {
 				* ((leftBox.getSurfaceArea() * (near + stradding)) + (rightBox
 						.getSurfaceArea() * (far + stradding)));
 	}
+	
+	public double leafCost(final BoundingBox currentBox, final List<GeometricObject> objects) {
+		return (1 / this.initialBox.getSurfaceArea()) * (currentBox.getSurfaceArea() * objects.size());
+	}
 
 	public double bestXCandidate(final List<Double> candidates,
 			final BoundingBox currentBox, final List<GeometricObject> objects) {
@@ -348,6 +373,10 @@ public class BSPAxisAligned {
 			final double min, final double max, final Tracer tracer,
 			final ShadeRec sr) {
 
+		if (node == emptyLeafNode) {
+			return sr.world.getBackgroundColor();
+		}
+		
 		if (node.isLeaf()) {
 			return tracer.traceRay(ray, node.getObjects(), sr, max);
 		}
