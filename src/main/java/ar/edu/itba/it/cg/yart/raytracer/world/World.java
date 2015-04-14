@@ -176,10 +176,15 @@ public class World {
 	public void addObjects(final List<GeometricObject> objects) {
 		this.objects = objects;
 		this.bspTree = new BSPAxisAligned(200, 1000, 0, 1000);
+		this.bspTree.buildTree(objects);
 	}
 	
 	public List<GeometricObject> getObjects() {
 		return objects;
+	}
+	
+	public BSPAxisAligned getTree() {
+		return bspTree;
 	}
 	
 	public void addCamera(final Camera camera) {

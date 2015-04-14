@@ -65,8 +65,10 @@ public class PinholeCamera extends CameraAbstract {
 
 						pp = new Point2d(x, y);
 						ray.direction = this.rayDirection(pp);
-						color.addEquals(tracer.traceRay(ray,
-								world.getObjects(), new ShadeRec(world), Double.POSITIVE_INFINITY));
+						Color c = world.getTree().traceRay(ray, tracer, new ShadeRec(world));
+						color.addEquals(c);
+//						color.addEquals(tracer.traceRay(ray,
+//								world.getObjects(), new ShadeRec(world), Double.POSITIVE_INFINITY));
 
 					}
 				}
