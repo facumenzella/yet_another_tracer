@@ -14,8 +14,8 @@ public class BoundingBox {
 		this.p0 = p0;
 		this.p1 = p1;
 		
-		final double bottomAndTopArea = (p1.x - p0.x) * (p0.z - p1.z) * 2;
-		final double sidesArea = (p0.z - p1.z) * (p1.y - p0.y) * 4;
+		final double bottomAndTopArea = (p1.x - p0.x) * Math.abs(p0.z - p1.z) * 2;
+		final double sidesArea = Math.abs(p0.z - p1.z) * (p1.y - p0.y) * 4;
 		this.surfaceArea = bottomAndTopArea + sidesArea;
 	}
 	
