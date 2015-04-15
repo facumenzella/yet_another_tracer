@@ -10,7 +10,8 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.raytracer.Tracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleTracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
 
 public class Mesh extends GeometricObject {
 	
@@ -32,7 +33,7 @@ public class Mesh extends GeometricObject {
 		normals = new ArrayList<Vector3d>();
 		faces = new ArrayList<List<Integer>>();
 		triangles = new ArrayList<GeometricObject>();
-		tracer = new Tracer();
+		tracer = new SimpleTracer();
 		
 		vertices.add(new Point3(-50, 50, -50));
 		vertices.add(new Point3(-50, 0, 50));
@@ -69,7 +70,7 @@ public class Mesh extends GeometricObject {
 
 	@Override
 	public double hit(Ray ray, ShadeRec sr) {
-		return tracer.traceRay(ray, triangles, sr).t;
+		return 0;
 		//return triangles.get(0).hit(ray, sr);
 	}
 

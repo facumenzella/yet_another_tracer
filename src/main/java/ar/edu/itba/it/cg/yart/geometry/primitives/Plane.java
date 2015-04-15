@@ -44,5 +44,9 @@ public class Plane extends GeometricObject {
 		// Infinite plane has no Bounding Box
 		return null;
 	}
-
+	
+	public double distanceFromRayOrigin(Ray ray) {
+		return (p.sub(ray.origin)).dot(normal) / ray.direction.dot(normal);
+	}
+	
 }

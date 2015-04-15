@@ -7,6 +7,7 @@ public class Ray {
 	
 	public Point3 origin;
 	public Vector3d direction;
+	public int depth = 0;
 	
 	public Ray(final Point3 origin, final Vector3d direction) {
 		this.origin = origin;

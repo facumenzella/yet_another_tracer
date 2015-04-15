@@ -41,4 +41,9 @@ public class GlossySpecular extends BRDF{
 		this.ks = ks;
 	}
 
+	@Override
+	public Color sample_f(ShadeRec sr, Vector3d wo, Vector3d wi) {
+		return Color.blackColor();
+	}
+
 }

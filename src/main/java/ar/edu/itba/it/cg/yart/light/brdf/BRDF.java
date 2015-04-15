@@ -10,4 +10,5 @@ public abstract class BRDF {
 	
 	public abstract Color f(final ShadeRec sr, final Vector3d wo, final Vector3d wi);
 	public abstract Color rho(final ShadeRec sr, final Vector3d wo);
+	public abstract Color sample_f(final ShadeRec sr, final Vector3d wo, final Vector3d wi);
 }
