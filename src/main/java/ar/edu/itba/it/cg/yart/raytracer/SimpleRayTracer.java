@@ -1,7 +1,7 @@
 package ar.edu.itba.it.cg.yart.raytracer;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
@@ -26,10 +26,10 @@ public class SimpleRayTracer implements RayTracer {
 	private int bucketSize;
 	private RaytracerCallbacks callbacks;
 	private final ExecutorService executor;
-	private final Queue<Bucket> buckets;
+	private final Deque<Bucket> buckets;
 	final Camera camera;
 	
-	final static private int THREADS = 3;
+	final static private int THREADS = 6;
 
 
 	public interface RaytracerCallbacks {
@@ -96,8 +96,6 @@ public class SimpleRayTracer implements RayTracer {
 		int i = 0;
 		while (i < THREADS) {
 			i++;
-//			final Bucket bucket = buckets.poll();
-//			buckets.remove(0);
 
 			final Camera camera = world.getActiveCamera();
 			executor.submit(new BucketWorker(buckets, camera, world, viewPlane,
@@ -156,8 +154,8 @@ public class SimpleRayTracer implements RayTracer {
 		return bucketSize;
 	}
 
-	public Queue<Bucket> getBuckets() {
-		Queue<Bucket> buckets = new LinkedList<Bucket>();
+	public Deque<Bucket> getBuckets() {
+		Deque<Bucket> buckets = new ArrayDeque<Bucket>();
 		int xBuckets = (int) Math.ceil(hRes / ((float) bucketSize));
 		int yBuckets = (int) Math.ceil(vRes / ((float) bucketSize));
 
