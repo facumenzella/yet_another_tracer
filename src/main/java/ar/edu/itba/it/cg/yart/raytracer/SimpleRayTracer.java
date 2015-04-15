@@ -156,7 +156,6 @@ public class SimpleRayTracer implements RayTracer {
 		return bucketSize;
 	}
 
-	@Override
 	public Queue<Bucket> getBuckets() {
 		Queue<Bucket> buckets = new LinkedList<Bucket>();
 		int xBuckets = (int) Math.ceil(hRes / ((float) bucketSize));
