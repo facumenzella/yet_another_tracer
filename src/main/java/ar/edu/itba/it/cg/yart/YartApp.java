@@ -3,6 +3,7 @@ package ar.edu.itba.it.cg.yart;
 import ar.edu.itba.it.cg.yart.exceptions.WrongParametersException;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer;
+import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 import ar.edu.itba.it.cg.yart.ui.RenderWindow;
 import ar.edu.itba.it.cg.yart.utils.ImageSaver;
@@ -18,14 +19,27 @@ public class YartApp {
 		final String imageName = args[0];
 		final String imageExtension = args[1];
 
+		// Wanna see something cool?
+		// Try 1920 * 1080
+		final int hRes = 640;
+		final int vRes = 480;
+		final double fov = 30;
+		final int bucketSize = 128;
+		final double tMax = 1000;
+		final double distance = 500;
+		final int zoom = 1;
+		final int numSamples = 16;
+		
 		World w = new World("jaja");
 		ArrayIntegerMatrix result;
 
-		SimpleRayTracer raytracer = new SimpleRayTracer(640, 480, 256);
+		RayTracer raytracer = new SimpleRayTracer(hRes, vRes, fov, bucketSize, tMax, distance, zoom, numSamples);
+		raytracer.setWorld(w);
+
 		new RenderWindow(raytracer);
 
 		long start = System.currentTimeMillis();
-		result = raytracer.render(w);
+		result = raytracer.render();
 		long end = System.currentTimeMillis();
 		System.out.println(end - start);
 	

@@ -38,6 +38,12 @@ public class Color {
 		return new Color(this.r*f.r, this.g*f.g, this.b*f.b);
 	}
 	
+	public void multiplyEquals(final double f) {
+		this.r*=f;
+		this.g*=f;
+		this.b*=f;
+	}
+	
 	public Color add(final Color c) {
 		if(c != null){
 			return new Color(this.r + c.r, this.g + c.g, this.b + c.b);

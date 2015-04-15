@@ -3,15 +3,21 @@ package ar.edu.itba.it.cg.yart.raytracer;
 import java.util.LinkedList;
 import java.util.List;
 
+import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
+
 public class ViewPlane {
 
 	public int hRes;
 	public int vRes;
-	public float pixelSize = 1;
+	public double pixelSize;
+	public int numSamples;
 
-	public ViewPlane(final int hRes, final int vRes) {
+	public ViewPlane(final int hRes, final int vRes, final double pixelSize2,
+			final int numSamples) {
 		this.hRes = hRes;
 		this.vRes = vRes;
+		this.pixelSize = pixelSize2;
+		this.numSamples = numSamples;
 	}
 
 	public List<Bucket> dividePlane(final int bucketSize) {
