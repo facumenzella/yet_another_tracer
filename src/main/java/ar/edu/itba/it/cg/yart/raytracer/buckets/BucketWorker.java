@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.raytracer.buckets;
 
+import java.util.Deque;
 import java.util.Queue;
 
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
@@ -18,9 +19,9 @@ public class BucketWorker implements Runnable{
 	private final ArrayIntegerMatrix result;
 	private final RaytracerCallbacks callback;
 	private final Tracer tracer;
-	private final Queue<Bucket> buckets;
+	private final Deque<Bucket> buckets;
 	
-	public BucketWorker(final Queue<Bucket> buckets, final Camera camera, final World world, 
+	public BucketWorker(final Deque<Bucket> buckets, final Camera camera, final World world, 
 			final ViewPlane viewPlane, final ArrayIntegerMatrix result, final RaytracerCallbacks callback, final Tracer tracer) {
 		this.buckets = buckets;
 		this.camera = camera;
@@ -33,14 +34,20 @@ public class BucketWorker implements Runnable{
 	
 	@Override
 	public void run() {
+		int i = 0;
 		boolean emptyQueue = false;
-		Bucket bucket = buckets.poll();
+		Bucket bucket = buckets.pop();
 		while (!emptyQueue) {
 			camera.renderScene(bucket, world, result, viewPlane, tracer);
 			callback.onBucketFinished(bucket, result);
 			emptyQueue = buckets.isEmpty();
+			i++;
 			if (!emptyQueue) {
-				bucket = buckets.poll();
+				if (i % 2 == 0) {
+					bucket = buckets.pollFirst();
+				} else {
+					bucket = buckets.pollLast();
+				}
 			}
 		}
 	}
