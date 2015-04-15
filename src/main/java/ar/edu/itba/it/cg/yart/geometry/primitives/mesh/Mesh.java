@@ -35,16 +35,14 @@ public class Mesh extends GeometricObject {
 		triangles = new ArrayList<GeometricObject>();
 		tracer = new SimpleTracer();
 		
-		vertices.add(new Point3(-50, 50, -50));
-		vertices.add(new Point3(-50, 0, 50));
-		vertices.add(new Point3(50, 50, 50));
-		vertices.add(new Point3(50, 0, -50));
+		vertices.add(new Point3(-50, 0, 0));
+		vertices.add(new Point3(0, 50, 20));
+		vertices.add(new Point3(0, 50,50));
+		vertices.add(new Point3(50, 0, 0));
 		
-		MeshTriangle t1 = new FlatMeshTriangle(0, 2, 3);
-		MeshTriangle t2 = new FlatMeshTriangle(0, 1, 2);
-		t1.mesh = this;
+		MeshTriangle t1 = new FlatMeshTriangle(0, 1, 2, this);
+		MeshTriangle t2 = new FlatMeshTriangle(1, 2, 3, this);
 		t1.computeNormal(false);
-		t2.mesh = this;
 		t2.computeNormal(false);
 		triangles.add(t1);
 		triangles.add(t2);

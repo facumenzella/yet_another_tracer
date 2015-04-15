@@ -19,11 +19,8 @@ import ar.edu.itba.it.cg.yart.light.Directional;
 import ar.edu.itba.it.cg.yart.light.Light;
 import ar.edu.itba.it.cg.yart.light.PointLight;
 import ar.edu.itba.it.cg.yart.light.materials.Matte;
-import ar.edu.itba.it.cg.yart.light.materials.Phong;
 import ar.edu.itba.it.cg.yart.light.materials.Reflective;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
-import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
 
 public class World {
 
@@ -47,18 +44,46 @@ public class World {
 	public World(final String filename) {
 		this();
 		// TODO Build scene file parser
-		buildTestWorld();
+		buildMeshWorld();
 	}
 	
-	private World buildMeshWorld() {
-		return null;
+	private void buildMeshWorld() {
+		setBackgroundColor(Color.blackColor());
+		
+		Mesh mesh = new Mesh();
+		
+		Reflective s1m = new Reflective();
+		s1m.setCd(Color.redColor());
+		s1m.setKd(0.75);
+		s1m.setKs(0.3);
+		s1m.setKa(0.3);
+		s1m.setExp(20);
+		s1m.setCr(Color.whiteColor());
+		s1m.setKr(0.75);
+		mesh.setMaterial(s1m);
+		
+		Matte right = new Matte();
+		right.setCd(Color.yellowColor());
+		right.setKd(0.50);
+		right.setKa(0.15);
+		final Plane floor = new Plane(new Point3(0,-30,0), new Vector3d(0,1,0));
+		Matte floorM = new Matte();
+		floorM.setCd(new Color(0.4, 0.4, 0.4));
+		floorM.setKd(0.50);
+		floorM.setKa(0.15);
+		floor.setMaterial(right);
+		
+		final PointLight light2 = new PointLight(2,Color.whiteColor(),new Vector3d(60,40,30));
+		addLight(light2);
+		
+		List<GeometricObject> objects = new ArrayList<GeometricObject>();
+		objects.addAll(mesh.triangles);
+		objects.add(floor);
+
+		this.addObjects(objects);
 	}
 	
 	private void buildTestWorld() {
-		final Point3 eye = new Point3(0,0,200);
-		final Point3 lookat = new Point3(0,0,0); // point where we look at
-		final Vector3d up = new Vector3d(0,1,0); // up vector, rotates around the camera z-axis
-
 		setBackgroundColor(Color.blackColor());
 		final Sphere s1 = new Sphere(new Point3(20,0,-10), 30.0f);
 		Reflective s1m = new Reflective();
@@ -133,15 +158,6 @@ public class World {
 		floorM.setKa(0.15);
 		floor.setMaterial(right);
 		
-		Mesh mesh = new Mesh();
-		Phong mm = new Phong();
-		mm.setCd(Color.greenColor());
-		mm.setKd(0.65);
-		mm.setKa(0.25);
-		mm.setKs(0.4);
-		mm.setExp(8);
-		mesh.setMaterial(mm);
-		
 		final Directional light1 = new Directional(2.0,Color.whiteColor(),new Vector3d(-2,7,3));
 		final PointLight light2 = new PointLight(2,Color.whiteColor(),new Vector3d(60,40,30));
 		
@@ -198,9 +214,7 @@ public class World {
 	
 	public void addObject(final Mesh mesh) {
 		if (mesh != null) {
-			for (GeometricObject t : mesh.triangles) {
 				addObjects(mesh.triangles);
-			}
 		}
 	}
 	
