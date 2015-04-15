@@ -49,8 +49,11 @@ public class SimpleRayTracer implements RayTracer {
 		this.bucketSize = bucketSize;
 		this.executor = YartExecutorFactory.newFixedThreadPool(THREADS); // TODO change after tests
 		this.buckets = getBuckets();		
-		final Point3 eye = new Point3(0,0,200);
-		final Point3 lookat = new Point3(0,0,0); // point where we look at
+//		final Point3 eye = new Point3(0,0,200);
+//		final Point3 lookat = new Point3(0,0,0); // point where we look at
+//		final Vector3d up = new Vector3d(0,1,0); // up vector, rotates around the camera z-axis
+		final Point3 eye = new Point3(0,500,-50);
+		final Point3 lookat = new Point3(0,0,100); // point where we look at
 		final Vector3d up = new Vector3d(0,1,0); // up vector, rotates around the camera z-axis
 		this.camera = new PinholeCamera(eye, lookat, up, distance, zoom, hRes, vRes, fov, numSamples);
 	}

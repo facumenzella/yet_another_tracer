@@ -7,14 +7,63 @@ import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
 public class FlatMeshTriangle extends MeshTriangle {
 
-	public FlatMeshTriangle(int index0, int index1, int index2) {
-		super(index0, index1, index2);
+	public FlatMeshTriangle(int index0, int index1, int index2, final Mesh mesh) {
+		super(index0, index1, index2, mesh);
+		updateBoundingBox();
 	}
 
 	@Override
 	public BoundingBox createBoundingBox() {
-		// TODO Auto-generated method stub
-		return null;
+		Point3 v0 = mesh.vertices.get(index0);
+		Point3 v1 = mesh.vertices.get(index1);
+		Point3 v2 = mesh.vertices.get(index2);
+		
+		double minX = v0.x;
+		double minY = v0.y;
+		double minZ = v0.z;
+		double maxX = v0.x;
+		double maxY = v0.z;
+		double maxZ = v0.z;
+		
+		//v1
+		if (v1.x < minX) {
+			minX = v1.x;
+		}
+		if (v1.y < minY) {
+			minY = v1.y;
+		}
+		if (v1.z < minZ) {
+			minZ = v1.z;
+		}
+		if (v1.x > maxX) {
+			maxX = v1.x;
+		}
+		if (v1.y > maxY) {
+			maxY = v1.y;
+		}
+		if (v1.z > maxZ) {
+			maxZ = v1.z;
+		}
+		// v2
+		if (v2.x < minX) {
+			minX = v2.x;
+		}
+		if (v2.y < minY) {
+			minY = v2.y;
+		}
+		if (v2.z < minZ) {
+			minZ = v2.z;
+		}
+		if (v2.x > maxX) {
+			maxX = v2.x;
+		}
+		if (v2.y > maxY) {
+			maxY = v2.y;
+		}
+		if (v2.z > maxZ) {
+			maxZ = v2.z;
+		}
+		return new BoundingBox(new Point3(minX, minY, minZ), new Point3(maxX, maxY, maxZ));
 	}
 
 	@Override

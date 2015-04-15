@@ -14,10 +14,11 @@ public abstract class MeshTriangle extends GeometricObject {
 	protected Vector3d normal;
 	protected double area;
 	
-	public MeshTriangle(final int index0, final int index1, final int index2) {
+	public MeshTriangle(final int index0, final int index1, final int index2, final Mesh mesh) {
 		this.index0 = index0;
 		this.index1 = index1;
 		this.index2 = index2;
+		this.mesh = mesh;
 	}
 	
 	protected void computeNormal(boolean reverse) {
