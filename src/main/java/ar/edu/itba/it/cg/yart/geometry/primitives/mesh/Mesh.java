@@ -1,7 +1,5 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives.mesh;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +19,8 @@ public class Mesh extends GeometricObject {
 	public List<Vector3d> normals;
 	public List<List<Integer>> faces;
 	public List<GeometricObject> triangles;
+	public int numVertices;
+	public int numTriangles;
 	Tracer tracer;
 	
 	int verticesAmount;
@@ -47,6 +47,9 @@ public class Mesh extends GeometricObject {
 		t2.computeNormal(false);
 		triangles.add(t1);
 		triangles.add(t2);
+		
+		this.numVertices = vertices.size();
+		this.numTriangles = triangles.size();
 	}
 	
 	@Override

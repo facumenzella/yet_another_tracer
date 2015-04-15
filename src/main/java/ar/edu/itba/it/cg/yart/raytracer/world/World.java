@@ -46,6 +46,10 @@ public class World {
 		buildTestWorld();
 	}
 	
+	private World buildMeshWorld() {
+		
+	}
+	
 	private void buildTestWorld() {
 		final Tracer tracer = new Tracer();
 		final Point3 eye = new Point3(0,0,200);
