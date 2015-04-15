@@ -1,2 +1,13 @@
+Camera "perspective" "float fov" [30]
 LookAt 8 1 2 2 2 2 5 1.1212 1
+Film
 "integer  xresolution" [200] "integer yresolution" [200]
+
+WorldBegin
+	
+	AttributeBegin
+		Shape "disk"
+			"float radius" [20] "float height" [-1]
+	AttributeEnd
+
+WorldEnd
