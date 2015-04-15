@@ -1,7 +1,7 @@
 package ar.edu.itba.it.cg.yart.raytracer;
 
 import java.util.LinkedList;
-import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
@@ -26,8 +26,10 @@ public class SimpleRayTracer implements RayTracer {
 	private int bucketSize;
 	private RaytracerCallbacks callbacks;
 	private final ExecutorService executor;
-	private final List<Bucket> buckets;
+	private final Queue<Bucket> buckets;
 	final Camera camera;
+	
+	final static private int THREADS = 3;
 
 
 	public interface RaytracerCallbacks {
@@ -45,7 +47,7 @@ public class SimpleRayTracer implements RayTracer {
 		this.hRes = hRes;
 		this.vRes = vRes;
 		this.bucketSize = bucketSize;
-		this.executor = YartExecutorFactory.newFixedThreadPool(2); // TODO change after tests
+		this.executor = YartExecutorFactory.newFixedThreadPool(THREADS); // TODO change after tests
 		this.buckets = getBuckets();		
 		final Point3 eye = new Point3(0,0,200);
 		final Point3 lookat = new Point3(0,0,0); // point where we look at
@@ -53,14 +55,16 @@ public class SimpleRayTracer implements RayTracer {
 		this.camera = new PinholeCamera(eye, lookat, up, distance, zoom, hRes, vRes, fov, numSamples);
 	}
 
-	public ArrayIntegerMatrix serialRender(final World world) {
+	public ArrayIntegerMatrix serialRender() {
+		return this.serialRender(this.world);
+	}
+	
+	private ArrayIntegerMatrix serialRender(final World world) {
 		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
-		List<Bucket> buckets = getBuckets();
 		ViewPlane viewPlane = camera.getViewPlane();
 
 		while (!buckets.isEmpty()) {
-			Bucket bucket = buckets.get(0);
-			buckets.remove(0);
+			Bucket bucket = buckets.poll();
 
 			world.getActiveCamera().renderScene(bucket, world, result,
 					viewPlane, new SimpleTracer());
@@ -77,24 +81,26 @@ public class SimpleRayTracer implements RayTracer {
 		return result;
 	}
 	
+	@Override
 	public ArrayIntegerMatrix render() {
 		return this.render(this.world);
 	}
 
-	@Override
-	public ArrayIntegerMatrix render(final World world) {
+	private ArrayIntegerMatrix render(final World world) {
 		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
 		ViewPlane viewPlane = camera.getViewPlane();
 
 		int totals = buckets.size();
 		final CountDownLatch latch = new CountDownLatch(totals);
 
-		while (!buckets.isEmpty()) {
-			final Bucket bucket = buckets.get(0);
-			buckets.remove(0);
+		int i = 0;
+		while (i < THREADS) {
+			i++;
+//			final Bucket bucket = buckets.poll();
+//			buckets.remove(0);
 
 			final Camera camera = world.getActiveCamera();
-			executor.submit(new BucketWorker(bucket, camera, world, viewPlane,
+			executor.submit(new BucketWorker(buckets, camera, world, viewPlane,
 					result, new RaytracerCallbacks() {
 
 						@Override
@@ -151,8 +157,8 @@ public class SimpleRayTracer implements RayTracer {
 	}
 
 	@Override
-	public List<Bucket> getBuckets() {
-		List<Bucket> buckets = new LinkedList<Bucket>();
+	public Queue<Bucket> getBuckets() {
+		Queue<Bucket> buckets = new LinkedList<Bucket>();
 		int xBuckets = (int) Math.ceil(hRes / ((float) bucketSize));
 		int yBuckets = (int) Math.ceil(vRes / ((float) bucketSize));
 

@@ -24,7 +24,7 @@ public class YartApp {
 		final int hRes = 640;
 		final int vRes = 480;
 		final double fov = 30;
-		final int bucketSize = 512;
+		final int bucketSize = 128;
 		final double tMax = 1000;
 		final double distance = 500;
 		final int zoom = 1;

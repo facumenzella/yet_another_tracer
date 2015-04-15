@@ -1,9 +1,10 @@
 package ar.edu.itba.it.cg.yart.raytracer.buckets;
 
+import java.util.Queue;
+
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
-import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer;
-import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer.RaytracerCallbacks;
+import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
@@ -11,16 +12,17 @@ import ar.edu.itba.it.cg.yart.raytracer.world.World;
 public class BucketWorker implements Runnable{
 
 	private final Camera camera;
-	private final Bucket bucket;
+//	private final Bucket bucket;
 	private final World world;
 	private final ViewPlane viewPlane;
 	private final ArrayIntegerMatrix result;
 	private final RaytracerCallbacks callback;
 	private final Tracer tracer;
+	private final Queue<Bucket> buckets;
 	
-	public BucketWorker(final Bucket bucket, final Camera camera, final World world, 
+	public BucketWorker(final Queue<Bucket> buckets, final Camera camera, final World world, 
 			final ViewPlane viewPlane, final ArrayIntegerMatrix result, final RaytracerCallbacks callback, final Tracer tracer) {
-		this.bucket = bucket;
+		this.buckets = buckets;
 		this.camera = camera;
 		this.world = world;
 		this.viewPlane = viewPlane;
@@ -31,8 +33,16 @@ public class BucketWorker implements Runnable{
 	
 	@Override
 	public void run() {
-		camera.renderScene(bucket, world, result, viewPlane, tracer);
-		callback.onBucketFinished(bucket, result);
+		boolean emptyQueue = false;
+		Bucket bucket = buckets.poll();
+		while (!emptyQueue) {
+			camera.renderScene(bucket, world, result, viewPlane, tracer);
+			callback.onBucketFinished(bucket, result);
+			emptyQueue = buckets.isEmpty();
+			if (!emptyQueue) {
+				bucket = buckets.poll();
+			}
+		}
 	}
 
 }
