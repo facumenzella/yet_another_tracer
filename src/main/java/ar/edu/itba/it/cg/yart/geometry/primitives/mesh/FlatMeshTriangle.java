@@ -28,22 +28,21 @@ public class FlatMeshTriangle extends MeshTriangle {
 		double i = v0.z - v1.z, j = v0.z - v2.z, k = ray.direction.z, l = v0.z - ray.origin.z;
 			
 		double m = f * k - g * j, n = h * k - g * l, p = f * l - h * j;
-		double q = g * i - e * k, s = e * j - f * i;
+		double q = g * i - e * k, r = e * l - h * i, s = e * j - f * i;
 		
 		double inv_denom  = 1.0 / (a * m + b * q + c * s);
 		
 		double e1 = d * m - b * n - c * p;
 		double beta = e1 * inv_denom;
 		
-		if (beta < 0.0) {
+		if (beta < 0.0 || beta > 1.0) {
 			return Double.NEGATIVE_INFINITY;
 		}
 		
-		double r = e * l - h * i;
 		double e2 = a * n + d * q + c * r;
 		double gamma = e2 * inv_denom;
 		
-		if (gamma < 0.0) {
+		if (gamma < 0.0 || gamma > 1.0) {
 			return Double.NEGATIVE_INFINITY;
 		}
 		
