@@ -7,9 +7,12 @@ import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 import ar.edu.itba.it.cg.yart.ui.RenderWindow;
 import ar.edu.itba.it.cg.yart.utils.ImageSaver;
+import ar.edu.itba.it.cg.yart.utils.config.YartConfigProvider;
 
 public class YartApp {
 
+	private final static YartConfigProvider configs = new YartConfigProvider();
+	
 	public static void main(String[] args) {
 
 		if (args.length < 2) {
@@ -19,6 +22,8 @@ public class YartApp {
 		final String imageName = args[0];
 		final String imageExtension = args[1];
 
+		int cores = configs.getCoresQty();
+		
 		// Wanna see something cool?
 		// Try 1920 * 1080
 		final int hRes = 640;
@@ -33,7 +38,7 @@ public class YartApp {
 		World w = new World("jaja");
 		ArrayIntegerMatrix result;
 
-		RayTracer raytracer = new SimpleRayTracer(hRes, vRes, fov, bucketSize, tMax, distance, zoom, numSamples);
+		RayTracer raytracer = new SimpleRayTracer(hRes, vRes, fov, bucketSize, tMax, distance, zoom, numSamples, cores);
 		raytracer.setWorld(w);
 
 		new RenderWindow(raytracer);

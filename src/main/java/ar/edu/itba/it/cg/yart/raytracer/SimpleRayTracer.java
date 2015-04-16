@@ -19,6 +19,8 @@ import ar.edu.itba.it.cg.yart.utils.YartExecutorFactory;
 
 public class SimpleRayTracer implements RayTracer {
 
+	private final int cores;
+	
 	private World world;
 
 	private int hRes;
@@ -28,9 +30,6 @@ public class SimpleRayTracer implements RayTracer {
 	private final ExecutorService executor;
 	private final Deque<Bucket> buckets;
 	final Camera camera;
-	
-	final static private int THREADS = 6;
-
 
 	public interface RaytracerCallbacks {
 		public void onBucketFinished(final Bucket bucket,
@@ -41,13 +40,13 @@ public class SimpleRayTracer implements RayTracer {
 
 	
 	public SimpleRayTracer(final int hRes, final int vRes, final double fov, final int bucketSize, 
-			final double tMax, final double distance, final int zoom, final int numSamples) {
-
+			final double tMax, final double distance, final int zoom, final int numSamples, final int cores) {
+		this.cores = cores;
 		// TODO : change how we create the world
 		this.hRes = hRes;
 		this.vRes = vRes;
 		this.bucketSize = bucketSize;
-		this.executor = YartExecutorFactory.newFixedThreadPool(THREADS); // TODO change after tests
+		this.executor = YartExecutorFactory.newFixedThreadPool(this.cores); // TODO change after tests
 		this.buckets = getBuckets();		
 		final Point3 eye = new Point3(0,0,200);
 		final Point3 lookat = new Point3(0,0,0); // point where we look at
@@ -94,7 +93,7 @@ public class SimpleRayTracer implements RayTracer {
 		final CountDownLatch latch = new CountDownLatch(totals);
 
 		int i = 0;
-		while (i < THREADS) {
+		while (i < this.cores) {
 			i++;
 
 			final Camera camera = world.getActiveCamera();
