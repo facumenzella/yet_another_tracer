@@ -23,13 +23,14 @@ public class YartApp {
 		final String imageExtension = args[1];
 
 		int cores = configs.getCoresQty();
-		
+		int alpha = cores * 2;
 		// Wanna see something cool?
 		// Try 1920 * 1080
 		final int hRes = 640;
 		final int vRes = 480;
 		final double fov = 30;
-		final int bucketSize = 128;
+		final int xBucketSize = hRes / alpha;
+		final int yBucketSize = vRes / alpha;
 		final double tMax = 1000;
 		final double distance = 500;
 		final int zoom = 1;
@@ -38,7 +39,7 @@ public class YartApp {
 		World w = new World("jaja");
 		ArrayIntegerMatrix result;
 
-		RayTracer raytracer = new SimpleRayTracer(hRes, vRes, fov, bucketSize, tMax, distance, zoom, numSamples, cores);
+		RayTracer raytracer = new SimpleRayTracer(hRes, vRes, fov, xBucketSize, yBucketSize, tMax, distance, zoom, numSamples, cores);
 		raytracer.setWorld(w);
 
 		new RenderWindow(raytracer);

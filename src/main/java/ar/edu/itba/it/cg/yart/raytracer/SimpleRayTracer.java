@@ -39,15 +39,14 @@ public class SimpleRayTracer implements RayTracer {
 	}
 
 	
-	public SimpleRayTracer(final int hRes, final int vRes, final double fov, final int bucketSize, 
+	public SimpleRayTracer(final int hRes, final int vRes, final double fov, final int xBucketSize, final int ysBucketSize,
 			final double tMax, final double distance, final int zoom, final int numSamples, final int cores) {
 		this.cores = cores;
 		// TODO : change how we create the world
 		this.hRes = hRes;
 		this.vRes = vRes;
-		this.bucketSize = bucketSize;
-		this.executor = YartExecutorFactory.newFixedThreadPool(this.cores); // TODO change after tests
-		this.buckets = getBuckets();		
+		this.executor = YartExecutorFactory.newFixedThreadPool(this.cores);
+		this.buckets = getBuckets(xBucketSize, ysBucketSize);		
 		final Point3 eye = new Point3(0,0,200);
 		final Point3 lookat = new Point3(0,0,0); // point where we look at
 		final Vector3d up = new Vector3d(0,1,0); // up vector, rotates around the camera z-axis
@@ -153,23 +152,23 @@ public class SimpleRayTracer implements RayTracer {
 		return bucketSize;
 	}
 
-	public Deque<Bucket> getBuckets() {
+	public Deque<Bucket> getBuckets(final int xBucketsSize, final int yBucketsSize) {
 		Deque<Bucket> buckets = new ArrayDeque<Bucket>();
-		int xBuckets = (int) Math.ceil(hRes / ((float) bucketSize));
-		int yBuckets = (int) Math.ceil(vRes / ((float) bucketSize));
+		int xBuckets = (int) Math.ceil(hRes / ((float) xBucketsSize));
+		int yBuckets = (int) Math.ceil(vRes / ((float) yBucketsSize));
 
 		for (int i = 0; i < yBuckets; i++) {
 			for (int j = 0; j < xBuckets; j++) {
-				int width = bucketSize;
-				int height = bucketSize;
+				int width = xBucketsSize;
+				int height = yBucketsSize;
 
 				if (j == (xBuckets - 1))
-					width = hRes - j * bucketSize;
+					width = hRes - j * xBucketsSize;
 
 				if (i == (yBuckets - 1))
-					height = vRes - i * bucketSize;
+					height = vRes - i * yBucketsSize;
 
-				buckets.add(new Bucket(j * bucketSize, i * bucketSize, width, height));
+				buckets.add(new Bucket(j * xBucketsSize, i * yBucketsSize, width, height));
 			}
 		}
 
