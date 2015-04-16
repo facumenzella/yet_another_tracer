@@ -10,19 +10,21 @@ import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
-public class BucketWorker implements Runnable{
+public class BucketWorker implements Runnable {
 
 	private final Camera camera;
-//	private final Bucket bucket;
+	// private final Bucket bucket;
 	private final World world;
 	private final ViewPlane viewPlane;
 	private final ArrayIntegerMatrix result;
 	private final RaytracerCallbacks callback;
 	private final Tracer tracer;
 	private final Deque<Bucket> buckets;
-	
-	public BucketWorker(final Deque<Bucket> buckets, final Camera camera, final World world, 
-			final ViewPlane viewPlane, final ArrayIntegerMatrix result, final RaytracerCallbacks callback, final Tracer tracer) {
+
+	public BucketWorker(final Deque<Bucket> buckets, final Camera camera,
+			final World world, final ViewPlane viewPlane,
+			final ArrayIntegerMatrix result, final RaytracerCallbacks callback,
+			final Tracer tracer) {
 		this.buckets = buckets;
 		this.camera = camera;
 		this.world = world;
@@ -31,23 +33,17 @@ public class BucketWorker implements Runnable{
 		this.callback = callback;
 		this.tracer = tracer;
 	}
-	
+
 	@Override
 	public void run() {
-		int i = 0;
 		boolean emptyQueue = false;
-		Bucket bucket = buckets.pop();
+		Bucket bucket = buckets.poll();
 		while (!emptyQueue) {
 			camera.renderScene(bucket, world, result, viewPlane, tracer);
 			callback.onBucketFinished(bucket, result);
 			emptyQueue = buckets.isEmpty();
-			i++;
 			if (!emptyQueue) {
-				if (i % 2 == 0) {
-					bucket = buckets.pollFirst();
-				} else {
-					bucket = buckets.pollLast();
-				}
+				bucket = buckets.poll();
 			}
 		}
 	}
