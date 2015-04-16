@@ -7,7 +7,7 @@ import java.util.Properties;
 public class YartConfigReader {
 
 	private final Properties properties;
-	private static final String BASE = "src/main/resources";
+	private static final String BASE = "src/main/resources/";
 	private static final String PROPERTIES_FILE = "config.properties";
 
 	protected YartConfigReader() {

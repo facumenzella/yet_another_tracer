@@ -9,11 +9,6 @@ public class YartConfigProvider {
 	public YartConfigProvider() {
 		this.reader = new YartConfigReader();
 	}
-	
-	public static void main (String args[]) {
-		YartConfigProvider provider = new YartConfigProvider();
-		System.out.println(provider.getCoresQty());
-	}
 
 	public int getCoresQty() {
 		final String qty = this.reader.getKey(CORES_QTY_KEY);
