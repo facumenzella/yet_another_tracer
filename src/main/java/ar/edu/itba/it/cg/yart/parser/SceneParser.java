@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
+import ar.edu.itba.it.cg.yart.parser.Attribute.AttributeType;
 
 public class SceneParser {
 	
@@ -23,8 +24,6 @@ public class SceneParser {
 		GLOBAL,
 		WORLD,
 		ATTRIBUTE,
-		PROPERTY,
-		IDENTIFIER,
 		END
 	}
 	
@@ -39,6 +38,7 @@ public class SceneParser {
 	
 	private ParserStatus status;
 	private Identifier identifier;
+	private Attribute currentAttribute;
 	private List<Property> accProperties;
 	
 	public SceneParser(final String filePath) {
@@ -130,10 +130,15 @@ public class SceneParser {
 			break;
 		case WORLD:
 			if (attribute.equals("AttributeBegin")) {
+				currentAttribute = new Attribute(AttributeType.ATTRIBUTE);
 				status = ParserStatus.ATTRIBUTE;
 			}
 			else if (attribute.equals("AttributeEnd")) {
 				status = ParserStatus.WORLD;
+			}
+			else if (attribute.equals("ObjectBegin")) {
+				currentAttribute = new Attribute(AttributeType.OBJECT);
+				status = ParserStatus.ATTRIBUTE;
 			}
 			else if (attribute.equals("WorldEnd")) {
 				status = ParserStatus.END;
