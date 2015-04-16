@@ -1,7 +1,9 @@
 package ar.edu.itba.it.cg.yart.acceleration_estructures;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
@@ -62,7 +64,7 @@ public class BSPAxisAligned {
 			return new LeafNode(currentObjects);
 		}
 		
-		List<Double> candidates = this.planeCandidatesX(currentObjects);
+		Set<Double> candidates = this.planeCandidatesX(currentObjects);
 		final double splittingPoint = this.bestXCandidate(candidates,
 				currentBox, currentObjects);
 		
@@ -104,7 +106,7 @@ public class BSPAxisAligned {
 			return new LeafNode(currentObjects);
 		}
 
-		List<Double> candidates = this.planeCandidatesY(currentObjects);
+		Set<Double> candidates = this.planeCandidatesY(currentObjects);
 		final double splittingPoint = this.bestYCandidate(candidates,
 				currentBox, currentObjects);
 
@@ -147,7 +149,7 @@ public class BSPAxisAligned {
 			return new LeafNode(currentObjects);
 		}
 
-		List<Double> candidates = this.planeCandidatesZ(currentObjects);
+		Set<Double> candidates = this.planeCandidatesZ(currentObjects);
 		final double splittingPoint = this.bestZCandidate(candidates,
 				currentBox, currentObjects);
 
@@ -196,8 +198,8 @@ public class BSPAxisAligned {
 		}
 	}
 
-	public List<Double> planeCandidatesX(final List<GeometricObject> objects) {
-		List<Double> candidates = new ArrayList<Double>();
+	public Set<Double> planeCandidatesX(final List<GeometricObject> objects) {
+		Set<Double> candidates = new HashSet<Double>();
 		for (GeometricObject o : objects) {
 			BoundingBox b = o.getBoundingBox();
 			if (b != null) {
@@ -208,8 +210,8 @@ public class BSPAxisAligned {
 		return candidates;
 	}
 
-	public List<Double> planeCandidatesY(final List<GeometricObject> objects) {
-		List<Double> candidates = new ArrayList<Double>();
+	public Set<Double> planeCandidatesY(final List<GeometricObject> objects) {
+		Set<Double> candidates = new HashSet<Double>();
 		for (GeometricObject o : objects) {
 			BoundingBox b = o.getBoundingBox();
 			if (b != null) {
@@ -220,8 +222,8 @@ public class BSPAxisAligned {
 		return candidates;
 	}
 
-	public List<Double> planeCandidatesZ(final List<GeometricObject> objects) {
-		List<Double> candidates = new ArrayList<Double>();
+	public Set<Double> planeCandidatesZ(final List<GeometricObject> objects) {
+		Set<Double> candidates = new HashSet<Double>();
 		for (GeometricObject o : objects) {
 			BoundingBox b = o.getBoundingBox();
 			if (b != null) {
@@ -320,10 +322,10 @@ public class BSPAxisAligned {
 		return (1 / this.initialBox.getSurfaceArea()) * (currentBox.getSurfaceArea() * objects.size());
 	}
 
-	public double bestXCandidate(final List<Double> candidates,
+	public double bestXCandidate(final Set<Double> candidates,
 			final BoundingBox currentBox, final List<GeometricObject> objects) {
 		double minCost = Double.POSITIVE_INFINITY;
-		double bestCandidate = candidates.get(0);
+		double bestCandidate = Double.POSITIVE_INFINITY;
 		for (Double d : candidates) {
 			final double cost = this.planeCostX(currentBox, objects, d);
 			if (cost < minCost) {
@@ -334,10 +336,10 @@ public class BSPAxisAligned {
 		return bestCandidate;
 	}
 
-	public double bestYCandidate(final List<Double> candidates,
+	public double bestYCandidate(final Set<Double> candidates,
 			final BoundingBox currentBox, final List<GeometricObject> objects) {
 		double minCost = Double.POSITIVE_INFINITY;
-		double bestCandidate = candidates.get(0);
+		double bestCandidate = Double.POSITIVE_INFINITY;
 		for (Double d : candidates) {
 			final double cost = this.planeCostY(currentBox, objects, d);
 			if (cost < minCost) {
@@ -348,10 +350,10 @@ public class BSPAxisAligned {
 		return bestCandidate;
 	}
 
-	public double bestZCandidate(final List<Double> candidates,
+	public double bestZCandidate(final Set<Double> candidates,
 			final BoundingBox currentBox, final List<GeometricObject> objects) {
 		double minCost = Double.POSITIVE_INFINITY;
-		double bestCandidate = candidates.get(0);
+		double bestCandidate = Double.POSITIVE_INFINITY;
 		for (Double d : candidates) {
 			final double cost = this.planeCostZ(currentBox, objects, d);
 			if (cost < minCost) {
