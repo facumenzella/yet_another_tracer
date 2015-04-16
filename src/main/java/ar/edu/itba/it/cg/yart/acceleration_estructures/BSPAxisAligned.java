@@ -33,19 +33,14 @@ public class BSPAxisAligned {
 		this.minZ = minZ;
 		this.maxZ = maxZ;
 		this.emptyLeafNode = new LeafNode(new ArrayList<GeometricObject>());
-	}
-
-	public List<GeometricObject> getAllObjects() {
-		return this.root.getObjects();
-	}
-
-	public void buildTree(final List<GeometricObject> objects) {
 		this.buildInitialBox();
+	}
+	
+	public void buildTree(final List<GeometricObject> objects) {
 		this.root = subdivideXAxis(initialBox, objects, 0);
 	}
 
 	private void buildInitialBox() {
-		
 		double minX = -4000;
 		double maxX = 4000;
 		double minY = -4000;
