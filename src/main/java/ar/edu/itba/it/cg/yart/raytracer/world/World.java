@@ -20,9 +20,8 @@ import ar.edu.itba.it.cg.yart.light.PointLight;
 import ar.edu.itba.it.cg.yart.light.materials.Matte;
 import ar.edu.itba.it.cg.yart.light.materials.Phong;
 import ar.edu.itba.it.cg.yart.light.materials.Reflective;
+import ar.edu.itba.it.cg.yart.light.materials.Transparent;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
-import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
 
 public class World {
 
@@ -60,7 +59,7 @@ public class World {
 		s1m.setKa(0.3);
 		s1m.setExp(20);
 		s1m.setCr(Color.whiteColor());
-		s1m.setKr(0.75);
+		s1m.setKr(0.4);
 		s1.setMaterial(s1m);
 		final Sphere s2 = new Sphere(new Point3(-35,-10,5), 20.0f);
 		Reflective s2m = new Reflective();
@@ -70,17 +69,19 @@ public class World {
 		s2m.setKs(0.2);
 		s2m.setExp(10);
 		s2m.setCr(Color.whiteColor());
-		s2m.setKr(0.95);
+		s2m.setKr(0.5);
 		s2.setMaterial(s2m);
-		final Sphere s3 = new Sphere(new Point3(5,-20,40), 10.0f);
-		Reflective s3m = new Reflective();	
+		final Sphere s3 = new Sphere(new Point3(-5,-20,65), 10.0f);
+		Transparent s3m = new Transparent();	
 		s3m.setCd(Color.blueColor());
-		s3m.setKd(0.85);
-		s3m.setKa(0.25);
-		s3m.setKs(0.3);
-		s3m.setExp(10);
+		s2m.setKd(0.50);
+		s2m.setKa(0.3);
+		s3m.setKs(0.5);
+		s3m.setExp(1000);
 		s3m.setCr(Color.whiteColor());
 		s3m.setKr(0.5);
+		s3m.setIor(1.5);
+		s3m.setKt(0.9);
 		s3.setMaterial(s3m);
 		final Disc d1 = new Disc(new Point3(0, 0, 0), new Vector3d(5,2,2), 30);
 		Matte d1m = new Matte();
