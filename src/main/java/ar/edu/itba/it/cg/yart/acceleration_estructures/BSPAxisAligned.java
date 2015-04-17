@@ -23,7 +23,7 @@ public class BSPAxisAligned {
 	private final double maxZ;
 	private final LeafNode emptyLeafNode;
 
-	private static final int DEPTH = 5;
+	private static final int DEPTH = 30;
 	protected static final double EPSILON = 0.00001;
 
 	public BSPAxisAligned(final double minZ, final double maxZ,
@@ -244,6 +244,8 @@ public class BSPAxisAligned {
 				} else {
 					stradding++;
 				}
+			} else {
+				stradding++;
 			}
 		}
 
@@ -272,6 +274,8 @@ public class BSPAxisAligned {
 				} else {
 					stradding++;
 				}
+			} else {
+				stradding++;
 			}
 		}
 
@@ -300,6 +304,8 @@ public class BSPAxisAligned {
 				} else {
 					stradding++;
 				}
+			} else {
+				stradding++;
 			}
 		}
 
