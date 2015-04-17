@@ -52,6 +52,13 @@ public final class Vector3d {
 		return new Vector3d(x + other.x, y + other.y, z + other.z);
 	}
 	
+	public Vector3d add(final double n) {
+		this.x += n;
+		this.y += n;
+		this.z += n;
+		return this;
+	}
+	
 	public Vector3d sub(final Vector3d other) {
 		return new Vector3d(x - other.x, y - other.y, z - other.z);
 	}
