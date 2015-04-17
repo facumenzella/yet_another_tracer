@@ -50,4 +50,9 @@ public class Property {
 	public String getType() {
 		return type;
 	}
+	
+	@Override
+	public String toString() {
+		return "(" + getType() + ") " + getName() + " = " + getValue();
+	}
 }
