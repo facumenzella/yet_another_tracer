@@ -1,13 +1,18 @@
-Camera "perspective" "float fov" [30]
+Camera "perspective"
+	"float fov" [30]
 LookAt 8 1 2 2 2 2 5 1.1212 1
 Film
-"integer  xresolution" [200] "integer yresolution" [200]
+"integer  xresolution" [200] "integer yresolution" [200] #kik
 
 WorldBegin
 	
-	AttributeBegin
+	AttributeBegin "pedro"
 		Shape "disk"
 			"float radius" [20] "float height" [-1]
 	AttributeEnd
+
+	ObjectBegin "kkkk"
+		Shape "kik"
+	ObjectEnd
 
 WorldEnd
