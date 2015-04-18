@@ -44,7 +44,7 @@ public class SceneParser {
 		Path path = Paths.get(filePath);
 		Scanner scanner =  new Scanner(path, StandardCharsets.UTF_8.name());
 		while (scanner.hasNextLine() && status != ParserStatus.END) {
-			String rawLine = scanner.nextLine().trim();
+			String rawLine = scanner.nextLine().trim().replaceAll("\\s", " ");
 			String uncommentedLine = StringUtils.substringBefore(rawLine, "#");
 			
 			if (uncommentedLine != null && !uncommentedLine.isEmpty()) {
@@ -55,9 +55,16 @@ public class SceneParser {
 		scanner.close();
 	}
 	
-	public void processLine(final String line) throws ParseException {
+	public List<Attribute> getAttributes() {
+		return attributes;
+	}
+	
+	public List<Identifier> getGlobalIdentifiers() {
+		return globalIdentifiers;
+	}
+	
+	private void processLine(final String line) throws ParseException {
 		String first = StringUtils.substringBefore(line, " ");
-		System.out.println(first);
 		
 		if (first.charAt(0) == '"') { // Is a property
 			processProperties(line);
@@ -68,7 +75,7 @@ public class SceneParser {
 		}
 	}
 	
-	public void processProperties(final String line) throws ParseException {
+	private void processProperties(final String line) throws ParseException {
 		String[] properties = StringUtils.substringsBetween(line, "\"", "\"");
 		String[] values = StringUtils.substringsBetween(line, "[", "]");
 		
@@ -82,7 +89,7 @@ public class SceneParser {
 		}
 	}
 	
-	public void processAttribute(final String attribute, final String[] args) throws ParseException {
+	private void processAttribute(final String attribute, final String[] args) throws ParseException {
 		// First, check if we're dealing with an Identifier
 		IdentifierType identifierType = Identifier.getByName(attribute);
 		if (identifierType != null) {
@@ -144,13 +151,13 @@ public class SceneParser {
 		}
 	}
 	
-	public void closeAttribute() {
+	private void closeAttribute() {
 		applyProperties();
 		applyIdentifiers();
 		currentAttribute = null;
 	}
 	
-	public void applyIdentifiers() {
+	private void applyIdentifiers() {
 		if (status == ParserStatus.GLOBAL) {
 			for (Identifier i : accIdentifiers) {
 				globalIdentifiers.add(i);
@@ -168,7 +175,7 @@ public class SceneParser {
 		accIdentifiers.clear();
 	}
 	
-	public void applyProperties() {
+	private void applyProperties() {
 		if (currentIdentifier != null) {
 			for (Property p : accProperties) {
 				currentIdentifier.addProperty(p);
