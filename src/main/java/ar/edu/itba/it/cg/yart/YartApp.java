@@ -1,20 +1,13 @@
 package ar.edu.itba.it.cg.yart;
 
-import java.io.IOException;
-import java.text.ParseException;
-
 import ar.edu.itba.it.cg.yart.exceptions.WrongParametersException;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
-import ar.edu.itba.it.cg.yart.parser.SceneParser;
 import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
-<<<<<<< HEAD
 import ar.edu.itba.it.cg.yart.ui.RenderWindow;
 import ar.edu.itba.it.cg.yart.utils.ImageSaver;
 import ar.edu.itba.it.cg.yart.utils.config.YartConfigProvider;
-=======
->>>>>>> First attempt at file parser.
 
 public class YartApp {
 
