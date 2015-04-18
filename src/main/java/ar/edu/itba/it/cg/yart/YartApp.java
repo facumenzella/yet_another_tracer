@@ -1,14 +1,12 @@
 package ar.edu.itba.it.cg.yart;
 
-import java.io.IOException;
-import java.text.ParseException;
-
 import ar.edu.itba.it.cg.yart.exceptions.WrongParametersException;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
-import ar.edu.itba.it.cg.yart.parser.SceneParser;
 import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
+import ar.edu.itba.it.cg.yart.ui.RenderWindow;
+import ar.edu.itba.it.cg.yart.utils.ImageSaver;
 
 public class YartApp {
 
@@ -36,7 +34,7 @@ public class YartApp {
 		ArrayIntegerMatrix result;
 
 		RayTracer raytracer = new SimpleRayTracer(hRes, vRes, fov, bucketSize, tMax, distance, zoom, numSamples);
-		/*raytracer.setWorld(w);
+		raytracer.setWorld(w);
 
 		new RenderWindow(raytracer);
 
@@ -46,14 +44,7 @@ public class YartApp {
 		System.out.println(end - start);
 	
 		ImageSaver imageSaver = new ImageSaver();
-		imageSaver.saveImage(result, imageName, imageExtension);*/
-		
-		SceneParser parser = new SceneParser("test.lxs");
-		try {
-			parser.parseFile();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		imageSaver.saveImage(result, imageName, imageExtension);
 	}
 
 }
