@@ -1,7 +1,8 @@
 package ar.edu.itba.it.cg.yart.parser;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Identifier {
 
@@ -22,8 +23,8 @@ public class Identifier {
 		}
 	}
 
-	private List<Property> properties;
-	private Object parameter;
+	private Map<String, Property> properties;
+	private String[] parameter;
 	private IdentifierType type;
 	
 	public static IdentifierType getByName(final String name) {
@@ -38,15 +39,21 @@ public class Identifier {
 
 	public Identifier(final IdentifierType type, final String[] args) {
 		this.type = type;
+		
+		for (int i = 0; i < args.length; i++) {
+			args[i] = args[i].replaceAll("\"", "");
+		}
+		
+		this.parameter = args;
 	}
 
 	public void addProperty(final Property property) {
 		if (properties == null) {
-			properties = new ArrayList<Property>();
+			properties = new HashMap<String, Property>();
 		}
 
 		if (property != null) {
-			properties.add(property);
+			properties.put(property.getName(), property);
 		}
 	}
 	
@@ -54,12 +61,26 @@ public class Identifier {
 		return type;
 	}
 	
-	public Object getParamter() {
+	public String[] getParamter() {
 		return parameter;
 	}
 	
-	public List<Property> getProperties() {
-		return properties;
+	public Collection<Property> getProperties() {
+		return properties.values();
+	}
+	
+	public Property getProperty(final String propertyName) {
+		Property ret = null;
+		
+		if (properties != null) {
+			ret = properties.get(propertyName);
+		}
+		
+		return ret;
+	}
+	
+	public boolean hasProperty(final String propertyName) {
+		return properties != null && properties.containsKey(propertyName);
 	}
 	
 	@Override
