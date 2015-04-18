@@ -6,13 +6,9 @@ Film
 
 WorldBegin
 	
-	AttributeBegin "pedro"
-		Shape "disk"
-			"float radius" [20] "float height" [-1]
+	AttributeBegin
+		Shape "shpere"
+			"float radius" [10]
 	AttributeEnd
-
-	ObjectBegin "kkkk"
-		Shape "kik"
-	ObjectEnd
 
 WorldEnd
