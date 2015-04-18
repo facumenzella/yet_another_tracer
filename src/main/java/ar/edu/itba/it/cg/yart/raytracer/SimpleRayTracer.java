@@ -14,6 +14,7 @@ import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleTracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 import ar.edu.itba.it.cg.yart.utils.YartExecutorFactory;
 
@@ -37,6 +38,7 @@ public class SimpleRayTracer implements RayTracer {
 	private final ExecutorService executor;
 	private final Deque<Bucket> buckets;
 	private Camera camera;
+	private Tracer tracer;
 
 	public interface RaytracerCallbacks {
 		public void onBucketFinished(final Bucket bucket,
@@ -59,16 +61,12 @@ public class SimpleRayTracer implements RayTracer {
 	}
 
 	public ArrayIntegerMatrix serialRender() {
-		return this.serialRender(this.world);
-	}
-	
-	private ArrayIntegerMatrix serialRender(final World world) {
 		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
 
 		while (!buckets.isEmpty()) {
 			Bucket bucket = buckets.poll();
 
-			camera.renderScene(bucket, world, result, new SimpleTracer(), numSamples);
+			camera.renderScene(bucket, this, result);
 
 			if (callbacks != null) {
 				callbacks.onBucketFinished(bucket, result);
@@ -109,7 +107,7 @@ public class SimpleRayTracer implements RayTracer {
 							callbacks.onBucketFinished(bucket, result);
 							latch.countDown();
 						}
-					}, new SimpleTracer()));
+					}));
 		}
 
 		try {
@@ -175,6 +173,15 @@ public class SimpleRayTracer implements RayTracer {
 		}
 
 		return buckets;
+	}
+	
+	@Override
+	public Tracer getTracer() {
+		if (tracer == null) {
+			tracer = new SimpleTracer();
+		}
+		
+		return tracer;
 	}
 	
 	@Override
