@@ -29,7 +29,7 @@ public class SimpleRayTracer implements RayTracer {
 	private RaytracerCallbacks callbacks;
 	private final ExecutorService executor;
 	private final Deque<Bucket> buckets;
-	final Camera camera;
+	private Camera camera;
 
 	public interface RaytracerCallbacks {
 		public void onBucketFinished(final Bucket bucket,
@@ -50,7 +50,7 @@ public class SimpleRayTracer implements RayTracer {
 		final Point3 eye = new Point3(0,0,200);
 		final Point3 lookat = new Point3(0,0,0); // point where we look at
 		final Vector3d up = new Vector3d(0,1,0); // up vector, rotates around the camera z-axis
-		this.camera = new PinholeCamera(eye, lookat, up, distance, zoom, hRes, vRes, fov, numSamples);
+		setCamera(new PinholeCamera(eye, lookat, up, distance, zoom, hRes, vRes, fov, numSamples));
 	}
 
 	public ArrayIntegerMatrix serialRender() {
@@ -64,7 +64,7 @@ public class SimpleRayTracer implements RayTracer {
 		while (!buckets.isEmpty()) {
 			Bucket bucket = buckets.poll();
 
-			world.getActiveCamera().renderScene(bucket, world, result,
+			camera.renderScene(bucket, world, result,
 					viewPlane, new SimpleTracer());
 
 			if (callbacks != null) {
@@ -95,7 +95,6 @@ public class SimpleRayTracer implements RayTracer {
 		while (i < this.cores) {
 			i++;
 
-			final Camera camera = world.getActiveCamera();
 			executor.submit(new BucketWorker(buckets, camera, world, viewPlane,
 					result, new RaytracerCallbacks() {
 
@@ -128,7 +127,6 @@ public class SimpleRayTracer implements RayTracer {
 	@Override
 	public void setWorld(final World world) {
 		this.world = world;
-		world.addCamera(this.camera);
 	}
 	
 	@Override
@@ -173,5 +171,15 @@ public class SimpleRayTracer implements RayTracer {
 		}
 
 		return buckets;
+	}
+
+	@Override
+	public void setCamera(Camera camera) {
+		this.camera = camera;
+	}
+
+	@Override
+	public Camera getCamera() {
+		return camera;
 	}
 }

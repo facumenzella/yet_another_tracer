@@ -1,9 +1,7 @@
 package ar.edu.itba.it.cg.yart.raytracer.world;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.BSPAxisAligned;
 import ar.edu.itba.it.cg.yart.color.Color;
@@ -18,19 +16,15 @@ import ar.edu.itba.it.cg.yart.light.Directional;
 import ar.edu.itba.it.cg.yart.light.Light;
 import ar.edu.itba.it.cg.yart.light.PointLight;
 import ar.edu.itba.it.cg.yart.light.materials.Matte;
-import ar.edu.itba.it.cg.yart.light.materials.Phong;
 import ar.edu.itba.it.cg.yart.light.materials.Reflective;
 import ar.edu.itba.it.cg.yart.light.materials.Transparent;
-import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 
 public class World {
 
 	private Color backgroundColor;
 	private List<GeometricObject> objects = new ArrayList<GeometricObject>();
 	private List<Light> lights = new ArrayList<Light>();
-	private Set<Camera> cameras;
 	private AmbientLight ambientLight;
-	private Camera activeCamera;
 	BSPAxisAligned bspTree;
 	
 	/**
@@ -38,7 +32,6 @@ public class World {
 	 */
 	public World() {
 		this.ambientLight = new AmbientLight();
-		this.cameras = new HashSet<Camera>();
 	}
 	
 	
@@ -158,14 +151,6 @@ public class World {
 		this.ambientLight = ambientLight;
 	}
 	
-	public Camera getActiveCamera() {
-		return activeCamera;
-	}
-	
-	public void setActiveCamera(final Camera camera) {
-		activeCamera = camera;
-	}
-	
 	public void setBackgroundColor(final Color color) {
 		backgroundColor = new Color(color.r, color.g, color.b, color.a);
 	}
@@ -188,24 +173,12 @@ public class World {
 		return bspTree;
 	}
 	
-	public void addCamera(final Camera camera) {
-		if (cameras.isEmpty()) {
-			setActiveCamera(camera);
-		}
-		
-		cameras.add(camera);
-	}
-	
 	public void addLight(final Light light) {
 		lights.add(light);
 	}
 	
 	public List<Light> getLights() {
 		return lights;
-	}
-	
-	public void setCamera(final Camera camera) {
-		this.addCamera(camera);
 	}
 
 }
