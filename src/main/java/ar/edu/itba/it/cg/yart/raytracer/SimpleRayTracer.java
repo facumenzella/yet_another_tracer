@@ -22,10 +22,17 @@ public class SimpleRayTracer implements RayTracer {
 	private final int cores;
 	
 	private World world;
+	
+	// Default parameters
+	private Point3 eye = new Point3(0,0,200);
+	private Point3 lookat = new Point3(0,0,0);
+	private Vector3d up = new Vector3d(0,1,0);
 
 	private int hRes;
 	private int vRes;
 	private int bucketSize;
+	private int numSamples;
+	
 	private RaytracerCallbacks callbacks;
 	private final ExecutorService executor;
 	private final Deque<Bucket> buckets;
@@ -39,18 +46,16 @@ public class SimpleRayTracer implements RayTracer {
 	}
 
 	
-	public SimpleRayTracer(final int hRes, final int vRes, final double fov, final int xBucketSize, final int ysBucketSize,
+	public SimpleRayTracer(final int xBucketSize, final int ysBucketSize,
 			final double tMax, final double distance, final int zoom, final int numSamples, final int cores) {
 		this.cores = cores;
 		// TODO : change how we create the world
-		this.hRes = hRes;
-		this.vRes = vRes;
+		setResolution(800, 600);
+		setNumSamples(numSamples);
 		this.executor = YartExecutorFactory.newFixedThreadPool(this.cores);
-		this.buckets = getBuckets(xBucketSize, ysBucketSize);		
-		final Point3 eye = new Point3(0,0,200);
-		final Point3 lookat = new Point3(0,0,0); // point where we look at
-		final Vector3d up = new Vector3d(0,1,0); // up vector, rotates around the camera z-axis
-		setCamera(new PinholeCamera(eye, lookat, up, distance, zoom, hRes, vRes, fov, numSamples));
+		this.buckets = getBuckets(xBucketSize, ysBucketSize);
+		
+		setCamera(new PinholeCamera(eye, lookat, up, distance, zoom, hRes, vRes, numSamples));
 	}
 
 	public ArrayIntegerMatrix serialRender() {
@@ -59,13 +64,11 @@ public class SimpleRayTracer implements RayTracer {
 	
 	private ArrayIntegerMatrix serialRender(final World world) {
 		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
-		ViewPlane viewPlane = camera.getViewPlane();
 
 		while (!buckets.isEmpty()) {
 			Bucket bucket = buckets.poll();
 
-			camera.renderScene(bucket, world, result,
-					viewPlane, new SimpleTracer());
+			camera.renderScene(bucket, world, result, new SimpleTracer(), numSamples);
 
 			if (callbacks != null) {
 				callbacks.onBucketFinished(bucket, result);
@@ -86,16 +89,12 @@ public class SimpleRayTracer implements RayTracer {
 
 	private ArrayIntegerMatrix render(final World world) {
 		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
-		ViewPlane viewPlane = camera.getViewPlane();
-
+		
 		int totals = buckets.size();
 		final CountDownLatch latch = new CountDownLatch(totals);
 
-		int i = 0;
-		while (i < this.cores) {
-			i++;
-
-			executor.submit(new BucketWorker(buckets, camera, world, viewPlane,
+		for (int i = 0; i < this.cores; i++) {
+			executor.submit(new BucketWorker(buckets, this,
 					result, new RaytracerCallbacks() {
 
 						@Override
@@ -122,6 +121,11 @@ public class SimpleRayTracer implements RayTracer {
 		}
 
 		return result;
+	}
+	
+	@Override
+	public World getWorld() {
+		return world;
 	}
 	
 	@Override
@@ -172,10 +176,41 @@ public class SimpleRayTracer implements RayTracer {
 
 		return buckets;
 	}
+	
+	@Override
+	public int getNumSamples() {
+		return numSamples;
+	}
+	
+	@Override
+	public void setNumSamples(final int numSamples) {
+		this.numSamples = numSamples;
+	}
+	
+	@Override
+	public void setResolution(final int hRes, final int vRes) {
+		this.hRes = hRes;
+		this.vRes = vRes;
+	}
 
+	@Override
+	public void setViewParameters(final Point3 eye, final Point3 lookAt, final Vector3d up) {
+		this.eye = eye;
+		this.lookat = lookAt;
+		this.up = up;
+		
+		if (camera != null) {
+			camera.setViewParameters(eye, lookAt, up);
+		}
+	}
+	
 	@Override
 	public void setCamera(Camera camera) {
 		this.camera = camera;
+		
+		if (camera != null) {
+			camera.setViewParameters(eye, lookat, up);
+		}
 	}
 
 	@Override
