@@ -2,7 +2,6 @@ package ar.edu.itba.it.cg.yart.raytracer.camera;
 
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
 
 public abstract class CameraAbstract implements Camera {
 
@@ -35,6 +34,13 @@ public abstract class CameraAbstract implements Camera {
 		this.u = up.cross(w);
 		this.u = u.normalized;
 		this.v = this.w.cross(this.u);
+	}
+	
+	@Override
+	public void setViewParameters(Point3 eye, Point3 lookAt, Vector3d up) {
+		this.eye = eye;
+		this.lookat = lookAt;
+		this.up = up;
 	}
 
 }

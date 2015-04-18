@@ -16,29 +16,33 @@ public class PinholeCamera extends CameraAbstract {
 
 	private final double distance;
 	private final double zoom;
+	
+	// Default value according to LuxRender specs.
+	private double fov = 90;
 	public final ViewPlane vp;
 
 	public PinholeCamera(final Point3 eye, final Point3 lookat, final Vector3d up, final double distance,
-			final double zoom, final int viewPlaneHRes, final int viewPlaneVRes, final double fov, 
+			final double zoom, final int viewPlaneHRes, final int viewPlaneVRes, 
 			final int numSamples) {
 		super(eye, lookat, up);
 		this.distance = distance;
 		this.zoom = zoom;
 		final double pixelSize = this.getPixeSize(viewPlaneHRes, viewPlaneVRes, fov, distance);
-		this.vp = new ViewPlane(viewPlaneHRes, viewPlaneVRes, pixelSize, numSamples);
+		this.vp = new ViewPlane(viewPlaneHRes, viewPlaneVRes, pixelSize);
 	}
 
 	@Override
 	public void renderScene(final Bucket bucket, final World world,
-			final ArrayIntegerMatrix result, final ViewPlane viewPlane, final Tracer tracer) {
+			final ArrayIntegerMatrix result, final Tracer tracer,
+			final int numSamples) {
 		// TODO : Its almost working, but its not finished
 		Color color;
-		double adjustedPixelSize = viewPlane.pixelSize / zoom;
+		double adjustedPixelSize = vp.pixelSize / zoom;
 		Point2d sp = new Point2d(0, 0);
 		Point2d pp;
 		Ray ray = new Ray(this.eye);
-		final int n = (int) Math.sqrt((double) viewPlane.numSamples);
-		final double invNumSamples = 1 / (double) viewPlane.numSamples;
+		final int n = (int) Math.sqrt((double) numSamples);
+		final double invNumSamples = 1 / (double) numSamples;
 
 		int xStart = bucket.getX();
 		int xFinish = xStart + bucket.getWidth();
@@ -59,9 +63,9 @@ public class PinholeCamera extends CameraAbstract {
 							distributionY = (i + Math.random())/n;
 						}
 						final double x = adjustedPixelSize
-								* (col - 0.5 * viewPlane.hRes + sp.x + distributionX);
+								* (col - 0.5 * vp.hRes + sp.x + distributionX);
 						final double y = adjustedPixelSize
-								* (0.5 * viewPlane.vRes - row + sp.y + distributionY);
+								* (0.5 * vp.vRes - row + sp.y + distributionY);
 
 						pp = new Point2d(x, y);
 						ray.direction = this.rayDirection(pp);
@@ -77,6 +81,21 @@ public class PinholeCamera extends CameraAbstract {
 			}
 		}
 
+	}
+	
+	public double getFov() {
+		return fov;
+	}
+	
+	public void setFov(double fov) {
+		if (fov < 0) {
+			fov = 0;
+		}
+		else if (fov >= 180) {
+			fov = 179;
+		}
+		
+		this.fov = fov;
 	}
 
 	private Vector3d rayDirection(final Point2d p) {
