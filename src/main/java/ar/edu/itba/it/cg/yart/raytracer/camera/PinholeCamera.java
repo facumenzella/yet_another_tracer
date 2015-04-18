@@ -9,6 +9,7 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
+import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
@@ -32,22 +33,23 @@ public class PinholeCamera extends CameraAbstract {
 	}
 
 	@Override
-	public void renderScene(final Bucket bucket, final World world,
-			final ArrayIntegerMatrix result, final Tracer tracer,
-			final int numSamples) {
+	public void renderScene(final Bucket bucket, RayTracer rayTracer, final ArrayIntegerMatrix result) {
 		// TODO : Its almost working, but its not finished
 		Color color;
 		double adjustedPixelSize = vp.pixelSize / zoom;
 		Point2d sp = new Point2d(0, 0);
 		Point2d pp;
 		Ray ray = new Ray(this.eye);
-		final int n = (int) Math.sqrt((double) numSamples);
-		final double invNumSamples = 1 / (double) numSamples;
+		final int n = (int) Math.sqrt((double) rayTracer.getNumSamples());
+		final double invNumSamples = 1 / (double) rayTracer.getNumSamples();
 
 		int xStart = bucket.getX();
 		int xFinish = xStart + bucket.getWidth();
 		int yStart = bucket.getY();
 		int yFinish = yStart + bucket.getHeight();
+		
+		World world = rayTracer.getWorld();
+		Tracer tracer = rayTracer.getTracer();
 
 		for (int row = yStart; row < yFinish; row++) { // up
 			for (int col = xStart; col < xFinish; col++) { // across
