@@ -10,7 +10,8 @@ public class Identifier {
 		LOOKAT("LookAt"),
 		CAMERA("Camera"),
 		FILM("Film"),
-		SHAPE("Shape");
+		SHAPE("Shape"),
+		MATERIAL("Material");
 		
 		private String name;
 		
@@ -61,7 +62,7 @@ public class Identifier {
 		return type;
 	}
 	
-	public String[] getParamter() {
+	public String[] getParamters() {
 		return parameter;
 	}
 	
