@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import ar.edu.itba.it.cg.yart.parser.Attribute.AttributeType;
 import ar.edu.itba.it.cg.yart.parser.Identifier.IdentifierType;
+import ar.edu.itba.it.cg.yart.parser.Property.PropertyType;
 
 public class SceneParser {
 	
@@ -85,7 +86,16 @@ public class SceneParser {
 		
 		for (int i = 0; i < properties.length; i++) {
 			String[] p = properties[i].split("\\s+");
-			accProperties.add(new Property(p[1], p[0], values[i]));
+			PropertyType type = Property.getType(p[0]);
+			if (type == null) {
+				// TODO Unkown type, say something here
+			}
+			else if (p.length < 2) {
+				// TODO Missing property name
+			}
+			else {
+				accProperties.add(new Property(p[1], type, values[i]));
+			}
 		}
 	}
 	
