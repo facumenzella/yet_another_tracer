@@ -4,6 +4,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import ar.edu.itba.it.cg.yart.color.Color;
+import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Vector3d;
+
 public class Identifier {
 
 	public enum IdentifierType {
@@ -82,6 +86,140 @@ public class Identifier {
 	
 	public boolean hasProperty(final String propertyName) {
 		return properties != null && properties.containsKey(propertyName);
+	}
+	
+	public boolean getBoolean(final String propertyName, boolean defaultValue) {
+		if (hasProperty(propertyName)) {
+			return getProperty(propertyName).getBoolean();
+		}
+		else {
+			return defaultValue;
+		}
+	}
+	
+	public boolean[] getBooleans(final String propertyName, boolean[] defaultValue) {
+		if (hasProperty(propertyName)) {
+			return getProperty(propertyName).getBooleans();
+		}
+		else {
+			return defaultValue;
+		}
+	}
+	
+	public double getDouble(final String propertyName, double defaultValue) {
+		if (hasProperty(propertyName)) {
+			return getProperty(propertyName).getDouble();
+		}
+		else {
+			return defaultValue;
+		}
+	}
+	
+	public double[] getDoubles(final String propertyName, double[] defaultValue) {
+		if (hasProperty(propertyName)) {
+			return getProperty(propertyName).getDoubles();
+		}
+		else {
+			return defaultValue;
+		}
+	}
+	
+	public int getInteger(final String propertyName, int defaultValue) {
+		if (hasProperty(propertyName)) {
+			return getProperty(propertyName).getInteger();
+		}
+		else {
+			return defaultValue;
+		}
+	}
+	
+	public int[] getIntegers(final String propertyName, int[] defaultValue) {
+		if (hasProperty(propertyName)) {
+			return getProperty(propertyName).getIntegers();
+		}
+		else {
+			return defaultValue;
+		}
+	}
+	
+	public Vector3d getVector(final String propertyName, Vector3d defaultValue) {
+		if (hasProperty(propertyName)) {
+			return getProperty(propertyName).getVector();
+		}
+		else {
+			return defaultValue;
+		}
+	}
+	
+	public Vector3d[] getVectors(final String propertyName, Vector3d[] defaultValue) {
+		if (hasProperty(propertyName)) {
+			return getProperty(propertyName).getVectors();
+		}
+		else {
+			return defaultValue;
+		}
+	}
+	
+	public Vector3d getNormal(final String propertyName, Vector3d defaultValue) {
+		return getVector(propertyName, defaultValue);
+	}
+	
+	public Vector3d[] getNormals(final String propertyName, Vector3d[] defaultValue) {
+		return getVectors(propertyName, defaultValue);
+	}
+	
+	public Color getColor(final String propertyName, Color defaultValue) {
+		if (hasProperty(propertyName)) {
+			return getProperty(propertyName).getColor();
+		}
+		else {
+			return defaultValue;
+		}
+	}
+	
+	public Color[] getColors(final String propertyName, Color[] defaultValue) {
+		if (hasProperty(propertyName)) {
+			return getProperty(propertyName).getColors();
+		}
+		else {
+			return defaultValue;
+		}
+	}
+	
+	public String getString(final String propertyName, String defaultValue) {
+		if (hasProperty(propertyName)) {
+			return getProperty(propertyName).getString();
+		}
+		else {
+			return defaultValue;
+		}
+	}
+	
+	public String[] getStrings(final String propertyName, String[] defaultValue) {
+		if (hasProperty(propertyName)) {
+			return getProperty(propertyName).getStrings();
+		}
+		else {
+			return defaultValue;
+		}
+	}
+	
+	public Point3 getPoint(final String propertyName, Point3 defaultValue) {
+		if (hasProperty(propertyName)) {
+			return getProperty(propertyName).getPoint();
+		}
+		else {
+			return defaultValue;
+		}
+	}
+	
+	public Point3[] getPoints(final String propertyName, Point3[] defaultValue) {
+		if (hasProperty(propertyName)) {
+			return getProperty(propertyName).getPoints();
+		}
+		else {
+			return defaultValue;
+		}
 	}
 	
 	@Override
