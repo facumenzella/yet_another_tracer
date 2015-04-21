@@ -7,6 +7,8 @@ public class Matrix4d {
 	public final double m20, m21, m22, m23;
 	public final double m30, m31, m32, m33;
 	
+	public final Matrix4d inverse;
+	
 	// Creates the identity matrix
 	public Matrix4d() {
 		this.m00 = this.m11 = this.m22 = this.m33 = 1;
@@ -14,9 +16,16 @@ public class Matrix4d {
 		this.m10 = this.m12 = this.m13 = 0;
 		this.m20 = this.m21 = this.m23 = 0;
 		this.m30 = this.m31 = this.m32 = 0;
+		
+		final Matrix4d inverse = new Matrix4d(m00, m10, m20, m30, 
+				m01, m11, m21, m31,
+				m02, m12, m22, m32,
+				m03, m13, m23, m33, this);
+		
+		this.inverse = inverse;
 	}
 	
-	private Matrix4d(final double m00, final double m01, final double m02, final double m03, 
+	public Matrix4d(final double m00, final double m01, final double m02, final double m03, 
 			final double m10, final double m11, final double m12, final double m13, 
 			final double m20, final double m21, final double m22, final double m23, 
 			final double m30, final double m31, final double m32, final double m33) {
@@ -36,6 +45,35 @@ public class Matrix4d {
 		this.m31 = m31;
 		this.m32 = m32;
 		this.m33 = m33;
+		final Matrix4d inverse = new Matrix4d(m00, m10, m20, m30, 
+				m01, m11, m21, m31,
+				m02, m12, m22, m32,
+				m03, m13, m23, m33, this);
+		
+		this.inverse = inverse;
+	}
+	
+	private Matrix4d(final double m00, final double m01, final double m02, final double m03, 
+			final double m10, final double m11, final double m12, final double m13, 
+			final double m20, final double m21, final double m22, final double m23, 
+			final double m30, final double m31, final double m32, final double m33, final Matrix4d inverse) {
+		this.m00 = m00;
+		this.m01 = m01;
+		this.m02 = m02;
+		this.m03 = m03;
+		this.m10 = m10;
+		this.m11 = m11;
+		this.m12 = m12;
+		this.m13 = m13;
+		this.m20 = m20;
+		this.m21 = m21;
+		this.m22 = m22;
+		this.m23 = m23;
+		this.m30 = m30;
+		this.m31 = m31;
+		this.m32 = m32;
+		this.m33 = m33;
+		this.inverse = inverse;
 	}
 	
 	private Matrix4d rightMultiply(final Matrix4d matrix) {
@@ -59,7 +97,12 @@ public class Matrix4d {
 		final double m32 = (this.m30 * matrix.m02) + (this.m31 * matrix.m12) + (this.m32 * matrix.m22) + (this.m33 * matrix.m32);
 		final double m33 = (this.m30 * matrix.m03) + (this.m31 * matrix.m13) + (this.m32 * matrix.m23) + (this.m33 * matrix.m33);
 		
-		return new Matrix4d(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
+		final Matrix4d inverse = new Matrix4d(m00, m10, m20, m30, 
+				m01, m11, m21, m31,
+				m02, m12, m22, m32,
+				m03, m13, m23, m33, this);
+		
+		return new Matrix4d(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33, inverse);
 	}
 	
 	private Matrix4d leftMultiply(final Matrix4d matrix) {
