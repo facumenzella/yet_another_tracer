@@ -2,6 +2,7 @@ package ar.edu.itba.it.cg.yart.raytracer.camera;
 
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
+import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 
 public abstract class CameraAbstract implements Camera {
 
@@ -10,6 +11,8 @@ public abstract class CameraAbstract implements Camera {
 	protected Vector3d up;
 	protected Vector3d u, v, w;
 	float exposue_time;
+	protected boolean viewPlaneInvalidated = true;
+	protected ViewPlane viewPlane;
 
 	protected CameraAbstract(final Point3 eye, final Point3 lookat, final Vector3d up) {
 		this.eye = eye;
@@ -41,6 +44,17 @@ public abstract class CameraAbstract implements Camera {
 		this.eye = eye;
 		this.lookat = lookAt;
 		this.up = up;
+		invalidateViewPlane();
+	}
+	
+	@Override
+	public void invalidateViewPlane() {
+		viewPlaneInvalidated = true;
+	}
+	
+	@Override
+	public boolean isViewPlaneInvalid() {
+		return viewPlaneInvalidated;
 	}
 
 }

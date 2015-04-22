@@ -9,8 +9,9 @@ import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
 
 public interface Camera {
 	
-	public ViewPlane getViewPlane();
 	public void renderScene(final Bucket bucket, final RayTracer rayTracer, final ArrayIntegerMatrix result);
-	
 	public void setViewParameters(final Point3 eye, final Point3 lookAt, final Vector3d up);
+	public ViewPlane calculateViewPlane(final int hRes, final int vRes);
+	public boolean isViewPlaneInvalid();
+	public void invalidateViewPlane();
 }
