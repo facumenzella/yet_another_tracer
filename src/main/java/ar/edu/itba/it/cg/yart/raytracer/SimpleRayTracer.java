@@ -57,7 +57,7 @@ public class SimpleRayTracer implements RayTracer {
 		this.executor = YartExecutorFactory.newFixedThreadPool(this.cores);
 		this.buckets = getBuckets(xBucketSize, ysBucketSize);
 		
-		setCamera(new PinholeCamera(eye, lookat, up, distance, zoom, hRes, vRes, numSamples));
+		setCamera(new PinholeCamera(eye, lookat, up, distance, zoom));
 	}
 
 	public ArrayIntegerMatrix serialRender() {
@@ -198,6 +198,10 @@ public class SimpleRayTracer implements RayTracer {
 	public void setResolution(final int hRes, final int vRes) {
 		this.hRes = hRes;
 		this.vRes = vRes;
+		Camera camera = getCamera();
+		
+		if (camera != null)
+			camera.invalidateViewPlane();
 	}
 
 	@Override
@@ -213,9 +217,8 @@ public class SimpleRayTracer implements RayTracer {
 	
 	@Override
 	public void setCamera(Camera camera) {
-		this.camera = camera;
-		
-		if (camera != null) {
+		if (this.camera != camera && camera != null) {
+			this.camera = camera;
 			camera.setViewParameters(eye, lookat, up);
 		}
 	}
@@ -223,5 +226,15 @@ public class SimpleRayTracer implements RayTracer {
 	@Override
 	public Camera getCamera() {
 		return camera;
+	}
+
+	@Override
+	public ViewPlane getViewPlane() {
+		Camera camera = getCamera();
+		if (camera != null) {
+			return camera.calculateViewPlane(hRes, vRes);
+		}
+		
+		return null;
 	}
 }

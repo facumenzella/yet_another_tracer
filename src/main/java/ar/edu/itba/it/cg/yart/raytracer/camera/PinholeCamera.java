@@ -20,23 +20,20 @@ public class PinholeCamera extends CameraAbstract {
 	
 	// Default value according to LuxRender specs.
 	private double fov = 90;
-	public final ViewPlane vp;
 
 	public PinholeCamera(final Point3 eye, final Point3 lookat, final Vector3d up, final double distance,
-			final double zoom, final int viewPlaneHRes, final int viewPlaneVRes, 
-			final int numSamples) {
+			final double zoom) {
 		super(eye, lookat, up);
 		this.distance = distance;
 		this.zoom = zoom;
-		final double pixelSize = this.getPixeSize(viewPlaneHRes, viewPlaneVRes, fov, distance);
-		this.vp = new ViewPlane(viewPlaneHRes, viewPlaneVRes, pixelSize);
 	}
 
 	@Override
 	public void renderScene(final Bucket bucket, RayTracer rayTracer, final ArrayIntegerMatrix result) {
 		// TODO : Its almost working, but its not finished
 		Color color;
-		double adjustedPixelSize = vp.pixelSize / zoom;
+		ViewPlane viewPlane = rayTracer.getViewPlane();
+		double adjustedPixelSize = viewPlane.pixelSize / zoom;
 		Point2d sp = new Point2d(0, 0);
 		Point2d pp;
 		Ray ray = new Ray(this.eye);
@@ -65,9 +62,9 @@ public class PinholeCamera extends CameraAbstract {
 							distributionY = (i + Math.random())/n;
 						}
 						final double x = adjustedPixelSize
-								* (col - 0.5 * vp.hRes + sp.x + distributionX);
+								* (col - 0.5 * viewPlane.hRes + sp.x + distributionX);
 						final double y = adjustedPixelSize
-								* (0.5 * vp.vRes - row + sp.y + distributionY);
+								* (0.5 * viewPlane.vRes - row + sp.y + distributionY);
 
 						pp = new Point2d(x, y);
 						ray.direction = this.rayDirection(pp);
@@ -98,6 +95,8 @@ public class PinholeCamera extends CameraAbstract {
 		}
 		
 		this.fov = fov;
+		
+		invalidateViewPlane();
 	}
 
 	private Vector3d rayDirection(final Point2d p) {
@@ -106,7 +105,7 @@ public class PinholeCamera extends CameraAbstract {
 		return dir.normalized;
 	}
 	
-	private double getPixeSize(final int hRes, final int vRes, final double fov, final double distance) {
+	private double getPixelSize(final int hRes, final int vRes) {
 		double pixelSize = 1;
 		
 		final double min = Math.min(hRes, vRes);
@@ -149,8 +148,12 @@ public class PinholeCamera extends CameraAbstract {
 	}
 
 	@Override
-	public ViewPlane getViewPlane() {
-		return this.vp;
+	public ViewPlane calculateViewPlane(int hRes, int vRes) {
+		if (isViewPlaneInvalid()) {
+			viewPlane = new ViewPlane(hRes, hRes, getPixelSize(hRes, vRes));
+			viewPlaneInvalidated = false;
+		}
+		return viewPlane;
 	}
 
 }
