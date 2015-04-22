@@ -13,6 +13,7 @@ import ar.edu.itba.it.cg.yart.light.PointLight;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.light.materials.Matte;
 import ar.edu.itba.it.cg.yart.light.materials.Reflective;
+import ar.edu.itba.it.cg.yart.light.materials.Transparent;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
@@ -47,9 +48,9 @@ public class SceneBuilder {
 				case LOOKAT:
 					String[] params = i.getParamters();
 					raytracer.setViewParameters(
-							new Point3(Double.valueOf(params[0]), Double.valueOf(params[1]), Double.valueOf(params[2])),
-							new Point3(Double.valueOf(params[3]), Double.valueOf(params[4]), Double.valueOf(params[5])),
-							new Vector3d(Double.valueOf(params[6]), Double.valueOf(params[7]), Double.valueOf(params[8])));
+							new Point3(Double.valueOf(params[0]), Double.valueOf(params[2]), Double.valueOf(params[1])),
+							new Point3(Double.valueOf(params[3]), Double.valueOf(params[5]), Double.valueOf(params[4])),
+							new Vector3d(Double.valueOf(params[6]), Double.valueOf(params[8]), Double.valueOf(params[7])));
 					break;
 				}
 			}
@@ -78,7 +79,7 @@ public class SceneBuilder {
 			e.printStackTrace();
 		}
 		
-		reset();
+		//reset();
 	}
 	
 	private Material buildMaterial(Identifier identifier) {
@@ -102,6 +103,17 @@ public class SceneBuilder {
 			mat.setExp(20);
 			mat.setCr(identifier.getProperty("Kr").getColor());
 			mat.setKr(1);
+			ret = mat;
+		}
+		else if (type.equals("glass")) {
+			Transparent mat = new Transparent();
+			mat.setCd(Color.blueColor());
+			mat.setKs(0.5);
+			mat.setExp(1000);
+			mat.setCr(Color.whiteColor());
+			mat.setKr(0.5);
+			mat.setIor(2);
+			mat.setKt(0.2);
 			ret = mat;
 		}
 		

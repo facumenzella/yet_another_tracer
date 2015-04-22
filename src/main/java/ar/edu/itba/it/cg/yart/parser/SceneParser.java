@@ -42,6 +42,10 @@ public class SceneParser {
 	}
 	
 	public void parseFile() throws IOException, ParseException {
+		parseFile(this.filePath);
+	}
+	
+	private void parseFile(final String filePath) throws IOException, ParseException {
 		Path path = Paths.get(filePath);
 		Scanner scanner =  new Scanner(path, StandardCharsets.UTF_8.name());
 		while (scanner.hasNextLine() && status != ParserStatus.END) {
@@ -64,7 +68,7 @@ public class SceneParser {
 		return globalIdentifiers;
 	}
 	
-	private void processLine(final String line) throws ParseException {
+	private void processLine(final String line) throws IOException, ParseException {
 		String first = StringUtils.substringBefore(line, " ");
 		
 		if (first.charAt(0) == '"') { // Is a property
@@ -99,7 +103,7 @@ public class SceneParser {
 		}
 	}
 	
-	private void processAttribute(final String attribute, final String[] args) throws ParseException {
+	private void processAttribute(final String attribute, final String[] args) throws IOException, ParseException {
 		// First, check if we're dealing with an Identifier
 		IdentifierType identifierType = Identifier.getByName(attribute);
 		if (identifierType != null) {
@@ -141,6 +145,23 @@ public class SceneParser {
 			closeAttribute();
 			status = ParserStatus.WORLD;
 		}
+		else if (attribute.equals("TransformBegin")) {
+			if (currentAttribute != null) {
+				throw new ParseException("Syntax error: Cannot create an attribute inside another", 0);
+			}
+			
+			currentAttribute = new Attribute(AttributeType.TRANSFORM, args);
+			attributes.add(currentAttribute);
+			status = ParserStatus.ATTRIBUTE;
+		}
+		else if (attribute.equals("TransformEnd")) {
+			if (currentAttribute == null || currentAttribute.getType() != AttributeType.TRANSFORM) {
+				throw new ParseException("Syntax error: TransformEnd found without matching TransformBegin", 0);
+			}
+			
+			closeAttribute();
+			status = ParserStatus.WORLD;
+		}
 		else if (attribute.equals("WorldBegin")) {
 			if (status != ParserStatus.GLOBAL) {
 				throw new ParseException("Syntax error: World must be defined with global scope", 0);
@@ -158,6 +179,10 @@ public class SceneParser {
 				throw new ParseException("Syntax error: WorldEnd found without matching WorldBegin", 0);
 			}
 			status = ParserStatus.END;
+		}
+		else if (attribute.equals("Include")) {
+			String path = StringUtils.substringBetween(args[0], "\"");
+			parseFile(path);
 		}
 	}
 	
