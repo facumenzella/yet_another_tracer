@@ -127,4 +127,5 @@ public final class Vector3d {
 			return false;
 		return true;
 	}
+
 }
