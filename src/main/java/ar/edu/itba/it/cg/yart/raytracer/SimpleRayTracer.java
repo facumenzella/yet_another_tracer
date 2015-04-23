@@ -1,7 +1,7 @@
 package ar.edu.itba.it.cg.yart.raytracer;
 
-import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
@@ -13,7 +13,7 @@ import ar.edu.itba.it.cg.yart.raytracer.buckets.BucketWorker;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleTracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleColorTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 import ar.edu.itba.it.cg.yart.utils.YartExecutorFactory;
 
@@ -29,7 +29,7 @@ public class SimpleRayTracer implements RayTracer {
 	private final Deque<Bucket> buckets;
 	final Camera camera;
 	
-	final static private int THREADS = 6;
+	final static private int THREADS = 2;
 
 
 	public interface RaytracerCallbacks {
@@ -52,8 +52,8 @@ public class SimpleRayTracer implements RayTracer {
 //		final Point3 eye = new Point3(0,0,200);
 //		final Point3 lookat = new Point3(0,0,0); // point where we look at
 //		final Vector3d up = new Vector3d(0,1,0); // up vector, rotates around the camera z-axis
-		final Point3 eye = new Point3(0,500,-50);
-		final Point3 lookat = new Point3(0,0,100); // point where we look at
+		final Point3 eye = new Point3(0,100,300);
+		final Point3 lookat = new Point3(0,0,0); // point where we look at
 		final Vector3d up = new Vector3d(0,1,0); // up vector, rotates around the camera z-axis
 		this.camera = new PinholeCamera(eye, lookat, up, distance, zoom, hRes, vRes, fov, numSamples);
 	}
@@ -70,7 +70,7 @@ public class SimpleRayTracer implements RayTracer {
 			Bucket bucket = buckets.poll();
 
 			world.getActiveCamera().renderScene(bucket, world, result,
-					viewPlane, new SimpleTracer());
+					viewPlane, new SimpleColorTracer());
 
 			if (callbacks != null) {
 				callbacks.onBucketFinished(bucket, result);
@@ -116,7 +116,7 @@ public class SimpleRayTracer implements RayTracer {
 							callbacks.onBucketFinished(bucket, result);
 							latch.countDown();
 						}
-					}, new SimpleTracer()));
+					}, new SimpleColorTracer()));
 		}
 
 		try {
@@ -158,7 +158,7 @@ public class SimpleRayTracer implements RayTracer {
 	}
 
 	public Deque<Bucket> getBuckets() {
-		Deque<Bucket> buckets = new ArrayDeque<Bucket>();
+		Deque<Bucket> buckets = new ConcurrentLinkedDeque<Bucket>();
 		int xBuckets = (int) Math.ceil(hRes / ((float) bucketSize));
 		int yBuckets = (int) Math.ceil(vRes / ((float) bucketSize));
 

@@ -44,43 +44,7 @@ public class World {
 	public World(final String filename) {
 		this();
 		// TODO Build scene file parser
-		buildMeshWorld();
-	}
-	
-	private void buildMeshWorld() {
-		setBackgroundColor(Color.blackColor());
-		
-		Mesh mesh = new Mesh();
-		
-		Reflective s1m = new Reflective();
-		s1m.setCd(Color.redColor());
-		s1m.setKd(0.75);
-		s1m.setKs(0.3);
-		s1m.setKa(0.3);
-		s1m.setExp(20);
-		s1m.setCr(Color.whiteColor());
-		s1m.setKr(0.75);
-		mesh.setMaterial(s1m);
-		
-		Matte right = new Matte();
-		right.setCd(Color.yellowColor());
-		right.setKd(0.50);
-		right.setKa(0.15);
-		final Plane floor = new Plane(new Point3(0,-30,0), new Vector3d(0,1,0));
-		Matte floorM = new Matte();
-		floorM.setCd(new Color(0.4, 0.4, 0.4));
-		floorM.setKd(0.50);
-		floorM.setKa(0.15);
-		floor.setMaterial(right);
-		
-		final PointLight light2 = new PointLight(2,Color.whiteColor(),new Vector3d(60,40,30));
-		addLight(light2);
-		
-		List<GeometricObject> objects = new ArrayList<GeometricObject>();
-		objects.addAll(mesh.triangles);
-		objects.add(floor);
-
-		this.addObjects(objects);
+		buildTestWorld();
 	}
 	
 	private void buildTestWorld() {
@@ -166,8 +130,31 @@ public class World {
 //		light1.shadowsOff();
 //		light2.shadowsOff();
 				
+		// we will atempt to build a mesh
+		Point3 v1 = new Point3(-50, 0, -100);
+		Point3 v2 = new Point3(-50, 50, -100);
+		Point3 v3 = new Point3(50, 50, -100);
+		Point3 v4 = new Point3(50, 0, -100);
+		
+		List<Point3> vertices = new ArrayList<Point3>();
+		vertices.add(v1);
+		vertices.add(v2);
+		vertices.add(v3);
+		vertices.add(v4);
+		
+		List<Integer> indices = new ArrayList<Integer>();
+		indices.add(3);
+		indices.add(1);
+		indices.add(0);
+		indices.add(3);
+		indices.add(2);
+		indices.add(1);
+		
+		Mesh mesh = new Mesh(vertices, null, indices, false);
+		mesh.setMaterial(s1m);
 		final List<GeometricObject> objects = new ArrayList<GeometricObject>();
 		
+		objects.add(mesh);
 		objects.add(s1);
 		objects.add(s2);
 		objects.add(s3);
