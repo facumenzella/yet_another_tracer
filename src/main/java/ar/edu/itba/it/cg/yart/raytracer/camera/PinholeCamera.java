@@ -9,7 +9,7 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.ColorTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
 public class PinholeCamera extends CameraAbstract {
@@ -30,7 +30,7 @@ public class PinholeCamera extends CameraAbstract {
 
 	@Override
 	public void renderScene(final Bucket bucket, final World world,
-			final ArrayIntegerMatrix result, final ViewPlane viewPlane, final Tracer tracer) {
+			final ArrayIntegerMatrix result, final ViewPlane viewPlane, final ColorTracer tracer) {
 		// TODO : Its almost working, but its not finished
 		Color color;
 		double adjustedPixelSize = viewPlane.pixelSize / zoom;

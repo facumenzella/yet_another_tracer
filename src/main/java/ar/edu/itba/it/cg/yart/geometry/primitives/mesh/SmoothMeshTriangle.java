@@ -1,12 +1,13 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives.mesh;
 
 import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
-public class FlatMeshTriangle extends MeshTriangle {
-
-	public FlatMeshTriangle(int index0, int index1, int index2, final Mesh mesh, final boolean reverse) {
+public class SmoothMeshTriangle extends MeshTriangle{
+	
+	public SmoothMeshTriangle(int index0, int index1, int index2, Mesh mesh, final boolean reverse) {
 		super(index0, index1, index2, mesh, reverse);
 		updateBoundingBox();
 	}
@@ -55,9 +56,9 @@ public class FlatMeshTriangle extends MeshTriangle {
 			return Double.NEGATIVE_INFINITY;
 		}
 
-		sr.normal = normal; // for flat shading
+		sr.normal = this.interpolateNormal(beta, gamma);
 		sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
-
+		
 		return t;
 	}
 
@@ -106,6 +107,14 @@ public class FlatMeshTriangle extends MeshTriangle {
 		}
 		
 		return t;
+	}
+	
+	public Vector3d interpolateNormal(final double beta, final double gamma) {
+		final Mesh mesh = this.mesh;
+		final Vector3d n0 = mesh.normals.get(index0).scale(1 - beta - gamma);
+		final Vector3d n1 = mesh.normals.get(index1).scale(beta);
+		final Vector3d n2 = mesh.normals.get(index1).scale(gamma);
+		return n0.add(n1).add(n2).normalized;
 	}
 
 }
