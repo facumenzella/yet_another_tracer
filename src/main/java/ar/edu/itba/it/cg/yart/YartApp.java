@@ -2,6 +2,8 @@ package ar.edu.itba.it.cg.yart;
 
 import ar.edu.itba.it.cg.yart.exceptions.WrongParametersException;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
+import ar.edu.itba.it.cg.yart.parser.SceneBuilder;
+import ar.edu.itba.it.cg.yart.parser.SceneParser;
 import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
@@ -36,7 +38,9 @@ public class YartApp {
 		ArrayIntegerMatrix result;
 
 		RayTracer raytracer = new SimpleRayTracer(xBucketSize, yBucketSize, tMax, distance, zoom, numSamples, cores);
-		raytracer.setWorld(w);
+		//raytracer.setWorld(w);
+		SceneBuilder builder = new SceneBuilder();
+		builder.buildRayTracer(raytracer, new SceneParser("test.lxs"));
 
 		new RenderWindow(raytracer);
 

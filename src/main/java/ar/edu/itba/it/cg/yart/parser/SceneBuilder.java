@@ -9,11 +9,16 @@ import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Plane;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Sphere;
+import ar.edu.itba.it.cg.yart.light.AmbientLight;
+import ar.edu.itba.it.cg.yart.light.Directional;
+import ar.edu.itba.it.cg.yart.light.Light;
 import ar.edu.itba.it.cg.yart.light.PointLight;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.light.materials.Matte;
 import ar.edu.itba.it.cg.yart.light.materials.Reflective;
 import ar.edu.itba.it.cg.yart.light.materials.Transparent;
+import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
+import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
@@ -41,6 +46,7 @@ public class SceneBuilder {
 			for (Identifier i : parser.getGlobalIdentifiers()) {
 				switch (i.getType()) {
 				case CAMERA:
+					raytracer.setCamera(buildCamera(i));
 					break;
 				case FILM:
 					raytracer.setResolution(i.getProperty("xresolution").getInteger(), i.getProperty("yresolution").getInteger());
@@ -64,22 +70,20 @@ public class SceneBuilder {
 					case MATERIAL:
 						currentMaterial = buildMaterial(i);
 						break;
+					case LIGHT:
+						world.addLight(buildLight(i));
+						break;
 					}
 				}
 			}
 			
 			world.addObjects(objects);
 			
-			final PointLight light2 = new PointLight(2,Color.whiteColor(),new Vector3d(60,40,30));
-			world.addLight(light2);
-			
 			world.setBackgroundColor(Color.blackColor());
 			raytracer.setWorld(world);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		//reset();
 	}
 	
 	private Material buildMaterial(Identifier identifier) {
@@ -134,6 +138,46 @@ public class SceneBuilder {
 		object.setMaterial(currentMaterial);
 		
 		return object;
+	}
+	
+	private Light buildLight(Identifier identifier) {
+		Light ret = null;
+		
+		String type = identifier.getParamters()[0];
+		
+		if (type.equals("point")) {
+			Vector3d from = identifier.getVector("from", new Vector3d(0,0,0));
+			Color l = identifier.getColor("l", Color.whiteColor());
+			double power = identifier.getDouble("power", 100);
+			PointLight light = new PointLight(power, l, from);
+			ret = light;
+		}
+		else if (type.equals("distant")) {
+			Color l = identifier.getColor("l", Color.whiteColor());
+			Point3[] def = {new Point3(0,0,0), new Point3(1,1,1)};
+			Point3[] fromTo = identifier.getPoints("from/to", def);
+			Directional light = new Directional(2, l, fromTo[1].sub(fromTo[0]));
+			ret = light;
+		}
+		else if (type.equals("infinite")) {
+			Color l = identifier.getColor("l", Color.whiteColor());
+			AmbientLight light = new AmbientLight(l);
+			ret = light;
+		}
+		
+		return ret;
+	}
+	
+	private Camera buildCamera(Identifier identifier) {
+		Camera ret = null;
+		
+		if (identifier.getParamters()[0].equals("perspective")) {
+			PinholeCamera cam = new PinholeCamera(new Point3(0,0,200), new Point3(0,0,0), new Vector3d(0,1,0), 500, 1);
+			cam.setFov(identifier.getDouble("fov", 90));
+			ret = cam;
+		}
+		
+		return ret;
 	}
 	
 	private void reset() {

@@ -31,7 +31,7 @@ public class World {
 	 * Creates a sad, empty World.
 	 */
 	public World() {
-		this.ambientLight = new AmbientLight();
+		this.ambientLight = new AmbientLight(Color.blackColor());
 	}
 	
 	
@@ -174,7 +174,16 @@ public class World {
 	}
 	
 	public void addLight(final Light light) {
-		lights.add(light);
+		if (light instanceof AmbientLight) {
+			setAmbientLight((AmbientLight) light);
+		}
+		else {
+			lights.add(light);
+		}
+	}
+	
+	public void addLight(final AmbientLight light) {
+		setAmbientLight(light);
 	}
 	
 	public List<Light> getLights() {

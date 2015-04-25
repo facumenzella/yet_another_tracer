@@ -63,9 +63,9 @@ public class Property {
 			if (values.length % 3 != 0) {
 				throw new IllegalArgumentException("Color properties need multiple of 3 values, found " + values.length);
 			}
-			this.value = new Color[values.length];
+			this.value = new Color[values.length / 3];
 			for (int i = 0; i < values.length; i += 3) {
-				((Color[]) this.value)[i] = new Color(Double.valueOf(values[i]), Double.valueOf(values[i+1]), Double.valueOf(values[i+2]));
+				((Color[]) this.value)[i / 3] = new Color(Double.valueOf(values[i]), Double.valueOf(values[i+1]), Double.valueOf(values[i+2]));
 			}
 			break;
 		case FLOAT:
@@ -85,18 +85,18 @@ public class Property {
 			if (values.length % 3 != 0) {
 				throw new IllegalArgumentException("Vector properties need multiple of 3 values, found " + values.length);
 			}
-			this.value = new Vector3d[values.length];
+			this.value = new Vector3d[values.length / 3];
 			for (int i = 0; i < values.length; i += 3) {
-				((Vector3d[]) this.value)[i] = new Vector3d(Double.valueOf(values[i]), Double.valueOf(values[i+2]), Double.valueOf(values[i+1]));
+				((Vector3d[]) this.value)[i / 3] = new Vector3d(Double.valueOf(values[i]), Double.valueOf(values[i+2]), Double.valueOf(values[i+1]));
 			}
 			break;
 		case POINT:
 			if (values.length % 3 != 0) {
 				throw new IllegalArgumentException("Point properties need multiple of 3 values, found " + values.length);
 			}
-			this.value = new Point3[values.length];
+			this.value = new Point3[values.length / 3];
 			for (int i = 0; i < values.length; i += 3) {
-				((Point3[]) this.value)[i] = new Point3(Double.valueOf(values[i]), Double.valueOf(values[i+2]), Double.valueOf(values[i+1]));
+				((Point3[]) this.value)[i / 3] = new Point3(Double.valueOf(values[i]), Double.valueOf(values[i+2]), Double.valueOf(values[i+1]));
 			}
 			break;
 		case STRING:
