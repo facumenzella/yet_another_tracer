@@ -11,9 +11,9 @@ public class AmbientLight extends LightAbstract {
 	private double ls;
 	private Color color;
 	
-	public AmbientLight() {
-		this.ls = 0.2;
-		this.color = Color.whiteColor();
+	public AmbientLight(final Color color) {
+		this.ls = 1;
+		this.color = color;
 		
 	}
 	

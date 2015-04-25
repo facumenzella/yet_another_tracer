@@ -15,7 +15,8 @@ public class Identifier {
 		CAMERA("Camera"),
 		FILM("Film"),
 		SHAPE("Shape"),
-		MATERIAL("Material");
+		MATERIAL("Material"),
+		LIGHT("Light");
 		
 		private String name;
 		

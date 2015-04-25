@@ -1,14 +1,30 @@
 Camera "perspective"
 	"float fov" [30]
-LookAt 8 1 2 2 2 2 5 1.1212 1
+LookAt 0 200 50 0 0 0 0 0 1
 Film
-"integer  xresolution" [200] "integer yresolution" [200] #kik
+"integer  xresolution" [800] "integer yresolution" [600] #kik
 
 WorldBegin
+
+	AttributeBegin
+		Light "point"
+			"color l" [1 0 1]
+			"float power" [2]
+			"vector from" [60 40 30]
+	AttributeEnd
 	
 	AttributeBegin
+		Material "matte"
+			"color Kd" [1 1 1]
 		Shape "shpere"
-			"float radius" [10]
+			"float radius" [30]
+	AttributeEnd
+
+	AttributeBegin
+		Material "matte"
+			"color Kd" [1 1 0]
+		Shape "plane"
+			"normal n" [0 0 -1]
 	AttributeEnd
 
 WorldEnd
