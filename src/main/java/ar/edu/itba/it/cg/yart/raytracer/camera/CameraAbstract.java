@@ -15,11 +15,7 @@ public abstract class CameraAbstract implements Camera {
 	protected ViewPlane viewPlane;
 
 	protected CameraAbstract(final Point3 eye, final Point3 lookat, final Vector3d up) {
-		this.eye = eye;
-		this.lookat = lookat;
-		this.up = up;
-		computeUVW();
-		checkForSingularity();
+		setViewParameters(eye, lookat, up);
 	}
 	
 	private void checkForSingularity() {
@@ -44,6 +40,8 @@ public abstract class CameraAbstract implements Camera {
 		this.eye = eye;
 		this.lookat = lookAt;
 		this.up = up;
+		computeUVW();
+		checkForSingularity();
 		invalidateViewPlane();
 	}
 	

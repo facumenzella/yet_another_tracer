@@ -25,8 +25,7 @@ public class YartApp {
 		int cores = configs.getCoresQty();
 		// Wanna see something cool?
 		// Try 1920 * 1080
-		final int xBucketSize = 128;
-		final int yBucketSize = 128;
+		final int bucketSize = 128;
 		final double tMax = 1000;
 		final double distance = 500;
 		final int zoom = 1;
@@ -35,7 +34,7 @@ public class YartApp {
 		World w = new World("jaja");
 		ArrayIntegerMatrix result;
 
-		RayTracer raytracer = new SimpleRayTracer(xBucketSize, yBucketSize, tMax, distance, zoom, numSamples, cores);
+		RayTracer raytracer = new SimpleRayTracer(bucketSize, tMax, distance, zoom, numSamples, cores);
 		raytracer.setWorld(w);
 
 		new RenderWindow(raytracer);
