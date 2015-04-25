@@ -36,7 +36,7 @@ public class SimpleRayTracer implements RayTracer {
 	
 	private RaytracerCallbacks callbacks;
 	private final ExecutorService executor;
-	private final Deque<Bucket> buckets;
+	private Deque<Bucket> buckets;
 	private Camera camera;
 	private Tracer tracer;
 
@@ -48,20 +48,19 @@ public class SimpleRayTracer implements RayTracer {
 	}
 
 	
-	public SimpleRayTracer(final int xBucketSize, final int ysBucketSize,
-			final double tMax, final double distance, final int zoom, final int numSamples, final int cores) {
+	public SimpleRayTracer(final int bucketSize, final double tMax, final double distance, final int zoom, final int numSamples, final int cores) {
 		this.cores = cores;
-		// TODO : change how we create the world
+		this.bucketSize = bucketSize;
+		this.executor = YartExecutorFactory.newFixedThreadPool(this.cores);
+		
 		setResolution(800, 600);
 		setNumSamples(numSamples);
-		this.executor = YartExecutorFactory.newFixedThreadPool(this.cores);
-		this.buckets = getBuckets(xBucketSize, ysBucketSize);
-		
 		setCamera(new PinholeCamera(eye, lookat, up, distance, zoom));
 	}
 
 	public ArrayIntegerMatrix serialRender() {
 		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
+		this.buckets = getBuckets(bucketSize, bucketSize);
 
 		while (!buckets.isEmpty()) {
 			Bucket bucket = buckets.poll();
@@ -87,6 +86,7 @@ public class SimpleRayTracer implements RayTracer {
 
 	private ArrayIntegerMatrix render(final World world) {
 		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
+		this.buckets = getBuckets(bucketSize, bucketSize);
 		
 		int totals = buckets.size();
 		final CountDownLatch latch = new CountDownLatch(totals);
@@ -198,7 +198,6 @@ public class SimpleRayTracer implements RayTracer {
 	public void setResolution(final int hRes, final int vRes) {
 		this.hRes = hRes;
 		this.vRes = vRes;
-		Camera camera = getCamera();
 		
 		if (camera != null)
 			camera.invalidateViewPlane();
@@ -230,7 +229,6 @@ public class SimpleRayTracer implements RayTracer {
 
 	@Override
 	public ViewPlane getViewPlane() {
-		Camera camera = getCamera();
 		if (camera != null) {
 			return camera.calculateViewPlane(hRes, vRes);
 		}

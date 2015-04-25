@@ -150,7 +150,7 @@ public class PinholeCamera extends CameraAbstract {
 	@Override
 	public ViewPlane calculateViewPlane(int hRes, int vRes) {
 		if (isViewPlaneInvalid()) {
-			viewPlane = new ViewPlane(hRes, hRes, getPixelSize(hRes, vRes));
+			viewPlane = new ViewPlane(hRes, vRes, getPixelSize(hRes, vRes));
 			viewPlaneInvalidated = false;
 		}
 		return viewPlane;
