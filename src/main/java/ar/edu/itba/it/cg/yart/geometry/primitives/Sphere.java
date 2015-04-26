@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives;
 
+import ar.edu.itba.it.cg.yart.geometry.MutableVector3d;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
@@ -23,7 +24,9 @@ public class Sphere extends GeometricObject {
 		}
 		
 		double t;
-		Vector3d tmp = ray.origin.sub(center);
+		MutableVector3d tmp = new MutableVector3d(ray.origin.sub(center));
+		MutableVector3d rayTmp = new MutableVector3d(ray.direction);
+		
 		double a = ray.direction.dot(ray.direction);
 		double b = 2.0 * tmp.dot(ray.direction);
 		double c = tmp.dot(tmp)  - radius * radius;
@@ -40,16 +43,22 @@ public class Sphere extends GeometricObject {
 		t = (-b - e) / denom;
 		
 		if (t > EPSILON) {
-			sr.normal = tmp.add(ray.direction.scale(t)).scale(1/radius);
-			sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
+			rayTmp.scale(t);
+			tmp.add(rayTmp);
+			tmp.scale(1/radius);
+			sr.normal = tmp.inmutableCopy();
+			sr.localHitPoint = ray.origin.add(rayTmp.inmutableCopy());
 			return t;
 		}
 		
 		t = (-b + e) / denom;
 		
 		if (t > EPSILON) {
-			sr.normal = tmp.add(ray.direction.scale(t)).scale(1/radius);
-			sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
+			rayTmp.scale(t);
+			tmp.add(rayTmp);
+			tmp.scale(1/radius);
+			sr.normal = tmp.inmutableCopy();
+			sr.localHitPoint = ray.origin.add(rayTmp.inmutableCopy());
 			return t;
 		}
 		
@@ -59,7 +68,7 @@ public class Sphere extends GeometricObject {
 	@Override
 	public double shadowHit(final Ray ray) {
 		double t;
-		Vector3d tmp = ray.origin.sub(center);
+		MutableVector3d tmp = new MutableVector3d(ray.origin.sub(center));
 		double a = ray.direction.dot(ray.direction);
 		double b = 2.0 * tmp.dot(ray.direction);
 		double c = tmp.dot(tmp)  - radius * radius;

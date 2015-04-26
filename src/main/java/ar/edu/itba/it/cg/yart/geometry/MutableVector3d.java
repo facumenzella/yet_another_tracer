@@ -5,7 +5,13 @@ public class MutableVector3d {
 	public double y;
 	public double z;
 	public double length;
-	public Vector3d normalized;
+	
+	public MutableVector3d(final Vector3d v) {
+		this.x = v.x;
+		this.y = v.y;
+		this.z = v.z;
+		this.length = Math.sqrt(x * x + y * y + z * z);
+	}
 	
 	public MutableVector3d(final double x, final double y, final double z) {
 		this.x = x;
@@ -17,7 +23,18 @@ public class MutableVector3d {
 		return new Vector3d(this.x, this.y, this.z);
 	}
 	
+	public void normalize() {
+		this.length = Math.sqrt(x * x + y * y + z * z);
+		this.x = this.x / length;
+		this.y = this.y / length;
+		this.z = this.z / length;
+	}
+	
 	public double dot(final Vector3d other) {
+		return x * other.x + y * other.y + z * other.z;
+	}
+	
+	public double dot(final MutableVector3d other) {
 		return x * other.x + y * other.y + z * other.z;
 	}
 	
@@ -45,13 +62,19 @@ public class MutableVector3d {
 		this.z = this.z - other.z;
 	}
 	
+	public void sub(final MutableVector3d other) {
+		this.x = x - other.x;
+		this.y = y - other.y;
+		this.z = z - other.z;
+	}
+	
 	public void add(final double n) {
 		this.x += n;
 		this.y += n;
 		this.z += n;
 	}
 	
-	public void add(final Vector3d other) {
+	public void add(final MutableVector3d other) {
 		this.x = x + other.x;
 		this.y = y + other.y;
 		this.z = z + other.z;

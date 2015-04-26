@@ -10,16 +10,17 @@ public class AmbientLight extends LightAbstract {
 	
 	private double ls;
 	private Color color;
+	private Vector3d direction;
 	
 	public AmbientLight() {
 		this.ls = 0.2;
 		this.color = Color.whiteColor();
-		
+		this.direction = new Vector3d(0,0,0);
 	}
 	
 	@Override
 	public Vector3d getDirection(final ShadeRec sr) {
-		return new Vector3d(0,0,0);
+		return this.direction;
 	}
 	
 	@Override

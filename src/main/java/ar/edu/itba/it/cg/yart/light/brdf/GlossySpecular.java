@@ -1,6 +1,7 @@
 package ar.edu.itba.it.cg.yart.light.brdf;
 
 import ar.edu.itba.it.cg.yart.color.Color;
+import ar.edu.itba.it.cg.yart.geometry.MutableVector3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
@@ -12,10 +13,16 @@ public class GlossySpecular extends BRDF{
 	
 	@Override
 	public Color f(final ShadeRec sr, final Vector3d wo, final Vector3d wi) {
+		MutableVector3d mNormalSR = new MutableVector3d(sr.normal);
+		MutableVector3d mWi = new MutableVector3d(wi);
+		mWi.inverse();
+		
 		Color L = null;
 		final double NdotWi = sr.normal.dot(wi);
-		final Vector3d r = wi.inverse().add(sr.normal.scale(2.0).scale(NdotWi));
-		final double rdotWo = r.dot(wo);
+		mNormalSR.scale(2.0);
+		mNormalSR.scale(NdotWi);
+		mWi.add(mNormalSR);
+		final double rdotWo = mWi.dot(wo);
 		
 		if(rdotWo >	0.0) {
 			final double aux = ks* Math.pow(rdotWo, exp);
