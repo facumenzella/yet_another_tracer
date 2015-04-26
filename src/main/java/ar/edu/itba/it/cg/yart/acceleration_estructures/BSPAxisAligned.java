@@ -11,7 +11,8 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.BoundingBox;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.ColorTracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.HitTracer;
 
 public class BSPAxisAligned {
 
@@ -21,30 +22,41 @@ public class BSPAxisAligned {
 	private final double tMax;
 	private final double minZ;
 	private final double maxZ;
+	private final double minY;
+	private final double maxY;
+	private final double minX;
+	private final double maxX;
+	
 	private final LeafNode emptyLeafNode;
 
 	private static final int DEPTH = 30;
 	protected static final double EPSILON = 0.00001;
 
-	public BSPAxisAligned(final double minZ, final double maxZ,
+	public BSPAxisAligned(final double minX, final double maxX, final double minY, final double maxY, 
+			final double minZ, final double maxZ,
 			final double tMin, final double tMax) {
 		this.tMin = tMin;
 		this.tMax = tMax;
 		this.minZ = minZ;
 		this.maxZ = maxZ;
+		this.minX = minX;
+		this.maxX = maxX;
+		this.minY = minY;
+		this.maxY = maxY;
 		this.emptyLeafNode = new LeafNode(new ArrayList<GeometricObject>());
 		this.buildInitialBox();
 	}
 	
+	public BSPAxisAligned(final double minZ, final double maxZ,
+			final double tMin, final double tMax) {
+		this(-1000, 1000, -1000, 1000, minZ, maxZ, tMin, tMax);
+	}
+
 	public void buildTree(final List<GeometricObject> objects) {
 		this.root = subdivideXAxis(initialBox, objects, 0);
 	}
 
 	private void buildInitialBox() {
-		double minX = -4000;
-		double maxX = 4000;
-		double minY = -4000;
-		double maxY = 4000;
 		this.initialBox = new BoundingBox(new Point3(minX, minY, minZ),
 				new Point3(maxX, maxY, maxZ));
 	}
@@ -364,8 +376,44 @@ public class BSPAxisAligned {
 		}
 		return bestCandidate;
 	}
+	
+	public double traceRayHit(final Ray ray, final HitTracer tracer) {
+		// Point3 origin = new Point3(0, 0, 200);
+		// Point3 hitP = new Point3(-45,-10,20);
+		// Ray aRay = new Ray(origin, hitP.sub(origin));
+		return p_traceObjectsForRayHit(ray, root, tMin, tMax, tracer);
+	}
+	
+	private double p_traceObjectsForRayHit(final Ray ray, final Node node,
+			final double min, final double max, final HitTracer tracer) {
 
-	public Color traceRay(final Ray ray, final Tracer tracer, final ShadeRec sr) {
+		if (node.isLeaf()) {
+			return tracer.traceRayHit(ray, node.getObjects(), max);
+		}
+		final double t = node.distanceToSplittingPlane(ray);
+		final Node near = node.nearNode(ray);
+		final Node far = node.farNode(near);
+
+		// This is madness !!
+		if (t > max || t < 0) {
+			// its on the near node
+			return p_traceObjectsForRayHit(ray, near, min, max, tracer);
+		} else {
+			if (t < min) {
+				// its on the far node
+				return p_traceObjectsForRayHit(ray, far, min, max, tracer);
+			} else {
+				// the ray might hit in both nodes, so we split the ray
+				double hit = p_traceObjectsForRayHit(ray, near, min, t, tracer);
+				if (t != Double.NEGATIVE_INFINITY) {
+					return hit;
+				}
+				return p_traceObjectsForRayHit(ray, far, t, max, tracer);
+			}
+		}
+	}
+
+	public Color traceRay(final Ray ray, final ColorTracer tracer, final ShadeRec sr) {
 		// Point3 origin = new Point3(0, 0, 200);
 		// Point3 hitP = new Point3(-45,-10,20);
 		// Ray aRay = new Ray(origin, hitP.sub(origin));
@@ -373,7 +421,7 @@ public class BSPAxisAligned {
 	}
 
 	private Color p_traceObjectsForRay(final Ray ray, final Node node,
-			final double min, final double max, final Tracer tracer,
+			final double min, final double max, final ColorTracer tracer,
 			final ShadeRec sr) {
 
 		if (node == emptyLeafNode) {
@@ -399,7 +447,7 @@ public class BSPAxisAligned {
 				// the ray might hit in both nodes, so we split the ray
 				Color nearColor = p_traceObjectsForRay(ray, near, min, t,
 						tracer, sr);
-				if (tracer.hitObject()) {
+				if (sr.hitObject) {
 					return nearColor;
 				}
 				return p_traceObjectsForRay(ray, far, t, max, tracer, sr);
