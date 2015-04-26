@@ -91,6 +91,14 @@ public final class Vector3d {
 		this.normalized = new Vector3d(this.x, this.y, this.z, this.length);
 	}
 	
+	public void copy(final MutableVector3d other) {
+		this.x = other.x;
+		this.y = other.y;
+		this.z = other.z;
+		this.length = other.length;
+		this.normalized = new Vector3d(this.x, this.y, this.z, this.length);
+	}
+	
 	@Override
 	public String toString() {
 		return "(" + x + ", " + y + ", " + z + ")";

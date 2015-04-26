@@ -1,6 +1,7 @@
 package ar.edu.itba.it.cg.yart.raytracer.camera;
 
 import ar.edu.itba.it.cg.yart.color.Color;
+import ar.edu.itba.it.cg.yart.geometry.MutableVector3d;
 import ar.edu.itba.it.cg.yart.geometry.Point2d;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
@@ -71,9 +72,6 @@ public class PinholeCamera extends CameraAbstract {
 						ray.direction = this.rayDirection(pp);
 						Color c = world.getTree().traceRay(ray, tracer, new ShadeRec(world));
 						color.addEquals(c);
-//						color.addEquals(tracer.traceRay(ray,
-//								world.getObjects(), new ShadeRec(world), Double.POSITIVE_INFINITY));
-
 					}
 				}
 				color.multiplyEquals(invNumSamples);
@@ -101,9 +99,16 @@ public class PinholeCamera extends CameraAbstract {
 	}
 
 	private Vector3d rayDirection(final Point2d p) {
-		final Vector3d dir = (u.scale(p.x)).add(v.scale(p.y)).sub(
-				w.scale(distance));
-		return dir.normalized;
+		final MutableVector3d mu = new MutableVector3d(this.u);
+		final MutableVector3d mv = new MutableVector3d(this.v);
+		final MutableVector3d mw = new MutableVector3d(this.w);
+		mu.scale(p.x);
+		mv.scale(p.y);
+		mw.scale(distance);
+		mu.add(mv);
+		mu.sub(mw);
+		mu.normalize();
+		return mu.inmutableCopy();
 	}
 	
 	private double getPixelSize(final int hRes, final int vRes) {
@@ -125,17 +130,6 @@ public class PinholeCamera extends CameraAbstract {
 
 	private void displayPixel(final int col, final int row, final Color color,
 			final ArrayIntegerMatrix result) {
-		// if (color.r > 1.0) {
-		// color.r = 1.0;
-		// }
-		//
-		// if (color.g > 1.0) {
-		// color.g = 1.0;
-		// }
-		//
-		// if (color.b > 1.0) {
-		// color.b = 1.0;
-		// }
 		final Color mappedColor = maxToOne(color);
 		result.put(col, row, mappedColor.toInt());
 	}
