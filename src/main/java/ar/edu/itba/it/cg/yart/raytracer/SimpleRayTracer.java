@@ -1,7 +1,7 @@
 package ar.edu.itba.it.cg.yart.raytracer;
 
-import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
@@ -13,8 +13,8 @@ import ar.edu.itba.it.cg.yart.raytracer.buckets.BucketWorker;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleTracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.ColorTracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleColorTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 import ar.edu.itba.it.cg.yart.utils.YartExecutorFactory;
 
@@ -38,7 +38,8 @@ public class SimpleRayTracer implements RayTracer {
 	private final ExecutorService executor;
 	private Deque<Bucket> buckets;
 	private Camera camera;
-	private Tracer tracer;
+	private ColorTracer tracer;
+
 
 	public interface RaytracerCallbacks {
 		public void onBucketFinished(final Bucket bucket,
@@ -107,7 +108,7 @@ public class SimpleRayTracer implements RayTracer {
 							callbacks.onBucketFinished(bucket, result);
 							latch.countDown();
 						}
-					}));
+						}));
 		}
 
 		try {
@@ -153,7 +154,7 @@ public class SimpleRayTracer implements RayTracer {
 	}
 
 	public Deque<Bucket> getBuckets(final int xBucketsSize, final int yBucketsSize) {
-		Deque<Bucket> buckets = new ArrayDeque<Bucket>();
+		Deque<Bucket> buckets = new ConcurrentLinkedDeque<Bucket>();
 		int xBuckets = (int) Math.ceil(hRes / ((float) xBucketsSize));
 		int yBuckets = (int) Math.ceil(vRes / ((float) yBucketsSize));
 
@@ -176,9 +177,9 @@ public class SimpleRayTracer implements RayTracer {
 	}
 	
 	@Override
-	public Tracer getTracer() {
+	public ColorTracer getTracer() {
 		if (tracer == null) {
-			tracer = new SimpleTracer();
+			tracer = new SimpleColorTracer();
 		}
 		
 		return tracer;

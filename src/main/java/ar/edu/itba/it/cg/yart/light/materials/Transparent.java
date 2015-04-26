@@ -9,14 +9,14 @@ import ar.edu.itba.it.cg.yart.light.brdf.PerfectSpecular;
 import ar.edu.itba.it.cg.yart.light.btdf.PerfectTransmitter;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleTracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.ColorTracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleColorTracer;
 
 public class Transparent extends Phong {
 
 	private final PerfectSpecular reflectiveBRDF = new PerfectSpecular();
 	private final PerfectTransmitter specularBTDF = new PerfectTransmitter();
-	private final Tracer tracer = new SimpleTracer();
+	private final ColorTracer tracer = new SimpleColorTracer();
 
 	public void setCr(final Color color) {
 		reflectiveBRDF.setCr(color);

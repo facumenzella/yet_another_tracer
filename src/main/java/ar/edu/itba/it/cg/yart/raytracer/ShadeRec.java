@@ -14,7 +14,7 @@ public class ShadeRec {
 	public Material material;
 	public Ray ray;							//for specular highlights
 	public int depth = 0;						//recursion depth
-	public double t = 0;
+	public double t = -Double.NEGATIVE_INFINITY;
 	public Vector3d dir;					//for area lights
 	public World world;						//world reference for shading
 	

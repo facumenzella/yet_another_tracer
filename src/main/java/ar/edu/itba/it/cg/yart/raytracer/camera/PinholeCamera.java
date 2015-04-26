@@ -10,7 +10,7 @@ import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.ColorTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
 public class PinholeCamera extends CameraAbstract {
@@ -30,6 +30,7 @@ public class PinholeCamera extends CameraAbstract {
 
 	@Override
 	public void renderScene(final Bucket bucket, RayTracer rayTracer, final ArrayIntegerMatrix result) {
+
 		// TODO : Its almost working, but its not finished
 		Color color;
 		ViewPlane viewPlane = rayTracer.getViewPlane();
@@ -46,7 +47,7 @@ public class PinholeCamera extends CameraAbstract {
 		int yFinish = yStart + bucket.getHeight();
 		
 		World world = rayTracer.getWorld();
-		Tracer tracer = rayTracer.getTracer();
+		ColorTracer tracer = rayTracer.getTracer();
 
 		for (int row = yStart; row < yFinish; row++) { // up
 			for (int col = xStart; col < xFinish; col++) { // across
