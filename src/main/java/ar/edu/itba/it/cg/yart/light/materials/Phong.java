@@ -18,7 +18,7 @@ public class Phong extends MaterialAbstract {
 
 	@Override
 	public Color shade(ShadeRec sr) {
-		Vector3d wo = null; // we compute it if its really necesary
+		Vector3d wo = sr.ray.direction.inverse();
 		final Color colorL = ambientBRDF.rho(sr, wo);
 		colorL.multiplyEquals(sr.world.getAmbientLight().L(sr));
 
@@ -31,7 +31,6 @@ public class Phong extends MaterialAbstract {
 			double ndotwi = sr.normal.dot(wi);
 
 			if (ndotwi > 0.0) {
-				wo = sr.ray.direction.inverse();
 				Color aux = diffuseBRDF.f(sr, wo, wi);
 				aux.addEquals(specularBRDF.f(sr, wo, wi));
 				aux.multiplyEquals(light.L(sr));
@@ -50,7 +49,6 @@ public class Phong extends MaterialAbstract {
 				Ray shadowRay = new Ray(sr.hitPoint, wi);
 				inShadow = light.inShadow(shadowRay, sr);
 				if (!inShadow) {
-					wo = sr.ray.direction.inverse();
 					Color aux = diffuseBRDF.f(sr, wo, wi);
 					aux.addEquals(specularBRDF.f(sr, wo, wi));
 					aux.multiplyEquals(light.L(sr));
