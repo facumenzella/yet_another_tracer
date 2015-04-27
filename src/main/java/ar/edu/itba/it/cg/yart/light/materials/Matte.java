@@ -17,27 +17,40 @@ public class Matte extends MaterialAbstract {
 	@Override
 	public Color shade(ShadeRec sr) {
 		final Vector3d wo = null; // not necessary
-//		final Vector3d wo = sr.ray.direction.inverse();
-		final Color colorL = ambientBRDF.rho(sr, wo);
+		// final Vector3d wo = sr.ray.direction.inverse();
+		final Color colorL = ambientBRDF.mRho(sr, wo);
 		colorL.multiplyEquals(sr.world.getAmbientLight().L(sr));
-		
-		final List<Light> lights = sr.world.getLights();
 
-		for (final Light light : lights) {
+		final List<Light> castShadowLights = sr.world.getCastShadowLights();
+		final List<Light> doNotCastShadowLights = sr.world
+				.getDoNotCastShadowLights();
+		
+		for (final Light light : doNotCastShadowLights) {
+			final Vector3d wi = light.getDirection(sr);
+			double ndotwi = sr.normal.dot(wi);
+			
+			if (ndotwi > 0.0) {
+				final Color aux = diffuseBRDF.mF(sr, wo, wi);
+				aux.multiplyEquals(light.L(sr));
+				aux.multiplyEquals(ndotwi);
+
+				colorL.addEquals(aux);
+			}
+		}
+
+		for (final Light light : castShadowLights) {
 			final Vector3d wi = light.getDirection(sr);
 			double ndotwi = sr.normal.dot(wi);
 
 			if (ndotwi > 0.0) {
 				boolean inShadow = false;
-				if (light.castShadows()) {
-					Ray shadowRay = new Ray(sr.hitPoint, wi);
-					inShadow = light.inShadow(shadowRay, sr);
-				}
+				Ray shadowRay = new Ray(sr.hitPoint, wi);
+				inShadow = light.inShadow(shadowRay, sr);
 				if (!inShadow) {
-					final Color aux = diffuseBRDF.f(sr, wo, wi);
+					final Color aux = diffuseBRDF.mF(sr, wo, wi);
 					aux.multiplyEquals(light.L(sr));
 					aux.multiplyEquals(ndotwi);
-					
+
 					colorL.addEquals(aux);
 				}
 			}
