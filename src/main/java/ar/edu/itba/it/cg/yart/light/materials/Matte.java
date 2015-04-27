@@ -16,9 +16,11 @@ public class Matte extends MaterialAbstract {
 
 	@Override
 	public Color shade(ShadeRec sr) {
-		final Vector3d wo = sr.ray.direction.inverse();
-		final Color colorL = ambientBRDF.rho(sr, wo).multiply(
-				sr.world.getAmbientLight().L(sr));
+		final Vector3d wo = null; // not necessary
+//		final Vector3d wo = sr.ray.direction.inverse();
+		final Color colorL = ambientBRDF.rho(sr, wo);
+		colorL.multiplyEquals(sr.world.getAmbientLight().L(sr));
+		
 		final List<Light> lights = sr.world.getLights();
 
 		for (final Light light : lights) {
@@ -32,8 +34,10 @@ public class Matte extends MaterialAbstract {
 					inShadow = light.inShadow(shadowRay, sr);
 				}
 				if (!inShadow) {
-					final Color aux = diffuseBRDF.f(sr, wo, wi)
-							.multiply(light.L(sr)).multiply(ndotwi);
+					final Color aux = diffuseBRDF.f(sr, wo, wi);
+					aux.multiplyEquals(light.L(sr));
+					aux.multiplyEquals(ndotwi);
+					
 					colorL.addEquals(aux);
 				}
 			}
