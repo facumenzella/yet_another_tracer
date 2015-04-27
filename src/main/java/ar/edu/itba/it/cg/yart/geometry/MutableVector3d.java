@@ -23,6 +23,12 @@ public class MutableVector3d {
 		return new Vector3d(this.x, this.y, this.z);
 	}
 	
+	public void copy(final Vector3d v) {
+		this.x = v.x;
+		this.y = v.y;
+		this.z = v.z;
+	}
+	
 	public void normalize() {
 		this.length = Math.sqrt(x * x + y * y + z * z);
 		this.x = this.x / length;
