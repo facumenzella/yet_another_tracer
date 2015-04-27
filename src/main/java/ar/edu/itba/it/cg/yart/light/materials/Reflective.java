@@ -35,7 +35,9 @@ public class Reflective extends Phong {
 		reflectedRay.depth = sr.depth + 1;
 
 		Color c = sr.world.getTree().traceRay(reflectedRay, tracer, new ShadeRec(sr.world));
-		colorL.addEquals(fr.multiply(c).multiply(sr.normal.dot(wi)));
+		fr.multiplyEquals(c);
+		fr.multiplyEquals(sr.normal.dot(wi));
+		colorL.addEquals(fr);
 		
 		return colorL;
 	}
