@@ -39,7 +39,7 @@ public class Transparent extends Phong {
 		Color colorL = super.shade(sr);
 		final Vector3d wo = sr.ray.direction.inverse();
 		final Vector3d wi = new Vector3d(0, 0, 0);
-		final Color fr = reflectiveBRDF.sample_f(sr, wo, wi);
+//		final Color fr = reflectiveBRDF.sample_f(sr, wo, wi);
 		final Ray reflectedRay = new Ray(sr.hitPoint, wi);
 		reflectedRay.depth = sr.depth + 1;
 		if (specularBTDF.tir(sr)) {
@@ -52,8 +52,9 @@ public class Transparent extends Phong {
 			transmittedRay.depth = sr.depth + 1;
 
 			Color c = sr.world.getTree().traceRay(transmittedRay, tracer, new ShadeRec(sr.world));
-			colorL.addEquals(ft.multiply(c)
-					.multiply(Math.abs(sr.normal.dot(wt))));
+			ft.multiplyEquals(c);
+			ft.multiplyEquals(Math.abs(sr.normal.dot(wt)));
+			colorL.addEquals(ft);
 		}
 		
 		return colorL;
