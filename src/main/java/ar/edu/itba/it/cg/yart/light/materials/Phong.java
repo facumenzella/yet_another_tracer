@@ -15,10 +15,13 @@ public class Phong extends MaterialAbstract{
 	private final Lambertian ambientBRDF = new Lambertian();
 	private final Lambertian diffuseBRDF = new Lambertian();
 	private final GlossySpecular specularBRDF = new GlossySpecular();
+	
 	@Override
 	public Color shade(ShadeRec sr) {
 		final Vector3d wo = sr.ray.direction.inverse();
-		final Color colorL = ambientBRDF.rho(sr, wo).multiply(sr.world.getAmbientLight().L(sr));
+		final Color colorL = ambientBRDF.rho(sr, wo);
+		colorL.multiplyEquals(sr.world.getAmbientLight().L(sr));
+		
 		final List<Light> lights = sr.world.getLights();
 		
 		for(final Light light : lights) {
@@ -33,7 +36,10 @@ public class Phong extends MaterialAbstract{
 					inShadow = light.inShadow(shadowRay, sr);
 				}
 				if(!inShadow){
-					final Color aux = (diffuseBRDF.f(sr, wo, wi).add(specularBRDF.f(sr, wo, wi))).multiply(light.L(sr)).multiply(ndotwi);
+					Color aux = diffuseBRDF.f(sr, wo, wi);
+					aux.addEquals(specularBRDF.f(sr, wo, wi));
+					aux.multiplyEquals(light.L(sr));
+					aux.multiplyEquals(ndotwi);
 					colorL.addEquals(aux);					
 				}
 			}

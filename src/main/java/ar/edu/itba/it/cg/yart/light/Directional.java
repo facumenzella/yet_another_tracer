@@ -11,7 +11,6 @@ public class Directional extends LightAbstract{
 	
 	private final double ls;
 	private final Color color;
-	private final Color shadeColor;
 	private final Vector3d dir;
 	private final HitTracer tracer;
 	
@@ -19,7 +18,6 @@ public class Directional extends LightAbstract{
 		super();
 		this.ls = ls;
 		this.color = color;
-		this.shadeColor = color.multiply(ls);
 		this.dir = direction.normalizedVector();
 		this.tracer = new SimpleHitTracer();
 	}
@@ -30,7 +28,7 @@ public class Directional extends LightAbstract{
 
 	@Override
 	public Color L(ShadeRec sr) {
-		return this.shadeColor;
+		return color.multiply(ls);
 	}
 	@Override
 	public boolean inShadow(Ray ray, ShadeRec sr) {
