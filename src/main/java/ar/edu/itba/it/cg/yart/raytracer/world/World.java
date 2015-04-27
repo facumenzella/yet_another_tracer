@@ -25,6 +25,8 @@ public class World {
 	private Color backgroundColor;
 	private List<GeometricObject> objects = new ArrayList<GeometricObject>();
 	private List<Light> lights = new ArrayList<Light>();
+	private List<Light> castShadowLights = new ArrayList<Light>();
+	private List<Light> doNotCastShadowLights = new ArrayList<Light>();
 	private AmbientLight ambientLight;
 	BSPAxisAligned bspTree;
 	
@@ -204,10 +206,23 @@ public class World {
 	
 	public void addLight(final Light light) {
 		lights.add(light);
+		if (light.castShadows()) {
+			castShadowLights.add(light);
+		} else {
+			doNotCastShadowLights.add(light);
+		}
 	}
 	
 	public List<Light> getLights() {
 		return lights;
+	}
+	
+	public List<Light> getCastShadowLights() {
+		return castShadowLights;
+	}
+	
+	public List<Light> getDoNotCastShadowLights() {
+		return doNotCastShadowLights;
 	}
 
 }

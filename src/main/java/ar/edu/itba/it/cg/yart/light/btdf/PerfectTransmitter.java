@@ -9,9 +9,11 @@ public class PerfectTransmitter extends BTDF {
 
 	private double kt;
 	private double ior;
+	private double invIor;
 
 	public void setIor(final double ior) {
 		this.ior = ior;
+		this.invIor = 1.0 / ior;
 	}
 
 	public void setKt(final double kt) {
@@ -64,7 +66,7 @@ public class PerfectTransmitter extends BTDF {
 		final double cosThetai = sr.normal.dot(wo);
 		double eta = ior;
 		if (cosThetai < 0.0) {
-			eta = 1.0 / eta;
+			eta = invIor;
 		}
 		final double aux = 1.0 - (1.0 - cosThetai * cosThetai)/(eta * eta);
 		return (aux < 0.0);
