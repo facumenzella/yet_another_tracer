@@ -33,11 +33,10 @@ public class Reflective extends Phong {
 		Color fr = reflectiveBRDF.sample_f(sr, wo, wi);
 		Ray reflectedRay = new Ray(sr.hitPoint, wi);
 		reflectedRay.depth = sr.depth + 1;
-		List<GeometricObject> objects = sr.world.getObjects();
-//		Color c = sr.world.getTree().traceRay(reflectedRay, tracer, new ShadeRec(sr.world));
-//		colorL.addEquals(fr.multiply(c).multiply(sr.normal.dot(wi)));
-		colorL.addEquals(fr.multiply(tracer.traceRay(reflectedRay, objects, 
-				new ShadeRec(sr.world), Double.POSITIVE_INFINITY)).multiply(sr.normal.dot(wi)));
+
+		Color c = sr.world.getTree().traceRay(reflectedRay, tracer, new ShadeRec(sr.world));
+		colorL.addEquals(fr.multiply(c).multiply(sr.normal.dot(wi)));
+		
 		return colorL;
 	}
 }
