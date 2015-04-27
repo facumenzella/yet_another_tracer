@@ -37,9 +37,6 @@ public class SimpleColorTracer extends AbstractTracer implements ColorTracer {
 			sr.depth = ray.depth;
 			sr.t = tMin;
 			sr.normal = normal;
-			if (sr.normal==null) {
-				System.out.println("hola");
-			}
 			sr.localHitPoint = localHitPoint;
 			sr.ray = ray;
 			return sr.material.shade(sr);

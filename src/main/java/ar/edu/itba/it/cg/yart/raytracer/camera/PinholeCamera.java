@@ -1,7 +1,6 @@
 package ar.edu.itba.it.cg.yart.raytracer.camera;
 
 import ar.edu.itba.it.cg.yart.color.Color;
-import ar.edu.itba.it.cg.yart.geometry.MutableVector3d;
 import ar.edu.itba.it.cg.yart.geometry.Point2d;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
@@ -99,15 +98,17 @@ public class PinholeCamera extends CameraAbstract {
 	}
 
 	private Vector3d rayDirection(final Point2d p) {
-		final MutableVector3d mu = new MutableVector3d(this.u);
-		final MutableVector3d mv = new MutableVector3d(this.v);
-		final MutableVector3d mw = new MutableVector3d(this.w);
+		mu.copy(u);
+		mv.copy(v);
+		mw.copy(w);
+		
 		mu.scale(p.x);
 		mv.scale(p.y);
 		mw.scale(distance);
 		mu.add(mv);
 		mu.sub(mw);
 		mu.normalize();
+		
 		return mu.inmutableCopy();
 	}
 	
