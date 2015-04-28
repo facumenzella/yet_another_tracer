@@ -14,22 +14,31 @@ public class Directional extends LightAbstract{
 	private final Vector3d dir;
 	private final HitTracer tracer;
 	
+	private Color L;
+	
 	public Directional(final double ls, final Color color, final Vector3d direction) {
 		super();
 		this.ls = ls;
 		this.color = color;
 		this.dir = direction.normalizedVector();
 		this.tracer = new SimpleHitTracer();
+		this.L = this.mL(null);
 	}
+	
 	@Override
 	public Vector3d getDirection(ShadeRec sr) {
 		return dir;
 	}
 
 	@Override
-	public Color L(ShadeRec sr) {
+	public Color L(final ShadeRec sr) {
+		return this.L;
+	}
+	
+	public Color mL(final ShadeRec sr) {
 		return color.multiply(ls);
 	}
+	
 	@Override
 	public boolean inShadow(Ray ray, ShadeRec sr) {
 		double t;		

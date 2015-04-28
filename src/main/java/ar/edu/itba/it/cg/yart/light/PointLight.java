@@ -16,6 +16,8 @@ public class PointLight extends LightAbstract {
 	private final Point3 point;
 	private final HitTracer tracer;
 
+	private Color L;
+	
 	public PointLight(final double ls, final Color color,
 			final Vector3d location) {
 		super();
@@ -24,6 +26,7 @@ public class PointLight extends LightAbstract {
 		this.location = location;
 		this.point = new Point3(location.x, location.y, location.z);
 		this.tracer = new SimpleHitTracer();
+		this.L = this.mL(null);
 	}
 
 	@Override
@@ -33,8 +36,11 @@ public class PointLight extends LightAbstract {
 
 	@Override
 	public Color L(final ShadeRec sr) {
+		return this.L;
+	}
+	
+	public Color mL(final ShadeRec sr) {
 		return color.multiply(ls);
-
 	}
 
 	@Override
