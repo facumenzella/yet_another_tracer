@@ -1,15 +1,12 @@
 package ar.edu.itba.it.cg.yart.light.materials;
 
-import java.util.List;
-
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
-import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.light.brdf.PerfectSpecular;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleColorTracer;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.ColorTracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleColorTracer;
 
 public class Reflective extends Phong {
 
