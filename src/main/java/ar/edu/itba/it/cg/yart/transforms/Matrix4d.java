@@ -2,12 +2,17 @@ package ar.edu.itba.it.cg.yart.transforms;
 
 public class Matrix4d {
 
-	public final double m00, m01, m02, m03;
-	public final double m10, m11, m12, m13;
-	public final double m20, m21, m22, m23;
-	public final double m30, m31, m32, m33;
+	public double m00, m01, m02, m03;
+	public double m10, m11, m12, m13;
+	public double m20, m21, m22, m23;
+	public double m30, m31, m32, m33;
 	
-	public final Matrix4d inverse;
+	private static Matrix4d reflectXMatrix = Matrix4d.reflectXMatrix();
+	private static Matrix4d reflectYMatrix = Matrix4d.reflectYMatrix();
+	private static Matrix4d reflectZMatrix = Matrix4d.reflectZMatrix();
+
+	
+	public Matrix4d inverse;
 	
 	// Creates the identity matrix
 	public Matrix4d() {
@@ -16,13 +21,6 @@ public class Matrix4d {
 		this.m10 = this.m12 = this.m13 = 0;
 		this.m20 = this.m21 = this.m23 = 0;
 		this.m30 = this.m31 = this.m32 = 0;
-		
-		final Matrix4d inverse = new Matrix4d(m00, m10, m20, m30, 
-				m01, m11, m21, m31,
-				m02, m12, m22, m32,
-				m03, m13, m23, m33, this);
-		
-		this.inverse = inverse;
 	}
 	
 	public Matrix4d(final double m00, final double m01, final double m02, final double m03, 
@@ -45,12 +43,6 @@ public class Matrix4d {
 		this.m31 = m31;
 		this.m32 = m32;
 		this.m33 = m33;
-		final Matrix4d inverse = new Matrix4d(m00, m10, m20, m30, 
-				m01, m11, m21, m31,
-				m02, m12, m22, m32,
-				m03, m13, m23, m33, this);
-		
-		this.inverse = inverse;
 	}
 	
 	private Matrix4d(final double m00, final double m01, final double m02, final double m03, 
@@ -75,7 +67,7 @@ public class Matrix4d {
 		this.m33 = m33;
 		this.inverse = inverse;
 	}
-	
+		
 	private Matrix4d rightMultiply(final Matrix4d matrix) {
 		final double m00 = (this.m00 * matrix.m00) + (this.m01 * matrix.m10) + (this.m02 * matrix.m20) + (this.m03 * matrix.m30);
 		final double m01 = (this.m00 * matrix.m01) + (this.m01 * matrix.m11) + (this.m02 * matrix.m21) + (this.m03 * matrix.m31);
@@ -135,17 +127,14 @@ public class Matrix4d {
 	}
 	
 	public Matrix4d reflectX() {
-		final Matrix4d reflectXMatrix = Matrix4d.reflectXMatrix();
 		return this.rightMultiply(reflectXMatrix);
 	}
 	
 	public Matrix4d reflectY() {
-		final Matrix4d reflectYMatrix = Matrix4d.reflectYMatrix();
 		return this.rightMultiply(reflectYMatrix);
 	}
 	
 	public Matrix4d reflectZ() {
-		final Matrix4d reflectZMatrix = Matrix4d.reflectZMatrix();
 		return this.rightMultiply(reflectZMatrix);
 	}
 	
