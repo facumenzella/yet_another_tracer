@@ -2,6 +2,7 @@ package ar.edu.itba.it.cg.yart.parser;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Plane;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Sphere;
+import ar.edu.itba.it.cg.yart.geometry.primitives.mesh.Mesh;
 import ar.edu.itba.it.cg.yart.light.AmbientLight;
 import ar.edu.itba.it.cg.yart.light.Directional;
 import ar.edu.itba.it.cg.yart.light.Light;
@@ -171,7 +173,19 @@ public class SceneBuilder {
 			object = new Sphere(new Point3(0,0,0), identifier.getDouble("radius", 1.0));
 		}
 		else if (strType.equals("plane")) {
-			object = new Plane(new Point3(0,0,0), identifier.getNormal("n", null));
+			object = new Plane(new Point3(0,-2,0), identifier.getNormal("n", null));
+		}
+		else if (strType.equals("mesh")) {
+			int[] ind = identifier.getIntegers("triindices", null);
+			List<Point3> vertices = new ArrayList<Point3>(Arrays.asList(identifier.getPoints("P", null)));
+			List<Vector3d> normals = new ArrayList<Vector3d>(Arrays.asList(identifier.getNormals("N", null)));
+			List<Integer> indices = new ArrayList<Integer>(ind.length);
+			
+			for (int i : ind) {
+				indices.add(i);
+			}
+			
+			object = new Mesh(vertices, normals, indices, true);
 		}
 		
 		object.setMaterial(currentMaterial);
