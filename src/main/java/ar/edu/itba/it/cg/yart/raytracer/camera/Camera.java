@@ -14,4 +14,5 @@ public interface Camera {
 	public ViewPlane calculateViewPlane(final int hRes, final int vRes);
 	public boolean isViewPlaneInvalid();
 	public void invalidateViewPlane();
+
 }

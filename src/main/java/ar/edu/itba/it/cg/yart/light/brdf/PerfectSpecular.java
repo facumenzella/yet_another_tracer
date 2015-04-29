@@ -1,6 +1,7 @@
 package ar.edu.itba.it.cg.yart.light.brdf;
 
 import ar.edu.itba.it.cg.yart.color.Color;
+import ar.edu.itba.it.cg.yart.geometry.MutableVector3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
@@ -22,7 +23,16 @@ public class PerfectSpecular extends BRDF {
 	@Override
 	public Color sample_f(final ShadeRec sr, final Vector3d wo, Vector3d wi) {
 		final double ndotwo = sr.normal.dot(wo);
-		wi.copy(wo.inverse().add(sr.normal.scale(ndotwo).scale(2.0))); 
+		MutableVector3d mSR = new MutableVector3d(sr.normal);
+		MutableVector3d mWo = new MutableVector3d(wo);
+
+		mSR.scale(ndotwo);
+		mSR.scale(2.0);
+		
+		mWo.inverse();
+		mWo.add(mSR);
+		
+		wi.copy(mWo); 
 		final double aux = sr.normal.dot(wi);
 		return (cr.multiply(kr).multiply(1/aux));
 	}

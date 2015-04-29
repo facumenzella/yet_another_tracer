@@ -1,6 +1,7 @@
 package ar.edu.itba.it.cg.yart.light.btdf;
 
 import ar.edu.itba.it.cg.yart.color.Color;
+import ar.edu.itba.it.cg.yart.geometry.MutableVector3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
@@ -8,9 +9,14 @@ public class PerfectTransmitter extends BTDF {
 
 	private double kt;
 	private double ior;
-
+	private double invIor;
+	
+	private Color f = Color.blackColor();
+	private Color rho = Color.blackColor();
+	
 	public void setIor(final double ior) {
 		this.ior = ior;
+		this.invIor = 1.0 / ior;
 	}
 
 	public void setKt(final double kt) {
@@ -19,35 +25,48 @@ public class PerfectTransmitter extends BTDF {
 
 	@Override
 	public Color f(ShadeRec sr, Vector3d wo, Vector3d wi) {
-		// TODO Auto-generated method stub
+		return this.f;
+	}
+	
+	public Color mF(ShadeRec sr, Vector3d wo, Vector3d wi) {
 		return Color.blackColor();
 	}
 
 	@Override
 	public Color rho(ShadeRec sr, Vector3d wo) {
-		// TODO Auto-generated method stub
+		return this.rho;
+	}
+	
+	public Color mRho(ShadeRec sr, Vector3d wo) {
 		return Color.blackColor();
 	}
 
 	@Override
 	public Color sample_f(ShadeRec sr, Vector3d wo, Vector3d wt) {
-		Vector3d n = sr.normal;
+		MutableVector3d n = new MutableVector3d(sr.normal);
+		MutableVector3d mWo = new MutableVector3d(wo);
+
 		double cosThetai = n.dot(wo);
 		double eta = ior;
 
 		if (cosThetai < 0.0) {
 			cosThetai = -cosThetai;
-			n = n.inverse();
+			n.inverse();
 			eta = 1.0/eta;
 		}
 		double etaSquared = eta*eta;
 		double temp = 1.0 - (1.0 - cosThetai * cosThetai)/etaSquared;
 		double cosTheta2 = Math.sqrt(temp);
-		wt.copy(wo.inverse().scale(1.0 / eta)
-				.sub(n.scale(cosTheta2 - cosThetai / eta)));
+		
+		mWo.inverse();
+		mWo.scale(1.0 / eta);
+		n.scale(cosTheta2 - cosThetai / eta);
+		mWo.sub(n);
+		wt.copy(mWo);
+		
 		final double aux = Math.abs(sr.normal.dot(wt));
-		return (Color.whiteColor().multiply(kt/etaSquared))
-				.multiply(1.0/aux);
+		return (Color.whiteColor().multiplyEquals(kt/etaSquared))
+				.multiplyEquals(1.0/aux);
 	}
 
 	@Override
@@ -56,7 +75,7 @@ public class PerfectTransmitter extends BTDF {
 		final double cosThetai = sr.normal.dot(wo);
 		double eta = ior;
 		if (cosThetai < 0.0) {
-			eta = 1.0 / eta;
+			eta = invIor;
 		}
 		final double aux = 1.0 - (1.0 - cosThetai * cosThetai)/(eta * eta);
 		return (aux < 0.0);

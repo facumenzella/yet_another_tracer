@@ -1,7 +1,7 @@
 package ar.edu.itba.it.cg.yart.raytracer;
 
-import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
@@ -13,8 +13,8 @@ import ar.edu.itba.it.cg.yart.raytracer.buckets.BucketWorker;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleTracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.ColorTracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleColorTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 import ar.edu.itba.it.cg.yart.utils.YartExecutorFactory;
 
@@ -36,9 +36,10 @@ public class SimpleRayTracer implements RayTracer {
 	
 	private RaytracerCallbacks callbacks;
 	private final ExecutorService executor;
-	private final Deque<Bucket> buckets;
+	private Deque<Bucket> buckets;
 	private Camera camera;
-	private Tracer tracer;
+	private ColorTracer tracer;
+
 
 	public interface RaytracerCallbacks {
 		public void onBucketFinished(final Bucket bucket,
@@ -48,20 +49,19 @@ public class SimpleRayTracer implements RayTracer {
 	}
 
 	
-	public SimpleRayTracer(final int xBucketSize, final int ysBucketSize,
-			final double tMax, final double distance, final int zoom, final int numSamples, final int cores) {
+	public SimpleRayTracer(final int bucketSize, final double tMax, final double distance, final int zoom, final int numSamples, final int cores) {
 		this.cores = cores;
-		// TODO : change how we create the world
+		this.bucketSize = bucketSize;
+		this.executor = YartExecutorFactory.newFixedThreadPool(this.cores);
+		
 		setResolution(800, 600);
 		setNumSamples(numSamples);
-		this.executor = YartExecutorFactory.newFixedThreadPool(this.cores);
-		this.buckets = getBuckets(xBucketSize, ysBucketSize);
-		
 		setCamera(new PinholeCamera(eye, lookat, up, distance, zoom));
 	}
 
 	public ArrayIntegerMatrix serialRender() {
 		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
+		this.buckets = getBuckets(bucketSize, bucketSize);
 
 		while (!buckets.isEmpty()) {
 			Bucket bucket = buckets.poll();
@@ -87,6 +87,7 @@ public class SimpleRayTracer implements RayTracer {
 
 	private ArrayIntegerMatrix render(final World world) {
 		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
+		this.buckets = getBuckets(bucketSize, bucketSize);
 		
 		int totals = buckets.size();
 		final CountDownLatch latch = new CountDownLatch(totals);
@@ -107,7 +108,7 @@ public class SimpleRayTracer implements RayTracer {
 							callbacks.onBucketFinished(bucket, result);
 							latch.countDown();
 						}
-					}));
+						}));
 		}
 
 		try {
@@ -153,7 +154,7 @@ public class SimpleRayTracer implements RayTracer {
 	}
 
 	public Deque<Bucket> getBuckets(final int xBucketsSize, final int yBucketsSize) {
-		Deque<Bucket> buckets = new ArrayDeque<Bucket>();
+		Deque<Bucket> buckets = new ConcurrentLinkedDeque<Bucket>();
 		int xBuckets = (int) Math.ceil(hRes / ((float) xBucketsSize));
 		int yBuckets = (int) Math.ceil(vRes / ((float) yBucketsSize));
 
@@ -176,9 +177,9 @@ public class SimpleRayTracer implements RayTracer {
 	}
 	
 	@Override
-	public Tracer getTracer() {
+	public ColorTracer getTracer() {
 		if (tracer == null) {
-			tracer = new SimpleTracer();
+			tracer = new SimpleColorTracer();
 		}
 		
 		return tracer;
@@ -198,7 +199,6 @@ public class SimpleRayTracer implements RayTracer {
 	public void setResolution(final int hRes, final int vRes) {
 		this.hRes = hRes;
 		this.vRes = vRes;
-		Camera camera = getCamera();
 		
 		if (camera != null)
 			camera.invalidateViewPlane();
@@ -230,7 +230,6 @@ public class SimpleRayTracer implements RayTracer {
 
 	@Override
 	public ViewPlane getViewPlane() {
-		Camera camera = getCamera();
 		if (camera != null) {
 			return camera.calculateViewPlane(hRes, vRes);
 		}
