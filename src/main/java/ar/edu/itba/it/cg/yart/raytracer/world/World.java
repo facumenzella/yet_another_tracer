@@ -11,6 +11,7 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.Disc;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Plane;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Sphere;
+import ar.edu.itba.it.cg.yart.geometry.primitives.mesh.Mesh;
 import ar.edu.itba.it.cg.yart.light.AmbientLight;
 import ar.edu.itba.it.cg.yart.light.Directional;
 import ar.edu.itba.it.cg.yart.light.Light;
@@ -24,6 +25,8 @@ public class World {
 	private Color backgroundColor;
 	private List<GeometricObject> objects = new ArrayList<GeometricObject>();
 	private List<Light> lights = new ArrayList<Light>();
+	private List<Light> castShadowLights = new ArrayList<Light>();
+	private List<Light> doNotCastShadowLights = new ArrayList<Light>();
 	private AmbientLight ambientLight;
 	BSPAxisAligned bspTree;
 	
@@ -41,8 +44,7 @@ public class World {
 		buildTestWorld();
 	}
 	
-	private void buildTestWorld() {		
-
+	private void buildTestWorld() {
 		setBackgroundColor(Color.blackColor());
 		final Sphere s1 = new Sphere(new Point3(20,0,-10), 30.0f);
 		Reflective s1m = new Reflective();
@@ -127,8 +129,31 @@ public class World {
 //		light1.shadowsOff();
 //		light2.shadowsOff();
 				
+		// we will atempt to build a mesh
+		Point3 v1 = new Point3(-50, 0, -100);
+		Point3 v2 = new Point3(-50, 50, -100);
+		Point3 v3 = new Point3(50, 50, -100);
+		Point3 v4 = new Point3(50, 0, -100);
+		
+		List<Point3> vertices = new ArrayList<Point3>();
+		vertices.add(v1);
+		vertices.add(v2);
+		vertices.add(v3);
+		vertices.add(v4);
+		
+		List<Integer> indices = new ArrayList<Integer>();
+		indices.add(3);
+		indices.add(1);
+		indices.add(0);
+		indices.add(3);
+		indices.add(2);
+		indices.add(1);
+		
+		Mesh mesh = new Mesh(vertices, null, indices, false);
+		mesh.setMaterial(s1m);
 		final List<GeometricObject> objects = new ArrayList<GeometricObject>();
 		
+		objects.add(mesh);
 		objects.add(s1);
 		objects.add(s2);
 		objects.add(s3);
@@ -165,6 +190,12 @@ public class World {
 		this.bspTree.buildTree(objects);
 	}
 	
+	public void addObject(final Mesh mesh) {
+		if (mesh != null) {
+				addObjects(mesh.triangles);
+		}
+	}
+	
 	public List<GeometricObject> getObjects() {
 		return objects;
 	}
@@ -179,15 +210,24 @@ public class World {
 		}
 		else {
 			lights.add(light);
+			if (light.castShadows()) {
+				castShadowLights.add(light);
+			} else {
+				doNotCastShadowLights.add(light);
+			}
 		}
-	}
-	
-	public void addLight(final AmbientLight light) {
-		setAmbientLight(light);
 	}
 	
 	public List<Light> getLights() {
 		return lights;
+	}
+	
+	public List<Light> getCastShadowLights() {
+		return castShadowLights;
+	}
+	
+	public List<Light> getDoNotCastShadowLights() {
+		return doNotCastShadowLights;
 	}
 
 }

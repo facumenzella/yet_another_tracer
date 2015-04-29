@@ -15,6 +15,7 @@ public class BucketWorker implements Runnable {
 
 	public BucketWorker(final Deque<Bucket> buckets, RayTracer raytracer,
 			final ArrayIntegerMatrix result, final RaytracerCallbacks callback) {
+
 		this.buckets = buckets;
 		this.result = result;
 		this.callback = callback;

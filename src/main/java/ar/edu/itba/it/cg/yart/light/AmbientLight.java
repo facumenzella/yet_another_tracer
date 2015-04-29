@@ -10,26 +10,33 @@ public class AmbientLight extends LightAbstract {
 	
 	private double ls;
 	private Color color;
+	private Vector3d direction;
+	
+	private Color L;
 	
 	public AmbientLight(final Color color) {
 		this.ls = 1;
 		this.color = color;
-		
+		this.direction = new Vector3d(0,0,0);
+		this.L = this.mL(null);
 	}
 	
 	@Override
 	public Vector3d getDirection(final ShadeRec sr) {
-		return new Vector3d(0,0,0);
+		return this.direction;
 	}
 	
 	@Override
 	public Color L(final ShadeRec sr) {
-		return color.multiply(ls); 
+		return this.L;
+	}
+	
+	public Color mL(final ShadeRec sr) {
+		return color.multiply(ls);
 	}
 
 	@Override
 	public boolean inShadow(Ray ray, ShadeRec sr) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
