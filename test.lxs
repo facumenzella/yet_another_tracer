@@ -6,23 +6,27 @@ Film
 
 WorldBegin
 
+	MakeNamedMaterial "Material"
+		"color Kd" [1 0 0]
+		"float sigma" [0.000000000000000]
+		"string type" ["matte"]
+
 	AttributeBegin
 		Light "point"
-			"color l" [1 0 1]
+			"color l" [1 1 1]
 			"float power" [2]
 			"vector from" [60 40 30]
 	AttributeEnd
 	
+
+	NamedMaterial "Material"
+
 	AttributeBegin
-		Material "matte"
-			"color Kd" [1 1 1]
 		Shape "shpere"
 			"float radius" [30]
 	AttributeEnd
 
 	AttributeBegin
-		Material "matte"
-			"color Kd" [1 1 0]
 		Shape "plane"
 			"normal n" [0 0 -1]
 	AttributeEnd

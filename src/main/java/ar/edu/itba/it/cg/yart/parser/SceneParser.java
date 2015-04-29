@@ -84,11 +84,9 @@ public class SceneParser {
 		String[] properties = StringUtils.substringsBetween(line, "\"", "\"");
 		String[] values = StringUtils.substringsBetween(line, "[", "]");
 		
-		if (properties.length != values.length) {
-			throw new ParseException("Property and value amount does not match.", 0);
-		}
+		int total = Math.min(properties.length, values.length);
 		
-		for (int i = 0; i < properties.length; i++) {
+		for (int i = 0; i < total; i++) {
 			String[] p = properties[i].split("\\s+");
 			PropertyType type = Property.getType(p[0]);
 			if (type == null) {
@@ -116,6 +114,7 @@ public class SceneParser {
 				throw new ParseException("Syntax error: Cannot create an attribute inside another", 0);
 			}
 			
+			closeAttribute();
 			currentAttribute = new Attribute(AttributeType.ATTRIBUTE, args);
 			attributes.add(currentAttribute);
 			status = ParserStatus.ATTRIBUTE;
@@ -133,6 +132,7 @@ public class SceneParser {
 				throw new ParseException("Syntax error: Cannot create an attribute inside another", 0);
 			}
 			
+			closeAttribute();
 			currentAttribute = new Attribute(AttributeType.OBJECT, args);
 			attributes.add(currentAttribute);
 			status = ParserStatus.ATTRIBUTE;
@@ -150,6 +150,7 @@ public class SceneParser {
 				throw new ParseException("Syntax error: Cannot create an attribute inside another", 0);
 			}
 			
+			closeAttribute();
 			currentAttribute = new Attribute(AttributeType.TRANSFORM, args);
 			attributes.add(currentAttribute);
 			status = ParserStatus.ATTRIBUTE;
@@ -205,6 +206,15 @@ public class SceneParser {
 		}
 		else {
 			// TODO Warning here, we're trying to add identifiers without any Attribute
+			Attribute attribute = null;
+			try {
+				attribute = new Attribute(AttributeType.ATTRIBUTE, null);
+			} catch (ParseException e) {
+			}
+			attributes.add(attribute);
+			for (Identifier i : accIdentifiers) {
+				attribute.addIdentifier(i);
+			}
 		}
 		
 		accIdentifiers.clear();

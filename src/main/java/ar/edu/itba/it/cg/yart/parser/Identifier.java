@@ -16,7 +16,14 @@ public class Identifier {
 		FILM("Film"),
 		SHAPE("Shape"),
 		MATERIAL("Material"),
-		LIGHT("Light");
+		NAMED_MATERIAL("NamedMaterial"),
+		MAKE_NAMED_MATERIAL("MakeNamedMaterial"),
+		LIGHT("Light"),
+		IDENTITY("Identity"),
+		TRANSFORM("Transform"),
+		TRANSLATE("Translate"),
+		ROTATE("Rotate"),
+		SCALE("Scale");
 		
 		private String name;
 		
@@ -47,7 +54,7 @@ public class Identifier {
 		this.type = type;
 		
 		for (int i = 0; i < args.length; i++) {
-			args[i] = args[i].replaceAll("\"", "");
+			args[i] = args[i].replaceAll("[\"\\[\\]]", "");
 		}
 		
 		this.parameter = args;
@@ -63,11 +70,17 @@ public class Identifier {
 		}
 	}
 	
+	public void addProperties(final Collection<Property> properties) {
+		for (Property p : properties) {
+			addProperty(p);
+		}
+	}
+	
 	public IdentifierType getType() {
 		return type;
 	}
 	
-	public String[] getParamters() {
+	public String[] getParameters() {
 		return parameter;
 	}
 	

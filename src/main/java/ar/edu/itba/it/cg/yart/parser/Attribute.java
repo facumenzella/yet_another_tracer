@@ -17,7 +17,7 @@ public class Attribute {
 
 	private final AttributeType type;
 	private Object parameter;
-	private List<Identifier> identifiers;
+	private List<Identifier> identifiers = new ArrayList<Identifier>();
 	
 	public Attribute(final AttributeType type, final String[] args) throws ParseException {
 		this.type = type;
@@ -38,10 +38,6 @@ public class Attribute {
 	}
 	
 	public void addIdentifier(final Identifier identifier) {
-		if (identifiers == null) {
-			identifiers = new ArrayList<Identifier>();
-		}
-		
 		if (identifier != null) {
 			identifiers.add(identifier);
 		}		
