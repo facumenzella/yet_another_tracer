@@ -1,7 +1,11 @@
 package ar.edu.itba.it.cg.yart.parser;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
@@ -17,10 +21,12 @@ import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.light.materials.Matte;
 import ar.edu.itba.it.cg.yart.light.materials.Reflective;
 import ar.edu.itba.it.cg.yart.light.materials.Transparent;
+import ar.edu.itba.it.cg.yart.parser.Identifier.IdentifierType;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
+import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class SceneBuilder {
 	
@@ -28,12 +34,17 @@ public class SceneBuilder {
 	private RayTracer raytracer;
 	private SceneParser parser;
 	
+	private Map<String, Material> namedMaterials = new HashMap<String, Material>();
 	private Material currentMaterial;
+	
+	private Deque<Matrix4d> transformMatrices = new ArrayDeque<Matrix4d>();
 	
 	public void buildRayTracer(final RayTracer raytracer, final SceneParser parser) {
 		reset();
 		this.raytracer = raytracer;
 		this.parser = parser;
+		
+		transformMatrices.push(new Matrix4d());
 		
 		build();
 	}
@@ -52,7 +63,7 @@ public class SceneBuilder {
 					raytracer.setResolution(i.getProperty("xresolution").getInteger(), i.getProperty("yresolution").getInteger());
 					break;
 				case LOOKAT:
-					String[] params = i.getParamters();
+					String[] params = i.getParameters();
 					raytracer.setViewParameters(
 							new Point3(Double.valueOf(params[0]), Double.valueOf(params[2]), Double.valueOf(params[1])),
 							new Point3(Double.valueOf(params[3]), Double.valueOf(params[5]), Double.valueOf(params[4])),
@@ -73,6 +84,34 @@ public class SceneBuilder {
 					case LIGHT:
 						world.addLight(buildLight(i));
 						break;
+					case NAMED_MATERIAL:
+						currentMaterial = namedMaterials.get(i.getParameters()[0]);
+						break;
+					case MAKE_NAMED_MATERIAL:
+						addNamedMaterial(i);
+						break;
+					case IDENTITY:
+						transformMatrices.pop();
+						transformMatrices.push(new Matrix4d());
+						break;
+					case TRANSFORM:
+						transformMatrices.pop();
+						transformMatrices.push(transform(i));
+						break;
+					case ROTATE:
+						Matrix4d next = rotate(i);
+						transformMatrices.pop();
+						transformMatrices.push(next);
+						break;
+					case TRANSLATE:
+						next = translate(i);
+						transformMatrices.pop();
+						transformMatrices.push(next);
+						break;
+					case SCALE:
+						next = scale(i);
+						transformMatrices.pop();
+						transformMatrices.push(next);
 					}
 				}
 			}
@@ -89,7 +128,7 @@ public class SceneBuilder {
 	private Material buildMaterial(Identifier identifier) {
 		Material ret = null;
 		
-		String type = identifier.getParamters()[0];
+		String type = identifier.getParameters()[0];
 		
 		if (type.equals("matte")) {
 			Matte mat = new Matte();
@@ -127,7 +166,7 @@ public class SceneBuilder {
 	private GeometricObject buildShape(Identifier identifier) {
 		GeometricObject object = null;
 		
-		String strType = identifier.getParamters()[0];
+		String strType = identifier.getParameters()[0];
 		if (strType.equals("shpere")) {
 			object = new Sphere(new Point3(0,0,0), identifier.getDouble("radius", 1.0));
 		}
@@ -143,7 +182,7 @@ public class SceneBuilder {
 	private Light buildLight(Identifier identifier) {
 		Light ret = null;
 		
-		String type = identifier.getParamters()[0];
+		String type = identifier.getParameters()[0];
 		
 		if (type.equals("point")) {
 			Vector3d from = identifier.getVector("from", new Vector3d(0,0,0));
@@ -168,16 +207,92 @@ public class SceneBuilder {
 		return ret;
 	}
 	
+	private void addNamedMaterial(Identifier identifier) {
+		// Wrap the given identifier in a convenient Material one
+		String[] args = {identifier.getString("type", "matte")};
+		Identifier i = new Identifier(IdentifierType.MATERIAL, args);
+		i.addProperties(identifier.getProperties());
+		namedMaterials.put(identifier.getParameters()[0], buildMaterial(i));
+	}
+	
 	private Camera buildCamera(Identifier identifier) {
 		Camera ret = null;
 		
-		if (identifier.getParamters()[0].equals("perspective")) {
+		if (identifier.getParameters()[0].equals("perspective")) {
 			PinholeCamera cam = new PinholeCamera(new Point3(0,0,200), new Point3(0,0,0), new Vector3d(0,1,0), 500, 1);
 			cam.setFov(identifier.getDouble("fov", 90));
 			ret = cam;
 		}
 		
 		return ret;
+	}
+	
+	private Matrix4d transform(Identifier identifier) {
+		final double m00 = Double.valueOf(identifier.getParameters()[0]);
+		final double m01 = Double.valueOf(identifier.getParameters()[1]);
+		final double m02 = Double.valueOf(identifier.getParameters()[2]);
+		final double m03 = Double.valueOf(identifier.getParameters()[3]);
+		final double m10 = Double.valueOf(identifier.getParameters()[4]);
+		final double m11 = Double.valueOf(identifier.getParameters()[5]);
+		final double m12 = Double.valueOf(identifier.getParameters()[6]);
+		final double m13 = Double.valueOf(identifier.getParameters()[7]);
+		final double m20 = Double.valueOf(identifier.getParameters()[8]);
+		final double m21 = Double.valueOf(identifier.getParameters()[9]);
+		final double m22 = Double.valueOf(identifier.getParameters()[10]);
+		final double m23 = Double.valueOf(identifier.getParameters()[11]);
+		final double m30 = Double.valueOf(identifier.getParameters()[12]);
+		final double m31 = Double.valueOf(identifier.getParameters()[13]);
+		final double m32 = Double.valueOf(identifier.getParameters()[14]);
+		final double m33 = Double.valueOf(identifier.getParameters()[15]);
+		
+		return new Matrix4d(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
+	}
+	
+	private Matrix4d rotate(Identifier identifier) {
+		Matrix4d current = transformMatrices.peek();
+		
+		double degrees = Double.valueOf(identifier.getParameters()[0]);
+		int rotateX = Integer.valueOf(identifier.getParameters()[1]);
+		int rotateY = Integer.valueOf(identifier.getParameters()[2]);
+		int rotateZ = Integer.valueOf(identifier.getParameters()[3]);
+		
+		if (rotateX != 0) {
+			current = current.rotateX(degrees);
+		}
+		
+		if (rotateY != 0) {
+			current = current.rotateY(degrees);
+		}
+		
+		if (rotateZ != 0) {
+			current = current.rotateZ(degrees);
+		}
+		
+		return current;
+	}
+	
+	private Matrix4d translate(Identifier identifier) {
+		Matrix4d current = transformMatrices.peek();
+		
+		double translateX = Double.valueOf(identifier.getParameters()[1]);
+		double translateY = Double.valueOf(identifier.getParameters()[2]);
+		double translateZ = Double.valueOf(identifier.getParameters()[3]);
+		
+		current.transform(translateX, translateY, translateZ);
+		
+		return current;
+	}
+	
+	private Matrix4d scale(Identifier identifier) {
+		Matrix4d current = transformMatrices.peek();
+		
+		double scaleX = Double.valueOf(identifier.getParameters()[1]);
+		double scaleY = Double.valueOf(identifier.getParameters()[2]);
+		double scaleZ = Double.valueOf(identifier.getParameters()[3]);
+		
+		current.scale(scaleX, scaleY, scaleZ);
+		
+		return current;
 	}
 	
 	private void reset() {
