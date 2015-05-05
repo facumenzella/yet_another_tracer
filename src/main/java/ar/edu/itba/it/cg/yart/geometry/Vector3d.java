@@ -1,6 +1,6 @@
 package ar.edu.itba.it.cg.yart.geometry;
 
-public final class Vector3d {
+public class Vector3d {
 
 	public double x;
 	public double y;
@@ -76,8 +76,12 @@ public final class Vector3d {
 		return Math.acos(this.dot(other) / (this.length * other.length));
 	}
 	
-	public Vector3d normalizedVector() {
-		return new Vector3d(this.x / this.length, this.y / this.length, this.z / this.length);
+	public Normal3d normalizedVector() {
+		Normal3d normal = new Normal3d();
+		normal.x = this.x / this.length;
+		normal.y = this.y / this.length;
+		normal.z = this.z / this.length;
+		return normal;
 	}
 	
 	public void copy(final Vector3d other) {
