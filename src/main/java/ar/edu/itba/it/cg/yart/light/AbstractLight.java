@@ -5,7 +5,7 @@ import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
-public abstract class LightAbstract implements Light {
+public abstract class AbstractLight implements Light {
 
 	protected boolean shadows;
 
@@ -15,7 +15,7 @@ public abstract class LightAbstract implements Light {
 
 	public abstract boolean inShadow(final Ray ray, final ShadeRec sr);
 
-	public LightAbstract() {
+	public AbstractLight() {
 		shadows = true;
 	}
 

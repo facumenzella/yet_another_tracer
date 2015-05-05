@@ -8,7 +8,7 @@ import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.HitTracer;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleHitTracer;
 
-public class PointLight extends LightAbstract {
+public class PointLight extends AbstractLight {
 
 	private final double ls;
 	private final Color color;
