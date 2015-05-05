@@ -5,6 +5,7 @@ import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class AmbientLight extends AbstractLight {
 	
@@ -38,6 +39,11 @@ public class AmbientLight extends AbstractLight {
 	@Override
 	public boolean inShadow(Ray ray, ShadeRec sr) {
 		return false;
+	}
+
+	@Override
+	public void applyTransformation(Matrix4d matrix) {
+		this.direction = this.direction.transformByMatrix(matrix);
 	}
 
 }
