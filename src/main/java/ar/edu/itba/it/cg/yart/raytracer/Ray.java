@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.raytracer;
 
+import ar.edu.itba.it.cg.yart.geometry.MutableVector3d;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 
