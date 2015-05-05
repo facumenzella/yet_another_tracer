@@ -6,22 +6,19 @@ public final class Vector3d {
 	public double y;
 	public double z;
 	public double length;
-	public Vector3d normalized;
 	
 	public Vector3d(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.length = Math.sqrt(x * x + y * y + z * z);
-		this.normalized = new Vector3d(this.x, this.y, this.z, this.length);
 	}
 	
-	private Vector3d(double x, double y, double z, double length) {
+	public Vector3d(double x, double y, double z, double length) {
 		this.length = length;
 		this.x = x / length;
 		this.y = y / length;
 		this.z = z / length;
-		this.normalized = this;
 	}
 	
 	public static Vector3d xAxis() {
@@ -80,7 +77,7 @@ public final class Vector3d {
 	}
 	
 	public Vector3d normalizedVector() {
-		return this.normalized;
+		return new Vector3d(this.x / this.length, this.y / this.length, this.z / this.length);
 	}
 	
 	public void copy(final Vector3d other) {
@@ -88,7 +85,6 @@ public final class Vector3d {
 		this.y = other.y;
 		this.z = other.z;
 		this.length = other.length;
-		this.normalized = new Vector3d(this.x, this.y, this.z, this.length);
 	}
 	
 	public void copy(final MutableVector3d other) {
@@ -96,7 +92,6 @@ public final class Vector3d {
 		this.y = other.y;
 		this.z = other.z;
 		this.length = other.length;
-		this.normalized = new Vector3d(this.x, this.y, this.z, this.length);
 	}
 	
 	@Override

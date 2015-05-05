@@ -10,7 +10,7 @@ public abstract class GeometricObject {
 	protected static final double EPSILON = 0.0001;
 	public Color color;
 	private Material  material;
-	private BoundingBox boundingBox;
+	private BoundingBox boundingBox;	
 	
 	public GeometricObject() {
 		color = new Color(1.0f, 1.0f, 1.0f);
