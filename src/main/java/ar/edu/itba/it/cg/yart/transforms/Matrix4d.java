@@ -42,7 +42,7 @@ public class Matrix4d {
 		this.m33 = m33;
 	}
 		
-	private Matrix4d rightMultiply(final Matrix4d matrix) {
+	private void rightMultiply(final Matrix4d matrix) {
 		final double m00 = (this.m00 * matrix.m00) + (this.m01 * matrix.m10) + (this.m02 * matrix.m20) + (this.m03 * matrix.m30);
 		final double m01 = (this.m00 * matrix.m01) + (this.m01 * matrix.m11) + (this.m02 * matrix.m21) + (this.m03 * matrix.m31);
 		final double m02 = (this.m00 * matrix.m02) + (this.m01 * matrix.m12) + (this.m02 * matrix.m22) + (this.m03 * matrix.m32);
@@ -63,48 +63,63 @@ public class Matrix4d {
 		final double m32 = (this.m30 * matrix.m02) + (this.m31 * matrix.m12) + (this.m32 * matrix.m22) + (this.m33 * matrix.m32);
 		final double m33 = (this.m30 * matrix.m03) + (this.m31 * matrix.m13) + (this.m32 * matrix.m23) + (this.m33 * matrix.m33);
 		
-		return new Matrix4d(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
+		this.m00 = m00;
+		this.m01 = m01;
+		this.m02 = m02;
+		this.m03 = m03;
+		this.m10 = m10;
+		this.m11 = m11;
+		this.m12 = m12;
+		this.m13 = m13;
+		this.m20 = m20;
+		this.m21 = m21;
+		this.m22 = m22;
+		this.m23 = m23;
+		this.m30 = m30;
+		this.m31 = m31;
+		this.m32 = m32;
+		this.m33 = m33;
 	}
 	
-	private Matrix4d leftMultiply(final Matrix4d matrix) {
-		return matrix.rightMultiply(this);
+	private void leftMultiply(final Matrix4d matrix) {
+		matrix.rightMultiply(this);
 	}
 	
-	public Matrix4d transform(final double dx, final double dy, final double dz) {
+	public void transform(final double dx, final double dy, final double dz) {
 		final Matrix4d transformMatrix = Matrix4d.transformMatrix(dx, dy, dz);
-		return this.rightMultiply(transformMatrix);
+		this.rightMultiply(transformMatrix);
 	}
 	
-	public Matrix4d scale(final double a, final double b, final double c) {
+	public void scale(final double a, final double b, final double c) {
 		final Matrix4d scaleMatrix = Matrix4d.scaleMatrix(a, b, c);
-		return this.rightMultiply(scaleMatrix);
+		this.rightMultiply(scaleMatrix);
 	}
 	
-	public Matrix4d rotateX(final double degrees) {
+	public void rotateX(final double degrees) {
 		final Matrix4d rotateXMatrix = Matrix4d.rotateXMatrix(degrees);
-		return this.rightMultiply(rotateXMatrix);
+		this.rightMultiply(rotateXMatrix);
 	}
 	
-	public Matrix4d rotateY(final double degrees) {
+	public void rotateY(final double degrees) {
 		final Matrix4d rotateYMatrix = Matrix4d.rotateYMatrix(degrees);
-		return this.rightMultiply(rotateYMatrix);
+		this.rightMultiply(rotateYMatrix);
 	}
 	
-	public Matrix4d rotateZ(final double degrees) {
+	public void rotateZ(final double degrees) {
 		final Matrix4d rotateZMatrix = Matrix4d.rotateZMatrix(degrees);
-		return this.rightMultiply(rotateZMatrix);
+		this.rightMultiply(rotateZMatrix);
 	}
 	
-	public Matrix4d reflectX() {
-		return this.rightMultiply(reflectXMatrix);
+	public void reflectX() {
+		this.rightMultiply(reflectXMatrix);
 	}
 	
-	public Matrix4d reflectY() {
-		return this.rightMultiply(reflectYMatrix);
+	public void reflectY() {
+		this.rightMultiply(reflectYMatrix);
 	}
 	
-	public Matrix4d reflectZ() {
-		return this.rightMultiply(reflectZMatrix);
+	public void reflectZ() {
+		this.rightMultiply(reflectZMatrix);
 	}
 	
 	public void inverse() {
@@ -148,6 +163,8 @@ public class Matrix4d {
 				0, 0, 1, 0,
 				0, 0, 0, 1);
 	}
+	
+	// These methods should not be used directly as long as you do not need a new instance of the matrix.
 	
 	private static Matrix4d reflectXMatrix() {
 		return new Matrix4d(-1, 0, 0, 0,
