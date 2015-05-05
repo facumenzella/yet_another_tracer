@@ -70,6 +70,7 @@ public class PinholeCamera extends CameraAbstract {
 
 						pp = new Point2d(x, y);
 						ray.direction = this.rayDirection(pp);
+						ray.inverseDirection = ray.direction.inverse();
 						Color c = world.getTree().traceRay(ray, tracer, new ShadeRec(world));
 						color.addEquals(c);
 					}
