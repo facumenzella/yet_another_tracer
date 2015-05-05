@@ -6,12 +6,13 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.HitTracer;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleHitTracer;
+import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class Directional extends AbstractLight{
 	
 	private final double ls;
 	private final Color color;
-	private final Vector3d dir;
+	private Vector3d dir;
 	private final HitTracer tracer;
 	
 	private Color L;
@@ -47,6 +48,10 @@ public class Directional extends AbstractLight{
 				return true;
 		}
 		return false;
+	}
+	@Override
+	public void applyTransformation(Matrix4d matrix) {
+		this.dir = this.dir.transformByMatrix(matrix);
 	}
 
 }
