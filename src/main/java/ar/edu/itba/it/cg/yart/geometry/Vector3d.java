@@ -1,6 +1,9 @@
 package ar.edu.itba.it.cg.yart.geometry;
 
+import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
+
 public class Vector3d {
+
 
 	public double x;
 	public double y;
@@ -96,6 +99,13 @@ public class Vector3d {
 		this.y = other.y;
 		this.z = other.z;
 		this.length = other.length;
+	}
+	
+	public Vector3d transformByMatrix(final Matrix4d matrix) {
+		final double dx = (matrix.m00 * this.x) + (matrix.m01 * this.y) + (matrix.m02 * this.z);
+		final double dy = (matrix.m10 * this.x) + (matrix.m11 * this.y) + (matrix.m12 * this.z);
+		final double dz = (matrix.m20 * this.x) + (matrix.m21 * this.y) + (matrix.m22 * this.z);
+		return new Vector3d(dx, dy, dz);
 	}
 	
 	@Override
