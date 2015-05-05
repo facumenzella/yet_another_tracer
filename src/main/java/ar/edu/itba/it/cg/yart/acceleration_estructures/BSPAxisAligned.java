@@ -414,9 +414,6 @@ public class BSPAxisAligned {
 	}
 
 	public Color traceRay(final Ray ray, final ColorTracer tracer, final ShadeRec sr) {
-		// Point3 origin = new Point3(0, 0, 200);
-		// Point3 hitP = new Point3(-45,-10,20);
-		// Ray aRay = new Ray(origin, hitP.sub(origin));
 		return p_traceObjectsForRay(ray, root, tMin, tMax, tracer, sr);
 	}
 

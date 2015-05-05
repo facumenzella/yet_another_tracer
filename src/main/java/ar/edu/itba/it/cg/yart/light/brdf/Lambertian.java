@@ -13,7 +13,7 @@ public class Lambertian extends BRDF {
 	private Color f;
 	private Color rho;
 	private Color sample_f = Color.blackColor();
-
+	
 	@Override
 	public Color f(ShadeRec sr, Vector3d wo, Vector3d wi) {
 		return f;
@@ -38,7 +38,7 @@ public class Lambertian extends BRDF {
 	}
 
 	public Color mSample_f(ShadeRec sr, Vector3d wo, Vector3d wi) {
-		return Color.blackColor();
+		return new Color(this.sample_f);
 	}
 
 	public double getKd() {

@@ -32,7 +32,8 @@ public class PinholeCamera extends CameraAbstract {
 	public void renderScene(final Bucket bucket, RayTracer rayTracer, final ArrayIntegerMatrix result) {
 
 		// TODO : Its almost working, but its not finished
-		Color color;
+		Color blackColor = Color.blackColor();
+		Color color = new Color(0,0,0,0);
 		ViewPlane viewPlane = rayTracer.getViewPlane();
 		double adjustedPixelSize = viewPlane.pixelSize / zoom;
 		Point2d sp = new Point2d(0, 0);
@@ -51,7 +52,7 @@ public class PinholeCamera extends CameraAbstract {
 
 		for (int row = yStart; row < yFinish; row++) { // up
 			for (int col = xStart; col < xFinish; col++) { // across
-				color = Color.blackColor();
+				color.copy(blackColor);
 				for (int i = 0; i < n; i++) {
 					for (int j = 0; j < n; j++) {
 						final double distributionX;
@@ -138,7 +139,7 @@ public class PinholeCamera extends CameraAbstract {
 	private Color maxToOne(final Color c) {
 		final double maxValue = Math.max(c.r, Math.max(c.g, c.b));
 		if (maxValue > 1.0) {
-			return c.multiply(1 / maxValue);
+			return c.multiplyEquals(1 / maxValue);
 		}
 		return c;
 	}
