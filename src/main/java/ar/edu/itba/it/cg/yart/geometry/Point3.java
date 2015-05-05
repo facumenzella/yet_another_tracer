@@ -16,6 +16,10 @@ public class Point3 {
 		return new Vector3d(x - other.x, y - other.y, z - other.z);
 	}
 	
+	public MutableVector3d mutableSub(final Point3 other) {
+		return new MutableVector3d(x - other.x, y - other.y, z - other.z);
+	}
+	
 	public Point3 add(final Point3 other) {
 		return new Point3(x + other.x, y + other.y, z + other.z);
 	}
@@ -24,8 +28,18 @@ public class Point3 {
 		return new Point3(x + other.x, y + other.y, z + other.z);
 	}
 	
+	public Point3 add(final MutableVector3d other) {
+		return new Point3(x + other.x, y + other.y, z + other.z);
+	}
+	
 	public double distance(final Point3 other) {
 		return this.sub(other).length;
+	}
+	
+	public void copy(final Point3 p) {
+		this.x = p.x;
+		this.y = p.y;
+		this.z = p.z;
 	}
 
 }

@@ -24,7 +24,7 @@ public class Sphere extends GeometricObject {
 		}
 		
 		double t;
-		MutableVector3d tmp = new MutableVector3d(ray.origin.sub(center));
+		MutableVector3d tmp = ray.origin.mutableSub(center);
 		MutableVector3d rayTmp = new MutableVector3d(ray.direction);
 		
 		double a = ray.direction.dot(ray.direction);
@@ -47,7 +47,7 @@ public class Sphere extends GeometricObject {
 			tmp.add(rayTmp);
 			tmp.scale(1/radius);
 			sr.normal = tmp.inmutableCopy();
-			sr.localHitPoint = ray.origin.add(rayTmp.inmutableCopy());
+			sr.localHitPoint = ray.origin.add(rayTmp);
 			return t;
 		}
 		
@@ -58,7 +58,7 @@ public class Sphere extends GeometricObject {
 			tmp.add(rayTmp);
 			tmp.scale(1/radius);
 			sr.normal = tmp.inmutableCopy();
-			sr.localHitPoint = ray.origin.add(rayTmp.inmutableCopy());
+			sr.localHitPoint = ray.origin.add(rayTmp);
 			return t;
 		}
 		
@@ -68,7 +68,7 @@ public class Sphere extends GeometricObject {
 	@Override
 	public double shadowHit(final Ray ray) {
 		double t;
-		MutableVector3d tmp = new MutableVector3d(ray.origin.sub(center));
+		MutableVector3d tmp = ray.origin.mutableSub(center);
 		double a = ray.direction.dot(ray.direction);
 		double b = 2.0 * tmp.dot(ray.direction);
 		double c = tmp.dot(tmp)  - radius * radius;
