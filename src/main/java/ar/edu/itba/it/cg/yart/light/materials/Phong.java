@@ -18,7 +18,7 @@ public class Phong extends MaterialAbstract {
 
 	@Override
 	public Color shade(ShadeRec sr) {
-		Vector3d wo = sr.ray.direction.inverse();
+		Vector3d wo = sr.ray.inverseDirection;
 		final Color colorL = ambientBRDF.mRho(sr, wo);
 		colorL.multiplyEquals(sr.world.getAmbientLight().L(sr));
 
