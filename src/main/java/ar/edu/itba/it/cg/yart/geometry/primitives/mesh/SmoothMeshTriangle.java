@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives.mesh;
 
+import ar.edu.itba.it.cg.yart.geometry.MutableVector3d;
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
@@ -111,10 +112,13 @@ public class SmoothMeshTriangle extends MeshTriangle{
 	
 	public Vector3d interpolateNormal(final double beta, final double gamma) {
 		final Mesh mesh = this.mesh;
-		final Vector3d n0 = mesh.normals.get(index0).scale(1 - beta - gamma);
+		final MutableVector3d n0 = new MutableVector3d(mesh.normals.get(index0).scale(1 - beta - gamma));
 		final Vector3d n1 = mesh.normals.get(index1).scale(beta);
 		final Vector3d n2 = mesh.normals.get(index1).scale(gamma);
-		return n0.add(n1).add(n2).normalizedVector();
+		n0.add(n1);
+		n0.add(n2);
+		n0.normalize();
+		return n0.inmutableCopy();
 	}
 
 }

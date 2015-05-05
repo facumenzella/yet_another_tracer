@@ -86,4 +86,10 @@ public class MutableVector3d {
 		this.z = z + other.z;
 	}
 	
+	public void add(final Vector3d other) {
+		this.x = x + other.x;
+		this.y = y + other.y;
+		this.z = z + other.z;
+	}
+	
 }
