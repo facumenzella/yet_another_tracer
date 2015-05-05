@@ -7,8 +7,17 @@ public class Color {
 	public double b;
 	public double a;
 	
+	private static Color BLACK = new Color(0,0,0,1.0);
+	
 	public Color(final double r, final double g, final double b) {
 		this(r, g, b, 1.0);
+	}
+	
+	public Color(final Color c) {
+		this.r = c.r;
+		this.g = c.g;
+		this.b = c.g;
+		this.a = c.a;
 	}
 	
 	public Color(final double r, final double g, final double b, final double a) {
@@ -68,12 +77,19 @@ public class Color {
 		}
 	}
 	
+	public void copy(final Color color) {
+		this.r = color.r;
+		this.g = color.g;
+		this.b = color.b;
+		this.a = color.a;
+	}
+	
 	public static Color whiteColor() {
 		return new Color(1.0,1.0,1.0,1.0);
 	}
 	
 	public static Color blackColor() {
-		return new Color(0,0,0,1.0);
+		return BLACK;
 	}
 	
 	public static Color redColor() {

@@ -40,7 +40,7 @@ public class GlossySpecular extends BRDF{
 	}
 	
 	public Color mRho(ShadeRec sr, Vector3d wo) {
-		return Color.blackColor();
+		return new Color(this.rho);
 	}
 	
 	@Override
@@ -49,7 +49,7 @@ public class GlossySpecular extends BRDF{
 	}
 	
 	public Color mSample_f(ShadeRec sr, Vector3d wo, Vector3d wi) {
-		return Color.blackColor();
+		return new Color(this.sample_f);
 	}
 	
 	public void setExp(final double exp) {
