@@ -50,9 +50,9 @@ public class Mesh extends GeometricObject {
 
 		final int iterations = this.indices.size() / 3;
 		for (int i = 0; i < iterations; i++) {
-			Integer v1 = indices.get(i * 3);
+			Integer v1 = indices.get(i * 3 + 2);
 			Integer v2 = indices.get(i * 3 + 1);
-			Integer v3 = indices.get(i * 3 + 2);
+			Integer v3 = indices.get(i * 3);
 
 			List<MeshTriangle> facesV1 = this.faces.get(v1);
 			List<MeshTriangle> facesV2 = this.faces.get(v2);

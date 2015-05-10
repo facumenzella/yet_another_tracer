@@ -169,7 +169,7 @@ public class SceneBuilder {
 		GeometricObject object = null;
 		
 		String strType = identifier.getParameters()[0];
-		if (strType.equals("shpere")) {
+		if (strType.equals("sphere")) {
 			object = new Sphere(new Point3(0,0,0), identifier.getDouble("radius", 1.0));
 		}
 		else if (strType.equals("plane")) {
