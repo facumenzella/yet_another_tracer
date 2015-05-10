@@ -17,12 +17,18 @@ public class Sphere extends GeometricObject {
 	}
 
 	@Override
-	public double hit(final Ray ray, final ShadeRec sr) {
+	public double hit(final Ray aRay, final ShadeRec sr) {
+		Ray ray = new Ray(aRay.origin);
+		ray.direction = aRay.direction;
+		if (transformed) {
+			ray.origin = ray.origin.transformByMatrix(inverseMatrix);
+			ray.direction = ray.direction.transformByMatrix(inverseMatrix);
+		}
+		
 		if (!getBoundingBox().hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}
 		
-		double t;
 		MutableVector3d tmp = ray.origin.mutableSub(center);
 		MutableVector3d rayTmp = new MutableVector3d(ray.direction);
 		
@@ -38,7 +44,8 @@ public class Sphere extends GeometricObject {
 		
 		double e = Math.sqrt(disc);
 		double denom = 2.0 * a;
-		
+		double t;
+
 		t = (-b - e) / denom;
 		
 		if (t > EPSILON) {
@@ -46,7 +53,10 @@ public class Sphere extends GeometricObject {
 			tmp.add(rayTmp);
 			tmp.scale(1/radius);
 			sr.normal = tmp.inmutableCopy();
-			sr.localHitPoint = ray.origin.add(rayTmp);
+			if (transformed) {
+				sr.normal = sr.normal.transformByMatrix(transposedInvMatrix);
+			}
+			sr.localHitPoint = aRay.origin.add(aRay.direction.scale(t));
 			return t;
 		}
 		
@@ -57,7 +67,10 @@ public class Sphere extends GeometricObject {
 			tmp.add(rayTmp);
 			tmp.scale(1/radius);
 			sr.normal = tmp.inmutableCopy();
-			sr.localHitPoint = ray.origin.add(rayTmp);
+			if (transformed) {
+				sr.normal = sr.normal.transformByMatrix(transposedInvMatrix);
+			}
+			sr.localHitPoint = aRay.origin.add(aRay.direction.scale(t));
 			return t;
 		}
 		
@@ -65,8 +78,18 @@ public class Sphere extends GeometricObject {
 	}
 
 	@Override
-	public double shadowHit(final Ray ray) {
-		double t;
+	public double shadowHit(final Ray aRay) {
+		Ray ray = new Ray(aRay.origin);
+		ray.direction = aRay.direction;
+		if (transformed) {
+			ray.origin = ray.origin.transformByMatrix(inverseMatrix);
+			ray.direction = ray.direction.transformByMatrix(inverseMatrix);
+		}
+		
+		if (!getBoundingBox().hit(ray)) {
+			return Double.NEGATIVE_INFINITY;
+		}
+		
 		MutableVector3d tmp = ray.origin.mutableSub(center);
 		double a = ray.direction.dot(ray.direction);
 		double b = 2.0 * tmp.dot(ray.direction);
@@ -81,6 +104,7 @@ public class Sphere extends GeometricObject {
 		double e = Math.sqrt(disc);
 		double denom = 2.0 * a;
 		
+		double t;
 		t = (-b - e) / denom;
 		
 		if (t > EPSILON) {
