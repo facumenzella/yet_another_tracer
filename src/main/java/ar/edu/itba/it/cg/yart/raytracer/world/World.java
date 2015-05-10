@@ -37,14 +37,7 @@ public class World {
 		this.ambientLight = new AmbientLight(Color.blackColor());
 	}
 	
-	
-	public World(final String filename) {
-		this();
-		// TODO Build scene file parser
-		buildTestWorld();
-	}
-	
-	private void buildTestWorld() {
+	public void buildTestWorld() {
 		setBackgroundColor(Color.blackColor());
 		final Sphere s1 = new Sphere(new Point3(20,0,-10), 30.0f);
 		Reflective s1m = new Reflective();

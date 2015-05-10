@@ -2,7 +2,7 @@ package ar.edu.itba.it.cg.yart.raytracer.interfaces;
 
 import ar.edu.itba.it.cg.yart.geometry.Point3;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
-import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
+import ar.edu.itba.it.cg.yart.raytracer.RenderResult;
 import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer.RaytracerCallbacks;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
@@ -11,8 +11,8 @@ import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
 public interface RayTracer {
 	
-	public ArrayIntegerMatrix render();
-	public ArrayIntegerMatrix serialRender();
+	public RenderResult render();
+	public RenderResult serialRender();
 	public void setWorld(final World w);
 	public World getWorld();
 	public int getHorizontalRes();

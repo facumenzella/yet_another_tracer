@@ -22,6 +22,7 @@ public class SimpleRayTracer implements RayTracer {
 
 	private final int cores;
 	
+	private final RenderResult renderResult;
 	private World world;
 	
 	// Default parameters
@@ -49,18 +50,24 @@ public class SimpleRayTracer implements RayTracer {
 	}
 
 	
-	public SimpleRayTracer(final int bucketSize, final double tMax, final double distance, final int zoom, final int numSamples, final int cores) {
+	public SimpleRayTracer(final RenderResult renderResult, final int bucketSize, final double tMax, final double distance, final int zoom, final int numSamples, final int cores) {
 		this.cores = cores;
 		this.bucketSize = bucketSize;
 		this.executor = YartExecutorFactory.newFixedThreadPool(this.cores);
+		
+		this.renderResult = renderResult;
 		
 		setResolution(800, 600);
 		setNumSamples(numSamples);
 		setCamera(new PinholeCamera(eye, lookat, up, distance, zoom));
 	}
 
-	public ArrayIntegerMatrix serialRender() {
+	public RenderResult serialRender() {
+		renderResult.startRender();
+		
 		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
+		renderResult.setPixels(result);
+		
 		this.buckets = getBuckets(bucketSize, bucketSize);
 
 		while (!buckets.isEmpty()) {
@@ -76,17 +83,23 @@ public class SimpleRayTracer implements RayTracer {
 		if (callbacks != null) {
 			callbacks.onRenderFinished(result);
 		}
+		
+		renderResult.finishRender();
 
-		return result;
+		return renderResult;
 	}
 	
 	@Override
-	public ArrayIntegerMatrix render() {
+	public RenderResult render() {
 		return this.render(this.world);
 	}
 
-	private ArrayIntegerMatrix render(final World world) {
+	private RenderResult render(final World world) {
+		renderResult.startRender();
+		
 		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
+		renderResult.setPixels(result);
+		
 		this.buckets = getBuckets(bucketSize, bucketSize);
 		
 		int totals = buckets.size();
@@ -105,7 +118,9 @@ public class SimpleRayTracer implements RayTracer {
 						@Override
 						public void onBucketFinished(Bucket bucket,
 								ArrayIntegerMatrix result) {
-							callbacks.onBucketFinished(bucket, result);
+							if (callbacks != null) {
+								callbacks.onBucketFinished(bucket, result);
+							}
 							latch.countDown();
 						}
 						}));
@@ -116,10 +131,12 @@ public class SimpleRayTracer implements RayTracer {
 		} catch (InterruptedException e) {
 			System.out.println("We fucked up");
 		} finally {
-			callbacks.onRenderFinished(result);
+			if (callbacks != null)
+				callbacks.onRenderFinished(result);
 		}
 
-		return result;
+		renderResult.finishRender();
+		return renderResult;
 	}
 	
 	@Override
