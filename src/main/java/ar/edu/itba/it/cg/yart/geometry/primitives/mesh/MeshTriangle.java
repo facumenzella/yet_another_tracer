@@ -1,6 +1,6 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives.mesh;
 
-import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.BoundingBox;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
@@ -35,9 +35,9 @@ public abstract class MeshTriangle extends GeometricObject {
 	
 	@Override
 	public BoundingBox createBoundingBox() {
-		Point3 v0 = mesh.vertices.get(index0);
-		Point3 v1 = mesh.vertices.get(index1);
-		Point3 v2 = mesh.vertices.get(index2);
+		Point3d v0 = mesh.vertices.get(index0);
+		Point3d v1 = mesh.vertices.get(index1);
+		Point3d v2 = mesh.vertices.get(index2);
 		
 		double minX = Math.min(v0.x - EPSILON, Math.min(v1.x, v2.x));
 		double minY = Math.min(v0.y - EPSILON, Math.min(v1.y, v2.y));
@@ -46,7 +46,7 @@ public abstract class MeshTriangle extends GeometricObject {
 		double maxY = Math.max(v0.y + EPSILON, Math.max(v1.y, v2.y));
 		double maxZ = Math.max(v0.z + EPSILON, Math.max(v1.z, v2.z));
 
-		return new BoundingBox(new Point3(minX, minY, minZ), new Point3(maxX, maxY, maxZ));
+		return new BoundingBox(new Point3d(minX, minY, minZ), new Point3d(maxX, maxY, maxZ));
 	}
 
 }

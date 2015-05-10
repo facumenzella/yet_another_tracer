@@ -1,6 +1,6 @@
 package ar.edu.itba.it.cg.yart.raytracer;
 
-import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
@@ -8,8 +8,8 @@ import ar.edu.itba.it.cg.yart.raytracer.world.World;
 public class ShadeRec {
 	
 	public boolean hitObject;
-	public Point3 hitPoint = null;			//world coordinates of hit point
-	public Point3 localHitPoint;			//later for textures
+	public Point3d hitPoint = null;			//world coordinates of hit point
+	public Point3d localHitPoint;			//later for textures
 	public Vector3d normal = null;			//normal at hit point
 	public Material material;
 	public Ray ray;							//for specular highlights

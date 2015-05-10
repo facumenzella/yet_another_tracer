@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
-import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
@@ -25,8 +25,8 @@ public class SimpleRayTracer implements RayTracer {
 	private World world;
 	
 	// Default parameters
-	private Point3 eye = new Point3(0,0,200);
-	private Point3 lookat = new Point3(0,0,0);
+	private Point3d eye = new Point3d(0,0,200);
+	private Point3d lookat = new Point3d(0,0,0);
 	private Vector3d up = new Vector3d(0,1,0);
 
 	private int hRes;
@@ -205,7 +205,7 @@ public class SimpleRayTracer implements RayTracer {
 	}
 
 	@Override
-	public void setViewParameters(final Point3 eye, final Point3 lookAt, final Vector3d up) {
+	public void setViewParameters(final Point3d eye, final Point3d lookAt, final Vector3d up) {
 		this.eye = eye;
 		this.lookat = lookAt;
 		this.up = up;

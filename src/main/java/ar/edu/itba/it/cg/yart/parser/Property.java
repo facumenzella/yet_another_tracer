@@ -1,7 +1,7 @@
 package ar.edu.itba.it.cg.yart.parser;
 
 import ar.edu.itba.it.cg.yart.color.Color;
-import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 
 
@@ -94,9 +94,9 @@ public class Property {
 			if (values.length % 3 != 0) {
 				throw new IllegalArgumentException("Point properties need multiple of 3 values, found " + values.length);
 			}
-			this.value = new Point3[values.length / 3];
+			this.value = new Point3d[values.length / 3];
 			for (int i = 0; i < values.length; i += 3) {
-				((Point3[]) this.value)[i / 3] = new Point3(Double.valueOf(values[i]), Double.valueOf(values[i+2]), Double.valueOf(values[i+1]));
+				((Point3d[]) this.value)[i / 3] = new Point3d(Double.valueOf(values[i]), Double.valueOf(values[i+2]), Double.valueOf(values[i+1]));
 			}
 			break;
 		case STRING:
@@ -175,12 +175,12 @@ public class Property {
 		return ((String[]) value);
 	}
 	
-	public Point3 getPoint() {
+	public Point3d getPoint() {
 		return getPoints()[0];
 	}
 	
-	public Point3[] getPoints() {
-		return ((Point3[]) value);
+	public Point3d[] getPoints() {
+		return ((Point3d[]) value);
 	}
 	
 	public PropertyType getType() {

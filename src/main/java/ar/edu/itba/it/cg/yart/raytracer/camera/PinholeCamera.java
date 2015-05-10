@@ -3,7 +3,7 @@ package ar.edu.itba.it.cg.yart.raytracer.camera;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.MutableVector3d;
 import ar.edu.itba.it.cg.yart.geometry.Point2d;
-import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
@@ -22,7 +22,7 @@ public class PinholeCamera extends CameraAbstract {
 	// Default value according to LuxRender specs.
 	private double fov = 90;
 
-	public PinholeCamera(final Point3 eye, final Point3 lookat, final Vector3d up, final double distance,
+	public PinholeCamera(final Point3d eye, final Point3d lookat, final Vector3d up, final double distance,
 			final double zoom) {
 		super(eye, lookat, up);
 		this.distance = distance;

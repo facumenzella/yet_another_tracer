@@ -1,7 +1,7 @@
 package ar.edu.itba.it.cg.yart.light;
 
 import ar.edu.itba.it.cg.yart.color.Color;
-import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
@@ -14,7 +14,7 @@ public class PointLight extends AbstractLight {
 	private final double ls;
 	private final Color color;
 	private Vector3d location;
-	private final Point3 point;
+	private final Point3d point;
 	private final HitTracer tracer;
 
 	private Color L;
@@ -25,7 +25,7 @@ public class PointLight extends AbstractLight {
 		this.ls = ls;
 		this.color = color;
 		this.location = location;
-		this.point = new Point3(location.x, location.y, location.z);
+		this.point = new Point3d(location.x, location.y, location.z);
 		this.tracer = new SimpleHitTracer();
 		this.L = this.mL(null);
 	}

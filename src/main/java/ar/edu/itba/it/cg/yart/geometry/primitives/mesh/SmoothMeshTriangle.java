@@ -1,7 +1,7 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives.mesh;
 
 import ar.edu.itba.it.cg.yart.geometry.MutableVector3d;
-import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
@@ -19,9 +19,9 @@ public class SmoothMeshTriangle extends MeshTriangle{
 			return Double.NEGATIVE_INFINITY;
 		}
 		
-		Point3 v0 = mesh.vertices.get(index0);
-		Point3 v1 = mesh.vertices.get(index1);
-		Point3 v2 = mesh.vertices.get(index2);
+		Point3d v0 = mesh.vertices.get(index0);
+		Point3d v1 = mesh.vertices.get(index1);
+		Point3d v2 = mesh.vertices.get(index2);
 		
 		double a = v0.x - v1.x, b = v0.x - v2.x, c = ray.direction.x, d = v0.x - ray.origin.x; 
 		double e = v0.y - v1.y, f = v0.y - v2.y, g = ray.direction.y, h = v0.y - ray.origin.y;
@@ -69,9 +69,9 @@ public class SmoothMeshTriangle extends MeshTriangle{
 			return Double.NEGATIVE_INFINITY;
 		}
 		
-		Point3 v0 = mesh.vertices.get(index0);
-		Point3 v1 = mesh.vertices.get(index1);
-		Point3 v2 = mesh.vertices.get(index2);
+		Point3d v0 = mesh.vertices.get(index0);
+		Point3d v1 = mesh.vertices.get(index1);
+		Point3d v2 = mesh.vertices.get(index2);
 		
 		double a = v0.x - v1.x, b = v0.x - v2.x, c = ray.direction.x, d = v0.x - ray.origin.x; 
 		double e = v0.y - v1.y, f = v0.y - v2.y, g = ray.direction.y, h = v0.y - ray.origin.y;

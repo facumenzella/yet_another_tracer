@@ -1,6 +1,6 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives;
 
-import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
@@ -9,7 +9,7 @@ public class Disc extends Plane{
 	
 	private final double r;
 	
-	public Disc(final Point3 center, final Vector3d normal, final double raidus) {
+	public Disc(final Point3d center, final Vector3d normal, final double raidus) {
 		super(center ,normal);
 		this.r = raidus;
 	}
@@ -23,8 +23,8 @@ public class Disc extends Plane{
 		final double dx = ray.direction.x;
 		final double dy = ray.direction.y;
 		final double dz = ray.direction.z;
-		final Point3 tmp = new Point3(t*dx, t*dy, t*dz);
-		final Point3 intersection = ray.origin.add(tmp);
+		final Point3d tmp = new Point3d(t*dx, t*dy, t*dz);
+		final Point3d intersection = ray.origin.add(tmp);
 		
 		final double aux = intersection.sub(p).dot(intersection.sub(p));
 		

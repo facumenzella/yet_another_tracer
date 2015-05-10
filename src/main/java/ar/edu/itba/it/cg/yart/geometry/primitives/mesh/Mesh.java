@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.BSPAxisAligned;
-import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.BoundingBox;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
@@ -18,7 +18,7 @@ import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleHitTracer;
 
 public class Mesh extends GeometricObject {
 
-	public List<Point3> vertices;
+	public List<Point3d> vertices;
 	public List<Integer> indices;
 	public List<Vector3d> normals; // average normal at each vertex
 	public Map<Integer, List<MeshTriangle>> faces; // the faces shared by each vertex, we need it for smooth mesh
@@ -39,7 +39,7 @@ public class Mesh extends GeometricObject {
 	int verticesAmount;
 	int trianglesAmount;
 
-	public Mesh(final List<Point3> vertices, final List<Vector3d> normals,
+	public Mesh(final List<Point3d> vertices, final List<Vector3d> normals,
 			final List<Integer> indices, final boolean needsSmoothing) {
 		this.vertices = vertices;
 		this.normals = normals;
@@ -142,7 +142,7 @@ public class Mesh extends GeometricObject {
 
 	@Override
 	public BoundingBox createBoundingBox() {
-		return new BoundingBox(new Point3(minX, minY, minZ), new Point3(maxX,
+		return new BoundingBox(new Point3d(minX, minY, minZ), new Point3d(maxX,
 				maxY, maxZ));
 	}
 
