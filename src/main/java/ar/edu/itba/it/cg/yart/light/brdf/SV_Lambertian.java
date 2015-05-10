@@ -7,7 +7,7 @@ import ar.edu.itba.it.cg.yart.textures.Texture;
 
 public class SV_Lambertian extends BRDF{
 	
-	private double kd;
+	private double kd = 0;
 	private Texture cd;
 	private final double invPi = 1/(Math.PI);
 
@@ -25,6 +25,14 @@ public class SV_Lambertian extends BRDF{
 	public Color sample_f(ShadeRec sr, Vector3d wo, Vector3d wi) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public void setCd(final Texture cd) {
+		this.cd = cd;
+	}
+	
+	public void setKd(final double kd) {
+		this.kd = kd;
 	}
 
 }
