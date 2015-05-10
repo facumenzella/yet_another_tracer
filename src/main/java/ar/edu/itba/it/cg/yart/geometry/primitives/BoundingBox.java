@@ -2,8 +2,10 @@ package ar.edu.itba.it.cg.yart.geometry.primitives;
 
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
+import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
+import ar.edu.itba.it.cg.yart.transforms.Transformable;
 
-public class BoundingBox {
+public class BoundingBox implements Transformable{
 	
 	private static final double EPSILON = 0.0001;
 	public final Point3d p0;
@@ -91,6 +93,12 @@ public class BoundingBox {
 	
 	public double getSurfaceArea() {
 		return this.surfaceArea;
+	}
+
+	@Override
+	public void applyTransformation(Matrix4d matrix) {
+		p0.transformByMatrix(matrix);
+		p1.transformByMatrix(matrix);
 	}
 	
 }
