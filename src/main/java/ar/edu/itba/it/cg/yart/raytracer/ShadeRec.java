@@ -16,6 +16,8 @@ public class ShadeRec {
 	public int depth = 0;						//recursion depth
 	public double t = -Double.NEGATIVE_INFINITY;
 	public Vector3d dir;					//for area lights
+	public double u;						//coordinates for textures
+	public double v;						//coordinates for textures
 	public World world;						//world reference for shading
 	
 	public ShadeRec(final World world) {
@@ -32,6 +34,8 @@ public class ShadeRec {
 		this.material = sr.material;
 		this.depth = sr.depth;
 		this.dir = sr.dir;
+		this.u = sr.u;
+		this.v = sr.v;
 		this.world = sr.world;
 		this.t = sr.t;
 	}
