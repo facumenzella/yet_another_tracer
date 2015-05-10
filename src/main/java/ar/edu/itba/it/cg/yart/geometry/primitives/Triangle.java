@@ -1,6 +1,6 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives;
 
-import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
@@ -8,18 +8,18 @@ import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 public class Triangle extends GeometricObject{
 
 	// the vertexes are order counterclockwise (see page 362 of Ray Tracing from the ground up)
-	private final Point3 pointA,  pointB, pointC;
+	private final Point3d pointA,  pointB, pointC;
 	private final Vector3d normal;
 	
 	public Triangle() {
-		this.pointA = new Point3(0, 0, 0);
-		this.pointB = new Point3(0, 0, 1);
-		this.pointC = new Point3(1,0,0);
+		this.pointA = new Point3d(0, 0, 0);
+		this.pointB = new Point3d(0, 0, 1);
+		this.pointC = new Point3d(1,0,0);
 		this.normal = this.normal(pointA, pointB, pointC);
 		updateBoundingBox();
 	}
 	
-	public Triangle(final Point3 pointA, final Point3 pointB, final Point3 pointC) {
+	public Triangle(final Point3d pointA, final Point3d pointB, final Point3d pointC) {
 		this.pointA = pointA;
 		this.pointB = pointB;
 		this.pointC = pointC;
@@ -77,7 +77,7 @@ public class Triangle extends GeometricObject{
 		return t;
 	}
 	
-	private Vector3d normal(final Point3 pointA, final Point3 pointB, final Point3 pointC) {
+	private Vector3d normal(final Point3d pointA, final Point3d pointB, final Point3d pointC) {
 		final Vector3d e0 = pointB.sub(pointA);
 		final Vector3d e1 = pointC.sub(pointA);
 		final Vector3d n = e0.cross(e1);
@@ -94,11 +94,11 @@ public class Triangle extends GeometricObject{
 
 	@Override
 	public BoundingBox createBoundingBox() {
-		return (new BoundingBox(new Point3(Math.min(
+		return (new BoundingBox(new Point3d(Math.min(
 				Math.min(pointA.x, pointB.x), pointC.x)
 				- EPSILON, Math.min(Math.min(pointA.y, pointB.y), pointC.y)
 				- EPSILON, Math.min(Math.min(pointA.z, pointB.z), pointC.z)
-				- EPSILON), new Point3(Math.max(Math.max(pointA.x, pointB.x),
+				- EPSILON), new Point3d(Math.max(Math.max(pointA.x, pointB.x),
 				pointC.x) + EPSILON, Math.max(Math.max(pointA.y, pointB.y),
 				pointC.y) + EPSILON, Math.max(Math.max(pointA.z, pointB.z),
 				pointC.z) + EPSILON)));

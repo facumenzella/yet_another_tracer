@@ -1,15 +1,15 @@
 package ar.edu.itba.it.cg.yart.raytracer.camera;
 
 import ar.edu.itba.it.cg.yart.geometry.MutableVector3d;
-import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 
 
 public abstract class CameraAbstract implements Camera {
 
-	protected Point3 eye;
-	protected Point3 lookat;
+	protected Point3d eye;
+	protected Point3d lookat;
 	protected Vector3d up;
 	protected Vector3d u, v, w;
 	protected MutableVector3d mu, mv, mw;
@@ -17,7 +17,7 @@ public abstract class CameraAbstract implements Camera {
 	protected boolean viewPlaneInvalidated = true;
 	protected ViewPlane viewPlane;
 
-	protected CameraAbstract(final Point3 eye, final Point3 lookat, final Vector3d up) {
+	protected CameraAbstract(final Point3d eye, final Point3d lookat, final Vector3d up) {
 		setViewParameters(eye, lookat, up);
 	}
 	
@@ -42,7 +42,7 @@ public abstract class CameraAbstract implements Camera {
 	}
 	
 	@Override
-	public void setViewParameters(Point3 eye, Point3 lookAt, Vector3d up) {
+	public void setViewParameters(Point3d eye, Point3d lookAt, Vector3d up) {
 		this.eye = eye;
 		this.lookat = lookAt;
 		this.up = up;

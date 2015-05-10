@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ar.edu.itba.it.cg.yart.color.Color;
-import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 
 public class Identifier {
@@ -218,7 +218,7 @@ public class Identifier {
 		}
 	}
 	
-	public Point3 getPoint(final String propertyName, Point3 defaultValue) {
+	public Point3d getPoint(final String propertyName, Point3d defaultValue) {
 		if (hasProperty(propertyName)) {
 			return getProperty(propertyName).getPoint();
 		}
@@ -227,7 +227,7 @@ public class Identifier {
 		}
 	}
 	
-	public Point3[] getPoints(final String propertyName, Point3[] defaultValue) {
+	public Point3d[] getPoints(final String propertyName, Point3d[] defaultValue) {
 		if (hasProperty(propertyName)) {
 			return getProperty(propertyName).getPoints();
 		}

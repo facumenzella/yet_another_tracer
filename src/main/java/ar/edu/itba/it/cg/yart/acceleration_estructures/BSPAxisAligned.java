@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import ar.edu.itba.it.cg.yart.color.Color;
-import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.BoundingBox;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
@@ -57,8 +57,8 @@ public class BSPAxisAligned {
 	}
 
 	private void buildInitialBox() {
-		this.initialBox = new BoundingBox(new Point3(minX, minY, minZ),
-				new Point3(maxX, maxY, maxZ));
+		this.initialBox = new BoundingBox(new Point3d(minX, minY, minZ),
+				new Point3d(maxX, maxY, maxZ));
 	}
 
 	private Node subdivideXAxis(final BoundingBox currentBox,
@@ -82,9 +82,9 @@ public class BSPAxisAligned {
 			return new LeafNode(currentObjects);
 		}
 
-		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3(
+		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3d(
 				splittingPoint, currentBox.p1.y, currentBox.p1.z));
-		final BoundingBox rightBox = new BoundingBox(new Point3(splittingPoint,
+		final BoundingBox rightBox = new BoundingBox(new Point3d(splittingPoint,
 				currentBox.p0.y, currentBox.p0.z), currentBox.p1);
 
 		List<GeometricObject> leftObjects = new ArrayList<GeometricObject>();
@@ -124,9 +124,9 @@ public class BSPAxisAligned {
 			return new LeafNode(currentObjects);
 		}
 		
-		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3(
+		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3d(
 				currentBox.p1.x, splittingPoint, currentBox.p1.z));
-		final BoundingBox rightBox = new BoundingBox(new Point3(
+		final BoundingBox rightBox = new BoundingBox(new Point3d(
 				currentBox.p0.x, splittingPoint, currentBox.p0.z), currentBox.p1);
 
 		List<GeometricObject> leftObjects = new ArrayList<GeometricObject>();
@@ -167,9 +167,9 @@ public class BSPAxisAligned {
 			return new LeafNode(currentObjects);
 		}
 		
-		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3(
+		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3d(
 				currentBox.p1.x, currentBox.p1.y, splittingPoint));
-		final BoundingBox rightBox = new BoundingBox(new Point3(
+		final BoundingBox rightBox = new BoundingBox(new Point3d(
 				currentBox.p0.x, currentBox.p0.y, splittingPoint), currentBox.p1);
 
 		List<GeometricObject> leftObjects = new ArrayList<GeometricObject>();
@@ -261,9 +261,9 @@ public class BSPAxisAligned {
 			}
 		}
 
-		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3(
+		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3d(
 				middlePoint, currentBox.p1.y, currentBox.p1.z));
-		final BoundingBox rightBox = new BoundingBox(new Point3(middlePoint,
+		final BoundingBox rightBox = new BoundingBox(new Point3d(middlePoint,
 				currentBox.p0.y, currentBox.p0.z), currentBox.p1);
 
 		return (1 / this.initialBox.getSurfaceArea())
@@ -291,9 +291,9 @@ public class BSPAxisAligned {
 			}
 		}
 
-		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3(
+		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3d(
 				currentBox.p1.x, middlePoint, currentBox.p1.z));
-		final BoundingBox rightBox = new BoundingBox(new Point3(
+		final BoundingBox rightBox = new BoundingBox(new Point3d(
 				currentBox.p0.x, middlePoint, currentBox.p0.z), currentBox.p1);
 
 		return (1 / this.initialBox.getSurfaceArea())
@@ -321,9 +321,9 @@ public class BSPAxisAligned {
 			}
 		}
 
-		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3(
+		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3d(
 				currentBox.p1.x, currentBox.p1.y, middlePoint));
-		final BoundingBox rightBox = new BoundingBox(new Point3(
+		final BoundingBox rightBox = new BoundingBox(new Point3d(
 				currentBox.p0.x, currentBox.p0.y, middlePoint), currentBox.p1);
 
 		return (1 / this.initialBox.getSurfaceArea())

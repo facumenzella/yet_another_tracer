@@ -3,7 +3,7 @@ package ar.edu.itba.it.cg.yart.raytracer.tracer;
 import java.util.List;
 
 import ar.edu.itba.it.cg.yart.color.Color;
-import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
@@ -18,7 +18,7 @@ public class SimpleColorTracer extends AbstractTracer implements ColorTracer {
 			return Color.blackColor();
 		}
 		Vector3d normal = null;
-		Point3 localHitPoint = null;
+		Point3d localHitPoint = null;
 		double tMin = tMax;
 		for (int i = 0; i < objects.size(); i++) {
 			GeometricObject object = objects.get(i);

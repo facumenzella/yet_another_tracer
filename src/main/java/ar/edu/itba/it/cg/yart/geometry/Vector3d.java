@@ -63,7 +63,7 @@ public class Vector3d {
 		return new Vector3d(x - other.x, y - other.y, z - other.z);
 	}
 	
-	public Vector3d sub(final Point3 other) {
+	public Vector3d sub(final Point3d other) {
 		return new Vector3d(x - other.x, y - other.y, z - other.z);
 	}
 	

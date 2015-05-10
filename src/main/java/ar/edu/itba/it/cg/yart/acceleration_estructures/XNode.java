@@ -2,7 +2,7 @@ package ar.edu.itba.it.cg.yart.acceleration_estructures;
 
 import java.util.List;
 
-import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.BoundingBox;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
@@ -13,7 +13,7 @@ public class XNode extends AbstractNode{
 	
 	public XNode(BoundingBox box, List<GeometricObject> objects, final double splitPoint) {
 		super(box, objects, splitPoint);
-		this.splittingPlane = new Plane(new Point3(splitPoint, 0, 0), Vector3d.xAxis());
+		this.splittingPlane = new Plane(new Point3d(splitPoint, 0, 0), Vector3d.xAxis());
 	}
 
 	@Override

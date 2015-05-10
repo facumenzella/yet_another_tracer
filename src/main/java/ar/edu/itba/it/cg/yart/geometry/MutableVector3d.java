@@ -64,7 +64,7 @@ public class MutableVector3d {
 		this.z = x * other.y - this.y * other.x;
 	}
 	
-	public void sub(final Point3 other) {
+	public void sub(final Point3d other) {
 		this.x = this.x - other.x;
 		this.y = this.y - other.y;
 		this.z = this.z - other.z;
