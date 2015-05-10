@@ -26,7 +26,7 @@ public class SimpleColorTracer extends AbstractTracer implements ColorTracer {
 			if (t != Double.NEGATIVE_INFINITY && t < tMin) {
 				sr.hitObject = true;
 				sr.material = object.getMaterial();
-				sr.hitPoint = ray.origin.add(ray.direction.scale(t));
+				sr.hitPoint = sr.localHitPoint.transformByMatrix(object.matrix); // this should work
 				normal = sr.normal;
 				localHitPoint = sr.localHitPoint;
 				tMin = t;

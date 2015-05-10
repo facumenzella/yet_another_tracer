@@ -203,6 +203,30 @@ public class Matrix4d {
 							m20, m21, m22, m23,
 							m30, m31, m32, m33).scale(1/determinant);
 	}
+	
+	public Matrix4d transpose() {
+		final double m00 = this.m00;
+		final double m10 = this.m01;
+		final double m20 = this.m02;
+		final double m30 = this.m03;
+		final double m01 = this.m10;
+		final double m11 = this.m11;
+		final double m21 = this.m12;
+		final double m31 = this.m13;
+		final double m02 = this.m20;
+		final double m12 = this.m21;
+		final double m22 = this.m22;
+		final double m32 = this.m23;
+		final double m03 = this.m30;
+		final double m13 = this.m31;
+		final double m23 = this.m32;
+		final double m33 = this.m33;
+		
+		return new Matrix4d(m00, m01, m02, m03,
+							m10, m11, m12, m13,
+							m20, m21, m22, m23,
+							m30, m31, m32, m33);
+	}
 
 	public double determinant() {
 		final double value = m03 * m12 * m21 * m30 - m02 * m13 * m21 * m30
