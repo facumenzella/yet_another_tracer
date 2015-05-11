@@ -63,8 +63,8 @@ public class SimpleRayTracer implements RayTracer {
 	}
 
 	public RenderResult serialRender() {
+		preprocessWorld();
 		renderResult.startRender();
-		
 		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
 		renderResult.setPixels(result);
 		
@@ -95,8 +95,8 @@ public class SimpleRayTracer implements RayTracer {
 	}
 
 	private RenderResult render(final World world) {
+		preprocessWorld();
 		renderResult.startRender();
-		
 		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
 		renderResult.setPixels(result);
 		
@@ -252,5 +252,11 @@ public class SimpleRayTracer implements RayTracer {
 		}
 		
 		return null;
+	}
+	
+	private void preprocessWorld() {
+		renderResult.startPreprocessing();
+		world.preprocess();
+		renderResult.finishPreprocessing();
 	}
 }

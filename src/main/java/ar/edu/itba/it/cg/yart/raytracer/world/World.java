@@ -37,6 +37,11 @@ public class World {
 		this.ambientLight = new AmbientLight(Color.blackColor());
 	}
 	
+	public void preprocess() {
+		this.bspTree = new BSPAxisAligned(200, 1000, 0, 1000);
+		this.bspTree.buildTree(objects);
+	}
+	
 	public void buildTestWorld() {
 		setBackgroundColor(Color.blackColor());
 		final Sphere s1 = new Sphere(new Point3(20,0,-10), 30.0f);
@@ -178,15 +183,12 @@ public class World {
 	}
 	
 	public void addObjects(final List<GeometricObject> objects) {
-		this.objects = objects;
-		this.bspTree = new BSPAxisAligned(200, 1000, 0, 1000);
-		this.bspTree.buildTree(objects);
+		this.objects.clear();
+		this.objects.addAll(objects);
 	}
 	
-	public void addObject(final Mesh mesh) {
-		if (mesh != null) {
-				addObjects(mesh.triangles);
-		}
+	public void addObject(final GeometricObject object) {
+		objects.add(object);
 	}
 	
 	public List<GeometricObject> getObjects() {

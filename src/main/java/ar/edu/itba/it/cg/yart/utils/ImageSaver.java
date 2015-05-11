@@ -28,7 +28,7 @@ public class ImageSaver {
 		File outputfile = new File(nameBuilder.toString());
 		
 		try {
-			ImageIO.write(image, "png", outputfile);
+			ImageIO.write(image, imageExtension, outputfile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

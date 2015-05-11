@@ -5,9 +5,9 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
 
-import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.parser.SceneBuilder;
 import ar.edu.itba.it.cg.yart.parser.SceneParser;
 import ar.edu.itba.it.cg.yart.raytracer.RenderResult;
@@ -25,18 +25,17 @@ public class YartApp {
 	public static void main(String[] args) {
 		
 		int cores = configs.getCoresQty();
-		final int bucketSize = 128;
-		final double tMax = 1000;
-		final double distance = 500;
+		final int bucketSize = configs.getBucketSize();
+		final double tMax = configs.getMaxT();
+		final double distance = configs.getDistance();
 		final int zoom = 1;
-		final int numSamples = 16;
 		
 		RenderResult renderResult = new RenderResult();
 		
+		int numSamples = 16;
 		boolean guiRender = false;
 		String sceneFile = null;
 		String outputFile = null;
-		String inputFile = null;
 		String imageName = null;
 		String imageExtension = "png";
 		CommandLineParser parser = null;
@@ -61,20 +60,28 @@ public class YartApp {
 			}
 			
 			if (cmd.hasOption('o')) {
-				final String output = cmd.getOptionValue('o');
-				imageName = StringUtils.substringBeforeLast(output, ".");
-				imageExtension = StringUtils.substringAfterLast(output, ".");
+				outputFile = cmd.getOptionValue('o');
+				imageName = StringUtils.substringBeforeLast(outputFile, ".");
+				imageExtension = StringUtils.substringAfterLast(outputFile, ".");
 			}
 			
 			if (cmd.hasOption('i')) {
-				inputFile = cmd.getOptionValue('i');
+				sceneFile = cmd.getOptionValue('i');
+			}
+			
+			if (cmd.hasOption("aa")) {
+				numSamples = Integer.valueOf(cmd.getOptionValue("aa"));
+				
+				if (numSamples <= 0) {
+					throw new ParseException("Number of antialiasing samples must be a positive integer");
+				}
 			}
 			
 			guiRender = cmd.hasOption('g');
 			
 			// Apply command line parameters
 			RayTracer raytracer = new SimpleRayTracer(renderResult, bucketSize, tMax, distance, zoom, numSamples, cores);
-			if (StringUtils.isEmpty(inputFile)) {
+			if (StringUtils.isEmpty(sceneFile)) {
 				World w = new World();
 				w.buildTestWorld();
 				raytracer.setWorld(w);
@@ -82,7 +89,7 @@ public class YartApp {
 			else {
 				renderResult.startSceneLoading();
 				SceneBuilder builder = new SceneBuilder();
-				builder.buildRayTracer(raytracer, new SceneParser(inputFile));
+				builder.buildRayTracer(raytracer, new SceneParser(sceneFile));
 				renderResult.finishSceneLoading();
 			}
 
@@ -91,10 +98,17 @@ public class YartApp {
 			}
 
 			renderResult = raytracer.render();
-			System.out.println(renderResult.getRenderTime());
-		
-			ImageSaver imageSaver = new ImageSaver();
-			imageSaver.saveImage(renderResult.getPixels(), imageName, imageExtension);
+			System.out.println("Render finished!");
+			System.out.println("Scene loading time: " + renderResult.getSceneLoadingTime());
+			System.out.println("Preprocessing time: " + renderResult.getPreprocessingTime());
+			System.out.println("Render time: " + renderResult.getRenderTime());
+			System.out.println("-------------------");
+			System.out.println("Total time: " + renderResult.getTotalTime());
+			
+			if (StringUtils.isEmpty(imageName)) {
+				ImageSaver imageSaver = new ImageSaver();
+				imageSaver.saveImage(renderResult.getPixels(), imageName, imageExtension);
+			}
 		} catch (org.apache.commons.cli.ParseException ex) {
 			System.out.println(ex.getMessage());
 			printHelp(options);
