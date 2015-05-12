@@ -1,13 +1,21 @@
 package ar.edu.itba.it.cg.yart.textures.mapping;
 
+import java.awt.Point;
+
+import ar.edu.itba.it.cg.yart.geometry.Normal3d;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
+import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 
 public class SphericalMapping extends Mapping{
 	
 	@Override
-	public void getTexetlCoordinates(Point3d localHitPoint, int hres, int vres) {
-		final double theta = Math.acos(localHitPoint.y);
-		double phi = Math.atan2(localHitPoint.x, localHitPoint.y);
+	public void getTexetlCoordinates(final Point3d localHitPoint,
+			final int hres, final int vres, Point coordinates) {
+		
+		Vector3d point = new Vector3d(localHitPoint.x,localHitPoint.y, localHitPoint.z);
+		Normal3d versor = point.normalizedVector();
+		final double theta = Math.acos(versor.y);
+		double phi = Math.atan2(versor.x, versor.z);
 		if(phi < 0.0) {
 			phi += twoPI;
 		}
@@ -15,8 +23,9 @@ public class SphericalMapping extends Mapping{
 		final double u = phi*invTwoPI;
 		final double v = 1 - theta * invPI;
 		
-		int column = (int) ((hres - 1)*u);
-		int row = (int) ((vres - 1)*v);
+		int X = (int) ((hres - 1)*u);
+		int Y = (int) ((vres - 1)*v);
+		coordinates.setLocation(X, Y);
 	}
 
 }
