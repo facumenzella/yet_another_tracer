@@ -28,7 +28,8 @@ public class World {
 	private List<Light> castShadowLights = new ArrayList<Light>();
 	private List<Light> doNotCastShadowLights = new ArrayList<Light>();
 	private AmbientLight ambientLight;
-	BSPAxisAligned bspTree;
+	private BSPAxisAligned bspTree;
+	private boolean preprocessed = false;
 	
 	/**
 	 * Creates a sad, empty World.
@@ -38,8 +39,11 @@ public class World {
 	}
 	
 	public void preprocess() {
-		this.bspTree = new BSPAxisAligned(200, 1000, 0, 1000);
-		this.bspTree.buildTree(objects);
+		if (!preprocessed) {
+			this.bspTree = new BSPAxisAligned(200, 1000, 0, 1000);
+			this.bspTree.buildTree(objects);
+			preprocessed = true;
+		}
 	}
 	
 	public void buildTestWorld() {
@@ -185,10 +189,12 @@ public class World {
 	public void addObjects(final List<GeometricObject> objects) {
 		this.objects.clear();
 		this.objects.addAll(objects);
+		preprocessed = false;
 	}
 	
 	public void addObject(final GeometricObject object) {
 		objects.add(object);
+		preprocessed = false;
 	}
 	
 	public List<GeometricObject> getObjects() {

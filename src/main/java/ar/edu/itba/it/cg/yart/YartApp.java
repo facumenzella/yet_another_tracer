@@ -33,6 +33,7 @@ public class YartApp {
 		RenderResult renderResult = new RenderResult();
 		
 		int numSamples = 16;
+		int benchmarkRuns = 0;
 		boolean guiRender = false;
 		String sceneFile = null;
 		String outputFile = null;
@@ -77,7 +78,19 @@ public class YartApp {
 				}
 			}
 			
+			if (cmd.hasOption('b')) {
+				benchmarkRuns = Integer.valueOf(cmd.getOptionValue('b'));
+				
+				if (benchmarkRuns <= 0) {
+					throw new ParseException("Number of benchmark runs must be a positive integer");
+				}
+			}
+			
 			guiRender = cmd.hasOption('g');
+			
+			if (guiRender && benchmarkRuns >= 1) {
+				throw new ParseException("The GUI renderer can't be used in a benchmark");
+			}
 			
 			// Apply command line parameters
 			RayTracer raytracer = new SimpleRayTracer(renderResult, bucketSize, tMax, distance, zoom, numSamples, cores);
@@ -97,13 +110,18 @@ public class YartApp {
 				new RenderWindow(raytracer);
 			}
 
-			renderResult = raytracer.render();
-			System.out.println("Render finished!");
-			System.out.println("Scene loading time: " + renderResult.getSceneLoadingTime());
-			System.out.println("Preprocessing time: " + renderResult.getPreprocessingTime());
-			System.out.println("Render time: " + renderResult.getRenderTime());
-			System.out.println("-------------------");
-			System.out.println("Total time: " + renderResult.getTotalTime());
+			if (benchmarkRuns >= 1) {
+				benchmark(raytracer, benchmarkRuns);
+			}
+			else {
+				renderResult = raytracer.render();
+				System.out.println("Render finished!");
+				System.out.println("Scene loading time: " + renderResult.getSceneLoadingTime());
+				System.out.println("Preprocessing time: " + renderResult.getPreprocessingTime());
+				System.out.println("Render time: " + renderResult.getRenderTime());
+				System.out.println("-------------------");
+				System.out.println("Total time: " + renderResult.getTotalTime());
+			}
 			
 			if (StringUtils.isEmpty(imageName)) {
 				ImageSaver imageSaver = new ImageSaver();
@@ -115,6 +133,30 @@ public class YartApp {
 		} catch (java.lang.NumberFormatException ex) {
 			printHelp(options);
 		}
+	}
+	
+	private static void benchmark(final RayTracer raytracer, final int runs) {
+		if (raytracer == null || runs < 1) {
+			return;
+		}
+		
+		long times[] = new long[runs];
+		long totalTime = 0;
+		for (int i = 0; i < runs; i++) {
+			long currentTime = 0;
+			System.out.print("Render " + (i+1) + "/" + runs + "... ");
+			RenderResult result = raytracer.render();
+			currentTime = result.getRenderTime();
+			times[i] = currentTime;
+			totalTime += currentTime;
+			System.out.println(currentTime + "ms");
+		}
+		
+		System.out.println("Benchmark finished!");
+		System.out.println("Total runs: " + runs);
+		System.out.println("Average time: " + (long) Math.ceil(totalTime / times.length) + " ms");
+		System.out.println("Renders per second: " + runs / (totalTime / 1000.0f));
+		System.out.println("Total time: " + totalTime + " ms");
 	}
 	
 	private static void printHelp(final Options options) {
