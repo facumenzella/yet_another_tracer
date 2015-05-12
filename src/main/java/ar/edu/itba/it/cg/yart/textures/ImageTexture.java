@@ -57,18 +57,13 @@ public class ImageTexture extends Texture {
 //			red = (((int) pixels[row+column + 3]))/255.0; // red
 //		} else {
 //			final int pixelLength = 3;
-//			row*= (hres)*pixelLength;
-//			column*= pixelLength;	
+//			column*= (hres)*pixelLength;
+//			row = ((vres - 1) - row)*pixelLength;	
 //			blue = ((int) pixels[row+column])/255.0; // blue
 //			green = (((int) pixels[row+column + 1]))/255.0; // green
 //			red = (((int) pixels[row+column + 2]))/255.0; // red
 //		}
-		int X = hres - (int) coordinates.getX();
-		int Y = vres - (int) coordinates.getY();
 		
-//		if(X >= hres || Y >= vres) {
-//			return Color.whiteColor();
-//		}
 		int color = image.getRGB((int) coordinates.getX(),
 				(vres - 1) - (int) coordinates.getY());
 		int r = (color >> 16) & 0xFF;

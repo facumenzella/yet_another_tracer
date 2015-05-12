@@ -8,7 +8,6 @@ import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 public class GlossySpecular extends BRDF{
 	
 	private double ks;
-	private Color cs;
 	private double exp;
 	
 	private Color rho = Color.blackColor();
@@ -54,10 +53,6 @@ public class GlossySpecular extends BRDF{
 	
 	public void setExp(final double exp) {
 		this.exp = exp;
-	}
-	
-	public void setCs(final Color color) {
-		this.cs = color;
 	}
 	
 	public void setKs(final double ks) {

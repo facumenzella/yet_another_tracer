@@ -8,6 +8,8 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.ColorTracer;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleColorTracer;
+import ar.edu.itba.it.cg.yart.textures.ConstantColor;
+import ar.edu.itba.it.cg.yart.textures.Texture;
 
 public class Transparent extends Phong {
 
@@ -16,7 +18,12 @@ public class Transparent extends Phong {
 	private final ColorTracer tracer = new SimpleColorTracer();
 
 	public void setCr(final Color color) {
-		reflectiveBRDF.setCr(color);
+		final Texture cr = new ConstantColor(color);
+		setCr(cr);
+	}
+	
+	public void setCr(final Texture cr) {
+		reflectiveBRDF.setCr(cr);
 	}
 
 	public void setKr(final double kr) {
