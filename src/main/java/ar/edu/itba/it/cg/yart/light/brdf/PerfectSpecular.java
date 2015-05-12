@@ -4,11 +4,13 @@ import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.MutableVector3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.textures.ConstantColor;
+import ar.edu.itba.it.cg.yart.textures.Texture;
 
 public class PerfectSpecular extends BRDF {
 	
 	double kr;
-	Color cr;
+	Texture cr;
 
 	@Override
 	public Color f(final ShadeRec sr, final Vector3d wo, final Vector3d wi) {
@@ -34,11 +36,16 @@ public class PerfectSpecular extends BRDF {
 		
 		wi.copy(mWo); 
 		final double aux = sr.normal.dot(wi);
-		return (cr.multiply(kr).multiply(1/aux));
+		return (cr.getColor(sr).multiply(kr).multiply(1/aux));
 	}
 	
-	public void setCr(final Color color) {
-		this.cr = color;
+	public void setCr(final Color cr) {
+		final Texture texture = new ConstantColor(cr);
+		setCr(texture);
+	}
+	
+	public void setCr(final Texture cr) {
+		this.cr = cr;
 	}
 	
 	public void setKr(final double kr) {

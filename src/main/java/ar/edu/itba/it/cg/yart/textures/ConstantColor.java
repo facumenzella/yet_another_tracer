@@ -6,6 +6,10 @@ import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 public class ConstantColor extends Texture{
 	
 	private Color color;
+	
+	public ConstantColor(final Color color) {
+		this.color = color;
+	}
 
 	@Override
 	public Color getColor(final ShadeRec sr) {

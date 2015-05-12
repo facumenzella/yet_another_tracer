@@ -8,6 +8,8 @@ import ar.edu.itba.it.cg.yart.light.Light;
 import ar.edu.itba.it.cg.yart.light.brdf.Lambertian;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.textures.ConstantColor;
+import ar.edu.itba.it.cg.yart.textures.Texture;
 
 public class Matte extends MaterialAbstract {
 
@@ -18,7 +20,7 @@ public class Matte extends MaterialAbstract {
 	public Color shade(ShadeRec sr) {
 		final Vector3d wo = null; // not necessary
 		// final Vector3d wo = sr.ray.direction.inverse();
-		final Color colorL = ambientBRDF.mRho(sr, wo);
+		final Color colorL = ambientBRDF.rho(sr, wo);
 		colorL.multiplyEquals(sr.world.getAmbientLight().L(sr));
 
 		final List<Light> castShadowLights = sr.world.getCastShadowLights();
@@ -30,7 +32,7 @@ public class Matte extends MaterialAbstract {
 			double ndotwi = sr.normal.dot(wi);
 			
 			if (ndotwi > 0.0) {
-				final Color aux = diffuseBRDF.mF(sr, wo, wi);
+				final Color aux = diffuseBRDF.f(sr, wo, wi);
 				aux.multiplyEquals(light.L(sr));
 				aux.multiplyEquals(ndotwi);
 
@@ -47,7 +49,7 @@ public class Matte extends MaterialAbstract {
 				Ray shadowRay = new Ray(sr.hitPoint, wi);
 				inShadow = light.inShadow(shadowRay, sr);
 				if (!inShadow) {
-					final Color aux = diffuseBRDF.mF(sr, wo, wi);
+					final Color aux = diffuseBRDF.f(sr, wo, wi);
 					aux.multiplyEquals(light.L(sr));
 					aux.multiplyEquals(ndotwi);
 
@@ -68,8 +70,13 @@ public class Matte extends MaterialAbstract {
 	}
 
 	public void setCd(final Color cd) {
+		final Texture texture = new ConstantColor(cd);
+		setCd(texture);
+	}
+	
+	public void setCd(final Texture cd) {
 		ambientBRDF.setCd(cd);
-		diffuseBRDF.setCd(cd);
+		diffuseBRDF.setCd(cd);		
 	}
 
 }
