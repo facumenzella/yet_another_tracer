@@ -5,7 +5,7 @@ import java.util.List;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.BSPAxisAligned;
 import ar.edu.itba.it.cg.yart.color.Color;
-import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Disc;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
@@ -48,7 +48,7 @@ public class World {
 	
 	public void buildTestWorld() {
 		setBackgroundColor(Color.blackColor());
-		final Sphere s1 = new Sphere(new Point3(20,0,-10), 30.0f);
+		final Sphere s1 = new Sphere(new Point3d(20,0,-10), 30.0f);
 		Reflective s1m = new Reflective();
 		s1m.setCd(Color.redColor());
 		s1m.setKd(0.75);
@@ -58,7 +58,7 @@ public class World {
 		s1m.setCr(Color.whiteColor());
 		s1m.setKr(0.4);
 		s1.setMaterial(s1m);
-		final Sphere s2 = new Sphere(new Point3(-35,-10,5), 20.0f);
+		final Sphere s2 = new Sphere(new Point3d(-35,-10,5), 20.0f);
 		Reflective s2m = new Reflective();
 		s2m.setCd(Color.greenColor());
 		s2m.setKd(0.50);
@@ -68,7 +68,7 @@ public class World {
 		s2m.setCr(Color.whiteColor());
 		s2m.setKr(0.5);
 		s2.setMaterial(s2m);
-		final Sphere s3 = new Sphere(new Point3(-5,-20,65), 10.0f);
+		final Sphere s3 = new Sphere(new Point3d(-5,-20,65), 10.0f);
 		Transparent s3m = new Transparent();	
 		s3m.setCd(Color.blueColor());
 		s2m.setKd(0.50);
@@ -80,43 +80,43 @@ public class World {
 		s3m.setIor(1.5);
 		s3m.setKt(0.9);
 		s3.setMaterial(s3m);
-		final Disc d1 = new Disc(new Point3(0, 0, 0), new Vector3d(5,2,2), 30);
+		final Disc d1 = new Disc(new Point3d(0, 0, 0), new Vector3d(5,2,2), 30);
 		Matte d1m = new Matte();
 		d1m.setCd(Color.redColor());
 		d1m.setKd(0.75);
 		d1m.setKa(0.30);		
 		d1.setMaterial(d1m);
-		final Plane background = new Plane(new Point3(0,0,-150), new Vector3d(0,0,1));
+		final Plane background = new Plane(new Point3d(0,0,-150), new Vector3d(0,0,1));
 		Matte planeMaterial = new Matte();
 		planeMaterial.setCd(Color.yellowColor());
 		planeMaterial.setKd(0.50);
 		planeMaterial.setKa(0.15);
 		background.setMaterial(planeMaterial);
-		final Plane backgroundLeft = new Plane(new Point3(-150,0,0), new Vector3d(1,0,0));
+		final Plane backgroundLeft = new Plane(new Point3d(-150,0,0), new Vector3d(1,0,0));
 		Matte left = new Matte();
 		left.setCd(Color.yellowColor());
 		left.setKd(0.50);
 		left.setKa(0.15);
 		backgroundLeft.setMaterial(left);
-		final Plane backgroundBottom = new Plane(new Point3(0,-150,0), new Vector3d(0,1,0));
+		final Plane backgroundBottom = new Plane(new Point3d(0,-150,0), new Vector3d(0,1,0));
 		Matte bottom = new Matte();
 		bottom.setCd(Color.yellowColor());
 		bottom.setKd(0.50);
 		bottom.setKa(0.15);
 		backgroundBottom.setMaterial(bottom);
-		final Plane backgroundTop = new Plane(new Point3(0,150,0), new Vector3d(0,-1,0));
+		final Plane backgroundTop = new Plane(new Point3d(0,150,0), new Vector3d(0,-1,0));
 		Matte top = new Matte();
 		top.setCd(Color.yellowColor());
 		top.setKd(0.50);
 		top.setKa(0.15);
 		backgroundTop.setMaterial(top);
-		final Plane backgroundRight = new Plane(new Point3(150,0,0), new Vector3d(-1,0,0));
+		final Plane backgroundRight = new Plane(new Point3d(150,0,0), new Vector3d(-1,0,0));
 		Matte right = new Matte();
 		right.setCd(Color.yellowColor());
 		right.setKd(0.50);
 		right.setKa(0.15);
 		backgroundRight.setMaterial(right);
-		final Plane floor = new Plane(new Point3(0,-30,0), new Vector3d(0,1,0));
+		final Plane floor = new Plane(new Point3d(0,-30,0), new Vector3d(0,1,0));
 		Matte floorM = new Matte();
 		floorM.setCd(new Color(0.4, 0.4, 0.4));
 		floorM.setKd(0.50);
@@ -132,12 +132,12 @@ public class World {
 //		light2.shadowsOff();
 				
 		// we will atempt to build a mesh
-		Point3 v1 = new Point3(-50, 0, -100);
-		Point3 v2 = new Point3(-50, 50, -100);
-		Point3 v3 = new Point3(50, 50, -100);
-		Point3 v4 = new Point3(50, 0, -100);
+		Point3d v1 = new Point3d(-50, 0, -100);
+		Point3d v2 = new Point3d(-50, 50, -100);
+		Point3d v3 = new Point3d(50, 50, -100);
+		Point3d v4 = new Point3d(50, 0, -100);
 		
-		List<Point3> vertices = new ArrayList<Point3>();
+		List<Point3d> vertices = new ArrayList<Point3d>();
 		vertices.add(v1);
 		vertices.add(v2);
 		vertices.add(v3);

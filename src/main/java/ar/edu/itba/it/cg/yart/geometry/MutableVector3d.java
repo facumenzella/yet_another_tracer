@@ -1,5 +1,7 @@
 package ar.edu.itba.it.cg.yart.geometry;
 
+import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
+
 public class MutableVector3d {
 	public double x;
 	public double y;
@@ -62,7 +64,7 @@ public class MutableVector3d {
 		this.z = x * other.y - this.y * other.x;
 	}
 	
-	public void sub(final Point3 other) {
+	public void sub(final Point3d other) {
 		this.x = this.x - other.x;
 		this.y = this.y - other.y;
 		this.z = this.z - other.z;
@@ -92,4 +94,12 @@ public class MutableVector3d {
 		this.z = z + other.z;
 	}
 	
+	public void transformByMatrix(final Matrix4d matrix) {
+		final double dx = (matrix.m00 * this.x) + (matrix.m01 * this.y) + (matrix.m02 * this.z);
+		final double dy = (matrix.m10 * this.x) + (matrix.m11 * this.y) + (matrix.m12 * this.z);
+		final double dz = (matrix.m20 * this.x) + (matrix.m21 * this.y) + (matrix.m22 * this.z);
+		this.x = dx;
+		this.y = dy;
+		this.z = dz;
+	}
 }

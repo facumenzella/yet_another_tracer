@@ -7,14 +7,22 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.ColorTracer;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleColorTracer;
+import ar.edu.itba.it.cg.yart.textures.ConstantColor;
+import ar.edu.itba.it.cg.yart.textures.Texture;
 
 public class Reflective extends Phong {
 
 	private final PerfectSpecular reflectiveBRDF = new PerfectSpecular();
 	private final ColorTracer tracer = new SimpleColorTracer();
 	
+	
+	public void setCr(final Texture cr) {
+		reflectiveBRDF.setCr(cr);
+	}
+
 	public void setCr(final Color color) {
-		reflectiveBRDF.setCr(color);
+		final Texture texture = new ConstantColor(color);
+		setCr(texture);
 	}
 
 	public void setKr(final double kr) {
