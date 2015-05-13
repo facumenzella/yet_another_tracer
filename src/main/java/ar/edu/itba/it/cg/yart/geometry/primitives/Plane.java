@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives;
 
+import ar.edu.itba.it.cg.yart.geometry.Normal3d;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
@@ -15,6 +16,11 @@ public class Plane extends GeometricObject {
 		this.p = p;
 		this.normal = normal;
 		updateBoundingBox();
+	}
+	
+	public Plane() {
+		this.p = new Point3d(0, 0, 0);
+		this.normal = new Normal3d(0, 1, 0);
 	}
 
 	@Override
@@ -43,17 +49,11 @@ public class Plane extends GeometricObject {
 
 	@Override
 	public BoundingBox createBoundingBox() {
-		// Infinite plane has no Bounding Box
 		return null;
 	}
 	
 	public double distanceFromRayOrigin(Ray ray) {
 		return (p.sub(ray.origin)).dot(normal) / ray.direction.dot(normal);
-	}
-
-	@Override
-	public void applyTransformation(Matrix4d matrix) {
-		// TODO Auto-generated method stub
 	}
 	
 }

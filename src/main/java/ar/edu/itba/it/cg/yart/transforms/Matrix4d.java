@@ -44,7 +44,7 @@ public class Matrix4d {
 		this.m33 = m33;
 	}
 
-	private Matrix4d rightMultiply(final Matrix4d matrix) {
+	public Matrix4d rightMultiply(final Matrix4d matrix) {
 		final double m00 = (this.m00 * matrix.m00) + (this.m01 * matrix.m10)
 				+ (this.m02 * matrix.m20) + (this.m03 * matrix.m30);
 		final double m01 = (this.m00 * matrix.m01) + (this.m01 * matrix.m11)
@@ -244,7 +244,7 @@ public class Matrix4d {
 		return value;
 	}
 
-	private static Matrix4d transformMatrix(final double dx, final double dy,
+	public static Matrix4d transformMatrix(final double dx, final double dy,
 			final double dz) {
 		return new Matrix4d(1, 0, 0, dx, 0, 1, 0, dy, 0, 0, 1, dz, 0, 0, 0, 1);
 	}

@@ -51,7 +51,8 @@ public class World {
 	public void buildTestWorld() {
 		setBackgroundColor(Color.blackColor());
 		final Instance s1 = new Instance(new Sphere());
-		s1.applyTransformation(Matrix4d.scaleMatrix(20, 20, 20));
+		s1.applyTransformation(Matrix4d.scaleMatrix(20, 20, 20).rightMultiply(Matrix4d.transformMatrix(5,2,0)).
+				rightMultiply(Matrix4d.scaleMatrix(2, 2, 2)));
 		Reflective s1m = new Reflective();
 		s1m.setCd(Color.redColor());
 		s1m.setKd(0.75);
@@ -119,8 +120,8 @@ public class World {
 		right.setKd(0.50);
 		right.setKa(0.15);
 		backgroundRight.setMaterial(right);
-		final Plane floor = new Plane(new Point3d(0,-30,0), new Vector3d(0,1,0));
-		floor.applyTransformation(new Matrix4d());
+		final Instance floor = new Instance(new Plane());
+		floor.applyTransformation(Matrix4d.transformMatrix(0, -30, 0));
 		Matte floorM = new Matte();
 		floorM.setCd(new Color(0.4, 0.4, 0.4));
 		floorM.setKd(0.50);
@@ -140,7 +141,7 @@ public class World {
 //		objects.add(s2);
 //		objects.add(s3);
 //		addObject(d1);
-//		objects.add(floor);
+		objects.add(floor);
 		this.addObjects(objects);
 //		addObject(background);
 //		addObject(backgroundLeft);
