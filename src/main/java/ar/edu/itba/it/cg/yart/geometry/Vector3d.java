@@ -80,11 +80,7 @@ public class Vector3d {
 	}
 	
 	public Normal3d normalizedVector() {
-		Normal3d normal = new Normal3d();
-		normal.x = this.x / this.length;
-		normal.y = this.y / this.length;
-		normal.z = this.z / this.length;
-		return normal;
+		return new Normal3d(this.x, this.y, this.z);
 	}
 	
 	public void copy(final Vector3d other) {

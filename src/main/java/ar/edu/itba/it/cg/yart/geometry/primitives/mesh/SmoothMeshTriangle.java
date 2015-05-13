@@ -56,8 +56,10 @@ public class SmoothMeshTriangle extends MeshTriangle{
 		if (t < EPSILON) {
 			return Double.NEGATIVE_INFINITY;
 		}
-
-		sr.normal = this.interpolateNormal(beta, gamma);
+		sr.normal = this.interpolateNormal(beta, gamma);;
+		if (mesh.transformed) {
+			sr.normal = sr.normal.transformByMatrix(mesh.transposedInvMatrix);
+		}
 		sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
 		
 		return t;

@@ -55,14 +55,17 @@ public class FlatMeshTriangle extends MeshTriangle {
 			return Double.NEGATIVE_INFINITY;
 		}
 
-		sr.normal = normal; // for flat shading
+		sr.normal = normal;
+		if (transformed) {
+			sr.normal = sr.normal.transformByMatrix(transposedInvMatrix);
+		}
 		sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
 
 		return t;
 	}
 
 	@Override
-	public double shadowHit(Ray ray) {
+	public double shadowHit(Ray ray) {		
 		if (!getBoundingBox().hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}

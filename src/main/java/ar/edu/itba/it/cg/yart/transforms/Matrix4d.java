@@ -162,40 +162,42 @@ public class Matrix4d {
 	public Matrix4d reflectZ() {
 		return this.rightMultiply(reflectZMatrix);
 	}
-
+	
 	public Matrix4d inverse() {
-		final double m00 = this.m12 *this.m23 * this.m31 - this.m13 * this.m22 * this.m31 + this.m13 * this.m21 * this.m32
-				- this.m11 * this.m23 * this.m32 - this.m12 * this.m21 * this.m33 + this.m11 * this.m22 * this.m33;
-		final double m01 = this.m03 * this.m22 * this.m31 - this.m02 * this.m23 * this.m31 - this.m03 * this.m21 * this.m32
-				+ this.m01 * this.m23 * this.m32 + this.m02 * this.m21 * this.m33 - this.m01 * this.m22 * this.m33;
-		final double m02 = this.m02 * this.m13 * this.m31 - this.m03 * this.m12 * this.m31 + this.m03 * this.m11 * this.m32
-				- this.m01 * this.m13 * this.m32 - this.m02 * this.m11 * this.m33 + this.m01 * this.m12 * this.m33;
-		final double m03 = this.m03 * this.m12 * this.m21 - this.m02 * this.m13 * this.m21 - this.m03 * this.m11 * this.m22
-				+ this.m01 * this.m13 * this.m22 + this.m02 * this.m11 * this.m23 - this.m01 * this.m12 * this.m23;
-		final double m10 = m13 * this.m22 * this.m30 - this.m12 * this.m23 * this.m30 - this.m13 * this.m20 * this.m32
-				+ this.m10 * this.m23 * this.m32 + this.m12 * this.m20 * this.m33 - this.m10 * this.m22 * this.m33;
-		final double m11 = m02 * this.m23 * this.m30 - this.m03 * this.m22 * this.m30 + this.m03 * this.m20 * this.m32
-				- this.m00 * this.m23 * this.m32 - this.m02 * this.m20 * this.m33 + this.m00 * this.m22 * this.m33;
-		final double m12 = m03 * this.m12 * this.m30 - this.m02 * this.m13 * this.m30 - this.m03 * this.m10 * this.m32
-				+ this.m00 * this.m13 * this.m32 + this.m02 * this.m10 * this.m33 - this.m00 * this.m12 * this.m33;
-		final double m13 = m02 * this.m13 * this.m20 - this.m03 * this.m12 * this.m20 + this.m03 * this.m10 * this.m22
-				- this.m00 * this.m13 * this.m22 - this.m02 * this.m10 * this.m23 + this.m00 * this.m12 * this.m23;
-		final double m20 = m11 * this.m23 * this.m30 - this.m13 * this.m21 * this.m30 + this.m13 * this.m20 * this.m31
-				- this.m10 * this.m23 * this.m31 - this.m11 * this.m20 * this.m33 + this.m10 * this.m21 * this.m33;
-		final double m21 = m03 * this.m21 * this.m30 - this.m01 * this.m23 * this.m30 - this.m03 * this.m20 * this.m31
-				+ this.m00 * this.m23 * this.m31 + this.m01 * this.m20 * this.m33 - this.m00 * this.m21 * this.m33;
-		final double m22 = m01 * this.m13 * this.m30 - this.m03 * this.m11 * this.m30 + this.m03 * this.m10 * this.m31
-				- this.m00 * this.m13 * this.m31 - this.m01 * this.m10 * this.m33 + this.m00 * this.m11 * this.m33;
-		final double m23 = m03 * this.m11 * this.m20 - this.m01 * this.m13 * this.m20 - this.m03 * this.m10 * this.m21
-				+ this.m00 * this.m13 * this.m21 + this.m01 * this.m10 * this.m23 - this.m00 * this.m11 * this.m23;
-		final double m30 = m12 * this.m21 * this.m30 - this.m11 * this.m22 * this.m30 - this.m12 * this.m20 * this.m31
-				+ this.m10 * this.m22 * this.m31 + this.m11 * this.m20 * this.m32 - this.m10 * this.m21 * this.m32;
-		final double m31 = m01 * this.m22 * this.m30 - this.m02 * this.m21 * this.m30 + this.m02 * this.m20 * this.m31
-				- this.m00 * this.m22 * this.m31 - this.m01 * this.m20 * this.m32 + this.m00 * this.m21 * this.m32;
-		final double m32 = m02 * this.m11 * this.m30 - this.m01 * this.m12 * this.m30 - this.m02 * this.m10 * this.m31
-				+ this.m00 * this.m12 * this.m31 + this.m01 * this.m10 * this.m32 - this.m00 * this.m11 * this.m32;
-		final double m33 = m01 * this.m12 * this.m20 - this.m02 * this.m11 * this.m20 + this.m02 * this.m10 * this.m21
-				- this.m00 * this.m12 * this.m21 - this.m01 * this.m10 * this.m22 + this.m00 * this.m11 * this.m22;
+		final double m00 = (this.m11*this.m22*this.m33) + (this.m12*this.m23*this.m31) + (this.m13*this.m21*this.m32) -
+				(this.m11*this.m23*this.m32) - (this.m12*this.m21*this.m33) - (this.m13*this.m22*this.m31);
+		final double m01 = (this.m01*this.m23*this.m32) + (this.m02*this.m21*this.m33) + (this.m03*this.m22*this.m31) -
+				(this.m01*this.m22*this.m33) - (this.m02*this.m23*this.m31) - (this.m03*this.m21*this.m32);
+		final double m02 = (this.m01*this.m12*this.m33) + (this.m02*this.m13*this.m31) + (this.m03*this.m11*this.m32) -
+				(this.m01*this.m13*this.m32) - (this.m02*this.m11*this.m33) - (this.m03*this.m12*this.m31);
+		final double m03 = (this.m01*this.m13*this.m33) + (this.m02*this.m11*this.m23) + (this.m03*this.m12*this.m21) -
+				(this.m01*this.m12*this.m23) - (this.m02*this.m13*this.m21) - (this.m03*this.m11*this.m22);
+		
+		final double m10 = (this.m10*this.m23*this.m32) + (this.m12*this.m20*this.m33) + (this.m13*this.m22*this.m30) -
+				(this.m10*this.m22*this.m33) - (this.m12*this.m23*this.m30) - (this.m13*this.m20*this.m32);
+		final double m11 = (this.m00*this.m22*this.m33) + (this.m02*this.m23*this.m30) + (this.m03*this.m20*this.m32) -
+				(this.m00*this.m23*this.m32) - (this.m02*this.m20*this.m33) - (this.m03*this.m22*this.m30);
+		final double m12 = (this.m00*this.m13*this.m32) + (this.m02*this.m10*this.m33) + (this.m03*this.m12*this.m30) -
+				(this.m00*this.m12*this.m33) - (this.m02*this.m13*this.m30) - (this.m03*this.m10*this.m32);
+		final double m13 = (this.m00*this.m12*this.m23) + (this.m02*this.m13*this.m20) + (this.m03*this.m10*this.m22) -
+				(this.m00*this.m13*this.m22) - (this.m02*this.m10*this.m23) - (this.m03*this.m12*this.m20);
+		
+		final double m20 = (this.m10*this.m21*this.m33) + (this.m11*this.m23*this.m30) + (this.m13*this.m20*this.m31) -
+				(this.m10*this.m23*this.m31) - (this.m11*this.m20*this.m33) - (this.m13*this.m21*this.m30);
+		final double m21 = (this.m00*this.m23*this.m31) + (this.m01*this.m20*this.m33) + (this.m03*this.m21*this.m30) -
+				(this.m00*this.m21*this.m33) - (this.m01*this.m23*this.m30) - (this.m03*this.m20*this.m31);
+		final double m22 = (this.m00*this.m11*this.m33) + (this.m01*this.m13*this.m31) + (this.m03*this.m10*this.m31) -
+				(this.m00*this.m13*this.m31) - (this.m01*this.m10*this.m33) - (this.m03*this.m11*this.m30);
+		final double m23 = (this.m00*this.m13*this.m21) + (this.m01*this.m10*this.m23) + (this.m03*this.m11*this.m20) -
+				(this.m00*this.m11*this.m23) - (this.m01*this.m13*this.m20) - (this.m03*this.m10*this.m21);
+		final double m30 = (this.m10*this.m22*this.m31) + (this.m11*this.m20*this.m32) + (this.m12*this.m21*this.m30) -
+				(this.m10*this.m21*this.m32) - (this.m11*this.m22*this.m30) - (this.m12*this.m20*this.m31);
+		final double m31 = (this.m00*this.m21*this.m32) + (this.m01*this.m22*this.m30) + (this.m02*this.m20*this.m31) -
+				(this.m00*this.m22*this.m31) - (this.m01*this.m20*this.m32) - (this.m02*this.m21*this.m30);
+		final double m32 = (this.m00*this.m12*this.m31) + (this.m01*this.m10*this.m32) + (this.m02*this.m11*this.m30) -
+				(this.m00*this.m11*this.m32) - (this.m01*this.m12*this.m30) - (this.m02*this.m10*this.m31);
+		final double m33 = (this.m00*this.m11*this.m22) + (this.m01*this.m12*this.m20) + (this.m02*this.m10*this.m21) -
+				(this.m00*this.m12*this.m21) - (this.m01*this.m10*this.m22) - (this.m02*this.m11*this.m20);
 		final double determinant = this.determinant();
 		
 		return new Matrix4d(m00, m01, m02, m03,
@@ -247,7 +249,7 @@ public class Matrix4d {
 		return new Matrix4d(1, 0, 0, dx, 0, 1, 0, dy, 0, 0, 1, dz, 0, 0, 0, 1);
 	}
 
-	private static Matrix4d scaleMatrix(final double a, final double b,
+	public static Matrix4d scaleMatrix(final double a, final double b,
 			final double c) {
 		return new Matrix4d(a, 0, 0, 0, 0, b, 0, 0, 0, 0, c, 0, 0, 0, 0, 1);
 	}

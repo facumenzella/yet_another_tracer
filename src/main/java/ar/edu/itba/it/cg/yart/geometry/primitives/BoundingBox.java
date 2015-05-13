@@ -8,8 +8,8 @@ import ar.edu.itba.it.cg.yart.transforms.Transformable;
 public class BoundingBox implements Transformable{
 	
 	private static final double EPSILON = 0.0001;
-	public final Point3d p0;
-	public final Point3d p1;
+	public Point3d p0;
+	public Point3d p1;
 	public final double surfaceArea;
 	
 	public BoundingBox(final Point3d p0, final Point3d p1) {
@@ -97,8 +97,8 @@ public class BoundingBox implements Transformable{
 
 	@Override
 	public void applyTransformation(Matrix4d matrix) {
-		p0.transformByMatrix(matrix);
-		p1.transformByMatrix(matrix);
+		p0 = p0.transformByMatrix(matrix);
+		p1 = p1.transformByMatrix(matrix);
 	}
 	
 }

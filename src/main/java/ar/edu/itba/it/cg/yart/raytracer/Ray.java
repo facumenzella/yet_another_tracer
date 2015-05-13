@@ -7,13 +7,11 @@ public class Ray {
 	
 	public Point3d origin;
 	public Vector3d direction;
-	public Vector3d inverseDirection;
 	public int depth = 0;
 	
 	public Ray(final Point3d origin, final Vector3d direction) {
 		this.origin = origin;
 		this.direction = direction;
-		this.inverseDirection = direction.inverse();
 	}
 	
 	public Ray(final Point3d origin) {

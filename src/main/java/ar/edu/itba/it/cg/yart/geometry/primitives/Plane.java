@@ -17,22 +17,22 @@ public class Plane extends GeometricObject {
 	}
 
 	@Override
-	public double hit(final Ray aRay, final ShadeRec sr) {		
-		Ray ray = new Ray(aRay.origin);
-		ray.direction = aRay.direction;
-		if (transformed) {
-			ray.origin = ray.origin.transformByMatrix(inverseMatrix);
-			ray.direction = ray.direction.transformByMatrix(inverseMatrix);
-		}
-		
+	public double hit(final Ray ray, final ShadeRec sr) {		
+//		Ray ray = new Ray(aRay.origin);
+//		ray.direction = aRay.direction;
+//		if (transformed) {
+//			ray.origin = ray.origin.transformByMatrix(inverseMatrix);
+//			ray.direction = ray.direction.transformByMatrix(inverseMatrix);
+//		}
+//		
 		double t = (p.sub(ray.origin)).dot(normal) / ray.direction.dot(normal);
 
 		if (t > EPSILON) {
 			sr.normal = normal;
-			if (transformed) {
-				sr.normal = normal.transformByMatrix(transposedInvMatrix);
-			}
-			sr.localHitPoint = aRay.origin.add(aRay.direction.scale(t));
+//			if (transformed) {
+//				sr.normal = sr.normal.transformByMatrix(transposedInvMatrix).normalizedVector();
+//			}
+			sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
 			return t;
 		} else {
 			return Double.NEGATIVE_INFINITY;
