@@ -4,6 +4,7 @@ import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class Triangle extends GeometricObject{
 
@@ -102,6 +103,12 @@ public class Triangle extends GeometricObject{
 				pointC.x) + EPSILON, Math.max(Math.max(pointA.y, pointB.y),
 				pointC.y) + EPSILON, Math.max(Math.max(pointA.z, pointB.z),
 				pointC.z) + EPSILON)));
+	}
+
+	@Override
+	public void applyTransformation(Matrix4d matrix) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

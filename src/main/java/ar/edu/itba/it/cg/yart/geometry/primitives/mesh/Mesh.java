@@ -145,14 +145,7 @@ public class Mesh extends GeometricObject {
 	}
 
 	@Override
-	public double hit(Ray aRay, ShadeRec sr) {
-		Ray ray = new Ray(aRay.origin);
-		ray.direction = aRay.direction;
-		if (transformed) {
-			ray.origin = ray.origin.transformByMatrix(inverseMatrix);
-			ray.direction = ray.direction.transformByMatrix(inverseMatrix);
-		}
-		
+	public double hit(Ray ray, ShadeRec sr) {
 		if (!getBoundingBox().hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}
@@ -161,19 +154,13 @@ public class Mesh extends GeometricObject {
 	}
 
 	@Override
-	public double shadowHit(Ray aRay) {
-		Ray ray = new Ray(aRay.origin);
-		ray.direction = aRay.direction;
-		if (transformed) {
-			ray.origin = ray.origin.transformByMatrix(inverseMatrix);
-			ray.direction = ray.direction.transformByMatrix(inverseMatrix);
-		}
+	public double shadowHit(Ray ray) {
 		return tree.traceRayHit(ray, new SimpleHitTracer());
 	}	
 	
 	@Override
 	public void applyTransformation(Matrix4d matrix) {
-		super.applyTransformation(matrix);
+
 	}
 
 }
