@@ -19,6 +19,7 @@ import ar.edu.itba.it.cg.yart.light.PointLight;
 import ar.edu.itba.it.cg.yart.light.materials.Matte;
 import ar.edu.itba.it.cg.yart.light.materials.Reflective;
 import ar.edu.itba.it.cg.yart.light.materials.Transparent;
+import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class World {
 
@@ -48,7 +49,7 @@ public class World {
 	
 	public void buildTestWorld() {
 		setBackgroundColor(Color.blackColor());
-		final Sphere s1 = new Sphere(new Point3d(20,0,-10), 30.0f);
+		final Sphere s1 = new Sphere(new Point3d(0,0,0), 15.0f);
 		Reflective s1m = new Reflective();
 		s1m.setCd(Color.redColor());
 		s1m.setKd(0.75);
@@ -58,7 +59,8 @@ public class World {
 		s1m.setCr(Color.whiteColor());
 		s1m.setKr(0.4);
 		s1.setMaterial(s1m);
-		final Sphere s2 = new Sphere(new Point3d(-35,-10,5), 20.0f);
+		final Sphere s2 = new Sphere(new Point3d(0,0,-45), 15.0f);
+		s2.applyTransformation(Matrix4d.scaleMatrix(2, 2, 2));
 		Reflective s2m = new Reflective();
 		s2m.setCd(Color.greenColor());
 		s2m.setKd(0.50);
@@ -131,34 +133,10 @@ public class World {
 //		light1.shadowsOff();
 //		light2.shadowsOff();
 				
-		// we will atempt to build a mesh
-		Point3d v1 = new Point3d(-50, 0, -100);
-		Point3d v2 = new Point3d(-50, 50, -100);
-		Point3d v3 = new Point3d(50, 50, -100);
-		Point3d v4 = new Point3d(50, 0, -100);
 		
-		List<Point3d> vertices = new ArrayList<Point3d>();
-		vertices.add(v1);
-		vertices.add(v2);
-		vertices.add(v3);
-		vertices.add(v4);
-		
-		List<Integer> indices = new ArrayList<Integer>();
-		indices.add(3);
-		indices.add(1);
-		indices.add(0);
-		indices.add(3);
-		indices.add(2);
-		indices.add(1);
-		
-		Mesh mesh = new Mesh(vertices, null, indices, false);
-		mesh.setMaterial(s1m);
-		final List<GeometricObject> objects = new ArrayList<GeometricObject>();
-		
-		objects.add(mesh);
 		objects.add(s1);
 		objects.add(s2);
-		objects.add(s3);
+//		objects.add(s3);
 //		addObject(d1);
 		objects.add(floor);
 		this.addObjects(objects);

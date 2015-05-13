@@ -15,6 +15,7 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleColorTracer;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleHitTracer;
+import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class Mesh extends GeometricObject {
 
@@ -72,12 +73,9 @@ public class Mesh extends GeometricObject {
 			}
 			MeshTriangle t;
 			if (needsSmoothing) {
-				t = new SmoothMeshTriangle(v1, v2, v3, this, false); // TODO
-																		// just
-																		// trying
+				t = new SmoothMeshTriangle(v1, v2, v3, this, false);
 			} else {
-				t = new FlatMeshTriangle(v1, v2, v3, this, false); // TODO just
-																	// trying
+				t = new FlatMeshTriangle(v1, v2, v3, this, false);
 			}
 
 			facesV1.add(t);
@@ -147,7 +145,14 @@ public class Mesh extends GeometricObject {
 	}
 
 	@Override
-	public double hit(Ray ray, ShadeRec sr) {
+	public double hit(Ray aRay, ShadeRec sr) {
+		Ray ray = new Ray(aRay.origin);
+		ray.direction = aRay.direction;
+		if (transformed) {
+			ray.origin = ray.origin.transformByMatrix(inverseMatrix);
+			ray.direction = ray.direction.transformByMatrix(inverseMatrix);
+		}
+		
 		if (!getBoundingBox().hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}
@@ -156,8 +161,19 @@ public class Mesh extends GeometricObject {
 	}
 
 	@Override
-	public double shadowHit(Ray ray) {
+	public double shadowHit(Ray aRay) {
+		Ray ray = new Ray(aRay.origin);
+		ray.direction = aRay.direction;
+		if (transformed) {
+			ray.origin = ray.origin.transformByMatrix(inverseMatrix);
+			ray.direction = ray.direction.transformByMatrix(inverseMatrix);
+		}
 		return tree.traceRayHit(ray, new SimpleHitTracer());
 	}	
+	
+	@Override
+	public void applyTransformation(Matrix4d matrix) {
+		super.applyTransformation(matrix);
+	}
 
 }

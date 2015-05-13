@@ -17,28 +17,30 @@ public class Sphere extends GeometricObject {
 	}
 
 	@Override
-	public double hit(final Ray aRay, final ShadeRec sr) {
-		Ray ray = new Ray(aRay.origin);
-		ray.direction = aRay.direction;
+	public double hit(final Ray ray, final ShadeRec sr) {
+		Ray invRay = new Ray(ray.origin);
+		invRay.direction = ray.direction;
+		
+		// apply the inverse set of transformations to the ray to produce an inverse transformed ray
 		if (transformed) {
-			ray.origin = ray.origin.transformByMatrix(inverseMatrix);
-			ray.direction = ray.direction.transformByMatrix(inverseMatrix);
+			invRay.origin = ray.origin.transformByMatrix(inverseMatrix);
+			invRay.direction = ray.direction.transformByMatrix(inverseMatrix);
 		}
 		
-		if (!getBoundingBox().hit(ray)) {
-			return Double.NEGATIVE_INFINITY;
-		}
+		// intersect the inverse transformed ray with the untransformed object
+//		if (!getBoundingBox().hit(invRay)) {
+//			return Double.NEGATIVE_INFINITY;
+//		}
 		
-		MutableVector3d tmp = ray.origin.mutableSub(center);
-		MutableVector3d rayTmp = new MutableVector3d(ray.direction);
+		MutableVector3d tmp = invRay.origin.mutableSub(center);
+		MutableVector3d rayTmp = new MutableVector3d(invRay.direction);
 		
-		double a = ray.direction.dot(ray.direction);
-		double b = 2.0 * tmp.dot(ray.direction);
+		double a = invRay.direction.dot(invRay.direction);
+		double b = 2.0 * tmp.dot(invRay.direction);
 		double c = tmp.dot(tmp)  - radius * radius;
 		double disc = b * b - 4.0 * a * c;
 		
-		if (disc < 0.0) {
-			// No hit
+		if (disc < 0.0) { // No hit
 			return Double.NEGATIVE_INFINITY;
 		}
 		
@@ -52,11 +54,11 @@ public class Sphere extends GeometricObject {
 			rayTmp.scale(t);
 			tmp.add(rayTmp);
 			tmp.scale(1/radius);
-			sr.normal = tmp.inmutableCopy();
+			sr.normal = tmp.inmutableCopy().normalizedVector();
 			if (transformed) {
-				sr.normal = sr.normal.transformByMatrix(transposedInvMatrix);
+				sr.normal = sr.normal.transformByMatrix(transposedInvMatrix).normalizedVector();
 			}
-			sr.localHitPoint = aRay.origin.add(aRay.direction.scale(t));
+			sr.localHitPoint = invRay.origin.add(invRay.direction.scale(t));
 			return t;
 		}
 		
@@ -66,11 +68,11 @@ public class Sphere extends GeometricObject {
 			rayTmp.scale(t);
 			tmp.add(rayTmp);
 			tmp.scale(1/radius);
-			sr.normal = tmp.inmutableCopy();
+			sr.normal = tmp.inmutableCopy().normalizedVector();
 			if (transformed) {
-				sr.normal = sr.normal.transformByMatrix(transposedInvMatrix);
+				sr.normal = sr.normal.transformByMatrix(transposedInvMatrix).normalizedVector();
 			}
-			sr.localHitPoint = aRay.origin.add(aRay.direction.scale(t));
+			sr.localHitPoint = invRay.origin.add(invRay.direction.scale(t));
 			return t;
 		}
 		
@@ -78,42 +80,51 @@ public class Sphere extends GeometricObject {
 	}
 
 	@Override
-	public double shadowHit(final Ray aRay) {
-		Ray ray = new Ray(aRay.origin);
-		ray.direction = aRay.direction;
+	public double shadowHit(final Ray ray) {
+		Ray invRay = new Ray(ray.origin);
+		invRay.direction = ray.direction;
+		
+		// apply the inverse set of transformations to the ray to produce an inverse transformed ray
 		if (transformed) {
-			ray.origin = ray.origin.transformByMatrix(inverseMatrix);
-			ray.direction = ray.direction.transformByMatrix(inverseMatrix);
+			invRay.origin = ray.origin.transformByMatrix(inverseMatrix);
+			invRay.direction = ray.direction.transformByMatrix(inverseMatrix);
 		}
 		
-		if (!getBoundingBox().hit(ray)) {
-			return Double.NEGATIVE_INFINITY;
-		}
+		// intersect the inverse transformed ray with the untransformed object
+//		if (!getBoundingBox().hit(invRay)) {
+//			return Double.NEGATIVE_INFINITY;
+//		}
 		
-		MutableVector3d tmp = ray.origin.mutableSub(center);
-		double a = ray.direction.dot(ray.direction);
-		double b = 2.0 * tmp.dot(ray.direction);
+		MutableVector3d tmp = invRay.origin.mutableSub(center);
+		MutableVector3d rayTmp = new MutableVector3d(invRay.direction);
+		
+		double a = invRay.direction.dot(invRay.direction);
+		double b = 2.0 * tmp.dot(invRay.direction);
 		double c = tmp.dot(tmp)  - radius * radius;
 		double disc = b * b - 4.0 * a * c;
 		
-		if (disc < 0.0) {
-			// No hit
+		if (disc < 0.0) { // No hit
 			return Double.NEGATIVE_INFINITY;
 		}
 		
 		double e = Math.sqrt(disc);
 		double denom = 2.0 * a;
-		
 		double t;
+
 		t = (-b - e) / denom;
 		
 		if (t > EPSILON) {
-			return t;
+			rayTmp.scale(t);
+			tmp.add(rayTmp);
+			tmp.scale(1/radius);
 		}
 		
 		t = (-b + e) / denom;
 		
 		if (t > EPSILON) {
+			rayTmp.scale(t);
+			tmp.add(rayTmp);
+			tmp.scale(1/radius);
 			return t;
 		}
 		

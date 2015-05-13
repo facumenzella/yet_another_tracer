@@ -18,19 +18,18 @@ public class Matte extends MaterialAbstract {
 
 	@Override
 	public Color shade(ShadeRec sr) {
-		final Vector3d wo = null; // not necessary
-		// final Vector3d wo = sr.ray.direction.inverse();
+		final Vector3d wo = sr.ray.direction.inverse();
 		final Color colorL = ambientBRDF.rho(sr, wo);
 		colorL.multiplyEquals(sr.world.getAmbientLight().L(sr));
 
 		final List<Light> castShadowLights = sr.world.getCastShadowLights();
 		final List<Light> doNotCastShadowLights = sr.world
 				.getDoNotCastShadowLights();
-		
+
 		for (final Light light : doNotCastShadowLights) {
 			final Vector3d wi = light.getDirection(sr);
 			double ndotwi = sr.normal.dot(wi);
-			
+
 			if (ndotwi > 0.0) {
 				final Color aux = diffuseBRDF.f(sr, wo, wi);
 				aux.multiplyEquals(light.L(sr));
@@ -73,10 +72,10 @@ public class Matte extends MaterialAbstract {
 		final Texture texture = new ConstantColor(cd);
 		setCd(texture);
 	}
-	
+
 	public void setCd(final Texture cd) {
 		ambientBRDF.setCd(cd);
-		diffuseBRDF.setCd(cd);		
+		diffuseBRDF.setCd(cd);
 	}
 
 }

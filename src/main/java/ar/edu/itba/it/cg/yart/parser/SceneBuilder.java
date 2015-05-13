@@ -189,7 +189,8 @@ public class SceneBuilder {
 		}
 		
 		object.setMaterial(currentMaterial);
-		
+		Matrix4d matrix = transformMatrices.peek();
+		object.applyTransformation(matrix);
 		return object;
 	}
 	

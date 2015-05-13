@@ -24,16 +24,21 @@ public class BucketWorker implements Runnable {
 
 	@Override
 	public void run() {
-		boolean emptyQueue = false;
-		Bucket bucket = buckets.poll();
-		while (!emptyQueue) {
-			raytracer.getCamera().renderScene(bucket, raytracer, result);
-			callback.onBucketFinished(bucket, result);
-			emptyQueue = buckets.isEmpty();
-			if (!emptyQueue) {
-				bucket = buckets.poll();
+		try {
+			boolean emptyQueue = false;
+			Bucket bucket = buckets.poll();
+			while (!emptyQueue) {
+				raytracer.getCamera().renderScene(bucket, raytracer, result);
+				callback.onBucketFinished(bucket, result);
+				emptyQueue = buckets.isEmpty();
+				if (!emptyQueue) {
+					bucket = buckets.poll();
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		
 	}
 
 }

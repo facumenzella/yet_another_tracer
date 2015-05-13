@@ -20,7 +20,8 @@ public class Phong extends MaterialAbstract {
 
 	@Override
 	public Color shade(ShadeRec sr) {
-		Vector3d wo = sr.ray.inverseDirection;
+
+		Vector3d wo = sr.ray.direction.inverse();
 		final Color colorL = ambientBRDF.rho(sr, wo);
 		colorL.multiplyEquals(sr.world.getAmbientLight().L(sr));
 
@@ -79,7 +80,7 @@ public class Phong extends MaterialAbstract {
 		final Texture texture = new ConstantColor(cd);
 		setCd(texture);
 	}
-	
+
 	public void setCd(final Texture cd) {
 		ambientBRDF.setCd(cd);
 		diffuseBRDF.setCd(cd);
