@@ -3,6 +3,7 @@ package ar.edu.itba.it.cg.yart.geometry.primitives.mesh;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class FlatMeshTriangle extends MeshTriangle {
 
@@ -56,9 +57,6 @@ public class FlatMeshTriangle extends MeshTriangle {
 		}
 
 		sr.normal = normal;
-		if (transformed) {
-			sr.normal = sr.normal.transformByMatrix(transposedInvMatrix);
-		}
 		sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
 
 		return t;
@@ -109,6 +107,12 @@ public class FlatMeshTriangle extends MeshTriangle {
 		}
 		
 		return t;
+	}
+
+	@Override
+	public void applyTransformation(Matrix4d matrix) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

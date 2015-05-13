@@ -5,6 +5,7 @@ import java.util.List;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.BSPAxisAligned;
 import ar.edu.itba.it.cg.yart.color.Color;
+import ar.edu.itba.it.cg.yart.geometry.Instance;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Disc;
@@ -49,7 +50,8 @@ public class World {
 	
 	public void buildTestWorld() {
 		setBackgroundColor(Color.blackColor());
-		final Sphere s1 = new Sphere(new Point3d(0,0,0), 15.0f);
+		final Instance s1 = new Instance(new Sphere());
+		s1.applyTransformation(Matrix4d.scaleMatrix(20, 20, 20));
 		Reflective s1m = new Reflective();
 		s1m.setCd(Color.redColor());
 		s1m.setKd(0.75);
@@ -60,7 +62,6 @@ public class World {
 		s1m.setKr(0.4);
 		s1.setMaterial(s1m);
 		final Sphere s2 = new Sphere(new Point3d(0,0,-45), 15.0f);
-		s2.applyTransformation(Matrix4d.scaleMatrix(2, 2, 2));
 		Reflective s2m = new Reflective();
 		s2m.setCd(Color.greenColor());
 		s2m.setKd(0.50);
@@ -119,6 +120,7 @@ public class World {
 		right.setKa(0.15);
 		backgroundRight.setMaterial(right);
 		final Plane floor = new Plane(new Point3d(0,-30,0), new Vector3d(0,1,0));
+		floor.applyTransformation(new Matrix4d());
 		Matte floorM = new Matte();
 		floorM.setCd(new Color(0.4, 0.4, 0.4));
 		floorM.setKd(0.50);
@@ -135,10 +137,10 @@ public class World {
 				
 		
 		objects.add(s1);
-		objects.add(s2);
+//		objects.add(s2);
 //		objects.add(s3);
 //		addObject(d1);
-		objects.add(floor);
+//		objects.add(floor);
 		this.addObjects(objects);
 //		addObject(background);
 //		addObject(backgroundLeft);

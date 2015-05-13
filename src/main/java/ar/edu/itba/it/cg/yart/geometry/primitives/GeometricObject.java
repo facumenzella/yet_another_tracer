@@ -14,9 +14,8 @@ public abstract class GeometricObject implements Transformable{
 	private Material  material;
 	private BoundingBox boundingBox;	
 	
-	public boolean transformed;
 	public Matrix4d matrix;
-	public Matrix4d inverseMatrix;
+	public Matrix4d invMatrix;
 	public Matrix4d transposedInvMatrix;
 	
 	public GeometricObject() {
@@ -41,10 +40,9 @@ public abstract class GeometricObject implements Transformable{
 	
 	@Override
 	public void applyTransformation(Matrix4d matrix) {
-		this.transformed = true;
 		this.matrix = matrix;
-		this.inverseMatrix = matrix.inverse();
-		this.transposedInvMatrix = this.inverseMatrix.transpose();
+		this.invMatrix = matrix.inverse();
+		this.transposedInvMatrix = this.invMatrix.transpose();
 	}
 	
 	public abstract BoundingBox createBoundingBox();

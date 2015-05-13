@@ -5,6 +5,7 @@ import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class SmoothMeshTriangle extends MeshTriangle{
 	
@@ -57,9 +58,6 @@ public class SmoothMeshTriangle extends MeshTriangle{
 			return Double.NEGATIVE_INFINITY;
 		}
 		sr.normal = this.interpolateNormal(beta, gamma);;
-		if (mesh.transformed) {
-			sr.normal = sr.normal.transformByMatrix(mesh.transposedInvMatrix);
-		}
 		sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
 		
 		return t;
@@ -121,6 +119,12 @@ public class SmoothMeshTriangle extends MeshTriangle{
 		n0.add(n2);
 		n0.normalize();
 		return n0.inmutableCopy();
+	}
+
+	@Override
+	public void applyTransformation(Matrix4d matrix) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
