@@ -123,7 +123,7 @@ public class YartApp {
 				System.out.println("Total time: " + renderResult.getTotalTime());
 			}
 			
-			if (StringUtils.isEmpty(imageName)) {
+			if (!StringUtils.isEmpty(imageName)) {
 				ImageSaver imageSaver = new ImageSaver();
 				imageSaver.saveImage(renderResult.getPixels(), imageName, imageExtension);
 			}
