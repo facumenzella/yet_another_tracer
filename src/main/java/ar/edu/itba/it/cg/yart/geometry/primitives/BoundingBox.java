@@ -1,16 +1,16 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives;
 
-import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 
 public class BoundingBox {
 	
 	private static final double EPSILON = 0.0001;
-	public final Point3 p0;
-	public final Point3 p1;
+	public final Point3d p0;
+	public final Point3d p1;
 	public final double surfaceArea;
 	
-	public BoundingBox(final Point3 p0, final Point3 p1) {
+	public BoundingBox(final Point3d p0, final Point3d p1) {
 		this.p0 = p0;
 		this.p1 = p1;
 		

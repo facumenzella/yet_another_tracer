@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import ar.edu.itba.it.cg.yart.color.Color;
-import ar.edu.itba.it.cg.yart.geometry.Point3;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Plane;
@@ -67,8 +67,8 @@ public class SceneBuilder {
 				case LOOKAT:
 					String[] params = i.getParameters();
 					raytracer.setViewParameters(
-							new Point3(Double.valueOf(params[0]), Double.valueOf(params[2]), Double.valueOf(params[1])),
-							new Point3(Double.valueOf(params[3]), Double.valueOf(params[5]), Double.valueOf(params[4])),
+							new Point3d(Double.valueOf(params[0]), Double.valueOf(params[2]), Double.valueOf(params[1])),
+							new Point3d(Double.valueOf(params[3]), Double.valueOf(params[5]), Double.valueOf(params[4])),
 							new Vector3d(Double.valueOf(params[6]), Double.valueOf(params[8]), Double.valueOf(params[7])));
 					break;
 				}
@@ -170,14 +170,14 @@ public class SceneBuilder {
 		
 		String strType = identifier.getParameters()[0];
 		if (strType.equals("sphere")) {
-			object = new Sphere(new Point3(0,0,0), identifier.getDouble("radius", 1.0));
+			object = new Sphere(new Point3d(0,0,0), identifier.getDouble("radius", 1.0));
 		}
 		else if (strType.equals("plane")) {
-			object = new Plane(new Point3(0,-2,0), identifier.getNormal("n", null));
+			object = new Plane(new Point3d(0,-2,0), identifier.getNormal("n", null));
 		}
 		else if (strType.equals("mesh")) {
 			int[] ind = identifier.getIntegers("triindices", null);
-			List<Point3> vertices = new ArrayList<Point3>(Arrays.asList(identifier.getPoints("P", null)));
+			List<Point3d> vertices = new ArrayList<Point3d>(Arrays.asList(identifier.getPoints("P", null)));
 			List<Vector3d> normals = new ArrayList<Vector3d>(Arrays.asList(identifier.getNormals("N", null)));
 			List<Integer> indices = new ArrayList<Integer>(ind.length);
 			
@@ -207,8 +207,8 @@ public class SceneBuilder {
 		}
 		else if (type.equals("distant")) {
 			Color l = identifier.getColor("l", Color.whiteColor());
-			Point3[] def = {new Point3(0,0,0), new Point3(1,1,1)};
-			Point3[] fromTo = identifier.getPoints("from/to", def);
+			Point3d[] def = {new Point3d(0,0,0), new Point3d(1,1,1)};
+			Point3d[] fromTo = identifier.getPoints("from/to", def);
 			Directional light = new Directional(2, l, fromTo[1].sub(fromTo[0]));
 			ret = light;
 		}
@@ -233,7 +233,7 @@ public class SceneBuilder {
 		Camera ret = null;
 		
 		if (identifier.getParameters()[0].equals("perspective")) {
-			PinholeCamera cam = new PinholeCamera(new Point3(0,0,200), new Point3(0,0,0), new Vector3d(0,1,0), 500, 1);
+			PinholeCamera cam = new PinholeCamera(new Point3d(0,0,200), new Point3d(0,0,0), new Vector3d(0,1,0), 500, 1);
 			cam.setFov(identifier.getDouble("fov", 90));
 			ret = cam;
 		}

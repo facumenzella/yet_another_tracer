@@ -1,17 +1,16 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives;
 
 import ar.edu.itba.it.cg.yart.geometry.MutableVector3d;
-import ar.edu.itba.it.cg.yart.geometry.Point3;
-import ar.edu.itba.it.cg.yart.geometry.Vector3d;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
 public class Sphere extends GeometricObject {
 	
-	private Point3 center;
+	private Point3d center;
 	private double radius;
 	
-	public Sphere(final Point3 center, final double radius) {
+	public Sphere(final Point3d center, final double radius) {
 		this.center = center;
 		this.radius = radius;
 		updateBoundingBox();
@@ -99,8 +98,8 @@ public class Sphere extends GeometricObject {
 
 	@Override
 	public BoundingBox createBoundingBox() {
-		return new BoundingBox(new Point3(center.x - radius, center.y - radius, center.z - radius),
-				new Point3(center.x + radius, center.y + radius, center.z + radius));
+		return new BoundingBox(new Point3d(center.x - radius, center.y - radius, center.z - radius),
+				new Point3d(center.x + radius, center.y + radius, center.z + radius));
 	}
 
 }
