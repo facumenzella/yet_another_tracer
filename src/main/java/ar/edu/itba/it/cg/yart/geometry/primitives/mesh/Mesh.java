@@ -15,7 +15,6 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleColorTracer;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleHitTracer;
-import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class Mesh extends GeometricObject {
 
@@ -157,10 +156,5 @@ public class Mesh extends GeometricObject {
 	public double shadowHit(Ray ray) {
 		return tree.traceRayHit(ray, new SimpleHitTracer());
 	}	
-	
-	@Override
-	public void applyTransformation(Matrix4d matrix) {
-
-	}
 
 }

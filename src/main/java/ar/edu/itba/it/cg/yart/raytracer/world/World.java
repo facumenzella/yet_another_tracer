@@ -142,7 +142,7 @@ public class World {
 //		objects.add(s3);
 //		addObject(d1);
 		objects.add(floor);
-		this.addObjects(objects);
+//		this.addObjects(objects);
 //		addObject(background);
 //		addObject(backgroundLeft);
 //		addObject(backgroundBottom);
