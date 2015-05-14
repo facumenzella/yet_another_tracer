@@ -52,7 +52,7 @@ public class World {
 		setBackgroundColor(Color.blackColor());
 		final Instance s1 = new Instance(new Sphere());
 		s1.applyTransformation(Matrix4d.scaleMatrix(20, 20, 20).rightMultiply(Matrix4d.transformMatrix(5,2,0)).
-				rightMultiply(Matrix4d.scaleMatrix(2, 2, 2)));
+				rightMultiply(Matrix4d.scaleMatrix(6, 2, 2)));
 		Reflective s1m = new Reflective();
 		s1m.setCd(Color.redColor());
 		s1m.setKd(0.75);

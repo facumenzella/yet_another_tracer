@@ -18,7 +18,7 @@ public class Identifier {
 		MATERIAL("Material"),
 		NAMED_MATERIAL("NamedMaterial"),
 		MAKE_NAMED_MATERIAL("MakeNamedMaterial"),
-		LIGHT("Light"),
+		LIGHT_SOURCE("LightSource"),
 		IDENTITY("Identity"),
 		TRANSFORM("Transform"),
 		TRANSLATE("Translate"),

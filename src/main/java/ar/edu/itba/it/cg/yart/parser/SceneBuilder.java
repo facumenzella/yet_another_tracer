@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import ar.edu.itba.it.cg.yart.color.Color;
+import ar.edu.itba.it.cg.yart.geometry.Instance;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
@@ -40,6 +41,9 @@ public class SceneBuilder {
 	private Material currentMaterial;
 	
 	private Deque<Matrix4d> transformMatrices = new ArrayDeque<Matrix4d>();
+	
+	private final Sphere referenceSphere = new Sphere();
+	private final Plane referencePlane = new Plane();
 	
 	public void buildRayTracer(final RayTracer raytracer, final SceneParser parser) {
 		reset();
@@ -83,7 +87,7 @@ public class SceneBuilder {
 					case MATERIAL:
 						currentMaterial = buildMaterial(i);
 						break;
-					case LIGHT:
+					case LIGHT_SOURCE:
 						world.addLight(buildLight(i));
 						break;
 					case NAMED_MATERIAL:
@@ -166,14 +170,20 @@ public class SceneBuilder {
 	}
 	
 	private GeometricObject buildShape(Identifier identifier) {
-		GeometricObject object = null;
+		Instance instance = null;
+		Matrix4d localMatrix = new Matrix4d();
 		
 		String strType = identifier.getParameters()[0];
 		if (strType.equals("sphere")) {
-			object = new Sphere(new Point3d(0,0,0), identifier.getDouble("radius", 1.0));
+			double radius = identifier.getDouble("radius", 1.0);
+			instance = new Instance(referenceSphere);
+			localMatrix = localMatrix.scale(radius, radius, radius);
+			//localMatrix = localMatrix.transform(0, 1, 0);
 		}
 		else if (strType.equals("plane")) {
-			object = new Plane(new Point3d(0,-2,0), identifier.getNormal("n", null));
+			Vector3d normal = identifier.getNormal("n", new Vector3d(0, 1, 0));
+			instance = new Instance(referencePlane);
+			//localMatrix = localMatrix.transform(0, 0.5, 0);
 		}
 		else if (strType.equals("mesh")) {
 			int[] ind = identifier.getIntegers("triindices", null);
@@ -185,13 +195,15 @@ public class SceneBuilder {
 				indices.add(i);
 			}
 			
-			object = new Mesh(vertices, normals, indices, true);
+			//object = new Mesh(vertices, normals, indices, true);
+			//instance = new Instance(object);
+			instance.applyTransformation(new Matrix4d());
 		}
 		
-		object.setMaterial(currentMaterial);
+		instance.setMaterial(currentMaterial);
 		Matrix4d matrix = transformMatrices.peek();
-		object.applyTransformation(matrix);
-		return object;
+		instance.applyTransformation(localMatrix.rightMultiply(matrix));
+		return instance;
 	}
 	
 	private Light buildLight(Identifier identifier) {
