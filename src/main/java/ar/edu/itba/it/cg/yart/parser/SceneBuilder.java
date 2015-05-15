@@ -178,12 +178,10 @@ public class SceneBuilder {
 			double radius = identifier.getDouble("radius", 1.0);
 			instance = new Instance(referenceSphere);
 			localMatrix = localMatrix.scale(radius, radius, radius);
-			//localMatrix = localMatrix.transform(0, 1, 0);
 		}
 		else if (strType.equals("plane")) {
 			Vector3d normal = identifier.getNormal("n", new Vector3d(0, 1, 0));
 			instance = new Instance(referencePlane);
-			//localMatrix = localMatrix.transform(0, 0.5, 0);
 		}
 		else if (strType.equals("mesh")) {
 			int[] ind = identifier.getIntegers("triindices", null);
@@ -194,15 +192,11 @@ public class SceneBuilder {
 			for (int i : ind) {
 				indices.add(i);
 			}
-			
-			//object = new Mesh(vertices, normals, indices, true);
-			//instance = new Instance(object);
-			instance.applyTransformation(new Matrix4d());
+			instance.applyTransformation(localMatrix);
 		}
 		
 		instance.setMaterial(currentMaterial);
 		Matrix4d matrix = transformMatrices.peek();
-		instance.applyTransformation(localMatrix);
 		instance.applyTransformation(localMatrix.rightMultiply(matrix));
 		return instance;
 	}

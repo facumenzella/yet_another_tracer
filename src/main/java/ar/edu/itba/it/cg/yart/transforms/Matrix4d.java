@@ -10,7 +10,7 @@ public class Matrix4d {
 	private static Matrix4d reflectXMatrix = Matrix4d.reflectXMatrix();
 	private static Matrix4d reflectYMatrix = Matrix4d.reflectYMatrix();
 	private static Matrix4d reflectZMatrix = Matrix4d.reflectZMatrix();
-
+	
 	// Creates the identity matrix
 	public Matrix4d() {
 		this.m00 = this.m11 = this.m22 = this.m33 = 1;
@@ -128,39 +128,39 @@ public class Matrix4d {
 
 	public Matrix4d transform(final double dx, final double dy, final double dz) {
 		final Matrix4d transformMatrix = Matrix4d.transformMatrix(dx, dy, dz);
-		return this.rightMultiply(transformMatrix);
+		return this.leftMultiply(transformMatrix);
 	}
 
 	public Matrix4d scale(final double a, final double b, final double c) {
 		final Matrix4d scaleMatrix = Matrix4d.scaleMatrix(a, b, c);
-		return this.rightMultiply(scaleMatrix);
+		return this.leftMultiply(scaleMatrix);
 	}
 
 	public Matrix4d rotateX(final double degrees) {
 		final Matrix4d rotateXMatrix = Matrix4d.rotateXMatrix(degrees);
-		return this.rightMultiply(rotateXMatrix);
+		return this.leftMultiply(rotateXMatrix);
 	}
 
 	public Matrix4d rotateY(final double degrees) {
 		final Matrix4d rotateYMatrix = Matrix4d.rotateYMatrix(degrees);
-		return this.rightMultiply(rotateYMatrix);
+		return this.leftMultiply(rotateYMatrix);
 	}
 
 	public Matrix4d rotateZ(final double degrees) {
 		final Matrix4d rotateZMatrix = Matrix4d.rotateZMatrix(degrees);
-		return this.rightMultiply(rotateZMatrix);
+		return this.leftMultiply(rotateZMatrix);
 	}
 
 	public Matrix4d reflectX() {
-		return this.rightMultiply(reflectXMatrix);
+		return this.leftMultiply(reflectXMatrix);
 	}
 
 	public Matrix4d reflectY() {
-		return this.rightMultiply(reflectYMatrix);
+		return this.leftMultiply(reflectYMatrix);
 	}
 
 	public Matrix4d reflectZ() {
-		return this.rightMultiply(reflectZMatrix);
+		return this.leftMultiply(reflectZMatrix);
 	}
 	
 	public Matrix4d inverse() {
@@ -261,18 +261,22 @@ public class Matrix4d {
 							this.m30 * value, this.m31 * value, this.m32 * value, this.m33 * value);
 	}
 
-	private static Matrix4d rotateXMatrix(final double degrees) {
+	private static Matrix4d rotateXMatrix(final double degree) {
+		final double degrees = Math.PI * degree / 180;
 		return new Matrix4d(1, 0, 0, 0, 0, Math.cos(degrees),
 				-Math.sin(degrees), 0, 0, Math.sin(degrees), Math.cos(degrees),
 				0, 0, 0, 0, 1);
 	}
 
-	private static Matrix4d rotateYMatrix(final double degrees) {
+	private static Matrix4d rotateYMatrix(final double degree) {
+		final double degrees = Math.PI * degree / 180;
 		return new Matrix4d(Math.cos(degrees), 0, Math.sin(degrees), 0, 0, 1,
 				0, 0, -Math.sin(degrees), 0, Math.cos(degrees), 0, 0, 0, 0, 1);
 	}
 
-	private static Matrix4d rotateZMatrix(final double degrees) {
+	private static Matrix4d rotateZMatrix(final double degree) {
+		// We need radians, not degrees!!!
+				final double degrees = Math.PI * degree / 180;
 		return new Matrix4d(Math.cos(degrees), -Math.sin(degrees), 0, 0,
 				Math.sin(degrees), Math.cos(degrees), 0, 0, 0, 0, 1, 0, 0, 0,
 				0, 1);
@@ -292,4 +296,12 @@ public class Matrix4d {
 		return new Matrix4d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1);
 	}
 
+	@Override
+	public String toString(){
+		String s = m00 +" "+ m01 +" "+ m02 +" "+ m03 +" ";
+		s += m10 +" "+ m11 +" "+ m12 +" "+ m13 +" ";
+		s += m20 +" "+ m21 +" "+ m22 +" "+ m23 +" ";
+		s += m30 +" "+ m31 +" "+ m32 +" "+ m33 +" ";
+		return s;
+	}
 }
