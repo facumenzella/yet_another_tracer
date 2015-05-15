@@ -11,7 +11,7 @@ public abstract class GeometricObject implements Transformable{
 
 	protected static final double EPSILON = 0.0001;
 	public Color color;
-	private Material  material;
+	public Material  material;
 	private BoundingBox boundingBox;	
 	
 	public Matrix4d matrix;
@@ -40,8 +40,8 @@ public abstract class GeometricObject implements Transformable{
 	
 	@Override
 	public void applyTransformation(Matrix4d matrix) {
-		this.matrix = matrix;
-		this.invMatrix = matrix.inverse();
+		this.matrix = this.matrix.leftMultiply(matrix);
+		this.invMatrix = this.matrix.inverse();
 		this.transposedInvMatrix = this.invMatrix.transpose();
 	}
 	

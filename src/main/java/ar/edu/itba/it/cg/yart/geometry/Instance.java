@@ -4,6 +4,7 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.BoundingBox;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class Instance extends GeometricObject{
 
@@ -12,6 +13,7 @@ public class Instance extends GeometricObject{
 
 	public Instance(final GeometricObject object) {
 		this.object = object;
+		this.matrix = new Matrix4d();
 	}
 	
 	@Override
@@ -32,6 +34,11 @@ public class Instance extends GeometricObject{
 		if (t != Double.NEGATIVE_INFINITY) {
 			sr.normal = sr.normal.transformByMatrix(transposedInvMatrix).normalizedVector();
 		}
+		
+		if (object.material != null) {
+			this.material = object.material;
+		}
+		
 		if (!transformTexture) {
 			// TODO check it out
 		}

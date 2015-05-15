@@ -104,11 +104,5 @@ public class Triangle extends GeometricObject{
 				pointC.y) + EPSILON, Math.max(Math.max(pointA.z, pointB.z),
 				pointC.z) + EPSILON)));
 	}
-
-	@Override
-	public void applyTransformation(Matrix4d matrix) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 }
