@@ -202,6 +202,7 @@ public class SceneBuilder {
 		
 		instance.setMaterial(currentMaterial);
 		Matrix4d matrix = transformMatrices.peek();
+		instance.applyTransformation(localMatrix);
 		instance.applyTransformation(localMatrix.rightMultiply(matrix));
 		return instance;
 	}
@@ -256,20 +257,23 @@ public class SceneBuilder {
 	
 	private Matrix4d transform(Identifier identifier) {
 		final double m00 = Double.valueOf(identifier.getParameters()[0]);
-		final double m01 = Double.valueOf(identifier.getParameters()[1]);
-		final double m02 = Double.valueOf(identifier.getParameters()[2]);
-		final double m03 = Double.valueOf(identifier.getParameters()[3]);
-		final double m10 = Double.valueOf(identifier.getParameters()[4]);
-		final double m11 = Double.valueOf(identifier.getParameters()[5]);
-		final double m12 = Double.valueOf(identifier.getParameters()[6]);
-		final double m13 = Double.valueOf(identifier.getParameters()[7]);
-		final double m20 = Double.valueOf(identifier.getParameters()[8]);
-		final double m21 = Double.valueOf(identifier.getParameters()[9]);
+		final double m10 = Double.valueOf(identifier.getParameters()[1]);
+		final double m20 = Double.valueOf(identifier.getParameters()[2]);
+		final double m30 = Double.valueOf(identifier.getParameters()[3]);
+		
+		final double m02 = Double.valueOf(identifier.getParameters()[8]);
+		final double m12 = Double.valueOf(identifier.getParameters()[9]);
 		final double m22 = Double.valueOf(identifier.getParameters()[10]);
-		final double m23 = Double.valueOf(identifier.getParameters()[11]);
-		final double m30 = Double.valueOf(identifier.getParameters()[12]);
-		final double m31 = Double.valueOf(identifier.getParameters()[13]);
-		final double m32 = Double.valueOf(identifier.getParameters()[14]);
+		final double m32 = Double.valueOf(identifier.getParameters()[11]);
+		
+		final double m01 = Double.valueOf(identifier.getParameters()[4]);
+		final double m11 = Double.valueOf(identifier.getParameters()[5]);
+		final double m21 = Double.valueOf(identifier.getParameters()[6]);
+		final double m31 = Double.valueOf(identifier.getParameters()[7]);
+		
+		final double m03 = Double.valueOf(identifier.getParameters()[12]);
+		final double m13 = Double.valueOf(identifier.getParameters()[13]);
+		final double m23 = Double.valueOf(identifier.getParameters()[14]);
 		final double m33 = Double.valueOf(identifier.getParameters()[15]);
 		
 		return new Matrix4d(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
