@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.parser;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -47,13 +48,14 @@ public class SceneParser {
 	
 	private void parseFile(final String filePath) throws IOException, ParseException {
 		Path path = Paths.get(filePath);
+		String folder = path.getParent().toString();
 		Scanner scanner =  new Scanner(path, StandardCharsets.UTF_8.name());
 		while (scanner.hasNextLine() && status != ParserStatus.END) {
 			String rawLine = scanner.nextLine().trim().replaceAll("\\s", " ");
 			String uncommentedLine = StringUtils.substringBefore(rawLine, "#");
 			
 			if (uncommentedLine != null && !uncommentedLine.isEmpty()) {
-				processLine(uncommentedLine);
+				processLine(uncommentedLine, folder);
 			}
 		}
 		applyProperties();
@@ -68,7 +70,7 @@ public class SceneParser {
 		return globalIdentifiers;
 	}
 	
-	private void processLine(final String line) throws IOException, ParseException {
+	private void processLine(final String line, final String folder) throws IOException, ParseException {
 		String first = StringUtils.substringBefore(line, " ");
 		
 		if (first.charAt(0) == '"') { // Is a property
@@ -76,7 +78,7 @@ public class SceneParser {
 		}
 		else if (Character.isUpperCase(first.charAt(0))) { // Is an attribute
 			applyProperties();
-			processAttribute(first, StringUtils.substringAfter(line, " ").split("\\s"));
+			processAttribute(first, StringUtils.substringAfter(line, " ").split("\\s"), folder);
 		}
 	}
 	
@@ -101,7 +103,7 @@ public class SceneParser {
 		}
 	}
 	
-	private void processAttribute(final String attribute, final String[] args) throws IOException, ParseException {
+	private void processAttribute(final String attribute, final String[] args, final String folder) throws IOException, ParseException {
 		// First, check if we're dealing with an Identifier
 		IdentifierType identifierType = Identifier.getByName(attribute);
 		if (identifierType != null) {
@@ -182,7 +184,14 @@ public class SceneParser {
 			status = ParserStatus.END;
 		}
 		else if (attribute.equals("Include")) {
-			String path = StringUtils.substringBetween(args[0], "\"");
+			String path = null;
+			String file = StringUtils.substringBetween(args[0], "\"");
+			if (StringUtils.isEmpty(folder)) {
+				path = file;
+			}
+			else {
+				path = folder + File.separator + file;
+			}
 			parseFile(path);
 		}
 	}

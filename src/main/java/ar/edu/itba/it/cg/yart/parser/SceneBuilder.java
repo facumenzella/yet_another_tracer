@@ -192,7 +192,7 @@ public class SceneBuilder {
 			for (int i : ind) {
 				indices.add(i);
 			}
-			instance.applyTransformation(localMatrix);
+			instance = new Instance(new Mesh(vertices, normals, indices, true));
 		}
 		
 		instance.setMaterial(currentMaterial);
@@ -206,11 +206,13 @@ public class SceneBuilder {
 		
 		String type = identifier.getParameters()[0];
 		
+		double gain = identifier.getDouble("gain", 1.0f);
+		
 		if (type.equals("point")) {
-			Vector3d from = identifier.getVector("from", new Vector3d(0,0,0));
+			Point3d from = identifier.getPoint("from", new Point3d(0,0,0));
 			Color l = identifier.getColor("l", Color.whiteColor());
-			double power = identifier.getDouble("power", 100);
-			PointLight light = new PointLight(power, l, from);
+			PointLight light = new PointLight(gain, l, new Vector3d(from.x, from.y, from.z));
+			light.applyTransformation(transformMatrices.peek());
 			ret = light;
 		}
 		else if (type.equals("distant")) {
