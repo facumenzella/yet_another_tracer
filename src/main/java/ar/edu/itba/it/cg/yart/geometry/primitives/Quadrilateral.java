@@ -39,6 +39,7 @@ public class Quadrilateral extends GeometricObject {
 		this.corner = corner;
 		this.sideA = sideA;
 		this.sideB = sideB;
+		this.normal = sideA.cross(sideB).normalizedVector();
 		sideAlenghtSquared = sideA.length * sideA.length;
 		sideBlenghtSquared = sideB.length * sideB.length;
 		updateBoundingBox();
