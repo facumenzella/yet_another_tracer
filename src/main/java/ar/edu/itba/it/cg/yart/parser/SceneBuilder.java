@@ -76,9 +76,9 @@ public class SceneBuilder {
 				case LOOKAT:
 					String[] params = i.getParameters();
 					raytracer.setViewParameters(
-							new Point3d(Double.valueOf(params[0]), Double.valueOf(params[2]), Double.valueOf(params[1])),
-							new Point3d(Double.valueOf(params[3]), Double.valueOf(params[5]), Double.valueOf(params[4])),
-							new Vector3d(Double.valueOf(params[6]), Double.valueOf(params[8]), Double.valueOf(params[7])));
+							new Point3d(Double.valueOf(params[0]), Double.valueOf(params[2]), -Double.valueOf(params[1])),
+							new Point3d(Double.valueOf(params[3]), Double.valueOf(params[5]), -Double.valueOf(params[4])),
+							new Vector3d(Double.valueOf(params[6]), Double.valueOf(params[8]), -Double.valueOf(params[7])));
 					break;
 				}
 			}
@@ -144,7 +144,7 @@ public class SceneBuilder {
 		if (type.equals("matte")) {
 			Matte mat = new Matte();
 			mat.setCd(identifier.getProperty("Kd").getColor());
-			mat.setKd(0.50);
+			mat.setKd(1);
 			mat.setKa(0.15);
 			ret = mat;
 		}
