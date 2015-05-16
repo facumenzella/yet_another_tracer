@@ -11,11 +11,13 @@ public class RectangularMapping extends Mapping{
 			Point coordinates) {
 		
 		int column, row;
-		final double u = (localHitPoint.z + 1)/2;
-		final double v = (localHitPoint.x + 1)/2;
+
+		final double u = localHitPoint.y;
+		final double v = localHitPoint.x;
+		
 		column = (int) ((vres - 1)*u);
 		row = (int) ((hres - 1)*v);
 		coordinates.setLocation(row, column);
 	}
 	
-}
+}	
