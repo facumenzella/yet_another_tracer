@@ -64,30 +64,36 @@ public class Phong extends MaterialAbstract {
 		return colorL;
 	}
 
-	public void setKa(final double ka) {
+	public Phong setKa(final double ka) {
 		ambientBRDF.setKd(ka);
+		return this;
 	}
 
-	public void setKd(final double kd) {
+	public Phong setKd(final double kd) {
 		diffuseBRDF.setKd(kd);
+		return this;
 	}
 
-	public void setKs(final double ks) {
+	public Phong setKs(final double ks) {
 		specularBRDF.setKs(ks);
+		return this;
 	}
 
-	public void setCd(final Color cd) {
+	public Phong setCd(final Color cd) {
 		final Texture texture = new ConstantColor(cd);
 		setCd(texture);
+		return this;
 	}
 
-	public void setCd(final Texture cd) {
+	public Phong setCd(final Texture cd) {
 		ambientBRDF.setCd(cd);
 		diffuseBRDF.setCd(cd);
+		return this;
 	}
 
-	public void setExp(final double exp) {
+	public Phong setExp(final double exp) {
 		specularBRDF.setExp(exp);
+		return this;
 	}
 
 }

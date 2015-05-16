@@ -60,22 +60,26 @@ public class Matte extends MaterialAbstract {
 		return colorL;
 	}
 
-	public void setKa(final double ka) {
+	public Matte setKa(final double ka) {
 		ambientBRDF.setKd(ka);
+		return this;
 	}
 
-	public void setKd(final double kd) {
+	public Matte setKd(final double kd) {
 		diffuseBRDF.setKd(kd);
+		return this;
 	}
 
-	public void setCd(final Color cd) {
+	public Matte setCd(final Color cd) {
 		final Texture texture = new ConstantColor(cd);
 		setCd(texture);
+		return this;
 	}
 
-	public void setCd(final Texture cd) {
+	public Matte setCd(final Texture cd) {
 		ambientBRDF.setCd(cd);
 		diffuseBRDF.setCd(cd);
+		return this;
 	}
 
 }

@@ -16,17 +16,20 @@ public class Reflective extends Phong {
 	private final ColorTracer tracer = new SimpleColorTracer();
 	
 	
-	public void setCr(final Texture cr) {
+	public Reflective setCr(final Texture cr) {
 		reflectiveBRDF.setCr(cr);
+		return this;
 	}
 
-	public void setCr(final Color color) {
+	public Reflective setCr(final Color color) {
 		final Texture texture = new ConstantColor(color);
 		setCr(texture);
+		return this;
 	}
 
-	public void setKr(final double kr) {
+	public Reflective setKr(final double kr) {
 		reflectiveBRDF.setKr(kr);
+		return this;
 	}
 
 	@Override
