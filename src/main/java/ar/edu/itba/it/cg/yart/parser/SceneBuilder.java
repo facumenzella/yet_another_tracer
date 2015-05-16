@@ -44,6 +44,11 @@ public class SceneBuilder {
 	
 	private final Sphere referenceSphere = new Sphere();
 	private final Plane referencePlane = new Plane();
+	private final Material defaultMaterial;
+	
+	public SceneBuilder() {
+		defaultMaterial = new Matte().setCd(new Color(0.75, 0.75, 0.75)).setKd(0.5).setKa(0.15);
+	}
 	
 	public void buildRayTracer(final RayTracer raytracer, final SceneParser parser) {
 		reset();
@@ -165,6 +170,10 @@ public class SceneBuilder {
 			mat.setKt(0.2);
 			ret = mat;
 		}
+		else {
+			// TODO Material not recognized, load default
+			ret = defaultMaterial;
+		}
 		
 		return ret;
 	}
@@ -192,7 +201,18 @@ public class SceneBuilder {
 			for (int i : ind) {
 				indices.add(i);
 			}
-			instance = new Instance(new Mesh(vertices, normals, indices, true));
+			Mesh mesh = new Mesh(vertices, normals, indices, true);
+			instance = new Instance(mesh);
+			if (currentMaterial == null) {
+				// TODO Material not set, loading default
+				currentMaterial = defaultMaterial;
+			}
+			mesh.setMaterial(currentMaterial);
+		}
+		
+		if (currentMaterial == null) {
+			// TODO Material not set, loading default
+			currentMaterial = defaultMaterial;
 		}
 		
 		instance.setMaterial(currentMaterial);
