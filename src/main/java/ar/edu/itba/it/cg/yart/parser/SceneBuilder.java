@@ -218,8 +218,8 @@ public class SceneBuilder {
 			localMatrix = localMatrix.scale(radius, radius, radius);
 		}
 		else if (strType.equals("plane")) {
-			Vector3d normal = identifier.getNormal("n", new Vector3d(0, 1, 0));
-			instance = new Instance(referencePlane);
+			Vector3d normal = identifier.getNormal("n", new Vector3d(0, 1, 0)).normalizedVector();
+			instance = new Instance(new Plane(new Point3d(0, 0, 0), normal));
 		}
 		else if (strType.equals("mesh")) {
 			int[] ind = identifier.getIntegers("triindices", null);
