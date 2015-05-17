@@ -22,6 +22,7 @@ import ar.edu.itba.it.cg.yart.light.Light;
 import ar.edu.itba.it.cg.yart.light.PointLight;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.light.materials.Matte;
+import ar.edu.itba.it.cg.yart.light.materials.Phong;
 import ar.edu.itba.it.cg.yart.light.materials.Reflective;
 import ar.edu.itba.it.cg.yart.light.materials.Transparent;
 import ar.edu.itba.it.cg.yart.parser.Identifier.IdentifierType;
@@ -143,31 +144,59 @@ public class SceneBuilder {
 		
 		if (type.equals("matte")) {
 			Matte mat = new Matte();
-			mat.setCd(identifier.getProperty("Kd").getColor());
+			mat.setCd(identifier.getColor("Kd", Color.whiteColor()));
 			mat.setKd(1);
 			mat.setKa(0.15);
 			ret = mat;
 		}
 		else if (type.equals("mirror")) {
+			Color cKr = identifier.getColor("Kr", Color.whiteColor());
+			double dKr = (cKr.r + cKr.g + cKr.b) / 3;
+			
 			Reflective mat = new Reflective();
-			mat.setCd(identifier.getProperty("Kr").getColor());
+			mat.setCd(cKr);
 			mat.setKd(0.75);
-			mat.setKs(0.3);
+			mat.setKs(0.2);
 			mat.setKa(0.3);
-			mat.setExp(20);
-			mat.setCr(identifier.getProperty("Kr").getColor());
-			mat.setKr(1);
+			mat.setExp(25);
+			mat.setCr(cKr);
+			mat.setKr(dKr);
 			ret = mat;
 		}
 		else if (type.equals("glass")) {
+			Color cKt = identifier.getColor("Kt", Color.whiteColor());
+			Color cKr = identifier.getColor("Kt", Color.whiteColor());
+			
+			double dKt = (cKt.r + cKt.g + cKt.b) / 3;
+			double dKr = (cKr.r + cKr.g + cKr.b) / 3;
+			
 			Transparent mat = new Transparent();
 			mat.setCd(Color.blueColor());
 			mat.setKs(0.5);
 			mat.setExp(1000);
 			mat.setCr(Color.whiteColor());
-			mat.setKr(0.5);
-			mat.setIor(2);
-			mat.setKt(0.2);
+			mat.setKr(dKr);
+			mat.setIor(identifier.getDouble("index", 1.5));
+			mat.setKt(dKt);
+			ret = mat;
+		}
+		else if (type.equals("metal2")) {
+			double uroughness = identifier.getDouble("uroughness", 0.001);
+			double vroughness = identifier.getDouble("vroughness", 0.001);
+			double finalRoughness = Math.max(uroughness, vroughness);
+			
+			if (finalRoughness <= 0) {
+				finalRoughness = 0.001;
+			}
+			
+			double exponent = 1 / finalRoughness;
+			
+			Phong mat = new Phong();
+			mat.setCd(identifier.getColor("Kr", Color.whiteColor()));
+			mat.setKd(1);
+			mat.setKa(0.15);
+			mat.setExp(exponent);
+			mat.setKs(1 - finalRoughness);
 			ret = mat;
 		}
 		else {
@@ -217,7 +246,7 @@ public class SceneBuilder {
 		
 		instance.setMaterial(currentMaterial);
 		Matrix4d matrix = transformMatrices.peek();
-		instance.applyTransformation(localMatrix.rightMultiply(matrix));
+		instance.applyTransformation(localMatrix.leftMultiply(matrix));
 		return instance;
 	}
 	
@@ -288,8 +317,8 @@ public class SceneBuilder {
 		final double m31 = Double.valueOf(identifier.getParameters()[7]);
 		
 		final double m03 = Double.valueOf(identifier.getParameters()[12]);
-		final double m13 = Double.valueOf(identifier.getParameters()[13]);
-		final double m23 = Double.valueOf(identifier.getParameters()[14]);
+		final double m13 = Double.valueOf(identifier.getParameters()[14]);
+		final double m23 = -Double.valueOf(identifier.getParameters()[13]);
 		final double m33 = Double.valueOf(identifier.getParameters()[15]);
 		
 		return new Matrix4d(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
