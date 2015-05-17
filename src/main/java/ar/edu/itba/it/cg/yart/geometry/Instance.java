@@ -13,6 +13,9 @@ public class Instance extends GeometricObject{
 
 	public Instance(final GeometricObject object) {
 		this.object = object;
+		this.matrix = new Matrix4d();
+		this.invMatrix = this.matrix.inverse();
+		this.transposedInvMatrix = this.invMatrix.transpose();
 	}
 	
 	@Override
