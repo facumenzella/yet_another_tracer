@@ -121,10 +121,4 @@ public class SmoothMeshTriangle extends MeshTriangle{
 		return n0.inmutableCopy();
 	}
 
-	@Override
-	public void applyTransformation(Matrix4d matrix) {
-		// TODO Auto-generated method stub
-		
-	}
-
 }

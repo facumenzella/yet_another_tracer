@@ -13,7 +13,6 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleColorTracer;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleHitTracer;
 
 public class Mesh extends GeometricObject {
@@ -148,13 +147,31 @@ public class Mesh extends GeometricObject {
 		if (!getBoundingBox().hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}
-		tree.traceRay(ray, new SimpleColorTracer(), sr);
-		return sr.t;
+		double tMin = Double.POSITIVE_INFINITY;
+		boolean hit = false;
+		Vector3d normal = null;
+		Point3d localHitPoint = null;
+		for (int i = 0; i < triangles.size(); i++) {
+			GeometricObject object = triangles.get(i);
+			double t = object.hit(ray, sr);
+			if (t != Double.NEGATIVE_INFINITY && t < tMin) {
+				tMin = t;
+				normal = sr.normal;
+				localHitPoint = sr.localHitPoint;
+				hit = true;
+			}
+		}
+		if (hit) {
+			sr.normal = normal;
+			sr.localHitPoint = localHitPoint;
+			return tMin;
+		}
+		return Double.NEGATIVE_INFINITY;
 	}
 
 	@Override
 	public double shadowHit(Ray ray) {
 		return tree.traceRayHit(ray, new SimpleHitTracer());
 	}	
-
+	
 }
