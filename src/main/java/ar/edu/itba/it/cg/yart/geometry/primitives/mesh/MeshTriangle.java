@@ -17,11 +17,11 @@ public abstract class MeshTriangle extends GeometricObject {
 	protected double area;
 	
 	public MeshTriangle(final int index0, final int index1, final int index2, final Mesh mesh, final boolean reverse) {
-		// triangles should be counter-sclockwise
+		// triangles should be counter-clockwise
 		this.index0 = index0;
 		this.index1 = index1;
 		this.index2 = index2;
-		this.mesh = mesh;
+		this.mesh = mesh;	
 		this.computeNormal(reverse);
 	}
 	
@@ -29,7 +29,7 @@ public abstract class MeshTriangle extends GeometricObject {
 		normal = (mesh.vertices.get(index1).sub(mesh.vertices.get(index0))).cross((mesh.vertices.get(index2).sub(mesh.vertices.get(index0))));
 		normal = normal.normalizedVector();
 		
-		if (reverse)
+		if (true)
 			normal = normal.inverse();
 	}
 	

@@ -13,7 +13,6 @@ public class Instance extends GeometricObject{
 
 	public Instance(final GeometricObject object) {
 		this.object = object;
-		this.matrix = new Matrix4d();
 	}
 	
 	@Override
@@ -40,7 +39,7 @@ public class Instance extends GeometricObject{
 		}
 		
 		if (!transformTexture) {
-			// TODO check it out
+			sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
 		}
 		return t;
 	}
