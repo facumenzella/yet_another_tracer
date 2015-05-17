@@ -13,6 +13,7 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.ColorTracer;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.HitTracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.ShadowTracer;
 
 public class BSPAxisAligned {
 
@@ -377,18 +378,18 @@ public class BSPAxisAligned {
 		return bestCandidate;
 	}
 	
-	public double traceRayHit(final Ray ray, final HitTracer tracer) {
+	public double traceShadowHit(final Ray ray, final ShadowTracer tracer) {
 		// Point3 origin = new Point3(0, 0, 200);
 		// Point3 hitP = new Point3(-45,-10,20);
 		// Ray aRay = new Ray(origin, hitP.sub(origin));
-		return p_traceObjectsForRayHit(ray, root, tMin, tMax, tracer);
+		return p_traceObjectsForShadowHit(ray, root, tMin, tMax, tracer);
 	}
 	
-	private double p_traceObjectsForRayHit(final Ray ray, final Node node,
-			final double min, final double max, final HitTracer tracer) {
+	private double p_traceObjectsForShadowHit(final Ray ray, final Node node,
+			final double min, final double max, final ShadowTracer tracer) {
 
 		if (node.isLeaf()) {
-			return tracer.traceRayHit(ray, node.getObjects(), max);
+			return tracer.traceShadowHit(ray, node.getObjects(), max);
 		}
 		final double t = node.distanceToSplittingPlane(ray);
 		final Node near = node.nearNode(ray);
@@ -397,18 +398,18 @@ public class BSPAxisAligned {
 		// This is madness !!
 		if (t > max || t < 0) {
 			// its on the near node
-			return p_traceObjectsForRayHit(ray, near, min, max, tracer);
+			return p_traceObjectsForShadowHit(ray, near, min, max, tracer);
 		} else {
 			if (t < min) {
 				// its on the far node
-				return p_traceObjectsForRayHit(ray, far, min, max, tracer);
+				return p_traceObjectsForShadowHit(ray, far, min, max, tracer);
 			} else {
 				// the ray might hit in both nodes, so we split the ray
-				double hit = p_traceObjectsForRayHit(ray, near, min, t, tracer);
+				double hit = p_traceObjectsForShadowHit(ray, near, min, t, tracer);
 				if (t != Double.NEGATIVE_INFINITY) {
 					return hit;
 				}
-				return p_traceObjectsForRayHit(ray, far, t, max, tracer);
+				return p_traceObjectsForShadowHit(ray, far, t, max, tracer);
 			}
 		}
 	}
@@ -448,6 +449,45 @@ public class BSPAxisAligned {
 					return nearColor;
 				}
 				return p_traceObjectsForRay(ray, far, t, max, tracer, sr);
+			}
+		}
+	}
+
+	public double traceRayHit(final Ray ray, final HitTracer tracer, final ShadeRec sr) {
+		return p_traceObjectsForRayHit(ray, root, tMin, tMax, tracer, sr);
+	}
+
+	private double p_traceObjectsForRayHit(final Ray ray, final Node node,
+			final double min, final double max, final HitTracer tracer,
+			final ShadeRec sr) {
+
+		if (node == emptyLeafNode) {
+			return Double.NEGATIVE_INFINITY;
+		}
+		
+		if (node.isLeaf()) {
+			return tracer.traceRayHit(ray, node.getObjects(), sr, max);
+		}
+		final double t = node.distanceToSplittingPlane(ray);
+		final Node near = node.nearNode(ray);
+		final Node far = node.farNode(near);
+
+		// This is madness !!
+		if (t > max || t < 0) {
+			// its on the near node
+			return p_traceObjectsForRayHit(ray, near, min, max, tracer, sr);
+		} else {
+			if (t < min) {
+				// its on the far node
+				return p_traceObjectsForRayHit(ray, far, min, max, tracer, sr);
+			} else {
+				// the ray might hit in both nodes, so we split the ray
+				double distance = p_traceObjectsForRayHit(ray, near, min, t,
+						tracer, sr);
+				if (distance != Double.NEGATIVE_INFINITY) {
+					return distance;
+				}
+				return p_traceObjectsForRayHit(ray, far, t, max, tracer, sr);
 			}
 		}
 	}

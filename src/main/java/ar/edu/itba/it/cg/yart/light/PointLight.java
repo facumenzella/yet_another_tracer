@@ -5,8 +5,8 @@ import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.HitTracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleHitTracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.ShadowTracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleShadowTracer;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class PointLight extends AbstractLight {
@@ -15,7 +15,7 @@ public class PointLight extends AbstractLight {
 	private final Color color;
 	private Vector3d location;
 	private final Point3d point;
-	private final HitTracer tracer;
+	private final ShadowTracer tracer;
 
 	private Color L;
 	
@@ -26,7 +26,7 @@ public class PointLight extends AbstractLight {
 		this.color = color;
 		this.location = location;
 		this.point = new Point3d(location.x, location.y, location.z);
-		this.tracer = new SimpleHitTracer();
+		this.tracer = new SimpleShadowTracer();
 		this.L = this.mL(null);
 	}
 
@@ -49,7 +49,7 @@ public class PointLight extends AbstractLight {
 		double t;
 		final double d = point.distance(ray.origin);
 
-		t = sr.world.getTree().traceRayHit(ray, tracer);
+		t = sr.world.getTree().traceShadowHit(ray, tracer);
 		if (t != Double.NEGATIVE_INFINITY && t < d) {
 			return true;
 		}

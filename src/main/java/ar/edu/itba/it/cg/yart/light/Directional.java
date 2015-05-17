@@ -4,8 +4,8 @@ import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.HitTracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleHitTracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.ShadowTracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleShadowTracer;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class Directional extends AbstractLight{
@@ -13,7 +13,7 @@ public class Directional extends AbstractLight{
 	private final double ls;
 	private final Color color;
 	private Vector3d dir;
-	private final HitTracer tracer;
+	private final ShadowTracer tracer;
 	
 	private Color L;
 	
@@ -22,7 +22,7 @@ public class Directional extends AbstractLight{
 		this.ls = ls;
 		this.color = color;
 		this.dir = direction.normalizedVector();
-		this.tracer = new SimpleHitTracer();
+		this.tracer = new SimpleShadowTracer();
 		this.L = this.mL(null);
 	}
 	
@@ -43,7 +43,7 @@ public class Directional extends AbstractLight{
 	@Override
 	public boolean inShadow(Ray ray, ShadeRec sr) {
 		double t;		
-		t = sr.world.getTree().traceRayHit(ray, tracer);
+		t = sr.world.getTree().traceShadowHit(ray, tracer);
 		if(t != Double.NEGATIVE_INFINITY) {
 				return true;
 		}

@@ -13,7 +13,10 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.HitTracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.ShadowTracer;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleHitTracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleShadowTracer;
 
 public class Mesh extends GeometricObject {
 
@@ -37,9 +40,16 @@ public class Mesh extends GeometricObject {
 
 	int verticesAmount;
 	int trianglesAmount;
+	
+	private HitTracer hitTracer;
+	private ShadowTracer shadowTracer;
+	
 
 	public Mesh(final List<Point3d> vertices, final List<Vector3d> normals,
 			final List<Integer> indices, final boolean needsSmoothing) {
+		this.hitTracer = new SimpleHitTracer();
+		this.shadowTracer = new SimpleShadowTracer();
+		
 		this.vertices = vertices;
 		this.normals = normals;
 		this.indices = indices;
@@ -71,9 +81,9 @@ public class Mesh extends GeometricObject {
 			}
 			MeshTriangle t;
 			if (needsSmoothing) {
-				t = new SmoothMeshTriangle(v1, v2, v3, this, false);
+				t = new SmoothMeshTriangle(v1, v2, v3, this, true);
 			} else {
-				t = new FlatMeshTriangle(v1, v2, v3, this, false);
+				t = new FlatMeshTriangle(v1, v2, v3, this, true);
 			}
 
 			facesV1.add(t);
@@ -147,31 +157,12 @@ public class Mesh extends GeometricObject {
 		if (!getBoundingBox().hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}
-		double tMin = Double.POSITIVE_INFINITY;
-		boolean hit = false;
-		Vector3d normal = null;
-		Point3d localHitPoint = null;
-		for (int i = 0; i < triangles.size(); i++) {
-			GeometricObject object = triangles.get(i);
-			double t = object.hit(ray, sr);
-			if (t != Double.NEGATIVE_INFINITY && t < tMin) {
-				tMin = t;
-				normal = sr.normal;
-				localHitPoint = sr.localHitPoint;
-				hit = true;
-			}
-		}
-		if (hit) {
-			sr.normal = normal;
-			sr.localHitPoint = localHitPoint;
-			return tMin;
-		}
-		return Double.NEGATIVE_INFINITY;
+		return tree.traceRayHit(ray, this.hitTracer, sr);
 	}
 
 	@Override
 	public double shadowHit(Ray ray) {
-		return tree.traceRayHit(ray, new SimpleHitTracer());
+		return tree.traceShadowHit(ray, this.shadowTracer);
 	}	
 	
 }
