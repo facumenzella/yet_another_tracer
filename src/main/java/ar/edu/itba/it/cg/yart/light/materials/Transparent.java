@@ -17,6 +17,38 @@ public class Transparent extends Phong {
 	private final PerfectTransmitter specularBTDF = new PerfectTransmitter();
 	private final ColorTracer tracer = new SimpleColorTracer();
 
+	
+	
+	public Transparent setKa(final double ka) {
+		super.setKa(ka);
+		return this;
+	}
+
+	public Transparent setKd(final double kd) {
+		super.setKd(kd);
+		return this;
+	}
+
+	public Transparent setKs(final double ks) {
+		super.setKs(ks);
+		return this;
+	}
+
+	public Transparent setCd(final Color cd) {
+		super.setCd(cd);
+		return this;
+	}
+
+	public Transparent setCd(final Texture cd) {
+		super.setCd(cd);
+		return this;
+	}
+
+	public Transparent setExp(final double exp) {
+		super.setExp(exp);
+		return this;
+	}
+	
 	public Transparent setCr(final Color color) {
 		final Texture cr = new ConstantColor(color);
 		setCr(cr);
