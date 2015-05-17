@@ -15,7 +15,35 @@ public class Reflective extends Phong {
 	private final PerfectSpecular reflectiveBRDF = new PerfectSpecular();
 	private final ColorTracer tracer = new SimpleColorTracer();
 	
-	
+	public Reflective setKa(final double ka) {
+		super.setKa(ka);
+		return this;
+	}
+
+	public Reflective setKd(final double kd) {
+		super.setKd(kd);
+		return this;
+	}
+
+	public Reflective setKs(final double ks) {
+		super.setKs(ks);
+		return this;
+	}
+
+	public Reflective setCd(final Color cd) {
+		super.setCd(cd);
+		return this;
+	}
+
+	public Reflective setCd(final Texture cd) {
+		super.setCd(cd);
+		return this;
+	}
+
+	public Reflective setExp(final double exp) {
+		super.setExp(exp);
+		return this;
+	}
 	public Reflective setCr(final Texture cr) {
 		reflectiveBRDF.setCr(cr);
 		return this;
