@@ -41,9 +41,9 @@ public class Instance extends GeometricObject{
 			this.material = object.material;
 		}
 		
-		if (!transformTexture) {
-			sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
-		}
+//		if (!transformTexture) {
+//			sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
+//		}
 		return t;
 	}
 
