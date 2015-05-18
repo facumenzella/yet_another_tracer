@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.parser;
 
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,6 +31,7 @@ import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
+import ar.edu.itba.it.cg.yart.textures.Texture;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class SceneBuilder {
@@ -39,6 +41,7 @@ public class SceneBuilder {
 	private RayTracer raytracer;
 	private SceneParser parser;
 	
+	private Map<String, Texture> textures = new HashMap<String, Texture>();
 	private Map<String, Material> namedMaterials = new HashMap<String, Material>();
 	private Material currentMaterial;
 	
@@ -148,6 +151,9 @@ public class SceneBuilder {
 					case MAKE_NAMED_MATERIAL:
 						addNamedMaterial(i);
 						break;
+					case TEXTURE:
+						buildTexture(i);
+						break;
 					case IDENTITY:
 						transformMatrices.pop();
 						transformMatrices.push(new Matrix4d());
@@ -248,6 +254,35 @@ public class SceneBuilder {
 		else {
 			// TODO Material not recognized, load default
 			ret = defaultMaterial;
+		}
+		
+		return ret;
+	}
+	
+	private Texture buildTexture(final Identifier identifier) throws IOException {
+		Texture ret = null;
+		final String[] args = identifier.getParameters();
+		
+		if (args.length >= 3) {
+			final String name = args[0];
+			final String color = args[1];
+			final String type = args[2];
+			
+			if (!color.equalsIgnoreCase("color")) {
+				// TODO We only support color right now, fire some warning, but carry on
+			}
+			
+			if (!type.equalsIgnoreCase("imagemap")) {
+				// TODO We only support imagemaps, fire some warning
+				if (!identifier.hasProperty("filename")) {
+					// TODO Missing filename
+					return null;
+				}
+				else if (!identifier.hasProperty("wrap")) {
+					// TODO Missing wrap type
+					return null;
+				}
+			}
 		}
 		
 		return ret;
