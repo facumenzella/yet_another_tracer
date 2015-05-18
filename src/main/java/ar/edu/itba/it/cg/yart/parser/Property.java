@@ -14,6 +14,7 @@ public class Property {
 		VECTOR("vector"),
 		NORMAL("normal"),
 		COLOR("color"),
+		TEXTURE("texture"),
 		BOOL("bool"),
 		STRING("string");
 		

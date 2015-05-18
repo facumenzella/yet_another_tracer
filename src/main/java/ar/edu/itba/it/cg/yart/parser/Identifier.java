@@ -8,6 +8,7 @@ import java.util.Map;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
+import ar.edu.itba.it.cg.yart.parser.Property.PropertyType;
 
 public class Identifier {
 
@@ -102,6 +103,14 @@ public class Identifier {
 	
 	public boolean hasProperty(final String propertyName) {
 		return properties != null && properties.containsKey(propertyName.toUpperCase(Locale.US));
+	}
+	
+	public PropertyType getPropertyType(final String propertyName) {
+		if (hasProperty(propertyName)) {
+			return getProperty(propertyName).getType();
+		}
+		
+		return null;
 	}
 	
 	public boolean getBoolean(final String propertyName, boolean defaultValue) {
