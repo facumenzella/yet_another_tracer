@@ -14,23 +14,21 @@ public class Box extends GeometricObject {
 
 	private Point3d topCorner;
 	private Point3d bottomCorner;
-	private double width;
-	private double height;
-	private double depth;
+
 	private List<GeometricObject> faces = new ArrayList<GeometricObject>();
 
 	public Box() {
-		initialize(1, 1, 1);
+		this(1, 1, 1);
 	}
 
 	public Box(final double width, final double height, final double depth) {
+		this.topCorner = new Point3d(width, height, depth);
+		this.bottomCorner = new Point3d(-width, -height, -depth);
 		initialize(width, height, depth);
 	}
 
 	private void initialize(final double width, final double height,
 			final double depth) {
-		this.topCorner = new Point3d(width, height, depth);
-		this.bottomCorner = new Point3d(-width, -height, -depth);
 
 		final Vector3d widthTopVector = new Vector3d(-2 * width, 0, 0);
 		final Vector3d heightTopVector = new Vector3d(0, -2 * height, 0);
