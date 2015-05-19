@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ar.edu.itba.it.cg.yart.acceleration_estructures.BSPAxisAligned;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.YAFKDTree;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
