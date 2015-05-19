@@ -2,7 +2,7 @@ package ar.edu.itba.it.cg.yart.acceleration_estructures;
 
 import java.util.List;
 
-import ar.edu.itba.it.cg.yart.geometry.primitives.BoundingBox;
+import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Plane;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
@@ -11,18 +11,18 @@ abstract class AbstractNode implements Node {
 
 	protected Node left;
 	protected Node right;
-	private BoundingBox box;
+	private AABB box;
 	private List<GeometricObject> objects;
 	protected Plane splittingPlane;
 	protected double splitPoint;
 
-	public AbstractNode(final BoundingBox box, final List<GeometricObject> objects, final double splitPoint) {
+	public AbstractNode(final AABB box, final List<GeometricObject> objects, final double splitPoint) {
 		this.box = box;
 		this.objects = objects;
 		this.splitPoint = splitPoint;
 	}
 	
-	public BoundingBox getBoundingBox() {
+	public AABB getBoundingBox() {
 		return this.box;
 	}
 

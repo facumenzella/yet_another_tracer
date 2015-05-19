@@ -46,7 +46,7 @@ public class Plane extends GeometricObject {
 	}
 
 	@Override
-	public BoundingBox createBoundingBox() {
+	public AABB createBoundingBox() {
 		return null;
 	}
 	

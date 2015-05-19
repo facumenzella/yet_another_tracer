@@ -6,7 +6,6 @@ import java.util.List;
 import ar.edu.itba.it.cg.yart.geometry.Instance;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
-import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
@@ -64,8 +63,8 @@ public class Box extends GeometricObject {
 	}
 
 	@Override
-	public BoundingBox createBoundingBox() {
-		return new BoundingBox(topCorner, bottomCorner);
+	public AABB createBoundingBox() {
+		return new AABB(topCorner, bottomCorner);
 	}
 
 	@Override

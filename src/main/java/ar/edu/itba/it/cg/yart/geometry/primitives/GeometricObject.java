@@ -12,7 +12,7 @@ public abstract class GeometricObject implements Transformable{
 	protected static final double EPSILON = 0.0001;
 	public Color color;
 	public Material  material;
-	private BoundingBox boundingBox;	
+	private AABB boundingBox;	
 	
 	public Matrix4d matrix;
 	public Matrix4d invMatrix;
@@ -32,7 +32,7 @@ public abstract class GeometricObject implements Transformable{
 		this.material = material;
 	}
 	
-	public BoundingBox getBoundingBox() {
+	public AABB getBoundingBox() {
 		return boundingBox;
 	}
 	
@@ -47,7 +47,7 @@ public abstract class GeometricObject implements Transformable{
 		this.transposedInvMatrix = this.invMatrix.transpose();
 	}
 	
-	public abstract BoundingBox createBoundingBox();
+	public abstract AABB createBoundingBox();
 	public abstract double hit(final Ray ray, final ShadeRec sr);
 	public abstract double shadowHit(final Ray ray);
 }

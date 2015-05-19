@@ -8,7 +8,7 @@ import java.util.Map;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.BSPAxisAligned;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
-import ar.edu.itba.it.cg.yart.geometry.primitives.BoundingBox;
+import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
@@ -110,7 +110,7 @@ public class Mesh extends GeometricObject {
 	}
 
 	private void addTriangle(final MeshTriangle t) {
-		BoundingBox b = t.getBoundingBox();
+		AABB b = t.getBoundingBox();
 
 		minX = Math.min(minX, b.p0.x);
 		minZ = Math.min(minZ, b.p0.z);
@@ -147,8 +147,8 @@ public class Mesh extends GeometricObject {
 	}
 
 	@Override
-	public BoundingBox createBoundingBox() {
-		return new BoundingBox(new Point3d(minX, minY, minZ), new Point3d(maxX,
+	public AABB createBoundingBox() {
+		return new AABB(new Point3d(minX, minY, minZ), new Point3d(maxX,
 				maxY, maxZ));
 	}
 
