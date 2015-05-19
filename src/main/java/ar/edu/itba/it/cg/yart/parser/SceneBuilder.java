@@ -47,6 +47,11 @@ public class SceneBuilder {
 	private final Plane referencePlane = new Plane();
 	private final Material defaultMaterial;
 	
+	private static Matrix4d converseMatrix = new Matrix4d(-1, 0, 0, 0, 
+															0, 0, 1, 0, 
+															0, 1, 0, 0, 
+															0, 0, 0, 1);
+
 	public SceneBuilder() {
 		defaultMaterial = new Matte().setCd(new Color(0.75, 0.75, 0.75)).setKd(0.5).setKa(0.15);
 	}
@@ -77,9 +82,9 @@ public class SceneBuilder {
 				case LOOKAT:
 					String[] params = i.getParameters();
 					raytracer.setViewParameters(
-							new Point3d(Double.valueOf(params[0]), Double.valueOf(params[2]), -Double.valueOf(params[1])),
-							new Point3d(Double.valueOf(params[3]), Double.valueOf(params[5]), -Double.valueOf(params[4])),
-							new Vector3d(Double.valueOf(params[6]), Double.valueOf(params[8]), -Double.valueOf(params[7])));
+							new Point3d(Double.valueOf(params[0]), Double.valueOf(params[1]), Double.valueOf(params[2])),
+							new Point3d(Double.valueOf(params[3]), Double.valueOf(params[4]), Double.valueOf(params[5])),
+							new Vector3d(Double.valueOf(params[6]), Double.valueOf(params[7]), Double.valueOf(params[8])));
 					break;
 				}
 			}
@@ -300,29 +305,41 @@ public class SceneBuilder {
 		return ret;
 	}
 	
-	private Matrix4d transform(Identifier identifier) {
-		final double m00 = Double.valueOf(identifier.getParameters()[0]);
-		final double m10 = Double.valueOf(identifier.getParameters()[1]);
-		final double m20 = Double.valueOf(identifier.getParameters()[2]);
-		final double m30 = Double.valueOf(identifier.getParameters()[3]);
-		
-		final double m02 = Double.valueOf(identifier.getParameters()[8]);
-		final double m12 = Double.valueOf(identifier.getParameters()[9]);
-		final double m22 = Double.valueOf(identifier.getParameters()[10]);
-		final double m32 = Double.valueOf(identifier.getParameters()[11]);
-		
-		final double m01 = Double.valueOf(identifier.getParameters()[4]);
-		final double m11 = Double.valueOf(identifier.getParameters()[5]);
-		final double m21 = Double.valueOf(identifier.getParameters()[6]);
-		final double m31 = Double.valueOf(identifier.getParameters()[7]);
-		
-		final double m03 = Double.valueOf(identifier.getParameters()[12]);
-		final double m13 = Double.valueOf(identifier.getParameters()[14]);
-		final double m23 = -Double.valueOf(identifier.getParameters()[13]);
-		final double m33 = Double.valueOf(identifier.getParameters()[15]);
-		
-		return new Matrix4d(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
-	}
+	 private Matrix4d transform(Identifier identifier) {
+         final double m00 = Double.valueOf(identifier.getParameters()[0]);
+         final double m10 = Double.valueOf(identifier.getParameters()[1]);
+         final double m20 = Double.valueOf(identifier.getParameters()[2]);
+         final double m30 = Double.valueOf(identifier.getParameters()[3]);
+        
+         final double m01 = Double.valueOf(identifier.getParameters()[4]);
+         final double m11 = Double.valueOf(identifier.getParameters()[5]);
+         final double m21 = Double.valueOf(identifier.getParameters()[6]);
+         final double m31 = Double.valueOf(identifier.getParameters()[7]);
+        
+         final double m02 = Double.valueOf(identifier.getParameters()[8]);
+         final double m12 = Double.valueOf(identifier.getParameters()[9]);
+         final double m22 = Double.valueOf(identifier.getParameters()[10]);
+         final double m32 = Double.valueOf(identifier.getParameters()[11]);
+         
+         final double m03 = Double.valueOf(identifier.getParameters()[12]);
+         final double m13 = Double.valueOf(identifier.getParameters()[13]);
+         final double m23 = Double.valueOf(identifier.getParameters()[14]);
+         final double m33 = Double.valueOf(identifier.getParameters()[15]);
+        
+         Matrix4d transformMatrix = new Matrix4d(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
+        
+//         transformMatrix = converseMatrix.leftMultiply(transformMatrix).leftMultiply(converseMatrix);
+//         transformMatrix.m01 = transformMatrix.m02;
+//         transformMatrix.m02 = transformMatrix.m01;
+//         transformMatrix.m10 = transformMatrix.m20;
+//         transformMatrix.m20 = transformMatrix.m10;
+//         transformMatrix.m11 = transformMatrix.m22;
+//         transformMatrix.m22 = transformMatrix.m11;
+//         transformMatrix.m12 = transformMatrix.m21;
+//         transformMatrix.m21 = transformMatrix.m12;
+         
+         return transformMatrix;
+ }
 	
 	private Matrix4d rotate(Identifier identifier) {
 		Matrix4d current = transformMatrices.peek();
