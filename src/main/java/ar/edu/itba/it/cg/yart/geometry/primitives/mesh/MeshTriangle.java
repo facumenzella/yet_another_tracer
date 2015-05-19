@@ -46,7 +46,7 @@ public abstract class MeshTriangle extends GeometricObject {
 		double maxY = Math.max(v0.y + EPSILON, Math.max(v1.y, v2.y));
 		double maxZ = Math.max(v0.z + EPSILON, Math.max(v1.z, v2.z));
 
-		return new AABB(new Point3d(minX, minY, minZ), new Point3d(maxX, maxY, maxZ));
+		return new AABB(new Point3d(minX, maxY, minZ), new Point3d(maxX, minY, maxZ));
 	}
 
 }
