@@ -18,8 +18,7 @@ public class Plane extends GeometricObject {
 	}
 	
 	public Plane() {
-		this.p = new Point3d(0, 0, 0);
-		this.normal = new Normal3d(0, 1, 0);
+		this(new Point3d(0, 0, 0), new Normal3d(0, 0, 1));
 	}
 
 	@Override
