@@ -37,13 +37,10 @@ public class Instance extends GeometricObject{
 			sr.normal = sr.normal.transformByMatrix(transposedInvMatrix).normalizedVector();
 		}
 		
-		if (object.material != null) {
-			this.material = object.material;
-		}
-		
 //		if (!transformTexture) {
 //			sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
 //		}
+
 		return t;
 	}
 

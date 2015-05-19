@@ -30,7 +30,7 @@ public class BSPAxisAligned {
 	
 	private final LeafNode emptyLeafNode;
 
-	private static final int DEPTH = 10;
+	private static final int DEPTH = 40;
 	protected static final double EPSILON = 0.00001;
 
 	public BSPAxisAligned(final double minX, final double maxX, final double minY, final double maxY, 
