@@ -22,7 +22,7 @@ public class YAFKDTree {
 
 	private static double kKT = 1.5;
 	private static double kKI = 1;
-	private static int kMAX_DEPTH = 2;
+	private static int kMAX_DEPTH = 5;
 	private double kEPSILON = 0.00001;;
 	private double kTMAX = 1000;
 
@@ -36,12 +36,14 @@ public class YAFKDTree {
 
 
 	public YAFKDTree(final List<GeometricObject> gObjects) {
-		final double size = 200;
+		this(gObjects, 200);
+	}
+	
+	public YAFKDTree(final List<GeometricObject> gObjects, final double size) {
 		xCandidates = new HashSet<Double>();
 		yCandidates = new HashSet<Double>();
 		zCandidates = new HashSet<Double>();
-		rootAABB = new AABB(new Point3d(-size, -size, -size), new Point3d(size,
-				size, size));
+		rootAABB = new AABB(new Point3d(-size, size, -size), new Point3d(size, -size, size));
 		this.root = this.buildKDTree(gObjects, rootAABB, SplitAxis.X, 0);
 	}
 
@@ -49,7 +51,7 @@ public class YAFKDTree {
 			final AABB box, final SplitAxis axis, final int currentDepth) {
 		PlaneCandidate bestCandidate = findPlane(gObjects, box, axis);
 		boolean terminate = shouldTerminate(gObjects, bestCandidate.splitPoint.cost);
-		if (currentDepth > kMAX_DEPTH || gObjects.isEmpty()
+		if (currentDepth >= kMAX_DEPTH || gObjects.isEmpty()
 				|| terminate) {
 			if (currentDepth > depth) {
 				depth = currentDepth;
@@ -77,13 +79,11 @@ public class YAFKDTree {
 		switch (p.axis) {
 		case X:
 			leftBox = new AABB(box.p0, new Point3d(p.point, box.p1.y, box.p1.z));
-			rightBox = new AABB(new Point3d(p.point, box.p0.y, box.p0.z),
-					box.p1);
+			rightBox = new AABB(new Point3d(p.point, box.p0.y, box.p0.z), box.p1);
 			break;
 		case Y:
-			leftBox = new AABB(box.p0, new Point3d(box.p1.x, p.point, box.p1.z));
-			rightBox = new AABB(new Point3d(box.p0.x, p.point, box.p0.z),
-					box.p1);
+			leftBox = new AABB(new Point3d(box.p0.x, p.point, box.p0.z), box.p1);
+			rightBox = new AABB(box.p0, new Point3d(box.p1.x, p.point, box.p1.z));
 			break;
 		case Z:
 			leftBox = new AABB(box.p0, new Point3d(box.p1.x, box.p1.y, p.point));
@@ -286,16 +286,11 @@ public class YAFKDTree {
 			} else {
 				if (oBox.intersectsBox(leftBox)) {
 					leftObjects.add(o);
-				} else if (oBox.intersectsBox(rightBox)) {
-					rightObjects.add(o);
-				} else {
-					leftObjects.add(o);
+				}
+				if (oBox.intersectsBox(rightBox)) {
 					rightObjects.add(o);
 				}
 			}
-		}
-		if (leftObjects.size() + rightObjects.size() < objects.size()) {
-			System.out.println("shit");
 		}
 	}
 
@@ -313,7 +308,7 @@ public class YAFKDTree {
 		}
 		
 		double dir[] = {ray.direction.x, ray.direction.y, ray.direction.z};
-		double origin[] = {ray.direction.x, ray.direction.y, ray.direction.z};
+		double origin[] = {ray.origin.x, ray.origin.y, ray.origin.z};
 
 		KDInternalNode internalNode = (KDInternalNode)node;
 		
@@ -322,13 +317,7 @@ public class YAFKDTree {
 		final double rayDirAxis = dir[internalNode.splitPoint.axis.value];
 		final double rayOriginAxis = origin[internalNode.splitPoint.axis.value];
 		
-		if (rayOriginAxis < splitPoint) {
-			near = internalNode.left;
-			far = internalNode.right;
-		} else if (rayOriginAxis > splitPoint){
-			near = internalNode.right;
-			far = internalNode.left;
-		} else if (rayDirAxis < 0) {
+		if (rayOriginAxis <= splitPoint) {
 			near = internalNode.left;
 			far = internalNode.right;
 		} else {
@@ -370,7 +359,7 @@ public class YAFKDTree {
 		}
 		
 		double dir[] = {ray.direction.x, ray.direction.y, ray.direction.z};
-		double origin[] = {ray.direction.x, ray.direction.y, ray.direction.z};
+		double origin[] = {ray.origin.x, ray.origin.y, ray.origin.z};
 
 		KDInternalNode internalNode = (KDInternalNode)node;
 		
@@ -383,12 +372,6 @@ public class YAFKDTree {
 			near = internalNode.left;
 			far = internalNode.right;
 		} else if (rayOriginAxis > splitPoint){
-			near = internalNode.right;
-			far = internalNode.left;
-		} else if (rayDirAxis < 0) {
-			near = internalNode.left;
-			far = internalNode.right;
-		} else {
 			near = internalNode.right;
 			far = internalNode.left;
 		}
@@ -415,6 +398,8 @@ public class YAFKDTree {
 	}
 
 	public double traceRayHit(final Ray ray, final HitTracer tracer, final ShadeRec sr) {
+//		Ray aRay = new Ray(ray.origin);
+//		aRay.direction = new Vector3d(-0.08728748780766624, 0.9920922738068253, -0.09018766392932867);
 		return p_traceObjectsForRayHit(ray, root, kEPSILON, kTMAX, tracer, sr);
 	}
 
@@ -427,7 +412,7 @@ public class YAFKDTree {
 		}
 		
 		double dir[] = {ray.direction.x, ray.direction.y, ray.direction.z};
-		double origin[] = {ray.direction.x, ray.direction.y, ray.direction.z};
+		double origin[] = {ray.origin.x, ray.origin.y, ray.origin.z};
 
 		KDInternalNode internalNode = (KDInternalNode)node;
 		
@@ -440,12 +425,6 @@ public class YAFKDTree {
 			near = internalNode.left;
 			far = internalNode.right;
 		} else if (rayOriginAxis > splitPoint){
-			near = internalNode.right;
-			far = internalNode.left;
-		} else if (rayDirAxis < 0) {
-			near = internalNode.left;
-			far = internalNode.right;
-		} else {
 			near = internalNode.right;
 			far = internalNode.left;
 		}

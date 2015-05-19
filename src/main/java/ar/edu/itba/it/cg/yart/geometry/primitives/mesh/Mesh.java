@@ -101,7 +101,8 @@ public class Mesh extends GeometricObject {
 		this.numTriangles = triangles.size();
 		this.numVertices = vertices.size();
 		this.updateBoundingBox();
-		kdTree = new YAFKDTree(this.triangles);
+		double max = Math.max(maxZ,Math.max(maxY, Math.max(maxX,Math.max(minZ,Math.max(minX,minY)))));
+		kdTree = new YAFKDTree(this.triangles, max);
 
 		if (needsSmoothing) {
 			this.computeMeshNormals();
@@ -147,8 +148,8 @@ public class Mesh extends GeometricObject {
 
 	@Override
 	public AABB createBoundingBox() {
-		return new AABB(new Point3d(minX, minY, minZ), new Point3d(maxX,
-				maxY, maxZ));
+		return new AABB(new Point3d(minX, maxY, minZ), new Point3d(maxX,
+				minY, maxZ));
 	}
 
 	@Override
@@ -156,7 +157,8 @@ public class Mesh extends GeometricObject {
 		if (!getBoundingBox().hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}
-		return kdTree.traceRayHit(ray, this.hitTracer, sr);
+		double t  =  kdTree.traceRayHit(ray, this.hitTracer, sr);
+		return t;
 	}
 
 	@Override
