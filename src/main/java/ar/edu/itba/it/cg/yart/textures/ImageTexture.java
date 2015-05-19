@@ -7,6 +7,7 @@ import java.awt.image.DataBufferByte;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.textures.mapping.Mapping;
+import ar.edu.itba.it.cg.yart.textures.wrappers.Wrapper;
 
 public class ImageTexture extends Texture {
 
@@ -16,15 +17,19 @@ public class ImageTexture extends Texture {
 	private int vres;
 	private Mapping mapping;
 	private boolean hasAlphaChannel;
+	private Wrapper wrapper;
 
-	public ImageTexture(final BufferedImage img, final Mapping mapping) {
+	public ImageTexture(final BufferedImage img, final Mapping mapping,
+			final Wrapper wrapper) {
 		this.mapping = mapping;
+		this.wrapper = wrapper;
 		setImage(img);
 
 	}
 
 	public void setImage(final BufferedImage image) {
 		this.image = image;
+		this.wrapper.setImage(image);
 		vres = image.getHeight();
 		hres = image.getWidth();
 		pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
@@ -38,9 +43,9 @@ public class ImageTexture extends Texture {
 			mapping.getTexetlCoordinates(sr.localHitPoint, hres, vres,
 					coordinates);
 		} else {
-			int row = (int) (sr.v * (vres - 1));
-			int column = (int) (sr.u * (hres - 1));
-			coordinates.setLocation(row, column);
+			int x = (int) (sr.v * (vres - 1));
+			int y = (int) (sr.u * (hres - 1));
+			coordinates.setLocation(x, y);
 		}
 //		int row = (int) coordinates.getX();
 //		int column = (int) coordinates.getY();
@@ -62,17 +67,8 @@ public class ImageTexture extends Texture {
 //			blue = ((int) pixels[row+column])/255.0; // blue
 //			green = (((int) pixels[row+column + 1]))/255.0; // green
 //			red = (((int) pixels[row+column + 2]))/255.0; // red
-//		}
-		
-		int color = image.getRGB((int) coordinates.getX(),
-				(vres - 1) - (int) coordinates.getY());
-		int r = (color >> 16) & 0xFF;
-		int g = (color >> 8) & 0xFF;
-		int b = (color) & 0xFF;
-		double red = r / 255.0;
-		double green = g / 255.0;
-		double blue = b / 255.0;
-		return new Color(red, green, blue);
+//	}
+		return wrapper.wrap(coordinates.getX(), coordinates.getY());
 	}
 
 }
