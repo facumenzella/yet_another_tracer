@@ -1,6 +1,6 @@
 package ar.edu.itba.it.cg.yart.geometry;
 
-import ar.edu.itba.it.cg.yart.geometry.primitives.BoundingBox;
+import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
@@ -19,8 +19,8 @@ public class Instance extends GeometricObject{
 	}
 	
 	@Override
-	public BoundingBox createBoundingBox() {
-		BoundingBox boundingBox = object.createBoundingBox();
+	public AABB createBoundingBox() {
+		AABB boundingBox = object.createBoundingBox();
 		boundingBox.applyTransformation(matrix);
 		return boundingBox;
 	}

@@ -2,7 +2,7 @@ package ar.edu.itba.it.cg.yart.acceleration_estructures;
 
 import java.util.List;
 
-import ar.edu.itba.it.cg.yart.geometry.primitives.BoundingBox;
+import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 
@@ -15,7 +15,7 @@ public class LeafNode implements Node{
 	}
 	
 	@Override
-	public BoundingBox getBoundingBox() {
+	public AABB getBoundingBox() {
 		return null;
 	}
 

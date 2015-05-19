@@ -94,8 +94,8 @@ public class Triangle extends GeometricObject{
 	}
 
 	@Override
-	public BoundingBox createBoundingBox() {
-		return (new BoundingBox(new Point3d(Math.min(
+	public AABB createBoundingBox() {
+		return (new AABB(new Point3d(Math.min(
 				Math.min(pointA.x, pointB.x), pointC.x)
 				- EPSILON, Math.min(Math.min(pointA.y, pointB.y), pointC.y)
 				- EPSILON, Math.min(Math.min(pointA.z, pointB.z), pointC.z)

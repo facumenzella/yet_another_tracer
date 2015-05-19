@@ -7,7 +7,7 @@ import java.util.Set;
 
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
-import ar.edu.itba.it.cg.yart.geometry.primitives.BoundingBox;
+import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
@@ -18,7 +18,7 @@ import ar.edu.itba.it.cg.yart.raytracer.tracer.ShadowTracer;
 public class BSPAxisAligned {
 
 	private Node root;
-	private BoundingBox initialBox;
+	private AABB initialBox;
 	private final double tMin;
 	private final double tMax;
 	private final double minZ;
@@ -58,11 +58,11 @@ public class BSPAxisAligned {
 	}
 
 	private void buildInitialBox() {
-		this.initialBox = new BoundingBox(new Point3d(minX, minY, minZ),
+		this.initialBox = new AABB(new Point3d(minX, minY, minZ),
 				new Point3d(maxX, maxY, maxZ));
 	}
 
-	private Node subdivideXAxis(final BoundingBox currentBox,
+	private Node subdivideXAxis(final AABB currentBox,
 			final List<GeometricObject> currentObjects, final int currentDepth) {
 		if (currentObjects.size() == 0) {
 			return this.emptyLeafNode;
@@ -83,9 +83,9 @@ public class BSPAxisAligned {
 			return new LeafNode(currentObjects);
 		}
 
-		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3d(
+		final AABB leftBox = new AABB(currentBox.p0, new Point3d(
 				splittingPoint, currentBox.p1.y, currentBox.p1.z));
-		final BoundingBox rightBox = new BoundingBox(new Point3d(splittingPoint,
+		final AABB rightBox = new AABB(new Point3d(splittingPoint,
 				currentBox.p0.y, currentBox.p0.z), currentBox.p1);
 
 		List<GeometricObject> leftObjects = new ArrayList<GeometricObject>();
@@ -103,7 +103,7 @@ public class BSPAxisAligned {
 		return xNode;
 	}
 
-	private Node subdivideYAxis(final BoundingBox currentBox,
+	private Node subdivideYAxis(final AABB currentBox,
 			final List<GeometricObject> currentObjects, final int currentDepth) {
 
 		if (currentObjects.size() == 0) {
@@ -125,9 +125,9 @@ public class BSPAxisAligned {
 			return new LeafNode(currentObjects);
 		}
 		
-		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3d(
+		final AABB leftBox = new AABB(currentBox.p0, new Point3d(
 				currentBox.p1.x, splittingPoint, currentBox.p1.z));
-		final BoundingBox rightBox = new BoundingBox(new Point3d(
+		final AABB rightBox = new AABB(new Point3d(
 				currentBox.p0.x, splittingPoint, currentBox.p0.z), currentBox.p1);
 
 		List<GeometricObject> leftObjects = new ArrayList<GeometricObject>();
@@ -146,7 +146,7 @@ public class BSPAxisAligned {
 		return yNode;
 	}
 
-	private Node subdivideZAxis(final BoundingBox currentBox,
+	private Node subdivideZAxis(final AABB currentBox,
 			final List<GeometricObject> currentObjects, final int currentDepth) {
 
 		if (currentObjects.size() == 0) {
@@ -168,9 +168,9 @@ public class BSPAxisAligned {
 			return new LeafNode(currentObjects);
 		}
 		
-		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3d(
+		final AABB leftBox = new AABB(currentBox.p0, new Point3d(
 				currentBox.p1.x, currentBox.p1.y, splittingPoint));
-		final BoundingBox rightBox = new BoundingBox(new Point3d(
+		final AABB rightBox = new AABB(new Point3d(
 				currentBox.p0.x, currentBox.p0.y, splittingPoint), currentBox.p1);
 
 		List<GeometricObject> leftObjects = new ArrayList<GeometricObject>();
@@ -188,11 +188,11 @@ public class BSPAxisAligned {
 		return zNode;
 	}
 
-	private void addObjectToBoxes(final BoundingBox leftBox,
-			final BoundingBox rightBox, final GeometricObject o,
+	private void addObjectToBoxes(final AABB leftBox,
+			final AABB rightBox, final GeometricObject o,
 			final List<GeometricObject> leftObjects,
 			final List<GeometricObject> rightObjects) {
-		final BoundingBox box = o.getBoundingBox();
+		final AABB box = o.getBoundingBox();
 		if (box == null) {
 			leftObjects.add(o);
 			rightObjects.add(o);
@@ -209,7 +209,7 @@ public class BSPAxisAligned {
 	public Set<Double> planeCandidatesX(final List<GeometricObject> objects) {
 		Set<Double> candidates = new HashSet<Double>();
 		for (GeometricObject o : objects) {
-			BoundingBox b = o.getBoundingBox();
+			AABB b = o.getBoundingBox();
 			if (b != null) {
 				candidates.add(b.p0.x);
 				candidates.add(b.p1.x);
@@ -221,7 +221,7 @@ public class BSPAxisAligned {
 	public Set<Double> planeCandidatesY(final List<GeometricObject> objects) {
 		Set<Double> candidates = new HashSet<Double>();
 		for (GeometricObject o : objects) {
-			BoundingBox b = o.getBoundingBox();
+			AABB b = o.getBoundingBox();
 			if (b != null) {
 				candidates.add(b.p0.y);
 				candidates.add(b.p1.y);
@@ -233,7 +233,7 @@ public class BSPAxisAligned {
 	public Set<Double> planeCandidatesZ(final List<GeometricObject> objects) {
 		Set<Double> candidates = new HashSet<Double>();
 		for (GeometricObject o : objects) {
-			BoundingBox b = o.getBoundingBox();
+			AABB b = o.getBoundingBox();
 			if (b != null) {
 				candidates.add(b.p0.z);
 				candidates.add(b.p1.z);
@@ -242,13 +242,13 @@ public class BSPAxisAligned {
 		return candidates;
 	}
 
-	public double planeCostX(final BoundingBox currentBox,
+	public double planeCostX(final AABB currentBox,
 			final List<GeometricObject> objects, final double middlePoint) {
 		double left = 0;
 		double right = 0;
 		double stradding = 0;
 		for (GeometricObject o : objects) {
-			BoundingBox b = o.getBoundingBox();
+			AABB b = o.getBoundingBox();
 			if (b != null) {
 				if (b.p0.x > middlePoint) {
 					right++;
@@ -262,9 +262,9 @@ public class BSPAxisAligned {
 			}
 		}
 
-		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3d(
+		final AABB leftBox = new AABB(currentBox.p0, new Point3d(
 				middlePoint, currentBox.p1.y, currentBox.p1.z));
-		final BoundingBox rightBox = new BoundingBox(new Point3d(middlePoint,
+		final AABB rightBox = new AABB(new Point3d(middlePoint,
 				currentBox.p0.y, currentBox.p0.z), currentBox.p1);
 
 		return (1 / this.initialBox.getSurfaceArea())
@@ -272,13 +272,13 @@ public class BSPAxisAligned {
 						.getSurfaceArea() * (right + stradding)));
 	}
 
-	public double planeCostY(final BoundingBox currentBox,
+	public double planeCostY(final AABB currentBox,
 			final List<GeometricObject> objects, final double middlePoint) {
 		double under = 0;
 		double over = 0;
 		double stradding = 0;
 		for (GeometricObject o : objects) {
-			BoundingBox b = o.getBoundingBox();
+			AABB b = o.getBoundingBox();
 			if (b != null) {
 				if (b.p0.y > middlePoint) {
 					over++;
@@ -292,9 +292,9 @@ public class BSPAxisAligned {
 			}
 		}
 
-		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3d(
+		final AABB leftBox = new AABB(currentBox.p0, new Point3d(
 				currentBox.p1.x, middlePoint, currentBox.p1.z));
-		final BoundingBox rightBox = new BoundingBox(new Point3d(
+		final AABB rightBox = new AABB(new Point3d(
 				currentBox.p0.x, middlePoint, currentBox.p0.z), currentBox.p1);
 
 		return (1 / this.initialBox.getSurfaceArea())
@@ -302,13 +302,13 @@ public class BSPAxisAligned {
 						.getSurfaceArea() * (over + stradding)));
 	}
 
-	public double planeCostZ(final BoundingBox currentBox,
+	public double planeCostZ(final AABB currentBox,
 			final List<GeometricObject> objects, final double middlePoint) {
 		double near = 0;
 		double far = 0;
 		double stradding = 0;
 		for (GeometricObject o : objects) {
-			BoundingBox b = o.getBoundingBox();
+			AABB b = o.getBoundingBox();
 			if (b != null) {
 				if (b.p0.z > middlePoint) {
 					near++;
@@ -322,9 +322,9 @@ public class BSPAxisAligned {
 			}
 		}
 
-		final BoundingBox leftBox = new BoundingBox(currentBox.p0, new Point3d(
+		final AABB leftBox = new AABB(currentBox.p0, new Point3d(
 				currentBox.p1.x, currentBox.p1.y, middlePoint));
-		final BoundingBox rightBox = new BoundingBox(new Point3d(
+		final AABB rightBox = new AABB(new Point3d(
 				currentBox.p0.x, currentBox.p0.y, middlePoint), currentBox.p1);
 
 		return (1 / this.initialBox.getSurfaceArea())
@@ -332,12 +332,12 @@ public class BSPAxisAligned {
 						.getSurfaceArea() * (far + stradding)));
 	}
 	
-	public double leafCost(final BoundingBox currentBox, final List<GeometricObject> objects) {
+	public double leafCost(final AABB currentBox, final List<GeometricObject> objects) {
 		return (1 / this.initialBox.getSurfaceArea()) * (currentBox.getSurfaceArea() * objects.size());
 	}
 
 	public double bestXCandidate(final Set<Double> candidates,
-			final BoundingBox currentBox, final List<GeometricObject> objects) {
+			final AABB currentBox, final List<GeometricObject> objects) {
 		double minCost = Double.POSITIVE_INFINITY;
 		double bestCandidate = Double.POSITIVE_INFINITY;
 		for (Double d : candidates) {
@@ -351,7 +351,7 @@ public class BSPAxisAligned {
 	}
 
 	public double bestYCandidate(final Set<Double> candidates,
-			final BoundingBox currentBox, final List<GeometricObject> objects) {
+			final AABB currentBox, final List<GeometricObject> objects) {
 		double minCost = Double.POSITIVE_INFINITY;
 		double bestCandidate = Double.POSITIVE_INFINITY;
 		for (Double d : candidates) {
@@ -365,7 +365,7 @@ public class BSPAxisAligned {
 	}
 
 	public double bestZCandidate(final Set<Double> candidates,
-			final BoundingBox currentBox, final List<GeometricObject> objects) {
+			final AABB currentBox, final List<GeometricObject> objects) {
 		double minCost = Double.POSITIVE_INFINITY;
 		double bestCandidate = Double.POSITIVE_INFINITY;
 		for (Double d : candidates) {

@@ -46,7 +46,7 @@ public class Quadrilateral extends GeometricObject {
 	}
 
 	@Override
-	public BoundingBox createBoundingBox() {
+	public AABB createBoundingBox() {
 		final double p1x = Math.min(corner.x, corner.x + sideA.x + sideB.x) - EPSILON;
 		final double p2x = Math.max(corner.x, corner.x + sideA.x + sideB.x) + EPSILON;
 		final double p1y = Math.min(corner.y, corner.y + sideA.y + sideB.y) - EPSILON;
@@ -57,7 +57,7 @@ public class Quadrilateral extends GeometricObject {
 		final Point3d p1 = new Point3d(p1x, p1y, p1z);
 		final Point3d p2 = new Point3d(p2x, p2y, p2z);
 		
-		return new BoundingBox(p1, p2);
+		return new AABB(p1, p2);
 	}
 
 	@Override

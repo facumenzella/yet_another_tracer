@@ -5,14 +5,14 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 import ar.edu.itba.it.cg.yart.transforms.Transformable;
 
-public class BoundingBox implements Transformable{
+public class AABB implements Transformable{
 	
 	private static final double EPSILON = 0.0001;
 	public Point3d p0;
 	public Point3d p1;
 	public final double surfaceArea;
 	
-	public BoundingBox(final Point3d p0, final Point3d p1) {
+	public AABB(final Point3d p0, final Point3d p1) {
 		this.p0 = p0;
 		this.p1 = p1;
 		
@@ -84,7 +84,7 @@ public class BoundingBox implements Transformable{
 		return (t0 < t1 && t1 > EPSILON);
 	}
 
-	public boolean boxIsInside(final BoundingBox box) {
+	public boolean boxIsInside(final AABB box) {
 		if ( (box.p0.x >= this.p0.x && box.p0.z <= this.p0.z) || (box.p1.x <= this.p1.x && box.p1.y <= this.p1.y) ) {
 			return true;
 		}

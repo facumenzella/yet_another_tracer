@@ -113,8 +113,8 @@ public class Sphere extends GeometricObject {
 	}
 
 	@Override
-	public BoundingBox createBoundingBox() {
-		return new BoundingBox(new Point3d(center.x - radius, center.y - radius, center.z - radius),
+	public AABB createBoundingBox() {
+		return new AABB(new Point3d(center.x - radius, center.y - radius, center.z - radius),
 				new Point3d(center.x + radius, center.y + radius, center.z + radius));
 	}
 

@@ -2,13 +2,13 @@ package ar.edu.itba.it.cg.yart.acceleration_estructures;
 
 import java.util.List;
 
-import ar.edu.itba.it.cg.yart.geometry.primitives.BoundingBox;
+import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 
 public interface Node {
 
-	public BoundingBox getBoundingBox();
+	public AABB getBoundingBox();
 	public List<GeometricObject> getObjects();
 	public void setLeftNode(final Node node);
 	public void setRightNode(final Node node);

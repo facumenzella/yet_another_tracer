@@ -2,7 +2,7 @@ package ar.edu.itba.it.cg.yart.geometry.primitives.mesh;
 
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
-import ar.edu.itba.it.cg.yart.geometry.primitives.BoundingBox;
+import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 
 public abstract class MeshTriangle extends GeometricObject {
@@ -34,7 +34,7 @@ public abstract class MeshTriangle extends GeometricObject {
 	}
 	
 	@Override
-	public BoundingBox createBoundingBox() {
+	public AABB createBoundingBox() {
 		Point3d v0 = mesh.vertices.get(index0);
 		Point3d v1 = mesh.vertices.get(index1);
 		Point3d v2 = mesh.vertices.get(index2);
@@ -46,7 +46,7 @@ public abstract class MeshTriangle extends GeometricObject {
 		double maxY = Math.max(v0.y + EPSILON, Math.max(v1.y, v2.y));
 		double maxZ = Math.max(v0.z + EPSILON, Math.max(v1.z, v2.z));
 
-		return new BoundingBox(new Point3d(minX, minY, minZ), new Point3d(maxX, maxY, maxZ));
+		return new AABB(new Point3d(minX, minY, minZ), new Point3d(maxX, maxY, maxZ));
 	}
 
 }
