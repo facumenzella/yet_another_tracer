@@ -5,22 +5,30 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 import ar.edu.itba.it.cg.yart.transforms.Transformable;
 
-public class AABB implements Transformable{
-	
+public class AABB implements Transformable {
+
 	private static final double EPSILON = 0.0001;
 	public Point3d p0;
 	public Point3d p1;
 	public final double surfaceArea;
 	
+	public static void main(String args[]) {
+		AABB box1 = new AABB(new Point3d(-200, -200, -200), new Point3d(-1, 200, 200));
+		AABB box2 = new AABB(new Point3d(-20, 0, -40), new Point3d(220, 80, 40));
+		System.out.println(box2.intersectsBox(box1));
+		System.out.println(box1.intersectsBox(box2));
+	}
+	
 	public AABB(final Point3d p0, final Point3d p1) {
 		this.p0 = p0;
 		this.p1 = p1;
-		
-		final double bottomAndTopArea = (p1.x - p0.x) * Math.abs(p0.z - p1.z) * 2;
+
+		final double bottomAndTopArea = (p1.x - p0.x) * Math.abs(p0.z - p1.z)
+				* 2;
 		final double sidesArea = Math.abs(p0.z - p1.z) * (p1.y - p0.y) * 4;
 		this.surfaceArea = bottomAndTopArea + sidesArea;
 	}
-	
+
 	public boolean hit(final Ray ray) {
 		double ox = ray.origin.x;
 		double oy = ray.origin.y;
@@ -84,15 +92,40 @@ public class AABB implements Transformable{
 		return (t0 < t1 && t1 > EPSILON);
 	}
 
-	public boolean boxIsInside(final AABB box) {
-		if ( (box.p0.x >= this.p0.x && box.p0.z <= this.p0.z) || (box.p1.x <= this.p1.x && box.p1.y <= this.p1.y) ) {
+	public boolean intersectsBox(final AABB box) {
+		if (this.p0.x > box.p1.x) { return false; }
+		if (this.p1.x < box.p0.x) { return false; }
+		if (this.p1.z < box.p0.z) { return false; }
+		if (this.p0.z > box.p1.z) { return false; }
+		if (this.p1.y < box.p0.y) { return false; }
+		if (this.p0.y > box.p1.y) { return false; }
+		return true;
+	}
+
+	public boolean pointIsInside(final Point3d point) {
+		if (point.x > this.p0.x && point.x < this.p1.x && point.y > this.p0.y
+				&& point.y < this.p1.y && point.z > this.p0.z
+				&& point.z < this.p1.z) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	public double getSurfaceArea() {
 		return this.surfaceArea;
+	}
+
+	public AABB clip(final AABB box) {
+		double minX, minY, minZ, maxX, maxY, maxZ;
+		minX = Math.max(this.p0.x, box.p0.x);
+		minY = Math.max(this.p0.y, box.p0.y);
+		minZ = Math.max(this.p0.z, box.p0.z);
+		maxX = Math.min(this.p1.x, box.p1.x);
+		maxY = Math.min(this.p1.y, box.p1.y);
+		maxZ = Math.min(this.p1.z, box.p1.z);
+
+		return new AABB(new Point3d(minX, minY, minZ), new Point3d(maxX, maxY,
+				maxZ));
 	}
 
 	@Override
@@ -100,5 +133,5 @@ public class AABB implements Transformable{
 		p0 = p0.transformByMatrix(matrix);
 		p1 = p1.transformByMatrix(matrix);
 	}
-	
+
 }

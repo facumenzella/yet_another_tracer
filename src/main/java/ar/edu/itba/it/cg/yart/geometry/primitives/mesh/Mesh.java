@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.BSPAxisAligned;
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.YAFKDTree;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
@@ -28,7 +29,7 @@ public class Mesh extends GeometricObject {
 
 	public int numVertices;
 	public int numTriangles;
-	private BSPAxisAligned tree;
+	private YAFKDTree kdTree;
 
 	private double minX = Double.POSITIVE_INFINITY;
 	private double maxX = Double.NEGATIVE_INFINITY;
@@ -93,7 +94,6 @@ public class Mesh extends GeometricObject {
 			this.addTriangle(t);
 		}
 
-		tree = new BSPAxisAligned(minX, maxX, minY, maxY, minZ, maxZ, 0, 1000);
 		this.finish();
 	}
 
@@ -101,9 +101,8 @@ public class Mesh extends GeometricObject {
 		this.numTriangles = triangles.size();
 		this.numVertices = vertices.size();
 		this.updateBoundingBox();
-		this.tree = new BSPAxisAligned(minZ, maxZ, 0, 1000);
+		kdTree = new YAFKDTree(this.triangles);
 
-		this.tree.buildTree(this.triangles);
 		if (needsSmoothing) {
 			this.computeMeshNormals();
 		}
@@ -157,12 +156,12 @@ public class Mesh extends GeometricObject {
 		if (!getBoundingBox().hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}
-		return tree.traceRayHit(ray, this.hitTracer, sr);
+		return kdTree.traceRayHit(ray, this.hitTracer, sr);
 	}
 
 	@Override
 	public double shadowHit(Ray ray) {
-		return tree.traceShadowHit(ray, this.shadowTracer);
+		return kdTree.traceShadowHit(ray, this.shadowTracer);
 	}	
 	
 }

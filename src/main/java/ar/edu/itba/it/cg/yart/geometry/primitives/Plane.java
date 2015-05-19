@@ -8,8 +8,8 @@ import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
 public class Plane extends GeometricObject {
 
-	protected Point3d p;
-	private Vector3d normal;
+	public Point3d p;
+	public Vector3d normal;
 
 	public Plane(final Point3d p, final Vector3d normal) {
 		this.p = p;
