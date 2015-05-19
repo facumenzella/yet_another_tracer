@@ -12,7 +12,6 @@ public abstract class CameraAbstract implements Camera {
 	protected Point3d lookat;
 	protected Vector3d up;
 	protected Vector3d u, v, w;
-	protected MutableVector3d mu, mv, mw;
 	float exposue_time;
 	protected boolean viewPlaneInvalidated = true;
 	protected ViewPlane viewPlane;
@@ -23,14 +22,11 @@ public abstract class CameraAbstract implements Camera {
 	
 	private void checkForSingularity() {
 		// we check if the camera is pointing exactly down
-		if (eye.x == lookat.x && eye.z == lookat.z) {
-			this.u = new Vector3d(0, 0, 1);
-			this.v = new Vector3d(1, 1, 0);
-			this.w = new Vector3d(0, 1, 0);
+		if (eye.x == lookat.x && eye.y == lookat.y) {
+			this.u = new Vector3d(0, 1, 0);
+			this.v = new Vector3d(1, 0, 1);
+			this.w = new Vector3d(0, 0, 1);
 		}
-		this.mu = new MutableVector3d(u);
-		this.mv = new MutableVector3d(v);
-		this.mw = new MutableVector3d(w);
 	}
 
 	private void computeUVW() {

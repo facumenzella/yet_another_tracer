@@ -100,16 +100,7 @@ public class PinholeCamera extends CameraAbstract {
 	}
 
 	private Vector3d rayDirection(final Point2d p) {
-		final MutableVector3d mu = new MutableVector3d(this.u);
-		final MutableVector3d mv = new MutableVector3d(this.v);
-		final MutableVector3d mw = new MutableVector3d(this.w);
-		mu.scale(p.x);
-		mv.scale(p.y);
-		mw.scale(distance);
-		mu.add(mv);
-		mu.sub(mw);
-		mu.normalize();
-		return mu.inmutableCopy();
+		return (u.scale(p.x)).add(v.scale(p.y)).sub(w.scale(distance)).normalizedVector();
 	}
 	
 	private double getPixelSize(final int hRes, final int vRes) {
