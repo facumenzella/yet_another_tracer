@@ -3,16 +3,14 @@ package ar.edu.itba.it.cg.yart.raytracer.world;
 import java.util.ArrayList;
 import java.util.List;
 
-import ar.edu.itba.it.cg.yart.acceleration_estructures.BSPAxisAligned;
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.YAFKDTree;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Instance;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
-import ar.edu.itba.it.cg.yart.geometry.primitives.Disc;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Plane;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Sphere;
-import ar.edu.itba.it.cg.yart.geometry.primitives.mesh.Mesh;
 import ar.edu.itba.it.cg.yart.light.AmbientLight;
 import ar.edu.itba.it.cg.yart.light.Directional;
 import ar.edu.itba.it.cg.yart.light.Light;
@@ -30,7 +28,7 @@ public class World {
 	private List<Light> castShadowLights = new ArrayList<Light>();
 	private List<Light> doNotCastShadowLights = new ArrayList<Light>();
 	private AmbientLight ambientLight;
-	private BSPAxisAligned bspTree;
+	private YAFKDTree kdTree;
 	private boolean preprocessed = false;
 	
 	/**
@@ -42,8 +40,8 @@ public class World {
 	
 	public void preprocess() {
 		if (!preprocessed) {
-			this.bspTree = new BSPAxisAligned(200, 1000, 0, 1000);
-			this.bspTree.buildTree(objects);
+//			this.bspTree = new BSPAxisAligned(200, 1000, 0, 1000);
+//			this.bspTree.buildTree(objects);
 			preprocessed = true;
 		}
 	}
@@ -51,8 +49,7 @@ public class World {
 	public void buildTestWorld() {
 		setBackgroundColor(Color.blackColor());
 		final Instance s1 = new Instance(new Sphere());
-		s1.applyTransformation(Matrix4d.scaleMatrix(20, 20, 20).rightMultiply(Matrix4d.transformMatrix(5,2,0)).
-				rightMultiply(Matrix4d.scaleMatrix(6, 2, 2)));
+		s1.applyTransformation(Matrix4d.scaleMatrix(2, 2, 2));
 		Reflective s1m = new Reflective();
 		s1m.setCd(Color.redColor());
 		s1m.setKd(0.75);
@@ -62,7 +59,8 @@ public class World {
 		s1m.setCr(Color.whiteColor());
 		s1m.setKr(0.4);
 		s1.setMaterial(s1m);
-		final Sphere s2 = new Sphere(new Point3d(0,0,-45), 15.0f);
+		final Instance s2 = new Instance(new Sphere());
+		s2.applyTransformation(Matrix4d.scaleMatrix(2,2,2).rightMultiply(Matrix4d.transformMatrix(-2,4,0)));
 		Reflective s2m = new Reflective();
 		s2m.setCd(Color.greenColor());
 		s2m.setKd(0.50);
@@ -72,7 +70,7 @@ public class World {
 		s2m.setCr(Color.whiteColor());
 		s2m.setKr(0.5);
 		s2.setMaterial(s2m);
-		final Sphere s3 = new Sphere(new Point3d(-5,-20,65), 10.0f);
+		final Instance s3 = new Instance(new Sphere());
 		Transparent s3m = new Transparent();	
 		s3m.setCd(Color.blueColor());
 		s2m.setKd(0.50);
@@ -84,12 +82,10 @@ public class World {
 		s3m.setIor(1.5);
 		s3m.setKt(0.9);
 		s3.setMaterial(s3m);
-		final Disc d1 = new Disc(new Point3d(0, 0, 0), new Vector3d(5,2,2), 30);
 		Matte d1m = new Matte();
 		d1m.setCd(Color.redColor());
 		d1m.setKd(0.75);
 		d1m.setKa(0.30);		
-		d1.setMaterial(d1m);
 		final Plane background = new Plane(new Point3d(0,0,-150), new Vector3d(0,0,1));
 		Matte planeMaterial = new Matte();
 		planeMaterial.setCd(Color.yellowColor());
@@ -121,7 +117,7 @@ public class World {
 		right.setKa(0.15);
 		backgroundRight.setMaterial(right);
 		final Instance floor = new Instance(new Plane());
-		floor.applyTransformation(Matrix4d.transformMatrix(0, -30, 0));
+//		floor.applyTransformation(Matrix4d.transformMatrix(0, -30, 0));
 		Matte floorM = new Matte();
 		floorM.setCd(new Color(0.4, 0.4, 0.4));
 		floorM.setKd(0.50);
@@ -129,7 +125,7 @@ public class World {
 		floor.setMaterial(right);
 		
 		final Directional light1 = new Directional(2.0,Color.whiteColor(),new Vector3d(-2,7,3));
-		final PointLight light2 = new PointLight(2,Color.whiteColor(),new Vector3d(60,40,30));
+		final PointLight light2 = new PointLight(2,Color.whiteColor(),new Vector3d(60,30,40));
 		
 //		addLight(light1);
 		addLight(light2);
@@ -140,7 +136,6 @@ public class World {
 		objects.add(s1);
 //		objects.add(s2);
 //		objects.add(s3);
-//		addObject(d1);
 		objects.add(floor);
 //		this.addObjects(objects);
 //		addObject(background);
@@ -148,6 +143,7 @@ public class World {
 //		addObject(backgroundBottom);
 //		addObject(backgroundRight);
 //		addObject(backgroundTop);
+		this.kdTree = new YAFKDTree(this.objects);
 	}
 	
 	
@@ -171,6 +167,7 @@ public class World {
 		this.objects.clear();
 		this.objects.addAll(objects);
 		preprocessed = false;
+		this.kdTree = new YAFKDTree(this.objects);
 	}
 	
 	public void addObject(final GeometricObject object) {
@@ -182,8 +179,8 @@ public class World {
 		return objects;
 	}
 	
-	public BSPAxisAligned getTree() {
-		return bspTree;
+	public YAFKDTree getTree() {
+		return kdTree;
 	}
 	
 	public void addLight(final Light light) {

@@ -8,7 +8,7 @@ import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class Instance extends GeometricObject{
 
-	private GeometricObject object; // object to be transformed
+	public GeometricObject object; // object to be transformed
 	public boolean transformTexture; // do we transform the texture
 
 	public Instance(final GeometricObject object) {
@@ -16,12 +16,15 @@ public class Instance extends GeometricObject{
 		this.matrix = new Matrix4d();
 		this.invMatrix = this.matrix.inverse();
 		this.transposedInvMatrix = this.invMatrix.transpose();
+		updateBoundingBox();
 	}
 	
 	@Override
 	public AABB createBoundingBox() {
 		AABB boundingBox = object.createBoundingBox();
-		boundingBox.applyTransformation(matrix);
+		if (boundingBox != null) {
+			boundingBox.applyTransformation(matrix);
+		}
 		return boundingBox;
 	}
 
@@ -53,6 +56,12 @@ public class Instance extends GeometricObject{
 		
 		final double t = object.shadowHit(invRay);
 		return t;
+	}
+	
+	@Override
+	public void applyTransformation(Matrix4d matrix) {
+		super.applyTransformation(matrix);
+		updateBoundingBox();
 	}
 
 }

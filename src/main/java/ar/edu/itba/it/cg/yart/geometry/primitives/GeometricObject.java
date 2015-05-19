@@ -21,7 +21,8 @@ public abstract class GeometricObject implements Transformable{
 	public GeometricObject() {
 		color = new Color(1.0f, 1.0f, 1.0f);
 		this.matrix = new Matrix4d();
-		this.applyTransformation(this.matrix);
+		this.invMatrix = this.matrix.inverse();
+		this.transposedInvMatrix = this.invMatrix.transpose();
 	}
 	
 	public Material getMaterial() { 

@@ -7,11 +7,9 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 
 public class LeafNode implements Node{
-
-	private final List<GeometricObject> objects;
 	
 	public LeafNode(final List<GeometricObject> objects) {
-		this.objects = objects;
+		gObjects = objects;
 	}
 	
 	@Override
