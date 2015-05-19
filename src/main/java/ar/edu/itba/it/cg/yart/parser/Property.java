@@ -87,7 +87,7 @@ public class Property {
 			}
 			this.value = new Vector3d[values.length / 3];
 			for (int i = 0; i < values.length; i += 3) {
-				((Vector3d[]) this.value)[i / 3] = new Vector3d(Double.valueOf(values[i]), Double.valueOf(values[i+2]), -Double.valueOf(values[i+1]));
+				((Vector3d[]) this.value)[i / 3] = new Vector3d(Double.valueOf(values[i]), Double.valueOf(values[i+1]), Double.valueOf(values[i+2]));
 			}
 			break;
 		case POINT:
@@ -96,7 +96,7 @@ public class Property {
 			}
 			this.value = new Point3d[values.length / 3];
 			for (int i = 0; i < values.length; i += 3) {
-				((Point3d[]) this.value)[i / 3] = new Point3d(Double.valueOf(values[i]), Double.valueOf(values[i+2]), -Double.valueOf(values[i+1]));
+				((Point3d[]) this.value)[i / 3] = new Point3d(Double.valueOf(values[i]), Double.valueOf(values[i+1]), Double.valueOf(values[i+2]));
 			}
 			break;
 		case STRING:
