@@ -23,7 +23,9 @@ public class Mesh extends GeometricObject {
 	public List<Point3d> vertices;
 	public List<Integer> indices;
 	public List<Vector3d> normals; // average normal at each vertex
-	public Map<Integer, List<MeshTriangle>> faces; // the faces shared by each vertex, we need it for smooth mesh
+	public Map<Integer, List<MeshTriangle>> faces; // the faces shared by each
+													// vertex, we need it for
+													// smooth mesh
 	public List<GeometricObject> triangles;
 
 	public int numVertices;
@@ -40,16 +42,15 @@ public class Mesh extends GeometricObject {
 
 	int verticesAmount;
 	int trianglesAmount;
-	
+
 	private HitTracer hitTracer;
 	private ShadowTracer shadowTracer;
-	
 
 	public Mesh(final List<Point3d> vertices, final List<Vector3d> normals,
 			final List<Integer> indices, final boolean needsSmoothing) {
 		this.hitTracer = new SimpleHitTracer();
 		this.shadowTracer = new SimpleShadowTracer();
-		
+
 		this.vertices = vertices;
 		this.normals = normals;
 		this.indices = indices;
@@ -100,7 +101,10 @@ public class Mesh extends GeometricObject {
 		this.numTriangles = triangles.size();
 		this.numVertices = vertices.size();
 		this.updateBoundingBox();
-		double max = Math.max(maxZ,Math.max(maxY, Math.max(maxX,Math.max(minZ,Math.max(minX,minY)))));
+		double max = Math.max(
+				maxZ,
+				Math.max(maxY,
+						Math.max(maxX, Math.max(minZ, Math.max(minX, minY)))));
 		kdTree = YAFKDTree2.build(this.triangles, max);
 
 		if (needsSmoothing) {
@@ -116,7 +120,7 @@ public class Mesh extends GeometricObject {
 		minY = Math.min(minY, b.p0.y);
 		maxX = Math.max(maxX, b.p1.x);
 		maxY = Math.max(maxY, b.p1.y);
-		maxZ = Math.max(maxZ, b.p1.x);
+		maxZ = Math.max(maxZ, b.p1.z);
 
 		this.triangles.add(t);
 	}
@@ -147,22 +151,24 @@ public class Mesh extends GeometricObject {
 
 	@Override
 	public AABB createBoundingBox() {
-		return new AABB(new Point3d(minX, maxY, minZ), new Point3d(maxX,
-				minY, maxZ));
+		return new AABB(new Point3d(minX, maxY, minZ), new Point3d(maxX, minY,
+				maxZ));
 	}
 
 	@Override
 	public double hit(Ray ray, ShadeRec sr) {
-		if (!getBoundingBox().hit(ray)) {
-			return Double.NEGATIVE_INFINITY;
-		}
-		double t  =  kdTree.traceRayHit(ray, this.hitTracer, sr);
-		return t;
+//		if (!getBoundingBox().hit(ray)) {
+//			return Double.NEGATIVE_INFINITY;
+//		}
+		return kdTree.traceRayHit(ray, this.hitTracer, sr);
 	}
 
 	@Override
 	public double shadowHit(Ray ray) {
+//		if (!getBoundingBox().hit(ray)) {
+//		return Double.NEGATIVE_INFINITY;
+//	}
 		return kdTree.traceShadowHit(ray, this.shadowTracer);
-	}	
-	
+	}
+
 }
