@@ -21,6 +21,7 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Plane;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Sphere;
 import ar.edu.itba.it.cg.yart.geometry.primitives.mesh.Mesh;
+import ar.edu.itba.it.cg.yart.geometry.primitives.mesh.MeshData;
 import ar.edu.itba.it.cg.yart.light.AmbientLight;
 import ar.edu.itba.it.cg.yart.light.Directional;
 import ar.edu.itba.it.cg.yart.light.Light;
@@ -59,46 +60,6 @@ public class SceneBuilder {
 	private final Sphere referenceSphere = new Sphere();
 	private final Plane referencePlane = new Plane();
 	private final Material defaultMaterial;
-	
-	private static class MeshData {
-
-        private final int[] triindices;
-        private final Point3d[] vertices;
-        private final Vector3d[] normals;
-        
-        public MeshData(final int[] triindices, final Point3d[] vertices, final Vector3d[] normals) {
-            this.triindices = triindices;
-            this.vertices = vertices;
-            this.normals = normals;
-        }
-	    
-	    @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + Arrays.hashCode(normals);
-            result = prime * result + Arrays.hashCode(triindices);
-            result = prime * result + Arrays.hashCode(vertices);
-            return result;
-        }
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            MeshData other = (MeshData) obj;
-            if (!Arrays.equals(normals, other.normals))
-                return false;
-            if (!Arrays.equals(triindices, other.triindices))
-                return false;
-            if (!Arrays.equals(vertices, other.vertices))
-                return false;
-            return true;
-        }
-	}
 	
 	private static Matrix4d converseMatrix = new Matrix4d(-1, 0, 0, 0, 
 															0, 0, 1, 0, 
