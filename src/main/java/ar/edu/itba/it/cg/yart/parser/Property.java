@@ -100,10 +100,11 @@ public class Property {
 				((Point3d[]) this.value)[i / 3] = new Point3d(Double.valueOf(values[i]), Double.valueOf(values[i+1]), Double.valueOf(values[i+2]));
 			}
 			break;
+		case TEXTURE:
 		case STRING:
 			this.value = new String[values.length];
 			for (int i = 0; i < values.length; i++) {
-				((String[]) this.value)[i] = values[i];
+				((String[]) this.value)[i] = values[i].replaceAll("\"", "");
 			}
 			break;
 		default:
