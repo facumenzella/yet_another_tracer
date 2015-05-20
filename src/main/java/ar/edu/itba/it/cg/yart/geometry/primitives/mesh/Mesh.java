@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ar.edu.itba.it.cg.yart.acceleration_estructures.BSPAxisAligned;
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.nlog2n.YAFKDTree2;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
-import ar.edu.itba.it.cg.yart.geometry.primitives.BoundingBox;
+import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
@@ -23,12 +23,14 @@ public class Mesh extends GeometricObject {
 	public List<Point3d> vertices;
 	public List<Integer> indices;
 	public List<Vector3d> normals; // average normal at each vertex
-	public Map<Integer, List<MeshTriangle>> faces; // the faces shared by each vertex, we need it for smooth mesh
+	public Map<Integer, List<MeshTriangle>> faces; // the faces shared by each
+													// vertex, we need it for
+													// smooth mesh
 	public List<GeometricObject> triangles;
 
 	public int numVertices;
 	public int numTriangles;
-	private BSPAxisAligned tree;
+	private YAFKDTree2 kdTree;
 
 	private double minX = Double.POSITIVE_INFINITY;
 	private double maxX = Double.NEGATIVE_INFINITY;
@@ -40,16 +42,15 @@ public class Mesh extends GeometricObject {
 
 	int verticesAmount;
 	int trianglesAmount;
-	
+
 	private HitTracer hitTracer;
 	private ShadowTracer shadowTracer;
-	
 
 	public Mesh(final List<Point3d> vertices, final List<Vector3d> normals,
 			final List<Integer> indices, final boolean needsSmoothing) {
 		this.hitTracer = new SimpleHitTracer();
 		this.shadowTracer = new SimpleShadowTracer();
-		
+
 		this.vertices = vertices;
 		this.normals = normals;
 		this.indices = indices;
@@ -93,7 +94,6 @@ public class Mesh extends GeometricObject {
 			this.addTriangle(t);
 		}
 
-		tree = new BSPAxisAligned(minX, maxX, minY, maxY, minZ, maxZ, 0, 1000);
 		this.finish();
 	}
 
@@ -101,23 +101,26 @@ public class Mesh extends GeometricObject {
 		this.numTriangles = triangles.size();
 		this.numVertices = vertices.size();
 		this.updateBoundingBox();
-		this.tree = new BSPAxisAligned(minZ, maxZ, 0, 1000);
+		double max = Math.max(
+				maxZ,
+				Math.max(maxY,
+						Math.max(maxX, Math.max(minZ, Math.max(minX, minY)))));
+		kdTree = YAFKDTree2.build(this.triangles, max);
 
-		this.tree.buildTree(this.triangles);
 		if (needsSmoothing) {
 			this.computeMeshNormals();
 		}
 	}
 
 	private void addTriangle(final MeshTriangle t) {
-		BoundingBox b = t.getBoundingBox();
+		AABB b = t.getBoundingBox();
 
 		minX = Math.min(minX, b.p0.x);
 		minZ = Math.min(minZ, b.p0.z);
 		minY = Math.min(minY, b.p0.y);
 		maxX = Math.max(maxX, b.p1.x);
 		maxY = Math.max(maxY, b.p1.y);
-		maxZ = Math.max(maxZ, b.p1.x);
+		maxZ = Math.max(maxZ, b.p1.z);
 
 		this.triangles.add(t);
 	}
@@ -147,22 +150,25 @@ public class Mesh extends GeometricObject {
 	}
 
 	@Override
-	public BoundingBox createBoundingBox() {
-		return new BoundingBox(new Point3d(minX, minY, minZ), new Point3d(maxX,
-				maxY, maxZ));
+	public AABB createBoundingBox() {
+		return new AABB(new Point3d(minX, maxY, minZ), new Point3d(maxX, minY,
+				maxZ));
 	}
 
 	@Override
 	public double hit(Ray ray, ShadeRec sr) {
-		if (!getBoundingBox().hit(ray)) {
-			return Double.NEGATIVE_INFINITY;
-		}
-		return tree.traceRayHit(ray, this.hitTracer, sr);
+//		if (!getBoundingBox().hit(ray)) {
+//			return Double.NEGATIVE_INFINITY;
+//		}
+		return kdTree.traceRayHit(ray, this.hitTracer, sr);
 	}
 
 	@Override
 	public double shadowHit(Ray ray) {
-		return tree.traceShadowHit(ray, this.shadowTracer);
-	}	
-	
+//		if (!getBoundingBox().hit(ray)) {
+//		return Double.NEGATIVE_INFINITY;
+//	}
+		return kdTree.traceShadowHit(ray, this.shadowTracer);
+	}
+
 }

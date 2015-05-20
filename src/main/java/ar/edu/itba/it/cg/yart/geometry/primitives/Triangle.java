@@ -4,7 +4,6 @@ import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class Triangle extends GeometricObject{
 
@@ -94,8 +93,8 @@ public class Triangle extends GeometricObject{
 	}
 
 	@Override
-	public BoundingBox createBoundingBox() {
-		return (new BoundingBox(new Point3d(Math.min(
+	public AABB createBoundingBox() {
+		return (new AABB(new Point3d(Math.min(
 				Math.min(pointA.x, pointB.x), pointC.x)
 				- EPSILON, Math.min(Math.min(pointA.y, pointB.y), pointC.y)
 				- EPSILON, Math.min(Math.min(pointA.z, pointB.z), pointC.z)

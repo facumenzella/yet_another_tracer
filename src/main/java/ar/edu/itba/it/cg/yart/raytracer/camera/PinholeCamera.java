@@ -1,7 +1,6 @@
 package ar.edu.itba.it.cg.yart.raytracer.camera;
 
 import ar.edu.itba.it.cg.yart.color.Color;
-import ar.edu.itba.it.cg.yart.geometry.MutableVector3d;
 import ar.edu.itba.it.cg.yart.geometry.Point2d;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
@@ -30,11 +29,12 @@ public class PinholeCamera extends CameraAbstract {
 	}
 
 	@Override
-	public void renderScene(final Bucket bucket, RayTracer rayTracer, final ArrayIntegerMatrix result) {
+	public void renderScene(final Bucket bucket, RayTracer rayTracer,
+			final ArrayIntegerMatrix result) {
 
 		// TODO : Its almost working, but its not finished
 		Color blackColor = Color.blackColor();
-		Color color = new Color(0,0,0,0);
+		Color color = new Color(0, 0, 0, 0);
 		ViewPlane viewPlane = rayTracer.getViewPlane();
 		double adjustedPixelSize = viewPlane.pixelSize / zoom;
 		Point2d sp = new Point2d(0, 0);
@@ -47,39 +47,48 @@ public class PinholeCamera extends CameraAbstract {
 		int xFinish = xStart + bucket.getWidth();
 		int yStart = bucket.getY();
 		int yFinish = yStart + bucket.getHeight();
-		
+
 		World world = rayTracer.getWorld();
 		ColorTracer tracer = rayTracer.getTracer();
-
-		for (int row = yStart; row < yFinish; row++) { // up
-			for (int col = xStart; col < xFinish; col++) { // across
-				color.copy(blackColor);
-				for (int i = 0; i < n; i++) {
-					for (int j = 0; j < n; j++) {
-						final double distributionX;
-						final double distributionY;
-						if (n == 1) {
-							distributionX = distributionY = 0;
-						} else {
-							distributionX = (j + Math.random())/n;
-							distributionY = (i + Math.random())/n;
-						}
-						final double x = adjustedPixelSize
-								* (col - 0.5 * viewPlane.hRes + sp.x + distributionX);
-						final double y = adjustedPixelSize
-								* (0.5 * viewPlane.vRes - row + sp.y + distributionY);
-
-						pp = new Point2d(x, y);
-						ray.direction = this.rayDirection(pp);
-						Color c = world.getTree().traceRay(ray, tracer, new ShadeRec(world));
-						color.addEquals(c);
-					}
+		int row = yStart;
+		int col = xStart;
+		while (row < yFinish) {
+			color.copy(blackColor);
+			int i = 0;
+			int j = 0;
+			while (i < n) {
+				final double distributionX;
+				final double distributionY;
+				if (n == 1) {
+					distributionX = distributionY = 0;
+				} else {
+					distributionX = (j + Math.random()) / n;
+					distributionY = (i + Math.random()) / n;
 				}
-				color.multiplyEquals(invNumSamples);
-				displayPixel(col, row, color, result);
+				final double x = adjustedPixelSize
+						* (col - 0.5 * viewPlane.hRes + sp.x + distributionX);
+				final double y = adjustedPixelSize
+						* (0.5 * viewPlane.vRes - row + sp.y + distributionY);
+
+				pp = new Point2d(x, y);
+				ray.direction = this.rayDirection(pp);
+				Color c = world.getTree().traceRay(ray, tracer,
+						new ShadeRec(world));
+				color.addEquals(c);
+				j++;
+				if (j == n) {
+					j = 0;
+					i++;
+				}
+			}
+			color.multiplyEquals(invNumSamples);
+			displayPixel(col, row, color, result);
+			col++;
+			if (col == xFinish) {
+				col = xStart;
+				row++;
 			}
 		}
-
 	}
 	
 	public double getFov() {

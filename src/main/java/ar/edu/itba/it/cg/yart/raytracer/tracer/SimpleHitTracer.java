@@ -14,6 +14,10 @@ public class SimpleHitTracer extends AbstractTracer implements HitTracer {
 	public double traceRayHit(Ray ray, List<GeometricObject> objects,
 			ShadeRec sr, double tMax) {
 		
+		if (objects == null || objects.size() == 0) {
+			return Double.NEGATIVE_INFINITY;
+		}
+		
 		double tMin = tMax;
 		boolean hit = false;
 		Vector3d normal = null;
