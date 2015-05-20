@@ -3,7 +3,7 @@ package ar.edu.itba.it.cg.yart.raytracer.world;
 import java.util.ArrayList;
 import java.util.List;
 
-import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.YAFKDTree;
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.nlog2n.YAFKDTree2;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Instance;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
@@ -28,7 +28,7 @@ public class World {
 	private List<Light> castShadowLights = new ArrayList<Light>();
 	private List<Light> doNotCastShadowLights = new ArrayList<Light>();
 	private AmbientLight ambientLight;
-	private YAFKDTree kdTree;
+	private YAFKDTree2 kdTree;
 	private boolean preprocessed = false;
 	
 	/**
@@ -143,7 +143,7 @@ public class World {
 //		addObject(backgroundBottom);
 //		addObject(backgroundRight);
 //		addObject(backgroundTop);
-		this.kdTree = new YAFKDTree(this.objects);
+		this.kdTree = YAFKDTree2.build(this.objects, 30);
 	}
 	
 	
@@ -167,7 +167,7 @@ public class World {
 		this.objects.clear();
 		this.objects.addAll(objects);
 		preprocessed = false;
-		this.kdTree = new YAFKDTree(this.objects);
+		this.kdTree = YAFKDTree2.build(this.objects, 30);
 	}
 	
 	public void addObject(final GeometricObject object) {
@@ -179,7 +179,7 @@ public class World {
 		return objects;
 	}
 	
-	public YAFKDTree getTree() {
+	public YAFKDTree2 getTree() {
 		return kdTree;
 	}
 	

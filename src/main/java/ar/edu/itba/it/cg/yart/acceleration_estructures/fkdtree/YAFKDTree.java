@@ -18,13 +18,16 @@ import ar.edu.itba.it.cg.yart.raytracer.tracer.ColorTracer;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.HitTracer;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.ShadowTracer;
 
+// This has O(N * N)
+
 public class YAFKDTree {
 
 	private static double kKT = 1.5;
 	private static double kKI = 1;
-	private static int kMAX_DEPTH = 5;
+	private static int kMAX_DEPTH = 1;
 	private double kEPSILON = 0.00001;;
 	private double kTMAX = 1000;
+	private double kLAMBDA = .8;
 
 	private KDNode root;
 	private AABB rootAABB;
@@ -40,11 +43,14 @@ public class YAFKDTree {
 	}
 	
 	public YAFKDTree(final List<GeometricObject> gObjects, final double size) {
+		final long start = System.currentTimeMillis();
 		xCandidates = new HashSet<Double>();
 		yCandidates = new HashSet<Double>();
 		zCandidates = new HashSet<Double>();
 		rootAABB = new AABB(new Point3d(-size, size, -size), new Point3d(size, -size, size));
 		this.root = this.buildKDTree(gObjects, rootAABB, SplitAxis.X, 0);
+		System.out.println("Tree built in "
+				+ (System.currentTimeMillis() - start) + " milliseconds.");
 	}
 
 	private KDNode buildKDTree(final List<GeometricObject> gObjects,
@@ -61,6 +67,7 @@ public class YAFKDTree {
 
 		SplitPoint splitPoint = bestCandidate.splitPoint;
 		AABB[] boxes = bestCandidate.boxes;
+				
 		List<GeometricObject> leftObjects = new ArrayList<GeometricObject>();
 		List<GeometricObject> rightObjects = new ArrayList<GeometricObject>();
 		divideObjects(leftObjects, rightObjects, gObjects, boxes[0], boxes[1],
@@ -150,7 +157,7 @@ public class YAFKDTree {
 		}
 		splitPoint.cost = minCost;
 		splitPoint.point = bestCandidate;
-		return new PlaneCandidate(bestBoxes, splitPoint);
+		return new PlaneCandidate(bestBoxes, splitPoint, minCost, true); // true its not true, just to work XD
 	}
 
 	private Set<Double> planeCandidatesX(
@@ -222,9 +229,9 @@ public class YAFKDTree {
 		return candidates;
 	}
 
-	private static double costOfSubdividing(final double pL, final double pR,
+	private double costOfSubdividing(final double pL, final double pR,
 			final double nL, final double nR) {
-		final double lambda = (nL == 0 || nR == 0) ? .8 : 1;
+		final double lambda = (nL == 0 || nR == 0) ? kLAMBDA : 1;
 		return lambda * (kKT + kKI * ((pL * nL) + (pR * nR)));
 	}
 
@@ -398,8 +405,6 @@ public class YAFKDTree {
 	}
 
 	public double traceRayHit(final Ray ray, final HitTracer tracer, final ShadeRec sr) {
-//		Ray aRay = new Ray(ray.origin);
-//		aRay.direction = new Vector3d(-0.08728748780766624, 0.9920922738068253, -0.09018766392932867);
 		return p_traceObjectsForRayHit(ray, root, kEPSILON, kTMAX, tracer, sr);
 	}
 
