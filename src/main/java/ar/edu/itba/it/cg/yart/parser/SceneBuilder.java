@@ -35,6 +35,7 @@ import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 public class SceneBuilder {
 	
 	private List<GeometricObject> objects = new ArrayList<GeometricObject>();
+	private Map<MeshData, Mesh> meshes = new HashMap<MeshData, Mesh>();
 	private RayTracer raytracer;
 	private SceneParser parser;
 	
@@ -46,6 +47,46 @@ public class SceneBuilder {
 	private final Sphere referenceSphere = new Sphere();
 	private final Plane referencePlane = new Plane();
 	private final Material defaultMaterial;
+	
+	private static class MeshData {
+
+        private final int[] triindices;
+        private final Point3d[] vertices;
+        private final Vector3d[] normals;
+        
+        public MeshData(final int[] triindices, final Point3d[] vertices, final Vector3d[] normals) {
+            this.triindices = triindices;
+            this.vertices = vertices;
+            this.normals = normals;
+        }
+	    
+	    @Override
+        public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + Arrays.hashCode(normals);
+            result = prime * result + Arrays.hashCode(triindices);
+            result = prime * result + Arrays.hashCode(vertices);
+            return result;
+        }
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            MeshData other = (MeshData) obj;
+            if (!Arrays.equals(normals, other.normals))
+                return false;
+            if (!Arrays.equals(triindices, other.triindices))
+                return false;
+            if (!Arrays.equals(vertices, other.vertices))
+                return false;
+            return true;
+        }
+	}
 	
 	private static Matrix4d converseMatrix = new Matrix4d(-1, 0, 0, 0, 
 															0, 0, 1, 0, 
@@ -227,15 +268,29 @@ public class SceneBuilder {
 			instance = new Instance(new Plane(new Point3d(0, 0, 0), normal));
 		}
 		else if (strType.equals("mesh")) {
-			int[] ind = identifier.getIntegers("triindices", null);
-			List<Point3d> vertices = new ArrayList<Point3d>(Arrays.asList(identifier.getPoints("P", null)));
-			List<Vector3d> normals = new ArrayList<Vector3d>(Arrays.asList(identifier.getNormals("N", null)));
-			List<Integer> indices = new ArrayList<Integer>(ind.length);
+			final int[] triIndicesArray = identifier.getIntegers("triindices", null);
+			final Point3d[] verticesArray = identifier.getPoints("P", null);
+			final Vector3d[] normalsArray = identifier.getNormals("N", null);
+			final MeshData meshData = new MeshData(triIndicesArray, verticesArray, normalsArray);
 			
-			for (int i : ind) {
-				indices.add(i);
+			Mesh mesh = null;
+			
+			/*if (meshes.containsKey(meshData)) {
+			    mesh = meshes.get(meshData);
 			}
-			Mesh mesh = new Mesh(vertices, normals, indices, true);
+			else {*/
+			    List<Point3d> vertices = new ArrayList<Point3d>(Arrays.asList(verticesArray));
+	            List<Vector3d> normals = new ArrayList<Vector3d>(Arrays.asList(normalsArray));
+	            List<Integer> indices = new ArrayList<Integer>(triIndicesArray.length);
+	            
+	            for (int i : triIndicesArray) {
+	                indices.add(i);
+	            }
+	            
+	            mesh = new Mesh(vertices, normals, indices, true);
+	            meshes.put(meshData, mesh);
+			//}
+			
 			instance = new Instance(mesh);
 			if (currentMaterial == null) {
 				// TODO Material not set, loading default
