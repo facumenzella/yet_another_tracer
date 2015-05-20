@@ -235,7 +235,7 @@ public class SceneBuilder {
 			for (int i : ind) {
 				indices.add(i);
 			}
-			Mesh mesh = new Mesh(vertices, normals, indices, true);
+			Mesh mesh = new Mesh(vertices, normals, indices, false);
 			instance = new Instance(mesh);
 			if (currentMaterial == null) {
 				// TODO Material not set, loading default

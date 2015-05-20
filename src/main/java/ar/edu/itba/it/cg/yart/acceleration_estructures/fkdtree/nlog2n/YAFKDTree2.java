@@ -35,6 +35,8 @@ public class YAFKDTree2 {
 	private double kTMAX = 1000;
 	private static double kLAMBDA = 1;
 
+	private static int leafs;
+	
 	private KDNode root;
 	private static AABB rootAABB;
 	
@@ -55,7 +57,7 @@ public class YAFKDTree2 {
 		Arrays.sort(events);
 		tree.root = buildTree(rootAABB, gObjects, events);
 		System.out.println("Tree built in "
-				+ (System.currentTimeMillis() - start) + " milliseconds.");
+				+ (System.currentTimeMillis() - start) + " milliseconds. \n initials" + gObjects.size() + "leafs: " + leafs);
 		return tree;
 	}
 
@@ -71,11 +73,11 @@ public class YAFKDTree2 {
 		if (size == 0) {
 			return emptyLeaf;
 		}
-		PlaneCandidate bestCandidate = findPlane(size, box, axis,
-				events);
+		PlaneCandidate bestCandidate = findPlane(size, box, events);
 		boolean terminate = bestCandidate.cost > (kKI * size);
 
 		if (currentDepth >= kMAX_DEPTH  || terminate || prevs.contains(bestCandidate)) {
+			leafs += gObjects.size();
 			return new KDLeafNode(gObjects);
 		}
 
@@ -162,7 +164,7 @@ public class YAFKDTree2 {
 
 	// find a 'good' plane mother fucker!!
 	private static PlaneCandidate findPlane(final int objectsSize,
-			final AABB box, SplitAxis axis, final Event[] events) {
+			final AABB box, final Event[] events) {
 
 		final int size = objectsSize;
 		final int eventsQty = events.length;
@@ -465,7 +467,9 @@ public class YAFKDTree2 {
 		final double rayDirAxis = dir[internalNode.splitPoint.axis.value];
 		final double rayOriginAxis = origin[internalNode.splitPoint.axis.value];
 
-		if (rayOriginAxis <= splitPoint) {
+		final double diff = splitPoint - rayOriginAxis;
+		
+		if (diff > 0) {
 			near = internalNode.left;
 			far = internalNode.right;
 		} else {
@@ -473,8 +477,8 @@ public class YAFKDTree2 {
 			far = internalNode.left;
 		}
 
-		final double t = (splitPoint - rayOriginAxis) / rayDirAxis;
-
+		final double t = diff / rayDirAxis;
+		
 		// This is madness !!
 		if (t > max || t < kEPSILON) {
 			// its on the near node
@@ -516,15 +520,17 @@ public class YAFKDTree2 {
 		final double rayDirAxis = dir[internalNode.splitPoint.axis.value];
 		final double rayOriginAxis = origin[internalNode.splitPoint.axis.value];
 
-		if (rayOriginAxis < splitPoint) {
+		final double diff = splitPoint - rayOriginAxis;
+		
+		if (diff > 0) {
 			near = internalNode.left;
 			far = internalNode.right;
-		} else if (rayOriginAxis > splitPoint) {
+		} else {
 			near = internalNode.right;
 			far = internalNode.left;
 		}
 
-		final double t = (splitPoint - rayOriginAxis) / rayDirAxis;
+		final double t = diff / rayDirAxis;
 
 		// This is madness !!
 		if (t > max || t < kEPSILON) {
@@ -569,15 +575,17 @@ public class YAFKDTree2 {
 		final double rayDirAxis = dir[internalNode.splitPoint.axis.value];
 		final double rayOriginAxis = origin[internalNode.splitPoint.axis.value];
 
-		if (rayOriginAxis < splitPoint) {
+		final double diff = splitPoint - rayOriginAxis;
+		
+		if (diff > 0) {
 			near = internalNode.left;
 			far = internalNode.right;
-		} else if (rayOriginAxis > splitPoint) {
+		} else {
 			near = internalNode.right;
 			far = internalNode.left;
 		}
 
-		final double t = (splitPoint - rayOriginAxis) / rayDirAxis;
+		final double t = diff / rayDirAxis;
 
 		// This is madness !!
 		if (t > max || t < kEPSILON) {

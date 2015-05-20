@@ -29,7 +29,7 @@ public abstract class MeshTriangle extends GeometricObject {
 		normal = (mesh.vertices.get(index1).sub(mesh.vertices.get(index0))).cross((mesh.vertices.get(index2).sub(mesh.vertices.get(index0))));
 		normal = normal.normalizedVector();
 		
-		if (true)
+		if (reverse)
 			normal = normal.inverse();
 	}
 	
