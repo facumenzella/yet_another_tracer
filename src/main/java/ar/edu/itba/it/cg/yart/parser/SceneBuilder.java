@@ -1,5 +1,7 @@
 package ar.edu.itba.it.cg.yart.parser;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -8,6 +10,8 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.imageio.ImageIO;
 
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Instance;
@@ -27,11 +31,16 @@ import ar.edu.itba.it.cg.yart.light.materials.Phong;
 import ar.edu.itba.it.cg.yart.light.materials.Reflective;
 import ar.edu.itba.it.cg.yart.light.materials.Transparent;
 import ar.edu.itba.it.cg.yart.parser.Identifier.IdentifierType;
+import ar.edu.itba.it.cg.yart.parser.Property.PropertyType;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
+import ar.edu.itba.it.cg.yart.textures.ConstantColor;
+import ar.edu.itba.it.cg.yart.textures.ImageTexture;
 import ar.edu.itba.it.cg.yart.textures.Texture;
+import ar.edu.itba.it.cg.yart.textures.mapping.SphericalMapping;
+import ar.edu.itba.it.cg.yart.textures.wrappers.ClampWrap;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class SceneBuilder {
@@ -196,40 +205,42 @@ public class SceneBuilder {
 		
 		if (type.equals("matte")) {
 			Matte mat = new Matte();
-			mat.setCd(identifier.getColor("Kd", Color.whiteColor()));
+			mat.setCd(getColorOrTexture(identifier, "Kd", Color.whiteColor()));
 			mat.setKd(1);
 			mat.setKa(0.15);
 			ret = mat;
 		}
 		else if (type.equals("mirror")) {
-			Color cKr = identifier.getColor("Kr", Color.whiteColor());
-			double dKr = (cKr.r + cKr.g + cKr.b) / 3;
-			
 			Reflective mat = new Reflective();
-			mat.setCd(cKr);
+			mat.setCd(getColorOrTexture(identifier, "Kd", Color.blackColor()));
+			mat.setCr(getColorOrTexture(identifier, "Kr", Color.whiteColor()));
 			mat.setKd(0.75);
-			mat.setKs(0.2);
+			mat.setKs(0.0);
 			mat.setKa(0.3);
-			mat.setExp(25);
-			mat.setCr(cKr);
-			mat.setKr(dKr);
+			mat.setExp(0);
+			mat.setKr(1);
 			ret = mat;
 		}
 		else if (type.equals("glass")) {
 			Color cKt = identifier.getColor("Kt", Color.whiteColor());
-			Color cKr = identifier.getColor("Kt", Color.whiteColor());
+			Color cKr = identifier.getColor("Kr", Color.whiteColor());
+			
+			double ior = identifier.getDouble("index", 1.5);
+			if (ior < 1) {
+				ior = 1;
+			}
 			
 			double dKt = (cKt.r + cKt.g + cKt.b) / 3;
 			double dKr = (cKr.r + cKr.g + cKr.b) / 3;
 			
 			Transparent mat = new Transparent();
-			mat.setCd(Color.blueColor());
+			mat.setCd(Color.blackColor());
 			mat.setKs(0.5);
 			mat.setExp(1000);
-			mat.setCr(Color.whiteColor());
-			mat.setKr(dKr);
-			mat.setIor(identifier.getDouble("index", 1.5));
-			mat.setKt(dKt);
+			mat.setCr(getColorOrTexture(identifier, "Kr", Color.whiteColor()));
+			mat.setKr(0.5);
+			mat.setIor(ior);
+			mat.setKt(1);
 			ret = mat;
 		}
 		else if (type.equals("metal2")) {
@@ -244,7 +255,7 @@ public class SceneBuilder {
 			double exponent = 1 / finalRoughness;
 			
 			Phong mat = new Phong();
-			mat.setCd(identifier.getColor("Kr", Color.whiteColor()));
+			mat.setCd(getColorOrTexture(identifier, "Kr", Color.whiteColor()));
 			mat.setKd(1);
 			mat.setKa(0.15);
 			mat.setExp(exponent);
@@ -254,6 +265,30 @@ public class SceneBuilder {
 		else {
 			// TODO Material not recognized, load default
 			ret = defaultMaterial;
+		}
+		
+		return ret;
+	}
+	
+	private Texture getColorOrTexture(Identifier identifier, String property, Color defaultColor) {
+		Texture ret;
+		
+		if (identifier.getPropertyType(property) == PropertyType.COLOR) {
+			Color color = identifier.getColor(property, defaultColor);
+			ret = new ConstantColor(color);
+		}
+		else if (identifier.getPropertyType(property) == PropertyType.TEXTURE) {
+			String textureName = identifier.getString(property, null);
+			if (!textures.containsKey(textureName)) {
+				// TODO Texture not found, fire some warning
+				ret = new ConstantColor(defaultColor);
+			}
+			else {
+				ret = textures.get(textureName);
+			}
+		}
+		else {
+			ret = new ConstantColor(defaultColor);
 		}
 		
 		return ret;
@@ -272,8 +307,7 @@ public class SceneBuilder {
 				// TODO We only support color right now, fire some warning, but carry on
 			}
 			
-			if (!type.equalsIgnoreCase("imagemap")) {
-				// TODO We only support imagemaps, fire some warning
+			if (type.equalsIgnoreCase("imagemap")) {
 				if (!identifier.hasProperty("filename")) {
 					// TODO Missing filename
 					return null;
@@ -282,6 +316,15 @@ public class SceneBuilder {
 					// TODO Missing wrap type
 					return null;
 				}
+				BufferedImage image = ImageIO.read(new File(identifier.getString("filename", null)));
+				ret = new ImageTexture(image, new SphericalMapping(), new ClampWrap());
+			}
+			else {
+				// TODO We only support imagemaps, fire some warning
+			}
+			
+			if (ret != null) {
+				textures.put(name, ret);
 			}
 		}
 		
