@@ -40,8 +40,13 @@ import ar.edu.itba.it.cg.yart.raytracer.world.World;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.ImageTexture;
 import ar.edu.itba.it.cg.yart.textures.Texture;
+import ar.edu.itba.it.cg.yart.textures.mapping.Mapping;
+import ar.edu.itba.it.cg.yart.textures.mapping.RectangularMapping;
 import ar.edu.itba.it.cg.yart.textures.mapping.SphericalMapping;
 import ar.edu.itba.it.cg.yart.textures.wrappers.ClampWrap;
+import ar.edu.itba.it.cg.yart.textures.wrappers.ColorWrap;
+import ar.edu.itba.it.cg.yart.textures.wrappers.RepeatWrap;
+import ar.edu.itba.it.cg.yart.textures.wrappers.Wrapper;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class SceneBuilder {
@@ -278,7 +283,37 @@ public class SceneBuilder {
 					return null;
 				}
 				BufferedImage image = ImageIO.read(new File(identifier.getString("filename", null)));
-				ret = new ImageTexture(image, new SphericalMapping(), new ClampWrap());
+				Mapping mapping = null;
+				Wrapper wrapper = null;
+				String mappingStr = identifier.getString("mapping", "uv");
+				String wrapperStr = identifier.getString("wrap", null);
+				
+				// Load mapping
+				if (mappingStr.equalsIgnoreCase("uv")) {
+					// TODO Add UV mapping
+				}
+				else if (mappingStr.equalsIgnoreCase("spherical")) {
+					mapping = new SphericalMapping();
+				}
+				else if (mappingStr.equalsIgnoreCase("planar")) {
+					mapping = new RectangularMapping();
+				}
+				else {
+					// TODO Mapping not recognized, defaulting to UV
+				}
+				
+				// Load wrap type
+				if (wrapperStr.equalsIgnoreCase("repeat")) {
+					wrapper = new RepeatWrap();
+				}
+				else if (wrapperStr.equalsIgnoreCase("black")) {
+					wrapper = new ColorWrap();
+				}
+				else if (wrapperStr.equalsIgnoreCase("clamp")) {
+					wrapper = new ClampWrap();
+				}
+				
+				ret = new ImageTexture(image, mapping, wrapper);
 			}
 			else {
 				// TODO We only support imagemaps, fire some warning
