@@ -93,6 +93,9 @@ public class YAFKDTree2 {
 		final Event[] ebl = classifiedEvents.ebl.toArray(new Event[0]);
 		final Event[] ebr = classifiedEvents.ebr.toArray(new Event[0]);
 
+		Arrays.sort(ebl);
+		Arrays.sort(ebr);
+		
 		final List<Event> el = Event.mergeEvents(Arrays.asList(ebl),
 				classifiedEvents.elo);
 		final List<Event> er = Event.mergeEvents(Arrays.asList(ebr),
@@ -100,6 +103,24 @@ public class YAFKDTree2 {
 
 		final int nextDepth = currentDepth + 1;
 		SplitAxis nextAxis = SplitAxis.nextAxis(axis);
+		
+		final List<GeometricObject> tl = new ArrayList<>();
+		final List<GeometricObject> tr = new ArrayList<>();
+
+		for (final GeometricObject go : gObjects) {
+			switch (classifiedObjects.sides.get(go)) {
+			case 1:
+				tl.add(go);
+				break;
+			case 2:
+				tr.add(go);
+				break;
+			case 3:
+				tl.add(go);
+				tr.add(go);
+				break;
+			}
+		}
 		
 		final Set<PlaneCandidate> newSplits = new HashSet<>(prevs);
 		newSplits.add(bestCandidate);

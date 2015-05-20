@@ -1,23 +1,22 @@
 package ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.nlog2n;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeSet;
 
 import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 
 public class ClassifiedEvents {
 	
-	public final Set<Event> elo;
-	public final Set<Event> ero;
-	public final Set<Event> ebl;
-	public final Set<Event> ebr;
+	public final List<Event> elo;
+	public final List<Event> ero;
+	public final List<Event> ebl;
+	public final List<Event> ebr;
 	
-	private ClassifiedEvents(final Set<Event> elo,
-			final Set<Event> ero, final Set<Event> ebl,
-			final Set<Event> ebr) {
+	private ClassifiedEvents(final List<Event> elo,
+			final List<Event> ero, final List<Event> ebl,
+			final List<Event> ebr) {
 		this.elo = elo;
 		this.ero = ero;
 		this.ebl = ebl;
@@ -26,10 +25,10 @@ public class ClassifiedEvents {
 	
 	public static ClassifiedEvents splice(final Event[] events,
 			final ClassifiedObjects tc, final AABB leftBox, final AABB rightBox) {
-		final Set<Event> elo = new TreeSet<Event>();
-		final Set<Event> ero = new TreeSet<Event>();
-		final Set<Event> ebl = new TreeSet<Event>();
-		final Set<Event> ebr = new TreeSet<Event>();
+		final List<Event> elo = new ArrayList<Event>();
+		final List<Event> ero = new ArrayList<Event>();
+		final List<Event> ebl = new ArrayList<Event>();
+		final List<Event> ebr = new ArrayList<Event>();
 		
 		try {
 			for (int i = 0; i < events.length; i++) {

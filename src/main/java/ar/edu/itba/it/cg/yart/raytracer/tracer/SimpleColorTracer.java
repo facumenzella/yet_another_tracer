@@ -14,7 +14,7 @@ public class SimpleColorTracer extends AbstractTracer implements ColorTracer {
 	@Override
 	public Color traceRay(final Ray ray, List<GeometricObject> objects, final ShadeRec sr, final double tMax) {
 		
-		if (ray.depth >= MAX_DEPTH || objects.size() == 0) {
+		if (ray.depth >= MAX_DEPTH || objects == null || objects.size() == 0) {
 			return Color.blackColor();
 		}
 		Vector3d normal = null;

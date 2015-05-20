@@ -9,7 +9,7 @@ public class SimpleShadowTracer extends AbstractTracer implements ShadowTracer{
 
 	@Override
 	public double traceShadowHit(final Ray ray, final List<GeometricObject> objects, final double tMax) {
-		if (ray.depth >= MAX_DEPTH) {
+		if (ray.depth >= MAX_DEPTH || objects == null || objects.size() == 0) {
 			return Double.NEGATIVE_INFINITY;
 		}
 		double tMin = tMax;
