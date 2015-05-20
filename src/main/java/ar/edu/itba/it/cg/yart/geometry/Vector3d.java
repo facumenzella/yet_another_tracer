@@ -4,6 +4,9 @@ import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class Vector3d {
 
+	public static final Vector3d X = new Vector3d(1, 0 ,0);
+	public static final Vector3d Y = new Vector3d(0 ,1 ,0);
+	public static final Vector3d Z = new Vector3d(0, 0, 1);
 
 	public double x;
 	public double y;

@@ -352,6 +352,7 @@ public class SceneBuilder {
 			/*if (meshes.containsKey(meshData)) {
 			    mesh = meshes.get(meshData);
 			}
+<<<<<<< HEAD
 			else {*/
 			    List<Point3d> vertices = new ArrayList<Point3d>(Arrays.asList(verticesArray));
 	            List<Vector3d> normals = new ArrayList<Vector3d>(Arrays.asList(normalsArray));
@@ -364,7 +365,6 @@ public class SceneBuilder {
 	            mesh = new Mesh(vertices, normals, indices, true);
 	            meshes.put(meshData, mesh);
 			//}
-			
 			instance = new Instance(mesh);
 			if (currentMaterial == null) {
 				// TODO Material not set, loading default

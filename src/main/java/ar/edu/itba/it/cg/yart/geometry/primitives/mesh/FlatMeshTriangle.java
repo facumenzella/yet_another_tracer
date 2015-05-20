@@ -13,10 +13,10 @@ public class FlatMeshTriangle extends MeshTriangle {
 
 	@Override
 	public double hit(Ray ray, ShadeRec sr) {
-		if (!getBoundingBox().hit(ray)) {
-			return Double.NEGATIVE_INFINITY;
-		}
-		
+//		if (!getBoundingBox().hit(ray)) {
+//			return Double.NEGATIVE_INFINITY;
+//		}
+//		
 		Point3d v0 = mesh.vertices.get(index0);
 		Point3d v1 = mesh.vertices.get(index1);
 		Point3d v2 = mesh.vertices.get(index2);
@@ -63,9 +63,9 @@ public class FlatMeshTriangle extends MeshTriangle {
 
 	@Override
 	public double shadowHit(Ray ray) {		
-		if (!getBoundingBox().hit(ray)) {
-			return Double.NEGATIVE_INFINITY;
-		}
+//		if (!getBoundingBox().hit(ray)) {
+//			return Double.NEGATIVE_INFINITY;
+//		}
 		
 		Point3d v0 = mesh.vertices.get(index0);
 		Point3d v1 = mesh.vertices.get(index1);

@@ -1,6 +1,6 @@
 package ar.edu.itba.it.cg.yart.geometry;
 
-import ar.edu.itba.it.cg.yart.geometry.primitives.BoundingBox;
+import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
@@ -8,7 +8,7 @@ import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class Instance extends GeometricObject{
 
-	private GeometricObject object; // object to be transformed
+	public GeometricObject object; // object to be transformed
 	public boolean transformTexture; // do we transform the texture
 
 	public Instance(final GeometricObject object) {
@@ -16,12 +16,15 @@ public class Instance extends GeometricObject{
 		this.matrix = new Matrix4d();
 		this.invMatrix = this.matrix.inverse();
 		this.transposedInvMatrix = this.invMatrix.transpose();
+		updateBoundingBox();
 	}
 	
 	@Override
-	public BoundingBox createBoundingBox() {
-		BoundingBox boundingBox = object.createBoundingBox();
-		boundingBox.applyTransformation(matrix);
+	public AABB createBoundingBox() {
+		AABB boundingBox = object.createBoundingBox();
+		if (boundingBox != null) {
+			boundingBox.applyTransformation(matrix);
+		}
 		return boundingBox;
 	}
 
@@ -37,13 +40,10 @@ public class Instance extends GeometricObject{
 			sr.normal = sr.normal.transformByMatrix(transposedInvMatrix).normalizedVector();
 		}
 		
-		if (object.material != null) {
-			this.material = object.material;
-		}
-		
 //		if (!transformTexture) {
 //			sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
 //		}
+
 		return t;
 	}
 
@@ -56,6 +56,12 @@ public class Instance extends GeometricObject{
 		
 		final double t = object.shadowHit(invRay);
 		return t;
+	}
+	
+	@Override
+	public void applyTransformation(Matrix4d matrix) {
+		super.applyTransformation(matrix);
+		updateBoundingBox();
 	}
 
 }
