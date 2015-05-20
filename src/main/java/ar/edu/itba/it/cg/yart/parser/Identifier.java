@@ -2,6 +2,7 @@ package ar.edu.itba.it.cg.yart.parser;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import ar.edu.itba.it.cg.yart.color.Color;
@@ -67,7 +68,7 @@ public class Identifier {
 		}
 
 		if (property != null) {
-			properties.put(property.getName(), property);
+			properties.put(property.getName().toUpperCase(Locale.US), property);
 		}
 	}
 	
@@ -93,14 +94,14 @@ public class Identifier {
 		Property ret = null;
 		
 		if (properties != null) {
-			ret = properties.get(propertyName);
+			ret = properties.get(propertyName.toUpperCase(Locale.US));
 		}
 		
 		return ret;
 	}
 	
 	public boolean hasProperty(final String propertyName) {
-		return properties != null && properties.containsKey(propertyName);
+		return properties != null && properties.containsKey(propertyName.toUpperCase(Locale.US));
 	}
 	
 	public boolean getBoolean(final String propertyName, boolean defaultValue) {
