@@ -30,7 +30,7 @@ public class YAFKDTree2 {
 
 	private static double kKT = 1.5;
 	private static double kKI = 1;
-	private static int kMAX_DEPTH = 10;
+	private static int kMAX_DEPTH = 40;
 	private double kEPSILON = 0.00001;;
 	private double kTMAX = 1000;
 	private static double kLAMBDA = 1;
