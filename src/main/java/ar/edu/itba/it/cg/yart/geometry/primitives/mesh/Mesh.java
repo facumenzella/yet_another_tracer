@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.YAFKDTree;
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.nlog2n.YAFKDTree2;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
@@ -28,7 +28,7 @@ public class Mesh extends GeometricObject {
 
 	public int numVertices;
 	public int numTriangles;
-	private YAFKDTree kdTree;
+	private YAFKDTree2 kdTree;
 
 	private double minX = Double.POSITIVE_INFINITY;
 	private double maxX = Double.NEGATIVE_INFINITY;
@@ -101,7 +101,7 @@ public class Mesh extends GeometricObject {
 		this.numVertices = vertices.size();
 		this.updateBoundingBox();
 		double max = Math.max(maxZ,Math.max(maxY, Math.max(maxX,Math.max(minZ,Math.max(minX,minY)))));
-		kdTree = new YAFKDTree(this.triangles, max);
+		kdTree = YAFKDTree2.build(this.triangles, max);
 
 		if (needsSmoothing) {
 			this.computeMeshNormals();
