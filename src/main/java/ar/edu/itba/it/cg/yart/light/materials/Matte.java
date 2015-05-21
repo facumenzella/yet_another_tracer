@@ -19,7 +19,7 @@ public class Matte extends MaterialAbstract {
 	@Override
 	public Color shade(ShadeRec sr) {
 		final Vector3d wo = sr.ray.direction.inverse();
-		final Color colorL = ambientBRDF.rho(sr, wo);
+		final Color colorL = diffuseBRDF.rho(sr, wo);
 		colorL.multiplyEquals(sr.world.getAmbientLight().L(sr));
 
 		final List<Light> castShadowLights = sr.world.getCastShadowLights();
@@ -69,11 +69,24 @@ public class Matte extends MaterialAbstract {
 		diffuseBRDF.setKd(kd);
 		return this;
 	}
+	
+	public Matte setKd(final Color kd) {
+		diffuseBRDF.setKd(kd);
+		return this;
+	}
+	
+	public Matte setKd(final Texture kd) {
+		diffuseBRDF.setKd(kd);
+		return this;
+	}
+	public Matte setCd(final double cd) {
+		final Color color = new Color(cd);
+		return setCd(color);
+	}
 
 	public Matte setCd(final Color cd) {
 		final Texture texture = new ConstantColor(cd);
-		setCd(texture);
-		return this;
+		return setCd(texture);
 	}
 
 	public Matte setCd(final Texture cd) {

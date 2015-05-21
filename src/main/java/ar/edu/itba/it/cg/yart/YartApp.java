@@ -28,7 +28,7 @@ public class YartApp {
 		final int bucketSize = configs.getBucketSize();
 		final double tMax = configs.getMaxT();
 		final double distance = configs.getDistance();
-		final int zoom = 1;
+		final int zoom = 2;
 		
 		RenderResult renderResult = new RenderResult();
 		

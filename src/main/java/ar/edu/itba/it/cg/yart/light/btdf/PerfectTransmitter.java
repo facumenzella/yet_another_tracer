@@ -4,10 +4,12 @@ import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.MutableVector3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.textures.ConstantColor;
+import ar.edu.itba.it.cg.yart.textures.Texture;
 
 public class PerfectTransmitter extends BTDF {
 
-	private double kt;
+	private Texture kt;
 	private double ior;
 	private double invIor;
 	
@@ -20,8 +22,19 @@ public class PerfectTransmitter extends BTDF {
 	}
 
 	public void setKt(final double kt) {
+		final Color ktColor = new Color(kt);
+		setKt(ktColor);
+	}
+	
+	public void setKt(final Color kt) {
+		final Texture ktTexture = new ConstantColor(kt);
+		setKt(ktTexture);
+	}
+	
+	public void setKt(final Texture kt) {
 		this.kt = kt;
 	}
+
 
 	@Override
 	public Color f(ShadeRec sr, Vector3d wo, Vector3d wi) {
@@ -65,7 +78,7 @@ public class PerfectTransmitter extends BTDF {
 		wt.copy(mWo);
 		
 		final double aux = Math.abs(sr.normal.dot(wt));
-		return (Color.whiteColor().multiplyEquals(kt/etaSquared))
+		return (Color.whiteColor().multiplyEquals(kt.getColor(sr).multiply(1.0/etaSquared)))
 				.multiplyEquals(1.0/aux);
 	}
 

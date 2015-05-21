@@ -14,6 +14,10 @@ public class Color {
 	private static Color YELLOW = new Color(1.0,1.0,0,1.0);
 	private static Color WHITE = new Color(1.0,1.0,1.0,1.0);
 	
+	public Color(final double c) {
+		this(c,c,c);
+	}
+	
 	public Color(final double r, final double g, final double b) {
 		this(r, g, b, 1.0);
 	}
@@ -52,12 +56,13 @@ public class Color {
 		return new Color(this.r*f.r, this.g*f.g, this.b*f.b);
 	}
 	
-	public void multiplyEquals(final Color f) {
+	public Color multiplyEquals(final Color f) {
 		if (f != null) {
 			this.r = this.r * f.r;
 			this.g = this.g * f.g;
 			this.b = this.b * f.b;
 		}
+		return this;
 	}
 	
 	public Color multiplyEquals(final double f) {
@@ -90,27 +95,27 @@ public class Color {
 	}
 	
 	public static Color whiteColor() {
-		return WHITE;
+		return new Color(1.0,1.0,1.0,1.0);
 	}
 	
 	public static Color blackColor() {
-		return BLACK;
+		return new Color(0,0,0,1.0);
 	}
 	
 	public static Color redColor() {
-		return RED;
+		return new Color(1.0,0,0,1.0);
 	}
 	
 	public static Color greenColor() {
-		return GREEN;
+		return new Color(0,1.0,0,1.0);
 	}
 	
 	public static Color blueColor() {
-		return BLUE;
+		return new Color(0,0,1.0,1.0);
 	}
 	
 	public static Color yellowColor() {
-		return YELLOW;
+		return new Color(1.0,1.0,0,1.0);
 	}
 	
 	@Override

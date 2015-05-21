@@ -72,9 +72,9 @@ public class Sphere extends GeometricObject {
 	@Override
 	public double shadowHit(final Ray ray) {
 		// intersect the inverse transformed ray with the untransformed object
-		if (!getBoundingBox().hit(ray)) {
-			return Double.NEGATIVE_INFINITY;
-		}
+//		if (!getBoundingBox().hit(ray)) {
+//			return Double.NEGATIVE_INFINITY;
+//		}
 		
 		MutableVector3d tmp = ray.origin.mutableSub(center);
 		MutableVector3d rayTmp = new MutableVector3d(ray.direction);

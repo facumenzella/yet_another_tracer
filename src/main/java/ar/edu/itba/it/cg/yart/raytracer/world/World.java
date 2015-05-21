@@ -1,15 +1,20 @@
 package ar.edu.itba.it.cg.yart.raytracer.world;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.nlog2n.YAFKDTree2;
+import javax.imageio.ImageIO;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Instance;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Plane;
+import ar.edu.itba.it.cg.yart.geometry.primitives.Quadrilateral;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Sphere;
 import ar.edu.itba.it.cg.yart.light.AmbientLight;
 import ar.edu.itba.it.cg.yart.light.Directional;
@@ -18,6 +23,12 @@ import ar.edu.itba.it.cg.yart.light.PointLight;
 import ar.edu.itba.it.cg.yart.light.materials.Matte;
 import ar.edu.itba.it.cg.yart.light.materials.Reflective;
 import ar.edu.itba.it.cg.yart.light.materials.Transparent;
+import ar.edu.itba.it.cg.yart.textures.ImageTexture;
+import ar.edu.itba.it.cg.yart.textures.mapping.RectangularMapping;
+import ar.edu.itba.it.cg.yart.textures.mapping.SphericalMapping;
+import ar.edu.itba.it.cg.yart.textures.wrappers.ClampWrap;
+import ar.edu.itba.it.cg.yart.textures.wrappers.ColorWrap;
+import ar.edu.itba.it.cg.yart.textures.wrappers.RepeatWrap;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class World {
@@ -35,7 +46,7 @@ public class World {
 	 * Creates a sad, empty World.
 	 */
 	public World() {
-		this.ambientLight = new AmbientLight(Color.blackColor());
+		this.ambientLight = new AmbientLight(new Color(0.3, 0.3, 0.3));
 	}
 	
 	public void preprocess() {
@@ -47,102 +58,121 @@ public class World {
 	}
 	
 	public void buildTestWorld() {
+		
+		BufferedImage blackAndWhiteImage = null;
+		try {
+			blackAndWhiteImage = ImageIO.read(new File("./images/BlackAndWhite.jpg"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		BufferedImage billiardBallImage = null;
+		try {
+			billiardBallImage = ImageIO.read(new File("./images/BilliardBall.jpg"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		BufferedImage earthMapImage = null;
+		try {
+			earthMapImage = ImageIO.read(new File("./images/earthmap.jpg"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		BufferedImage earthSpecImage = null;
+		try {
+			earthSpecImage = ImageIO.read(new File("./images/earthspec.jpg"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		BufferedImage menzellaImage = null;
+		try {
+			menzellaImage = ImageIO.read(new File("./images/menzella.jpg"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		final ImageTexture earthMirrorReflection = new ImageTexture(earthSpecImage, new RectangularMapping(), new ClampWrap());
+		final ImageTexture earthMirrorTexture = new ImageTexture(earthMapImage, new RectangularMapping(), new ClampWrap());
+		
+
+		final ImageTexture floorTexture = new ImageTexture(blackAndWhiteImage, new RectangularMapping(), new RepeatWrap());
+		final ImageTexture billiardBallTexture = new ImageTexture(billiardBallImage, new SphericalMapping(), new ColorWrap());
+		
+		final ImageTexture menzellaTexture = new ImageTexture(menzellaImage, new RectangularMapping(), new ClampWrap());
+		
+		final Instance earthMirror = new Instance(new Quadrilateral());
+		final Matrix4d earthMirrorTrans = Matrix4d.scaleMatrix(200,100,1).rotateZ(90).rotateY(100).transform(-10,-100,-30);
+		earthMirror.applyTransformation(earthMirrorTrans);
+		final Reflective r1m = new Reflective().setCd(earthMirrorTexture).setKa(0).setKd(1)
+				.setKs(0).setExp(0).setCr(Color.whiteColor()).setKr(earthMirrorReflection);
+		earthMirror.setMaterial(r1m);
+		
+		final Instance menzella = new Instance(new Quadrilateral());
+		final Matrix4d menzellaTrans = Matrix4d.scaleMatrix(85,88.4,1).rotateX(0).transform(-60,-30,250);
+		menzella.applyTransformation(menzellaTrans);
+		final Matte menzellaMaterial = new Matte().setCd(menzellaTexture).setKa(0).setKd(1);
+		menzella.setMaterial(menzellaMaterial);
+		
+		
+		
 		setBackgroundColor(Color.blackColor());
-		final Instance s1 = new Instance(new Sphere());
-		s1.applyTransformation(Matrix4d.scaleMatrix(2, 2, 2));
+
+		final Instance billiardBall = new Instance(new Sphere());
+		final Matrix4d ballTrans = Matrix4d.scaleMatrix(30, 30, 30).rotateY(0).transform(40,30,0);
+		billiardBall.applyTransformation(ballTrans);
 		Reflective s1m = new Reflective();
-		s1m.setCd(Color.redColor());
-		s1m.setKd(0.75);
-		s1m.setKs(0.3);
-		s1m.setKa(0.3);
-		s1m.setExp(20);
+		s1m.setCd(billiardBallTexture);
+		s1m.setKd(1);
+		s1m.setKa(0);
+		s1m.setKs(0.2);
+		s1m.setExp(200);
 		s1m.setCr(Color.whiteColor());
-		s1m.setKr(0.4);
-		s1.setMaterial(s1m);
-		final Instance s2 = new Instance(new Sphere());
-		s2.applyTransformation(Matrix4d.scaleMatrix(2,2,2).rightMultiply(Matrix4d.transformMatrix(-2,4,0)));
-		Reflective s2m = new Reflective();
-		s2m.setCd(Color.greenColor());
-		s2m.setKd(0.50);
-		s2m.setKa(0.3);
-		s2m.setKs(0.2);
-		s2m.setExp(10);
-		s2m.setCr(Color.whiteColor());
-		s2m.setKr(0.5);
-		s2.setMaterial(s2m);
-		final Instance s3 = new Instance(new Sphere());
-		Transparent s3m = new Transparent();	
-		s3m.setCd(Color.blueColor());
-		s2m.setKd(0.50);
-		s2m.setKa(0.3);
-		s3m.setKs(0.5);
-		s3m.setExp(1000);
-		s3m.setCr(Color.whiteColor());
-		s3m.setKr(0.5);
-		s3m.setIor(1.5);
-		s3m.setKt(0.9);
-		s3.setMaterial(s3m);
-		Matte d1m = new Matte();
-		d1m.setCd(Color.redColor());
-		d1m.setKd(0.75);
-		d1m.setKa(0.30);		
-		final Plane background = new Plane(new Point3d(0,0,-150), new Vector3d(0,0,1));
-		Matte planeMaterial = new Matte();
-		planeMaterial.setCd(Color.yellowColor());
-		planeMaterial.setKd(0.50);
-		planeMaterial.setKa(0.15);
-		background.setMaterial(planeMaterial);
-		final Plane backgroundLeft = new Plane(new Point3d(-150,0,0), new Vector3d(1,0,0));
-		Matte left = new Matte();
-		left.setCd(Color.yellowColor());
-		left.setKd(0.50);
-		left.setKa(0.15);
-		backgroundLeft.setMaterial(left);
-		final Plane backgroundBottom = new Plane(new Point3d(0,-150,0), new Vector3d(0,1,0));
-		Matte bottom = new Matte();
-		bottom.setCd(Color.yellowColor());
-		bottom.setKd(0.50);
-		bottom.setKa(0.15);
-		backgroundBottom.setMaterial(bottom);
-		final Plane backgroundTop = new Plane(new Point3d(0,150,0), new Vector3d(0,-1,0));
-		Matte top = new Matte();
-		top.setCd(Color.yellowColor());
-		top.setKd(0.50);
-		top.setKa(0.15);
-		backgroundTop.setMaterial(top);
-		final Plane backgroundRight = new Plane(new Point3d(150,0,0), new Vector3d(-1,0,0));
-		Matte right = new Matte();
-		right.setCd(Color.yellowColor());
-		right.setKd(0.50);
-		right.setKa(0.15);
-		backgroundRight.setMaterial(right);
+		s1m.setKr(.25);
+		billiardBall.setMaterial(s1m);
+		
+		final Instance waterGlass = new Instance(new Sphere());
+		final Matrix4d waterGlassTrans = Matrix4d.scaleMatrix(5, 5, 5).transform(70,-25,-25);
+		waterGlass.applyTransformation(waterGlassTrans);
+		Transparent waterGlassMaterial = new Transparent()
+		.setCd(Color.blackColor())
+		.setKa(0.2)
+		.setKd(0.5)
+		.setKs(0.7)
+		.setExp(100)
+		.setCr(Color.whiteColor())
+		.setKr(0.9)
+		.setIor(1)
+		.setKt(new Color(0.1, 0.1, 0.1));
+		waterGlass.setMaterial(waterGlassMaterial);
+		
 		final Instance floor = new Instance(new Plane());
-//		floor.applyTransformation(Matrix4d.transformMatrix(0, -30, 0));
+		floor.applyTransformation(Matrix4d.scaleMatrix(100, 100, 1).rotateX(0).transform(0, 0, -30));
 		Matte floorM = new Matte();
-		floorM.setCd(new Color(0.4, 0.4, 0.4));
+		floorM.setCd(floorTexture);
 		floorM.setKd(0.50);
 		floorM.setKa(0.15);
-		floor.setMaterial(right);
+		floor.setMaterial(floorM);
 		
 		final Directional light1 = new Directional(2.0,Color.whiteColor(),new Vector3d(-2,7,3));
-		final PointLight light2 = new PointLight(2,Color.whiteColor(),new Vector3d(60,30,40));
+
+		final PointLight light2 = new PointLight(2,Color.whiteColor(), new Vector3d(60, 70, 70));
+//		final Matrix4d light2T = Matrix4d.transformMatrix(60, 30, 40);
+//		light2.applyTransformation(light2T);
 		
 //		addLight(light1);
 		addLight(light2);
 //		light1.shadowsOff();
 //		light2.shadowsOff();
 				
-		
-		objects.add(s1);
-//		objects.add(s2);
-//		objects.add(s3);
-		objects.add(floor);
-//		this.addObjects(objects);
-//		addObject(background);
-//		addObject(backgroundLeft);
-//		addObject(backgroundBottom);
-//		addObject(backgroundRight);
-//		addObject(backgroundTop);
+
+		addObject(earthMirror);
+		addObject(billiardBall);
+//		addObject(menzella);
+		addObject(waterGlass);
+		addObject(floor);
+
 		this.kdTree = YAFKDTree2.build(this.objects, 30);
 	}
 	
@@ -186,8 +216,7 @@ public class World {
 	public void addLight(final Light light) {
 		if (light instanceof AmbientLight) {
 			setAmbientLight((AmbientLight) light);
-		}
-		else {
+		} else {
 			lights.add(light);
 			if (light.castShadows()) {
 				castShadowLights.add(light);

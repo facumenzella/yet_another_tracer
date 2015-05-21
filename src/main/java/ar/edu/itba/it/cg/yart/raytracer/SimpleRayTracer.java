@@ -26,7 +26,7 @@ public class SimpleRayTracer implements RayTracer {
 	private World world;
 	
 	// Default parameters
-	private Point3d eye = new Point3d(0,-5,12);
+	private Point3d eye = new Point3d(200,0,0);
 	private Point3d lookat = new Point3d(0,0,0);
 	private Vector3d up = new Vector3d(0,0,1);
 

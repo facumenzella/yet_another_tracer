@@ -7,9 +7,11 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
 public class Quadrilateral extends GeometricObject {
-
-	private Point3d corner;
-	private Vector3d sideA;
+	
+	private Point3d corner; // corner of rectangle
+	private Vector3d sideA; // this are the sides, they should not be paralel
+							//with this implementation you can create any quadrilateral
+							// not just a rectangle.
 	private Vector3d sideB;
 	private double sideAlenghtSquared;
 	private double sideBlenghtSquared;
@@ -47,6 +49,7 @@ public class Quadrilateral extends GeometricObject {
 
 	@Override
 	public AABB createBoundingBox() {
+		
 		final double p1x = Math.min(corner.x, corner.x + sideA.x + sideB.x) - EPSILON;
 		final double p2x = Math.max(corner.x, corner.x + sideA.x + sideB.x) + EPSILON;
 		final double p1y = Math.min(corner.y, corner.y + sideA.y + sideB.y) - EPSILON;
@@ -57,14 +60,14 @@ public class Quadrilateral extends GeometricObject {
 		final Point3d p1 = new Point3d(p1x, p1y, p1z);
 		final Point3d p2 = new Point3d(p2x, p2y, p2z);
 		
-		return new AABB(p1, p2);
+		return new AABB(p2, p1);
 	}
 
 	@Override
 	public double hit(Ray ray, ShadeRec sr) {
-		if (!getBoundingBox().hit(ray)) {
-			return Double.NEGATIVE_INFINITY;
-		}
+//		if (!getBoundingBox().hit(ray)) {
+//			return Double.NEGATIVE_INFINITY;
+//		}
 		
 		final double t = corner.sub(ray.origin).dot(normal)
 				/ ray.direction.dot(normal);
@@ -95,9 +98,9 @@ public class Quadrilateral extends GeometricObject {
 	@Override
 	public double shadowHit(Ray ray) {
 		
-		if (!getBoundingBox().hit(ray)) {
-			return Double.NEGATIVE_INFINITY;
-		}
+//		if (!getBoundingBox().hit(ray)) {
+//			return Double.NEGATIVE_INFINITY;
+//		}
 		
 		final double t = corner.sub(ray.origin).dot(normal)
 				/ ray.direction.dot(normal);
