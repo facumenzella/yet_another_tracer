@@ -18,6 +18,7 @@ public class PinholeCamera extends CameraAbstract {
 
 	private final double distance;
 	private final double zoom;
+	private final Point2d sp = new Point2d(0, 0);
 	
 	// Default value according to LuxRender specs.
 	private double fov = 90;
@@ -38,7 +39,6 @@ public class PinholeCamera extends CameraAbstract {
 		Color color = new Color(0, 0, 0, 0);
 		ViewPlane viewPlane = rayTracer.getViewPlane();
 		double adjustedPixelSize = viewPlane.pixelSize / zoom;
-		Point2d sp = new Point2d(0, 0);
 		Point2d pp;
 		Ray ray = new Ray(this.eye);
 		final int n = (int) Math.sqrt((double) rayTracer.getNumSamples());
@@ -71,8 +71,15 @@ public class PinholeCamera extends CameraAbstract {
 				final double y = adjustedPixelSize
 						* (0.5 * viewPlane.vRes - row + sp.y + distributionY);
 
-				pp = new Point2d(x, y);
-				ray.direction = this.rayDirection(pp);
+//				Vector3d d = (u.scale(p.x)).add(v.scale(p.y)).sub(w.scale(distance)).normalizedVector();
+				// ray direction
+				MutableVector3d mu = new MutableVector3d(u);
+				mu.scale(x);
+				mu.add(v.scale(y));
+				mu.sub(w.scale(distance));
+				mu.normalize();
+				ray.direction = mu.inmutableCopy();
+				
 				Color c = world.getTree().traceRay(ray, tracer,
 						new ShadeRec(world));
 				color.addEquals(c);
@@ -107,16 +114,6 @@ public class PinholeCamera extends CameraAbstract {
 		this.fov = fov;
 		
 		invalidateViewPlane();
-	}
-
-	private Vector3d rayDirection(final Point2d p) {
-//		Vector3d d = (u.scale(p.x)).add(v.scale(p.y)).sub(w.scale(distance)).normalizedVector();
-		MutableVector3d mu = new MutableVector3d(u);
-		mu.scale(p.x);
-		mu.add(v.scale(p.y));
-		mu.sub(w.scale(distance));
-		mu.normalize();
-		return mu.inmutableCopy();
 	}
 	
 	private double getPixelSize(final int hRes, final int vRes) {
