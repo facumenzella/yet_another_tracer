@@ -58,6 +58,12 @@ public class MutableVector3d {
 		this.z = this.z * factor;
 	}
 	
+	public void scale(final double x, final double y, final double z) {
+		this.x = this.x * x;
+		this.y = this.y * y;
+		this.z = this.z * z;
+	}
+	
 	public void cross(final Vector3d other) {
 		this.x = y * other.z - this.z * other.y;
 		this.y = z * other.x - this.x * other.z;
@@ -101,5 +107,11 @@ public class MutableVector3d {
 		this.x = dx;
 		this.y = dy;
 		this.z = dz;
+	}
+
+	public void sub(Vector3d other) {
+		this.x = this.x - other.x;
+		this.y = this.y - other.y;
+		this.z = this.z - other.z;
 	}
 }
