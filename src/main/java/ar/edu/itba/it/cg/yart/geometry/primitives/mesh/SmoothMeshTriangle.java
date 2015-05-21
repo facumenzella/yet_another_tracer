@@ -58,6 +58,8 @@ public class SmoothMeshTriangle extends MeshTriangle{
 		}
 		sr.normal = this.interpolateNormal(beta, gamma);;
 		sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
+		sr.u = interpolateU(beta, gamma);
+		sr.v = interpolateV(beta, gamma);
 		
 		return t;
 	}
