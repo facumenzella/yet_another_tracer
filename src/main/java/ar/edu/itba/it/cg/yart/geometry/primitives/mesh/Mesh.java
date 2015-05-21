@@ -21,6 +21,8 @@ import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleShadowTracer;
 public class Mesh extends GeometricObject {
 
 	public List<Point3d> vertices;
+	public List<Double> u;
+	public List<Double> v;
 	public List<Integer> indices;
 	public List<Vector3d> normals; // average normal at each vertex
 	public Map<Integer, List<MeshTriangle>> faces; // the faces shared by each
@@ -47,10 +49,14 @@ public class Mesh extends GeometricObject {
 	private ShadowTracer shadowTracer;
 
 	public Mesh(final List<Point3d> vertices, final List<Vector3d> normals,
-			final List<Integer> indices, final boolean needsSmoothing) {
+			final List<Integer> indices, final List<Double> u,
+			final List<Double> v, final boolean needsSmoothing) {
 		this.hitTracer = new SimpleHitTracer();
 		this.shadowTracer = new SimpleShadowTracer();
 
+		this.u = u;
+		this.v = v;
+		
 		this.vertices = vertices;
 		this.normals = normals;
 		this.indices = indices;
