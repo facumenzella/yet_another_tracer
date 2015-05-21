@@ -19,12 +19,12 @@ public class PinholeCamera extends CameraAbstract {
 	private final double distance;
 	private final double zoom;
 	private final Point2d sp = new Point2d(0, 0);
-	
+
 	// Default value according to LuxRender specs.
 	private double fov = 90;
 
-	public PinholeCamera(final Point3d eye, final Point3d lookat, final Vector3d up, final double distance,
-			final double zoom) {
+	public PinholeCamera(final Point3d eye, final Point3d lookat,
+			final Vector3d up, final double distance, final double zoom) {
 		super(eye, lookat, up);
 		this.distance = distance;
 		this.zoom = zoom;
@@ -106,27 +106,26 @@ public class PinholeCamera extends CameraAbstract {
 			}
 		}
 	}
-	
+
 	public double getFov() {
 		return fov;
 	}
-	
+
 	public void setFov(double fov) {
 		if (fov < 0) {
 			fov = 0;
-		}
-		else if (fov >= 180) {
+		} else if (fov >= 180) {
 			fov = 179;
 		}
-		
+
 		this.fov = fov;
-		
+
 		invalidateViewPlane();
 	}
 	
 	private double getPixelSize(final int hRes, final int vRes) {
 		double pixelSize = 1;
-		
+
 		final double min = Math.min(hRes, vRes);
 		// We need radians, not degrees!!!
 		final double radians = Math.toRadians(fov / 2);
@@ -137,7 +136,7 @@ public class PinholeCamera extends CameraAbstract {
 		} else {
 			pixelSize = length / vRes;
 		}
-		
+
 		return Math.abs(pixelSize);
 	}
 

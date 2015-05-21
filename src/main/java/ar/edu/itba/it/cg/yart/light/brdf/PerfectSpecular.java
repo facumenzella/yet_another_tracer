@@ -9,7 +9,7 @@ import ar.edu.itba.it.cg.yart.textures.Texture;
 
 public class PerfectSpecular extends BRDF {
 	
-	double kr;
+	Texture kr;
 	Texture cr;
 
 	@Override
@@ -36,7 +36,7 @@ public class PerfectSpecular extends BRDF {
 		
 		wi.copy(mWo); 
 		final double aux = sr.normal.dot(wi);
-		return (cr.getColor(sr).multiply(kr).multiply(1/aux));
+		return (cr.getColor(sr).multiply(kr.getColor(sr)).multiply(1/aux));
 	}
 	
 	public void setCr(final Color cr) {
@@ -49,6 +49,16 @@ public class PerfectSpecular extends BRDF {
 	}
 	
 	public void setKr(final double kr) {
+		final Color krColor = new Color(kr);
+		setKr(krColor);
+	}
+	
+	public void setKr(final Color kr) {
+		final Texture krTexture = new ConstantColor(kr);
+		setKr(krTexture);
+	}
+	
+	public void setKr(final Texture kr) {
 		this.kr = kr;
 	}
 

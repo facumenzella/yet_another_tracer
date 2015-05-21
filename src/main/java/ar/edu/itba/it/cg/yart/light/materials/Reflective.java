@@ -14,7 +14,7 @@ public class Reflective extends Phong {
 
 	private final PerfectSpecular reflectiveBRDF = new PerfectSpecular();
 	private final ColorTracer tracer = new SimpleColorTracer();
-	private final Vector3d wi = new Vector3d(0,0,0);
+	//private final Vector3d wi = new Vector3d(0,0,0);
 	
 	public Reflective setKa(final double ka) {
 		super.setKa(ka);
@@ -60,12 +60,20 @@ public class Reflective extends Phong {
 		reflectiveBRDF.setKr(kr);
 		return this;
 	}
+	public Reflective setKr(final Color kr) {
+		reflectiveBRDF.setKr(kr);
+		return this;
+	}
+	public Reflective setKr(final Texture kr) {
+		reflectiveBRDF.setKr(kr);
+		return this;
+	}
 
 	@Override
 	public Color shade(ShadeRec sr) {
-		
 		Color colorL = super.shade(sr);
 		Vector3d wo = sr.ray.direction.inverse();
+		Vector3d wi = new Vector3d(0,0,0);
 		Color fr = reflectiveBRDF.sample_f(sr, wo, wi);
 		Ray reflectedRay = new Ray(sr.hitPoint, wi);
 		reflectedRay.depth = sr.depth + 1;

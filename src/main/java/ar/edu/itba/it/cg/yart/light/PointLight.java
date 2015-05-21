@@ -19,6 +19,8 @@ public class PointLight extends AbstractLight {
 
 	private Color L;
 	
+	
+	
 	public PointLight(final double ls, final Color color,
 			final Vector3d location) {
 		super();
@@ -28,6 +30,9 @@ public class PointLight extends AbstractLight {
 		this.point = new Point3d(location.x, location.y, location.z);
 		this.tracer = new SimpleShadowTracer();
 		this.L = this.mL(null);
+	}
+	public PointLight(final double ls, final Color color) {
+		this(ls, color, new Vector3d(0,0,0));
 	}
 
 	@Override
