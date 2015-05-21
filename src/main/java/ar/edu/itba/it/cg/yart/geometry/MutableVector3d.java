@@ -31,11 +31,12 @@ public class MutableVector3d {
 		this.z = v.z;
 	}
 	
-	public void normalize() {
+	public Vector3d normalize() {
 		this.length = Math.sqrt(x * x + y * y + z * z);
 		this.x = this.x / length;
 		this.y = this.y / length;
 		this.z = this.z / length;
+		return new Vector3d(this.x, this.y, this.z);
 	}
 	
 	public double dot(final Vector3d other) {

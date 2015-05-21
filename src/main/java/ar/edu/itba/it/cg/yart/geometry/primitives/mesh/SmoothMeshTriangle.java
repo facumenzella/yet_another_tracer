@@ -116,8 +116,7 @@ public class SmoothMeshTriangle extends MeshTriangle{
 		final Vector3d n2 = mesh.normals.get(index1).scale(gamma);
 		n0.add(n1);
 		n0.add(n2);
-		n0.normalize();
-		return n0.inmutableCopy();
+		return n0.normalize();
 	}
 
 }

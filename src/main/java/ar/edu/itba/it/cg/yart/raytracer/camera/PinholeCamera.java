@@ -77,8 +77,7 @@ public class PinholeCamera extends CameraAbstract {
 				mu.scale(x);
 				mu.add(v.scale(y));
 				mu.sub(w.scale(distance));
-				mu.normalize();
-				ray.direction = mu.inmutableCopy();
+				ray.direction = mu.normalize();
 				
 				Color c = world.getTree().traceRay(ray, tracer,
 						new ShadeRec(world));
@@ -90,7 +89,16 @@ public class PinholeCamera extends CameraAbstract {
 				}
 			}
 			color.multiplyEquals(invNumSamples);
-			displayPixel(col, row, color, result);
+
+			// mapping color
+			Color mappedColor = null;
+			final double maxValue = Math.max(color.r, Math.max(color.g, color.b));
+			if (maxValue > 1.0) {
+				mappedColor = color.multiplyEquals(1 / maxValue);
+			}
+			mappedColor =  color;
+			// now we display the pixel
+			result.put(col, row, mappedColor.toInt());
 			col++;
 			if (col == xFinish) {
 				col = xStart;
@@ -135,14 +143,7 @@ public class PinholeCamera extends CameraAbstract {
 
 	private void displayPixel(final int col, final int row, final Color c,
 			final ArrayIntegerMatrix result) {
-		// max to one
-		Color mappedColor = null;
-		final double maxValue = Math.max(c.r, Math.max(c.g, c.b));
-		if (maxValue > 1.0) {
-			mappedColor = c.multiplyEquals(1 / maxValue);
-		}
-		mappedColor =  c;
-		result.put(col, row, mappedColor.toInt());
+		
 	}
 
 	@Override
