@@ -43,9 +43,9 @@ public class AABB implements Transformable {
 		}
 		
 		double b = 1.0 / dy;
-		if (b >= 0) {
-			ty_min = (p1.y - oy) * b;
-			ty_max = (p0.y - oy) * b;
+		if (b < 0) {
+			ty_min = (p0.y - oy) * b;
+			ty_max = (p1.y - oy) * b;
 		} else {
 			ty_min = (p1.y - oy) * b;
 			ty_max = (p0.y - oy) * b;
@@ -93,25 +93,21 @@ public class AABB implements Transformable {
 	}
 
 	public boolean pointIsInside(final Point3d point) {
-		if (point.x > this.p0.x && point.x < this.p1.x && point.y > this.p1.y
-				&& point.y < this.p0.y && point.z > this.p0.z
-				&& point.z < this.p1.z) {
+		if (point.x >= this.p0.x && point.x <= this.p1.x && point.y >= this.p1.y
+				&& point.y <= this.p0.y && point.z >= this.p0.z
+				&& point.z <= this.p1.z) {
 			return true;
 		}
 		return false;
 	}
 
-	public double getSurfaceArea() {
-		return this.surfaceArea;
-	}
-
 	public AABB clip(final AABB box) {
 		double minX, minY, minZ, maxX, maxY, maxZ;
 		minX = Math.max(this.p0.x, box.p0.x);
-		minY = Math.min(this.p0.y, box.p0.y);
+		minY = Math.max(this.p1.y, box.p1.y);
 		minZ = Math.max(this.p0.z, box.p0.z);
 		maxX = Math.min(this.p1.x, box.p1.x);
-		maxY = Math.max(this.p1.y, box.p1.y);
+		maxY = Math.min(this.p0.y, box.p0.y);
 		maxZ = Math.min(this.p1.z, box.p1.z);
 
 		return new AABB(new Point3d(minX, minY, minZ), new Point3d(maxX, maxY,
