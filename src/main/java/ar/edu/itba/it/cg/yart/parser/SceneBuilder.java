@@ -96,7 +96,14 @@ public class SceneBuilder {
 					raytracer.setCamera(buildCamera(i));
 					break;
 				case FILM:
-					raytracer.setResolution(i.getProperty("xresolution").getInteger(), i.getProperty("yresolution").getInteger());
+					String args[] = i.getParameters();
+					if (args.length < 1) {
+						// TODO Missing Film type throw exception
+					}
+					if (!args[0].equals("fleximage")) {
+						// TODO Fire warning, only fleximage is supported
+					}
+					raytracer.setResolution(i.getInteger("xresolution", 800), i.getInteger("yresolution", 600));
 					break;
 				case LOOKAT:
 					String[] params = i.getParameters();
@@ -121,7 +128,17 @@ public class SceneBuilder {
 						world.addLight(buildLight(i));
 						break;
 					case NAMED_MATERIAL:
-						currentMaterial = namedMaterials.get(i.getParameters()[0]);
+						String args[] = i.getParameters();
+						Material ret;
+						if (args.length < 1) {
+							// TODO Missing material name
+						}
+						else if ((ret = namedMaterials.get(args[0])) == null) {
+							// TODO Error building material
+						}
+						else {
+							currentMaterial = ret;
+						}
 						break;
 					case MAKE_NAMED_MATERIAL:
 						addNamedMaterial(i);
@@ -169,68 +186,68 @@ public class SceneBuilder {
 		
 		String type = identifier.getParameters()[0];
 		
-		if (type.equals("matte")) {
-			Matte mat = new Matte();
-			mat.setCd(getColorOrTexture(identifier, "Kd", Color.whiteColor()));
-			mat.setKd(1);
-			mat.setKa(0.15);
-			ret = mat;
-		}
-		else if (type.equals("mirror")) {
-			Reflective mat = new Reflective();
-			mat.setCd(getColorOrTexture(identifier, "Kd", Color.blackColor()));
-			mat.setCr(getColorOrTexture(identifier, "Kr", Color.whiteColor()));
-			mat.setKd(0.75);
-			mat.setKs(0.0);
-			mat.setKa(0.3);
-			mat.setExp(0);
-			mat.setKr(1);
-			ret = mat;
-		}
-		else if (type.equals("glass")) {
-			Color cKt = identifier.getColor("Kt", Color.whiteColor());
-			Color cKr = identifier.getColor("Kr", Color.whiteColor());
-			
-			double ior = identifier.getDouble("index", 1.5);
-			if (ior < 1) {
-				ior = 1;
+		try {
+			if (type.equals("matte")) {
+				Matte mat = new Matte();
+				mat.setCd(getColorOrTexture(identifier, "Kd", Color.whiteColor()));
+				mat.setKd(1);
+				mat.setKa(0.15);
+				ret = mat;
 			}
-			
-			double dKt = (cKt.r + cKt.g + cKt.b) / 3;
-			double dKr = (cKr.r + cKr.g + cKr.b) / 3;
-			
-			Transparent mat = new Transparent();
-			mat.setCd(Color.blackColor());
-			mat.setKs(0.5);
-			mat.setExp(1000);
-			mat.setCr(getColorOrTexture(identifier, "Kr", Color.whiteColor()));
-			mat.setKr(0.5);
-			mat.setIor(ior);
-			mat.setKt(1);
-			ret = mat;
-		}
-		else if (type.equals("metal2")) {
-			double uroughness = identifier.getDouble("uroughness", 0.001);
-			double vroughness = identifier.getDouble("vroughness", 0.001);
-			double finalRoughness = Math.max(uroughness, vroughness);
-			
-			if (finalRoughness <= 0) {
-				finalRoughness = 0.001;
+			else if (type.equals("mirror")) {
+				Reflective mat = new Reflective();
+				mat.setCd(getColorOrTexture(identifier, "Kd", Color.blackColor()));
+				mat.setCr(getColorOrTexture(identifier, "Kr", Color.whiteColor()));
+				mat.setKd(0.75);
+				mat.setKs(0.0);
+				mat.setKa(0.3);
+				mat.setExp(0);
+				mat.setKr(1);
+				ret = mat;
 			}
-			
-			double exponent = 1 / finalRoughness;
-			
-			Phong mat = new Phong();
-			mat.setCd(getColorOrTexture(identifier, "Kr", Color.whiteColor()));
-			mat.setKd(1);
-			mat.setKa(0.15);
-			mat.setExp(exponent);
-			mat.setKs(1 - finalRoughness);
-			ret = mat;
+			else if (type.equals("glass")) {
+				double ior = identifier.getDouble("index", 1.5);
+				if (ior < 1) {
+					ior = 1;
+				}
+				
+				Transparent mat = new Transparent();
+				mat.setCd(Color.blackColor());
+				mat.setKs(0.5);
+				mat.setExp(1000);
+				mat.setCr(getColorOrTexture(identifier, "Kr", Color.whiteColor()));
+				mat.setKr(0.5);
+				mat.setIor(ior);
+				mat.setKt(1);
+				ret = mat;
+			}
+			else if (type.equals("metal2")) {
+				double uroughness = identifier.getDouble("uroughness", 0.001);
+				double vroughness = identifier.getDouble("vroughness", 0.001);
+				double finalRoughness = Math.max(uroughness, vroughness);
+				
+				if (finalRoughness <= 0) {
+					// TODO Roughness cannot be a negative number
+					finalRoughness = 0.001;
+				}
+				else if (finalRoughness > 1) {
+					// TODO Roughness cannot be greater than 1
+					finalRoughness = 1;
+				}
+				
+				double exponent = 1 / finalRoughness;
+				
+				Phong mat = new Phong();
+				mat.setCd(getColorOrTexture(identifier, "Kr", Color.whiteColor()));
+				mat.setKd(1);
+				mat.setKa(0.15);
+				mat.setExp(exponent);
+				mat.setKs(1 - finalRoughness);
+				ret = mat;
+			}
 		}
-		else {
-			// TODO Material not recognized, load default
-			ret = defaultMaterial;
+		catch (ClassCastException e) {
+			// TODO Print warning
 		}
 		
 		return ret;
@@ -238,12 +255,13 @@ public class SceneBuilder {
 	
 	private Texture getColorOrTexture(Identifier identifier, String property, Color defaultColor) {
 		Texture ret;
+		PropertyType type = identifier.getPropertyType(property);
 		
-		if (identifier.getPropertyType(property) == PropertyType.COLOR) {
+		if (type == PropertyType.COLOR) {
 			Color color = identifier.getColor(property, defaultColor);
 			ret = new ConstantColor(color);
 		}
-		else if (identifier.getPropertyType(property) == PropertyType.TEXTURE) {
+		else if (type == PropertyType.TEXTURE) {
 			String textureName = identifier.getString(property, null);
 			if (!textures.containsKey(textureName)) {
 				// TODO Texture not found, fire some warning
@@ -254,13 +272,13 @@ public class SceneBuilder {
 			}
 		}
 		else {
-			ret = new ConstantColor(defaultColor);
+			throw new ClassCastException("Property " + property + " must be either a COLOR or TEXTURE. Found " + type + ".");
 		}
 		
 		return ret;
 	}
 	
-	private Texture buildTexture(final Identifier identifier) throws IOException {
+	private Texture buildTexture(final Identifier identifier) {
 		Texture ret = null;
 		final String[] args = identifier.getParameters();
 		
@@ -274,46 +292,51 @@ public class SceneBuilder {
 			}
 			
 			if (type.equalsIgnoreCase("imagemap")) {
-				if (!identifier.hasProperty("filename")) {
-					// TODO Missing filename
-					return null;
+				try {
+					if (!identifier.hasProperty("filename")) {
+						// TODO Missing filename
+						return null;
+					}
+					else if (!identifier.hasProperty("wrap")) {
+						// TODO Missing wrap type
+						return null;
+					}
+					BufferedImage image = ImageIO.read(new File(identifier.getString("filename", null)));
+					Mapping mapping = null;
+					Wrapper wrapper = null;
+					String mappingStr = identifier.getString("mapping", "uv");
+					String wrapperStr = identifier.getString("wrap", null);
+					
+					// Load mapping
+					if (mappingStr.equalsIgnoreCase("uv")) {
+						// TODO Add UV mapping
+					}
+					else if (mappingStr.equalsIgnoreCase("spherical")) {
+						mapping = new SphericalMapping();
+					}
+					else if (mappingStr.equalsIgnoreCase("planar")) {
+						mapping = new RectangularMapping();
+					}
+					else {
+						// TODO Mapping not recognized, defaulting to UV
+					}
+					
+					// Load wrap type
+					if (wrapperStr.equalsIgnoreCase("repeat")) {
+						wrapper = new RepeatWrap();
+					}
+					else if (wrapperStr.equalsIgnoreCase("black")) {
+						wrapper = new ColorWrap();
+					}
+					else if (wrapperStr.equalsIgnoreCase("clamp")) {
+						wrapper = new ClampWrap();
+					}
+					
+					ret = new ImageTexture(image, mapping, wrapper);
 				}
-				else if (!identifier.hasProperty("wrap")) {
-					// TODO Missing wrap type
-					return null;
+				catch (IOException e) {
+					// TODO Couldn't load texture
 				}
-				BufferedImage image = ImageIO.read(new File(identifier.getString("filename", null)));
-				Mapping mapping = null;
-				Wrapper wrapper = null;
-				String mappingStr = identifier.getString("mapping", "uv");
-				String wrapperStr = identifier.getString("wrap", null);
-				
-				// Load mapping
-				if (mappingStr.equalsIgnoreCase("uv")) {
-					// TODO Add UV mapping
-				}
-				else if (mappingStr.equalsIgnoreCase("spherical")) {
-					mapping = new SphericalMapping();
-				}
-				else if (mappingStr.equalsIgnoreCase("planar")) {
-					mapping = new RectangularMapping();
-				}
-				else {
-					// TODO Mapping not recognized, defaulting to UV
-				}
-				
-				// Load wrap type
-				if (wrapperStr.equalsIgnoreCase("repeat")) {
-					wrapper = new RepeatWrap();
-				}
-				else if (wrapperStr.equalsIgnoreCase("black")) {
-					wrapper = new ColorWrap();
-				}
-				else if (wrapperStr.equalsIgnoreCase("clamp")) {
-					wrapper = new ClampWrap();
-				}
-				
-				ret = new ImageTexture(image, mapping, wrapper);
 			}
 			else {
 				// TODO We only support imagemaps, fire some warning
@@ -366,11 +389,6 @@ public class SceneBuilder {
 	            meshes.put(meshData, mesh);
 			//}
 			instance = new Instance(mesh);
-			if (currentMaterial == null) {
-				// TODO Material not set, loading default
-				currentMaterial = defaultMaterial;
-			}
-			mesh.setMaterial(currentMaterial);
 		}
 		
 		if (currentMaterial == null) {
@@ -415,11 +433,18 @@ public class SceneBuilder {
 	}
 	
 	private void addNamedMaterial(Identifier identifier) {
-		// Wrap the given identifier in a convenient Material one
-		String[] args = {identifier.getString("type", "matte")};
-		Identifier i = new Identifier(IdentifierType.MATERIAL, args);
-		i.addProperties(identifier.getProperties());
-		namedMaterials.put(identifier.getParameters()[0], buildMaterial(i));
+		if (identifier.getParameters().length < 1) {
+			// Wrap the given identifier in a convenient Material one
+			String[] args = {identifier.getString("type", "matte")};
+			Identifier i = new Identifier(IdentifierType.MATERIAL, args);
+			i.addProperties(identifier.getProperties());
+			Material ret = buildMaterial(i);
+			if (ret != null)
+				namedMaterials.put(identifier.getParameters()[0], ret);
+		}
+		else {
+			// TODO Missing material name
+		}
 	}
 	
 	private Camera buildCamera(Identifier identifier) {
