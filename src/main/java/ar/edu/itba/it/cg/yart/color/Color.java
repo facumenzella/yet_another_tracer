@@ -8,6 +8,11 @@ public class Color {
 	public double a;
 	
 	private static Color BLACK = new Color(0,0,0,1.0);
+	private static Color RED = new Color(1.0,0,0,1.0);
+	private static Color GREEN = new Color(0,1.0,0,1.0);
+	private static Color BLUE = new Color(0,0,1.0,1.0);
+	private static Color YELLOW = new Color(1.0,1.0,0,1.0);
+	private static Color WHITE = new Color(1.0,1.0,1.0,1.0);
 	
 	public Color(final double r, final double g, final double b) {
 		this(r, g, b, 1.0);
@@ -85,7 +90,7 @@ public class Color {
 	}
 	
 	public static Color whiteColor() {
-		return new Color(1.0,1.0,1.0,1.0);
+		return WHITE;
 	}
 	
 	public static Color blackColor() {
@@ -93,19 +98,19 @@ public class Color {
 	}
 	
 	public static Color redColor() {
-		return new Color(1.0,0,0,1.0);
+		return RED;
 	}
 	
 	public static Color greenColor() {
-		return new Color(0,1.0,0,1.0);
+		return GREEN;
 	}
 	
 	public static Color blueColor() {
-		return new Color(0,0,1.0,1.0);
+		return BLUE;
 	}
 	
 	public static Color yellowColor() {
-		return new Color(1.0,1.0,0,1.0);
+		return YELLOW;
 	}
 	
 	@Override
