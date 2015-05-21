@@ -126,7 +126,12 @@ public class Property {
 	}
 	
 	public boolean[] getBooleans() {
-		return ((boolean[]) value);
+		try {
+			return ((boolean[]) value);
+		}
+		catch (ClassCastException e) {
+			throw new ClassCastException(getErrorMessage("boolean"));
+		}
 	}
 	
 	public double getDouble() {
@@ -134,7 +139,12 @@ public class Property {
 	}
 	
 	public double[] getDoubles() {
-		return ((double[]) value);
+		try {
+			return ((double[]) value);
+		}
+		catch (ClassCastException e) {
+			throw new ClassCastException(getErrorMessage("float"));
+		}
 	}
 	
 	public int getInteger() {
@@ -142,7 +152,12 @@ public class Property {
 	}
 	
 	public int[] getIntegers() {
-		return ((int[]) value);
+		try {
+			return ((int[]) value);
+		}
+		catch (ClassCastException e) {
+			throw new ClassCastException(getErrorMessage("integer"));
+		}
 	}
 	
 	public Vector3d getVector() {
@@ -150,7 +165,12 @@ public class Property {
 	}
 	
 	public Vector3d[] getVectors() {
-		return ((Vector3d[]) value);
+		try {
+			return ((Vector3d[]) value);
+		}
+		catch (ClassCastException e) {
+			throw new ClassCastException(getErrorMessage("vector"));
+		}
 	}
 	
 	public Vector3d getNormal() {
@@ -158,7 +178,12 @@ public class Property {
 	}
 	
 	public Vector3d[] getNormals() {
-		return getVectors();
+		try {
+			return getVectors();
+		}
+		catch (ClassCastException e) {
+			throw new ClassCastException(getErrorMessage("normal"));
+		}
 	}
 	
 	public Color getColor() {
@@ -166,15 +191,29 @@ public class Property {
 	}
 	
 	public Color[] getColors() {
-		return ((Color[]) value);
+		try {
+			return ((Color[]) value);
+		}
+		catch (ClassCastException e) {
+			throw new ClassCastException(getErrorMessage("color"));
+		}
 	}
 	
 	public String getString() {
-		return getStrings()[0];
+		StringBuilder sb = new StringBuilder();
+		for (String s : getStrings()) {
+			sb.append(s);
+		}
+		return sb.toString();
 	}
 	
 	public String[] getStrings() {
-		return ((String[]) value);
+		try {
+			return ((String[]) value);
+		}
+		catch (ClassCastException e) {
+			throw new ClassCastException(getErrorMessage("string"));
+		}
 	}
 	
 	public Point3d getPoint() {
@@ -182,7 +221,12 @@ public class Property {
 	}
 	
 	public Point3d[] getPoints() {
-		return ((Point3d[]) value);
+		try {
+			return ((Point3d[]) value);
+		}
+		catch (ClassCastException e) {
+			throw new ClassCastException(getErrorMessage("point"));
+		}
 	}
 	
 	public PropertyType getType() {
@@ -192,5 +236,9 @@ public class Property {
 	@Override
 	public String toString() {
 		return "(" + getType().getName() + ") " + getName() + " = " + getValue();
+	}
+	
+	private String getErrorMessage(String expectedType) {
+		return "Couldn't retreive " + expectedType + " property " + name + ". Found " + type + ".";
 	}
 }
