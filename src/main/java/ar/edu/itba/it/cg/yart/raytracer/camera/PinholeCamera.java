@@ -79,8 +79,7 @@ public class PinholeCamera extends CameraAbstract {
 //				mu.sub(w.scale(distance));
 //				ray.direction = mu.normalize();
 				ray.direction = d;
-				Color c = world.getTree().traceRay(ray, tracer,
-						new ShadeRec(world));
+				Color c = world.getTree().traceRay(ray, new ShadeRec(world));
 				color.addEquals(c);
 				j++;
 				if (j == n) {
