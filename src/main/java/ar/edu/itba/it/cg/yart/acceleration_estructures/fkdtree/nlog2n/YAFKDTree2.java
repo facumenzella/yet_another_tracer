@@ -426,11 +426,12 @@ public class YAFKDTree2 {
 
 	// Here we trace rays. Work for kids
 	public Color traceRay(final Ray ray, final ShadeRec sr, final Stack stack) {
-		
+		double tNear = 0;
+		double tFar = kTMAX;
 		KDNode node = null;
 		boolean hit = false;
 		KDNode top = root;
-		stack.push(root, 0, kTMAX);
+		stack.push(root, tNear, tFar);
 		
 		while (!hit || node != root) {
 			
