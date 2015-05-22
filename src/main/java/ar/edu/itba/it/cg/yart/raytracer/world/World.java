@@ -61,34 +61,34 @@ public class World {
 		
 		BufferedImage blackAndWhiteImage = null;
 		try {
-			blackAndWhiteImage = ImageIO.read(new File("/Users/fmenzella/Desktop/Facundo/soja_woodcut_0.jpg"));
+			blackAndWhiteImage = ImageIO.read(new File("./images/BlackAndWhite.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		BufferedImage billiardBallImage = null;
 		try {
-			billiardBallImage = ImageIO.read(new File("/Users/fmenzella/Desktop/dgZs7GeF.jpeg"));
+			billiardBallImage = ImageIO.read(new File("./images/BilliardBall.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		BufferedImage earthMapImage = null;
 		try {
-			earthMapImage = ImageIO.read(new File("/Users/fmenzella/Desktop/Facundo/soja_woodcut_0.jpg"));
+			earthMapImage = ImageIO.read(new File("./images/earthmap.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		BufferedImage earthSpecImage = null;
 		try {
-			earthSpecImage = ImageIO.read(new File("/Users/fmenzella/Desktop/dgZs7GeF.jpeg"));
+			earthSpecImage = ImageIO.read(new File("./images/earthspec.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		BufferedImage menzellaImage = null;
 		try {
-			menzellaImage = ImageIO.read(new File("/Users/fmenzella/Desktop/Facundo/soja_woodcut_0.jpg"));
+			menzellaImage = ImageIO.read(new File("./images/menzella.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
