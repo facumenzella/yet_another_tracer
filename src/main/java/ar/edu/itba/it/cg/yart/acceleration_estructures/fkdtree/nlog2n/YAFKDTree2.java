@@ -20,7 +20,6 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.AbstractTracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.ColorTracer;
 
 // This has O(N log N)
 
@@ -29,7 +28,7 @@ public class YAFKDTree2 {
 	private static double kKT = 1.5;
 	private static double kKI = 1;
 	private static int kMAX_DEPTH = 40;
-	private static int kMIN_DEPTH = 30;
+	private static int kMIN_DEPTH = 2;
 	private double kEPSILON = 0.00001;;
 	private double kTMAX = 1000;
 	private static double kLAMBDA = 1;
@@ -37,24 +36,50 @@ public class YAFKDTree2 {
 	private static int leafs;
 
 	private KDNode root;
-	private static AABB rootAABB;
+	private AABB rootAABB;
 
 	public static KDLeafNode emptyLeaf = new KDLeafNode(null);
 
+	private static AABB buildRootAABB(final List<GeometricObject> objects) {
+		double minX = Double.POSITIVE_INFINITY;
+		double minY = minX, minZ = minX;
+		double maxX = Double.NEGATIVE_INFINITY;
+		double maxY = maxX, maxZ = maxX;
+		
+		for (GeometricObject g : objects) {
+			AABB b = g.getBoundingBox();
+			if (b != null) {
+				minX = Math.min(minX, b.p0.x);
+				minZ = Math.min(minZ, b.p0.z);
+				minY = Math.min(minY, b.p1.y);
+				maxX = Math.max(maxX, b.p1.x);
+				maxY = Math.max(maxY, b.p0.y);
+				maxZ = Math.max(maxZ, b.p1.z);
+			}	
+		}
+		return new AABB(new Point3d(minX, maxY, minZ), new Point3d(maxX, minY, maxZ));
+	}
+	
+	public static YAFKDTree2 build(final List<GeometricObject> gObjects) {
+		final AABB aabb = YAFKDTree2.buildRootAABB(gObjects);
+		return YAFKDTree2.build(gObjects, aabb);
+	}
+	
 	public static YAFKDTree2 build(final List<GeometricObject> gObjects,
-			final double size) {
+			final AABB aabb) {
 		final long start = System.currentTimeMillis();
 		YAFKDTree2 tree = new YAFKDTree2();
-		rootAABB = new AABB(new Point3d(-size, size, -size), new Point3d(size,
-				-size, size));
 
 		final List<Event> eventList = new ArrayList<>();
 		for (final GeometricObject obj : gObjects) {
-			eventList.addAll(generateEvents(obj, rootAABB));
+			eventList.addAll(generateEvents(obj, aabb));
 		}
+		tree.rootAABB = aabb;
 		Event[] events = eventList.toArray(new Event[eventList.size()]);
 		Arrays.sort(events);
-		tree.root = buildTree(rootAABB, gObjects, events);
+		
+		tree.root = buildTree(tree.rootAABB, gObjects, events);
+		
 		System.out.println("Tree built in "
 				+ (System.currentTimeMillis() - start)
 				+ " milliseconds. \n initials" + gObjects.size() + "leafs: "
@@ -65,20 +90,20 @@ public class YAFKDTree2 {
 	private static KDNode buildTree(final AABB rootBox,
 			final List<GeometricObject> gObjects, final Event[] events) {
 		return buildKDNode(gObjects, rootBox, SplitAxis.X, 0, events,
-				new HashSet<PlaneCandidate>());
+				new HashSet<PlaneCandidate>(), rootBox);
 	}
 
 	private static KDNode buildKDNode(final List<GeometricObject> gObjects,
 			final AABB box, final SplitAxis axis, final int currentDepth,
-			Event[] events, Set<PlaneCandidate> prevs) {
+			Event[] events, Set<PlaneCandidate> prevs, final AABB rootAABB) {
 		final int size = gObjects.size();
 		if (size == 0) {
 			return emptyLeaf;
 		}
-		PlaneCandidate bestCandidate = findPlane(size, box, events);
+		PlaneCandidate bestCandidate = findPlane(size, box, events, rootAABB);
 		boolean terminate = bestCandidate.cost > (kKI * size);
 
-		if (currentDepth >= kMAX_DEPTH || currentDepth < kMIN_DEPTH || terminate
+		if (currentDepth >= kMAX_DEPTH || (terminate && currentDepth > kMIN_DEPTH)
 				|| prevs.contains(bestCandidate)) {
 			leafs += gObjects.size();
 			return new KDLeafNode(gObjects);
@@ -132,8 +157,8 @@ public class YAFKDTree2 {
 
 		return new KDInternalNode(splitPoint, buildKDNode(classifiedObjects.tl,
 				boxes[0], nextAxis, nextDepth, el.toArray(new Event[] {}),
-				newSplits), buildKDNode(classifiedObjects.tr, boxes[1],
-				nextAxis, nextDepth, er.toArray(new Event[] {}), newSplits));
+				newSplits, rootAABB), buildKDNode(classifiedObjects.tr, boxes[1],
+				nextAxis, nextDepth, er.toArray(new Event[] {}), newSplits, rootAABB));
 	}
 
 	private static AABB[] splitAABB(final AABB box, SplitPoint p) {
@@ -167,7 +192,7 @@ public class YAFKDTree2 {
 
 	// find a 'good' plane mother fucker!!
 	private static PlaneCandidate findPlane(final int objectsSize,
-			final AABB box, final Event[] events) {
+			final AABB box, final Event[] events, final AABB rootAABB) {
 
 		final int size = objectsSize;
 		final int eventsQty = events.length;
@@ -245,7 +270,7 @@ public class YAFKDTree2 {
 				nPX = pPLANARX;
 				nRX -= pPLANARX;
 				nRX -= pENDX;
-				candidate = sah(e.splitPoint, box, nLX, nRX, nPX);
+				candidate = sah(e.splitPoint, box, nLX, nRX, nPX, rootAABB);
 				nPX = 0;
 				nLX += pPLANARX;
 				nLX += pSTARTX;
@@ -254,7 +279,7 @@ public class YAFKDTree2 {
 				nPY = pPLANARY;
 				nRY -= pPLANARY;
 				nRY -= pENDY;
-				candidate = sah(e.splitPoint, box, nLY, nRY, nPY);
+				candidate = sah(e.splitPoint, box, nLY, nRY, nPY, rootAABB);
 				nPY = 0;
 				nLY += pPLANARY;
 				nLY += pSTARTY;
@@ -263,7 +288,7 @@ public class YAFKDTree2 {
 				nPZ = pPLANARZ;
 				nRZ -= pPLANARZ;
 				nRZ -= pENDZ;
-				candidate = sah(e.splitPoint, box, nLZ, nRZ, nPZ);
+				candidate = sah(e.splitPoint, box, nLZ, nRZ, nPZ, rootAABB);
 				nPZ = 0;
 				nLZ += pPLANARZ;
 				nLZ += pSTARTZ;
@@ -272,7 +297,7 @@ public class YAFKDTree2 {
 				System.out.println("Holy shit the impossible happened");
 			}
 
-			if (candidate.cost < minCost) {
+			if (minCost > candidate.cost ) {
 				bestCandidate.cost = candidate.cost;
 				bestCandidate.splitPoint = e.splitPoint;
 				bestCandidate.boxes = candidate.boxes;
@@ -312,7 +337,7 @@ public class YAFKDTree2 {
 	}
 
 	private static PlaneCandidate sah(final SplitPoint p, final AABB box,
-			final double nl, final double nr, final double np) {
+			final double nl, final double nr, final double np, final AABB rootAABB) {
 		AABB boxes[] = splitAABB(box, p);
 		final AABB boxL = boxes[0];
 		final AABB boxR = boxes[1];
