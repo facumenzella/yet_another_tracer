@@ -9,6 +9,7 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
 
 import ar.edu.itba.it.cg.yart.parser.SceneBuilder;
+import ar.edu.itba.it.cg.yart.parser.SceneParseException;
 import ar.edu.itba.it.cg.yart.parser.SceneParser;
 import ar.edu.itba.it.cg.yart.raytracer.RenderResult;
 import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer;
@@ -127,11 +128,13 @@ public class YartApp {
 				ImageSaver imageSaver = new ImageSaver();
 				imageSaver.saveImage(renderResult.getPixels(), imageName, imageExtension);
 			}
-		} catch (org.apache.commons.cli.ParseException ex) {
+		} catch (ParseException ex) {
 			System.out.println(ex.getMessage());
 			printHelp(options);
-		} catch (java.lang.NumberFormatException ex) {
+		} catch (NumberFormatException ex) {
 			printHelp(options);
+		} catch (SceneParseException ex) {
+			System.out.println(ex.getMessage());
 		}
 	}
 	

@@ -13,25 +13,27 @@ import ar.edu.itba.it.cg.yart.parser.Property.PropertyType;
 public class Identifier {
 
 	public enum IdentifierType {
-		LOOKAT("LookAt"),
-		CAMERA("Camera"),
-		FILM("Film"),
-		SHAPE("Shape"),
-		MATERIAL("Material"),
-		NAMED_MATERIAL("NamedMaterial"),
-		MAKE_NAMED_MATERIAL("MakeNamedMaterial"),
-		TEXTURE("Texture"),
-		LIGHT_SOURCE("LightSource"),
-		IDENTITY("Identity"),
-		TRANSFORM("Transform"),
-		TRANSLATE("Translate"),
-		ROTATE("Rotate"),
-		SCALE("Scale");
+		LOOKAT("LookAt", 9),
+		CAMERA("Camera", 1),
+		FILM("Film", 1),
+		SHAPE("Shape", 1),
+		MATERIAL("Material", 1),
+		NAMED_MATERIAL("NamedMaterial", 1),
+		MAKE_NAMED_MATERIAL("MakeNamedMaterial", 1),
+		TEXTURE("Texture", 3),
+		LIGHT_SOURCE("LightSource", 1),
+		IDENTITY("Identity", 0),
+		TRANSFORM("Transform", 16),
+		TRANSLATE("Translate", 3),
+		ROTATE("Rotate", 4),
+		SCALE("Scale", 3);
 		
-		private String name;
+		final private String name;
+		final private int expectedParameters;
 		
-		private IdentifierType(final String name) {
+		private IdentifierType(final String name, final int expectedParameters) {
 			this.name = name;
+			this.expectedParameters = expectedParameters;
 		}
 		
 		public String getName() {
@@ -43,7 +45,7 @@ public class Identifier {
 	private String[] parameter;
 	private IdentifierType type;
 	
-	public static IdentifierType getByName(final String name) {
+	public static IdentifierType getByName(final String name){
 		for (IdentifierType type : IdentifierType.values()) {
 			if (type.getName().equals(name)) {
 				return type;
