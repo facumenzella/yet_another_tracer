@@ -57,8 +57,10 @@ public class FlatMeshTriangle extends MeshTriangle {
 
 		sr.normal = normal;
 		sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
-		sr.u = interpolateU(beta, gamma);
-		sr.v = interpolateV(beta, gamma);
+		if (mesh.u != null && mesh.v != null) {
+			sr.u = interpolateU(beta, gamma);
+			sr.v = interpolateV(beta, gamma);
+		}
 
 		return t;
 	}
