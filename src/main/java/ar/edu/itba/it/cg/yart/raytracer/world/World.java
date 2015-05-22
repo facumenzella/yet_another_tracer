@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.nlog2n.YAFKDTree2;
 import javax.imageio.ImageIO;
+
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.nlog2n.YAFKDTree2;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Instance;
-import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Plane;
@@ -61,34 +61,34 @@ public class World {
 		
 		BufferedImage blackAndWhiteImage = null;
 		try {
-			blackAndWhiteImage = ImageIO.read(new File("./images/BlackAndWhite.jpg"));
+			blackAndWhiteImage = ImageIO.read(new File("/Users/fmenzella/Desktop/Facundo/soja_woodcut_0.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		BufferedImage billiardBallImage = null;
 		try {
-			billiardBallImage = ImageIO.read(new File("./images/BilliardBall.jpg"));
+			billiardBallImage = ImageIO.read(new File("/Users/fmenzella/Desktop/dgZs7GeF.jpeg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		BufferedImage earthMapImage = null;
 		try {
-			earthMapImage = ImageIO.read(new File("./images/earthmap.jpg"));
+			earthMapImage = ImageIO.read(new File("/Users/fmenzella/Desktop/Facundo/soja_woodcut_0.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		BufferedImage earthSpecImage = null;
 		try {
-			earthSpecImage = ImageIO.read(new File("./images/earthspec.jpg"));
+			earthSpecImage = ImageIO.read(new File("/Users/fmenzella/Desktop/dgZs7GeF.jpeg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 		BufferedImage menzellaImage = null;
 		try {
-			menzellaImage = ImageIO.read(new File("./images/menzella.jpg"));
+			menzellaImage = ImageIO.read(new File("/Users/fmenzella/Desktop/Facundo/soja_woodcut_0.jpg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
