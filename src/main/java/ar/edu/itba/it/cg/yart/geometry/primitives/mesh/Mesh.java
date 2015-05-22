@@ -13,10 +13,6 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.HitTracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.ShadowTracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleHitTracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleShadowTracer;
 
 public class Mesh extends GeometricObject {
 
@@ -101,11 +97,8 @@ public class Mesh extends GeometricObject {
 		this.numTriangles = triangles.size();
 		this.numVertices = vertices.size();
 		this.updateBoundingBox();
-		double max = Math.max(
-				maxZ,
-				Math.max(maxY,
-						Math.max(maxX, Math.max(minZ, Math.max(minX, minY)))));
-		kdTree = YAFKDTree2.build(this.triangles, max);
+		
+		kdTree = YAFKDTree2.build(this.triangles, this.getBoundingBox());
 
 		if (needsSmoothing) {
 			this.computeMeshNormals();
