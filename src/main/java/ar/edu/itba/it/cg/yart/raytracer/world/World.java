@@ -197,7 +197,6 @@ public class World {
 		this.objects.clear();
 		this.objects.addAll(objects);
 		preprocessed = false;
-
 		this.kdTree = YAFKDTree2.build(this.objects);
 	}
 	

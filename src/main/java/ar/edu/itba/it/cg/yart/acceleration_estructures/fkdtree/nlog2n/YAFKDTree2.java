@@ -21,17 +21,18 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.AbstractTracer;
 
-// This has O(N log N)
+// This has O(N log N) or at least we hope it does
 
 public class YAFKDTree2 {
 
 	private static double kKT = 1.5;
 	private static double kKI = 1;
 	private static int kMAX_DEPTH = 40;
-	private static int kMIN_DEPTH = 2;
+
+	private static int kMIN_DEPTH = 10;
 	private double kEPSILON = 0.00001;;
 	private double kTMAX = 1000;
-	private static double kLAMBDA = 1;
+	private static double kLAMBDA = .8;
 
 	private static int leafs;
 
@@ -41,9 +42,9 @@ public class YAFKDTree2 {
 	public static KDLeafNode emptyLeaf = new KDLeafNode(null);
 
 	private static AABB buildRootAABB(final List<GeometricObject> objects) {
-		double minX = Double.POSITIVE_INFINITY;
+		double minX = -Double.MAX_VALUE;
 		double minY = minX, minZ = minX;
-		double maxX = Double.NEGATIVE_INFINITY;
+		double maxX = Double.MAX_VALUE;
 		double maxY = maxX, maxZ = maxX;
 		
 		for (GeometricObject g : objects) {
@@ -297,7 +298,7 @@ public class YAFKDTree2 {
 				System.out.println("Holy shit the impossible happened");
 			}
 
-			if (minCost > candidate.cost ) {
+			if ( Double.isNaN(candidate.cost) || minCost > candidate.cost ) {
 				bestCandidate.cost = candidate.cost;
 				bestCandidate.splitPoint = e.splitPoint;
 				bestCandidate.boxes = candidate.boxes;
@@ -342,8 +343,10 @@ public class YAFKDTree2 {
 		final AABB boxL = boxes[0];
 		final AABB boxR = boxes[1];
 
-		final double pl = boxL.surfaceArea / rootAABB.surfaceArea;
-		final double pr = boxR.surfaceArea / rootAABB.surfaceArea;
+		double area = (Double.isInfinite(rootAABB.surfaceArea)) ? 10000 : rootAABB.surfaceArea;
+		
+		final double pl = boxL.surfaceArea / area;
+		final double pr = boxR.surfaceArea / area;
 
 		final double cl = kLAMBDA * (kKT + kKI * ((pl * nl + np) + (pr * nr)));
 		final double cr = kLAMBDA * (kKT + kKI * ((pl * nl) + (pr * nr + np)));

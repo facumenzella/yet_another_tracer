@@ -65,9 +65,6 @@ public class Quadrilateral extends GeometricObject {
 
 	@Override
 	public double hit(Ray ray, ShadeRec sr) {
-//		if (!getBoundingBox().hit(ray)) {
-//			return Double.NEGATIVE_INFINITY;
-//		}
 		
 		final double t = corner.sub(ray.origin).dot(normal)
 				/ ray.direction.dot(normal);
@@ -97,10 +94,6 @@ public class Quadrilateral extends GeometricObject {
 
 	@Override
 	public double shadowHit(Ray ray) {
-		
-//		if (!getBoundingBox().hit(ray)) {
-//			return Double.NEGATIVE_INFINITY;
-//		}
 		
 		final double t = corner.sub(ray.origin).dot(normal)
 				/ ray.direction.dot(normal);
