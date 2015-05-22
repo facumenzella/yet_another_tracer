@@ -16,7 +16,6 @@ import javax.imageio.ImageIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ar.edu.itba.it.cg.yart.YartConstants;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Instance;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
@@ -387,11 +386,10 @@ public class SceneBuilder {
 			
 			Mesh mesh = null;
 			
-			/*if (meshes.containsKey(meshData)) {
+			if (meshes.containsKey(meshData)) {
 			    mesh = meshes.get(meshData);
 			}
-<<<<<<< HEAD
-			else {*/
+			else {
 			    List<Point3d> vertices = new ArrayList<Point3d>(Arrays.asList(verticesArray));
 	            List<Vector3d> normals = new ArrayList<Vector3d>(Arrays.asList(normalsArray));
 	            List<Integer> indices = new ArrayList<Integer>(triIndicesArray.length);
@@ -417,12 +415,13 @@ public class SceneBuilder {
 	            
 	            mesh = new Mesh(vertices, normals, indices, uList, vList, true);
 	            meshes.put(meshData, mesh);
-			//}
+	            
 	            if (currentMaterial == null) {
 	    			// TODO Material not set, loading default
 	    			currentMaterial = defaultMaterial;
 	    			System.out.println("Failed");
 	    		}
+			}
 			instance = new Instance(mesh);
 		}
 		
