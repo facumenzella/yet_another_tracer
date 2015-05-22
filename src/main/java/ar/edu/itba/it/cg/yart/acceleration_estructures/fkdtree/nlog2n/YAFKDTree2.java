@@ -415,17 +415,45 @@ public class YAFKDTree2 {
 	}
 
 	// Here we trace rays. Work for kids
-	public Color traceRay(final Ray ray, final ColorTracer tracer,
-			final ShadeRec sr) {
-		return p_traceObjectsForRay(ray, root, 0, 1000, tracer, sr);
+	public Color traceRay(final Ray ray, final ShadeRec sr) {
+		return p_traceObjectsForRay(ray, root, 0, 1000, sr);
 	}
 
 	private Color p_traceObjectsForRay(final Ray ray, final KDNode node,
-			final double min, final double max, final ColorTracer tracer,
-			final ShadeRec sr) {
+			final double min, final double max, final ShadeRec sr) {
 
 		if (node.isLeaf()) {
-			return tracer.traceRay(ray, node.gObjects, sr, max);
+			KDLeafNode leaf = (KDLeafNode)node;
+			List<GeometricObject> objects = leaf.gObjects;
+			if (ray.depth >= AbstractTracer.MAX_DEPTH || objects == null || objects.size() == 0) {
+				return Color.blackColor();
+			}
+			Vector3d normal = null;
+			Point3d localHitPoint = null;
+			double tMin = max;
+			for (int i = 0; i < objects.size(); i++) {
+				GeometricObject object = objects.get(i);
+				double t = object.hit(ray, sr);
+				if (t != Double.NEGATIVE_INFINITY && t < tMin) {
+					sr.hitObject = true;
+					sr.material = object.getMaterial();
+					sr.hitPoint = sr.localHitPoint.transformByMatrix(object.matrix);
+					normal = sr.normal;
+					localHitPoint = sr.localHitPoint;
+					tMin = t;
+				}
+			}
+
+			if (sr.hitObject) {
+				sr.depth = ray.depth;
+				sr.t = tMin;
+				sr.normal = normal;
+				sr.localHitPoint = localHitPoint;
+				sr.ray = ray;
+				return sr.material.shade(sr);
+			}
+			
+			return sr.world.getBackgroundColor();
 		}
 
 		double dir[] = { ray.direction.x, ray.direction.y, ray.direction.z };
@@ -453,19 +481,18 @@ public class YAFKDTree2 {
 		// This is madness !!
 		if (t > max || t < kEPSILON) {
 			// its on the near node
-			return p_traceObjectsForRay(ray, near, min, max, tracer, sr);
+			return p_traceObjectsForRay(ray, near, min, max, sr);
 		} else {
 			if (t < min) {
 				// its on the far node
-				return p_traceObjectsForRay(ray, far, min, max, tracer, sr);
+				return p_traceObjectsForRay(ray, far, min, max, sr);
 			} else {
 				// the ray might hit in both nodes, so we split the ray
-				Color nearColor = p_traceObjectsForRay(ray, near, min, t,
-						tracer, sr);
+				Color nearColor = p_traceObjectsForRay(ray, near, min, t, sr);
 				if (sr.hitObject) {
 					return nearColor;
 				}
-				return p_traceObjectsForRay(ray, far, t, max, tracer, sr);
+				return p_traceObjectsForRay(ray, far, t, max, sr);
 			}
 		}
 	}

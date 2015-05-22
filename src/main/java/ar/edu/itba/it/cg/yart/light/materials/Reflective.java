@@ -13,7 +13,6 @@ import ar.edu.itba.it.cg.yart.textures.Texture;
 public class Reflective extends Phong {
 
 	private final PerfectSpecular reflectiveBRDF = new PerfectSpecular();
-	private final ColorTracer tracer = new SimpleColorTracer();
 	//private final Vector3d wi = new Vector3d(0,0,0);
 	
 	public Reflective setKa(final double ka) {
@@ -78,7 +77,7 @@ public class Reflective extends Phong {
 		Ray reflectedRay = new Ray(sr.hitPoint, wi);
 		reflectedRay.depth = sr.depth + 1;
 
-		Color c = sr.world.getTree().traceRay(reflectedRay, tracer, new ShadeRec(sr.world));
+		Color c = sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world));
 		fr.multiplyEquals(c);
 		fr.multiplyEquals(sr.normal.dot(wi));
 		colorL.addEquals(fr);
