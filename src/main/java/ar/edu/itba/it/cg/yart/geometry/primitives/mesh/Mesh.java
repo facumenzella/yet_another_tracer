@@ -25,9 +25,9 @@ public class Mesh extends GeometricObject {
 													// vertex, we need it for
 													// smooth mesh
 	public List<GeometricObject> triangles;
-
+	
 	public int numVertices;
-	public int numTriangles;
+	public static int numTriangles;
 	private YAFKDTree2 kdTree;
 
 	private double minX = Double.POSITIVE_INFINITY;
@@ -94,7 +94,8 @@ public class Mesh extends GeometricObject {
 	}
 
 	private void finish() {
-		this.numTriangles = triangles.size();
+		numTriangles += triangles.size();
+		System.out.println(this.numTriangles);
 		this.numVertices = vertices.size();
 		this.updateBoundingBox();
 		
