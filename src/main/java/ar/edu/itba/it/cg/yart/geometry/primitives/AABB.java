@@ -16,9 +16,9 @@ public class AABB implements Transformable {
 		this.p0 = p0;
 		this.p1 = p1;
 
-		final double bottomAndTopArea = (p1.x - p0.x) * Math.abs(p0.y - p1.y)
+		final double bottomAndTopArea = Math.abs(p1.x - p0.x) * Math.abs(p0.y - p1.y)
 				* 2;
-		final double sidesArea = Math.abs(p0.y - p1.y) * (p1.z - p0.z) * 4;
+		final double sidesArea = Math.abs(p0.y - p1.y) * Math.abs(p1.z - p0.z) * 4;
 		this.surfaceArea = bottomAndTopArea + sidesArea;
 	}
 
@@ -110,7 +110,7 @@ public class AABB implements Transformable {
 		maxY = Math.min(this.p0.y, box.p0.y);
 		maxZ = Math.min(this.p1.z, box.p1.z);
 
-		return new AABB(new Point3d(minX, minY, minZ), new Point3d(maxX, maxY,
+		return new AABB(new Point3d(minX, maxY, minZ), new Point3d(maxX, minY,
 				maxZ));
 	}
 

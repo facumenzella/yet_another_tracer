@@ -12,10 +12,7 @@ public class PerfectTransmitter extends BTDF {
 	private Texture kt;
 	private double ior;
 	private double invIor;
-	
-	private Color f = Color.blackColor();
-	private Color rho = Color.blackColor();
-	
+		
 	public void setIor(final double ior) {
 		this.ior = ior;
 		this.invIor = 1.0 / ior;
@@ -35,22 +32,13 @@ public class PerfectTransmitter extends BTDF {
 		this.kt = kt;
 	}
 
-
 	@Override
 	public Color f(ShadeRec sr, Vector3d wo, Vector3d wi) {
-		return this.f;
-	}
-	
-	public Color mF(ShadeRec sr, Vector3d wo, Vector3d wi) {
 		return Color.blackColor();
 	}
 
 	@Override
 	public Color rho(ShadeRec sr, Vector3d wo) {
-		return this.rho;
-	}
-	
-	public Color mRho(ShadeRec sr, Vector3d wo) {
 		return Color.blackColor();
 	}
 

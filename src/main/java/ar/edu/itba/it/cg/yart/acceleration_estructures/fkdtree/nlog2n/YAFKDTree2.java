@@ -13,11 +13,9 @@ import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.PlaneCandidate;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.SplitAxis;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.SplitPoint;
 import ar.edu.itba.it.cg.yart.color.Color;
-import ar.edu.itba.it.cg.yart.geometry.Instance;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
-import ar.edu.itba.it.cg.yart.geometry.primitives.Plane;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.ColorTracer;
@@ -36,10 +34,10 @@ public class YAFKDTree2 {
 	private static double kLAMBDA = 1;
 
 	private static int leafs;
-	
+
 	private KDNode root;
 	private static AABB rootAABB;
-	
+
 	public static KDLeafNode emptyLeaf = new KDLeafNode(null);
 
 	public static YAFKDTree2 build(final List<GeometricObject> gObjects,
@@ -57,13 +55,16 @@ public class YAFKDTree2 {
 		Arrays.sort(events);
 		tree.root = buildTree(rootAABB, gObjects, events);
 		System.out.println("Tree built in "
-				+ (System.currentTimeMillis() - start) + " milliseconds. \n initials" + gObjects.size() + "leafs: " + leafs);
+				+ (System.currentTimeMillis() - start)
+				+ " milliseconds. \n initials" + gObjects.size() + "leafs: "
+				+ leafs);
 		return tree;
 	}
 
 	private static KDNode buildTree(final AABB rootBox,
 			final List<GeometricObject> gObjects, final Event[] events) {
-		return buildKDNode(gObjects, rootBox, SplitAxis.X, 0, events, new HashSet<PlaneCandidate>());
+		return buildKDNode(gObjects, rootBox, SplitAxis.X, 0, events,
+				new HashSet<PlaneCandidate>());
 	}
 
 	private static KDNode buildKDNode(final List<GeometricObject> gObjects,
@@ -76,7 +77,8 @@ public class YAFKDTree2 {
 		PlaneCandidate bestCandidate = findPlane(size, box, events);
 		boolean terminate = bestCandidate.cost > (kKI * size);
 
-		if (currentDepth >= kMAX_DEPTH  || terminate || prevs.contains(bestCandidate)) {
+		if (currentDepth >= kMAX_DEPTH || terminate
+				|| prevs.contains(bestCandidate)) {
 			leafs += gObjects.size();
 			return new KDLeafNode(gObjects);
 		}
@@ -97,7 +99,7 @@ public class YAFKDTree2 {
 
 		Arrays.sort(ebl);
 		Arrays.sort(ebr);
-		
+
 		final List<Event> el = Event.mergeEvents(Arrays.asList(ebl),
 				classifiedEvents.elo);
 		final List<Event> er = Event.mergeEvents(Arrays.asList(ebr),
@@ -105,7 +107,7 @@ public class YAFKDTree2 {
 
 		final int nextDepth = currentDepth + 1;
 		SplitAxis nextAxis = SplitAxis.nextAxis(axis);
-		
+
 		final List<GeometricObject> tl = new ArrayList<>();
 		final List<GeometricObject> tr = new ArrayList<>();
 
@@ -123,14 +125,14 @@ public class YAFKDTree2 {
 				break;
 			}
 		}
-		
+
 		final Set<PlaneCandidate> newSplits = new HashSet<>(prevs);
 		newSplits.add(bestCandidate);
-		
+
 		return new KDInternalNode(splitPoint, buildKDNode(classifiedObjects.tl,
-				boxes[0], nextAxis, nextDepth, el.toArray(new Event[] {}), newSplits),
-				buildKDNode(classifiedObjects.tr, boxes[1], nextAxis,
-						nextDepth, er.toArray(new Event[] {}), newSplits));
+				boxes[0], nextAxis, nextDepth, el.toArray(new Event[] {}),
+				newSplits), buildKDNode(classifiedObjects.tr, boxes[1],
+				nextAxis, nextDepth, er.toArray(new Event[] {}), newSplits));
 	}
 
 	private static AABB[] splitAABB(final AABB box, SplitPoint p) {
@@ -285,56 +287,25 @@ public class YAFKDTree2 {
 		AABB b = object.getBoundingBox();
 		if (b != null) {
 			b = b.clip(box);
-			if (b.p0.x >= box.p0.x) {
-				xs[0] = b.p0.x;
-			}
-			if (b.p1.x <= box.p1.x) {
-				xs[1] = b.p1.x;
-			}
-		} else {
-			// its a fucking plane
-			Plane plane = (Plane) ((Instance) object).object;
-			if (SplitAxis.X.isParalel(plane.normal)) {
-				xs[0] = plane.p.x;
-				xs[1] = plane.p.x;
-			}
+			xs[0] = b.p0.x;
+			xs[1] = b.p1.x;
 		}
 		// then the ys
 		double[] ys = new double[2];
 		b = object.getBoundingBox();
 		if (b != null) {
 			b = b.clip(box);
-			if (b.p0.y >= box.p0.y) {
-				ys[0] = b.p0.y;
-			}
-			if (b.p1.y <= box.p1.y) {
-				ys[1] = b.p1.y;
-			}
-		} else {
-			Plane plane = (Plane) ((Instance) object).object;
-			if (SplitAxis.Y.isParalel(plane.normal)) {
-				ys[0] = plane.p.y;
-				ys[1] = plane.p.y;
-			}
+			ys[0] = b.p0.y;
+			ys[1] = b.p1.y;
 		}
 		// finally the zs
 		double[] zs = new double[2];
 		b = object.getBoundingBox();
 		if (b != null) {
 			b = b.clip(box);
-			if (b.p0.z >= box.p0.z) {
-				zs[0] = b.p0.z;
-			}
-			if (b.p1.z <= box.p1.z) {
-				zs[0] = b.p1.z;
-			}
-		} else {
-			Plane plane = (Plane) ((Instance) object).object;
-			if (SplitAxis.Z.isParalel(plane.normal)) {
-				zs[0] = plane.p.z;
-				zs[1] = plane.p.z;
-			}
-		}
+			zs[0] = b.p0.z;
+			zs[0] = b.p1.z;
+		} 
 
 		return new PerfectSplits(xs, ys, zs);
 	}
@@ -468,7 +439,7 @@ public class YAFKDTree2 {
 		final double rayOriginAxis = origin[internalNode.splitPoint.axis.value];
 
 		final double diff = splitPoint - rayOriginAxis;
-		
+
 		if (diff > 0) {
 			near = internalNode.left;
 			far = internalNode.right;
@@ -478,7 +449,7 @@ public class YAFKDTree2 {
 		}
 
 		final double t = diff / rayDirAxis;
-		
+
 		// This is madness !!
 		if (t > max || t < kEPSILON) {
 			// its on the near node
@@ -521,7 +492,7 @@ public class YAFKDTree2 {
 		final double rayOriginAxis = origin[internalNode.splitPoint.axis.value];
 
 		final double diff = splitPoint - rayOriginAxis;
-		
+
 		if (diff > 0) {
 			near = internalNode.left;
 			far = internalNode.right;
@@ -576,7 +547,7 @@ public class YAFKDTree2 {
 		final double rayOriginAxis = origin[internalNode.splitPoint.axis.value];
 
 		final double diff = splitPoint - rayOriginAxis;
-		
+
 		if (diff > 0) {
 			near = internalNode.left;
 			far = internalNode.right;

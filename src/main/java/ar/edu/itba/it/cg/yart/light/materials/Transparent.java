@@ -16,8 +16,6 @@ public class Transparent extends Phong {
 	private final PerfectSpecular reflectiveBRDF = new PerfectSpecular();
 	private final PerfectTransmitter specularBTDF = new PerfectTransmitter();
 	private final ColorTracer tracer = new SimpleColorTracer();
-//	private final Vector3d wi = new Vector3d(0, 0, 0);
-//	private final Vector3d wt = new Vector3d(0, 0, 0);
 
 	public Transparent setKa(final double ka) {
 		super.setKa(ka);
