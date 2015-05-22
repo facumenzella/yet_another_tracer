@@ -11,11 +11,9 @@ public class PerfectTransmitter extends BTDF {
 
 	private Texture kt;
 	private double ior;
-	private double invIor;
 		
 	public void setIor(final double ior) {
 		this.ior = ior;
-		this.invIor = 1.0 / ior;
 	}
 
 	public void setKt(final double kt) {
@@ -45,8 +43,6 @@ public class PerfectTransmitter extends BTDF {
 	@Override
 	public Color sample_f(ShadeRec sr, Vector3d wo, Vector3d wt) {
 		MutableVector3d n = new MutableVector3d(sr.normal);
-		MutableVector3d mWo = new MutableVector3d(wo);
-
 		double cosThetai = n.dot(wo);
 		double eta = ior;
 
@@ -56,8 +52,10 @@ public class PerfectTransmitter extends BTDF {
 			eta = 1.0/eta;
 		}
 		double etaSquared = eta*eta;
-		double temp = 1.0 - (1.0 - cosThetai * cosThetai)/etaSquared;
+		double temp = 1.0 - (1.0 - cosThetai * cosThetai) / etaSquared;
 		double cosTheta2 = Math.sqrt(temp);
+		
+		MutableVector3d mWo = new MutableVector3d(wo);
 		
 		mWo.inverse();
 		mWo.scale(1.0 / eta);
@@ -66,8 +64,8 @@ public class PerfectTransmitter extends BTDF {
 		wt.copy(mWo);
 		
 		final double aux = Math.abs(sr.normal.dot(wt));
-		return (Color.whiteColor().multiplyEquals(kt.getColor(sr).multiply(1.0/etaSquared)))
-				.multiplyEquals(1.0/aux);
+		Color c1 = Color.whiteColor().multiplyEquals(aux);
+		return c1.multiply(kt.getColor(sr).multiply(1/etaSquared));
 	}
 
 	@Override
@@ -76,7 +74,7 @@ public class PerfectTransmitter extends BTDF {
 		final double cosThetai = sr.normal.dot(wo);
 		double eta = ior;
 		if (cosThetai < 0.0) {
-			eta = invIor;
+			eta = 1 / eta;	
 		}
 		final double aux = 1.0 - (1.0 - cosThetai * cosThetai)/(eta * eta);
 		return (aux < 0.0);
