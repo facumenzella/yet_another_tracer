@@ -110,9 +110,9 @@ public class Mesh extends GeometricObject {
 
 		minX = Math.min(minX, b.p0.x);
 		minZ = Math.min(minZ, b.p0.z);
-		minY = Math.min(minY, b.p0.y);
+		minY = Math.min(minY, b.p1.y);
 		maxX = Math.max(maxX, b.p1.x);
-		maxY = Math.max(maxY, b.p1.y);
+		maxY = Math.max(maxY, b.p0.y);
 		maxZ = Math.max(maxZ, b.p1.z);
 
 		this.triangles.add(t);
