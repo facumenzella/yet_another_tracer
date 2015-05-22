@@ -39,13 +39,17 @@ public class Identifier {
 		public String getName() {
 			return name;
 		}
+		
+		public int getExpectedParameters() {
+			return expectedParameters;
+		}
 	}
 
 	private Map<String, Property> properties;
 	private String[] parameter;
 	private IdentifierType type;
 	
-	public static IdentifierType getByName(final String name){
+	public static IdentifierType getByName(final String name) {
 		for (IdentifierType type : IdentifierType.values()) {
 			if (type.getName().equals(name)) {
 				return type;
@@ -55,8 +59,12 @@ public class Identifier {
 		return null;
 	}
 
-	public Identifier(final IdentifierType type, final String[] args) {
+	public Identifier(final IdentifierType type, final String[] args) throws SceneParseException  {
 		this.type = type;
+		
+		if (args.length < type.getExpectedParameters() || args[0] == null || args[0].isEmpty()) {
+			throw new SceneParseException("Failed to read Identifier \"" + type.getName() + "\". Expected at least " + type.getExpectedParameters() + " parameters.");
+		}
 		
 		for (int i = 0; i < args.length; i++) {
 			args[i] = args[i].replaceAll("[\"\\[\\]]", "");

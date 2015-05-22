@@ -101,6 +101,9 @@ public class Property {
 			}
 			break;
 		case TEXTURE:
+			this.value = new String[1];
+			((String[]) this.value)[0] = value.replaceAll("\"", "");
+		break;
 		case STRING:
 			this.value = new String[values.length];
 			for (int i = 0; i < values.length; i++) {

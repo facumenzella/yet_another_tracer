@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ar.edu.itba.it.cg.yart.YartConstants;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Instance;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
@@ -86,105 +87,107 @@ public class SceneBuilder {
 	}
 	
 	private void build() throws SceneParseException {
-		try {
-			parser.parseFile();
-			World world = new World();
-			
-			for (Identifier i : parser.getGlobalIdentifiers()) {
-				switch (i.getType()) {
-				case CAMERA:
-					raytracer.setCamera(buildCamera(i));
-					break;
-				case FILM:
-					String args[] = i.getParameters();
-					if (args.length < 1) {
-						// TODO Missing Film type throw exception
-						String error = "Film expects ";
-						LOGGER.error("");
-						throw new SceneParseException("");
-					}
-					if (!args[0].equals("fleximage")) {
-						// TODO Fire warning, only fleximage is supported
-					}
-					raytracer.setResolution(i.getInteger("xresolution", 800), i.getInteger("yresolution", 600));
-					break;
-				case LOOKAT:
-					String[] params = i.getParameters();
-					raytracer.setViewParameters(
-							new Point3d(Double.valueOf(params[0]), Double.valueOf(params[1]), Double.valueOf(params[2])),
-							new Point3d(Double.valueOf(params[3]), Double.valueOf(params[4]), Double.valueOf(params[5])),
-							new Vector3d(Double.valueOf(params[6]), Double.valueOf(params[7]), Double.valueOf(params[8])));
-					break;
+		parser.parseFile();
+		World world = new World();
+
+		for (Identifier i : parser.getGlobalIdentifiers()) {
+			switch (i.getType()) {
+			case CAMERA:
+				raytracer.setCamera(buildCamera(i));
+				break;
+			case FILM:
+				String args[] = i.getParameters();
+				if (args.length < 1) {
+					// TODO Missing Film type throw exception
+					String error = "Film expects ";
+					LOGGER.error("");
+					throw new SceneParseException("");
 				}
-			}
-			
-			for (Attribute a : parser.getAttributes()) {
-				for (Identifier i : a.getIdentifiers()) {
-					switch (i.getType()) {
-					case SHAPE:
-						final GeometricObject shape = buildShape(i);
-						if (shape != null) {
-							objects.add(shape);
-						}
-						break;
-					case MATERIAL:
-						currentMaterial = buildMaterial(i);
-						break;
-					case LIGHT_SOURCE:
-						world.addLight(buildLight(i));
-						break;
-					case NAMED_MATERIAL:
-						String args[] = i.getParameters();
-						Material ret;
-						if (args.length < 1) {
-							// TODO Missing material name
-						}
-						else if ((ret = namedMaterials.get(args[0])) == null) {
-							// TODO Error building material
-						}
-						else {
-							currentMaterial = ret;
-						}
-						break;
-					case MAKE_NAMED_MATERIAL:
-						addNamedMaterial(i);
-						break;
-					case TEXTURE:
-						buildTexture(i);
-						break;
-					case IDENTITY:
-						transformMatrices.pop();
-						transformMatrices.push(new Matrix4d());
-						break;
-					case TRANSFORM:
-						transformMatrices.pop();
-						transformMatrices.push(transform(i));
-						break;
-					case ROTATE:
-						Matrix4d next = rotate(i);
-						transformMatrices.pop();
-						transformMatrices.push(next);
-						break;
-					case TRANSLATE:
-						next = translate(i);
-						transformMatrices.pop();
-						transformMatrices.push(next);
-						break;
-					case SCALE:
-						next = scale(i);
-						transformMatrices.pop();
-						transformMatrices.push(next);
-					}
+				if (!args[0].equals("fleximage")) {
+					// TODO Fire warning, only fleximage is supported
 				}
+				raytracer.setResolution(i.getInteger("xresolution", 800),
+						i.getInteger("yresolution", 600));
+				break;
+			case LOOKAT:
+				String[] params = i.getParameters();
+				raytracer
+						.setViewParameters(
+								new Point3d(Double.valueOf(params[0]), Double
+										.valueOf(params[1]), Double
+										.valueOf(params[2])),
+								new Point3d(Double.valueOf(params[3]), Double
+										.valueOf(params[4]), Double
+										.valueOf(params[5])),
+								new Vector3d(Double.valueOf(params[6]), Double
+										.valueOf(params[7]), Double
+										.valueOf(params[8])));
+				break;
 			}
-			
-			world.addObjects(objects);
-			
-			world.setBackgroundColor(Color.blackColor());
-			raytracer.setWorld(world);
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+
+		for (Attribute a : parser.getAttributes()) {
+			for (Identifier i : a.getIdentifiers()) {
+				switch (i.getType()) {
+				case SHAPE:
+					final GeometricObject shape = buildShape(i);
+					if (shape != null) {
+						objects.add(shape);
+					}
+					break;
+				case MATERIAL:
+					currentMaterial = buildMaterial(i);
+					break;
+				case LIGHT_SOURCE:
+					world.addLight(buildLight(i));
+					break;
+				case NAMED_MATERIAL:
+					String args[] = i.getParameters();
+					Material ret;
+					if (args.length < 1) {
+						// TODO Missing material name
+					} else if ((ret = namedMaterials.get(args[0])) == null) {
+						// TODO Error building material
+					} else {
+						currentMaterial = ret;
+					}
+					break;
+				case MAKE_NAMED_MATERIAL:
+					addNamedMaterial(i);
+					break;
+				case TEXTURE:
+					buildTexture(i);
+					break;
+				case IDENTITY:
+					transformMatrices.pop();
+					transformMatrices.push(new Matrix4d());
+					break;
+				case TRANSFORM:
+					transformMatrices.pop();
+					transformMatrices.push(transform(i));
+					break;
+				case ROTATE:
+					Matrix4d next = rotate(i);
+					transformMatrices.pop();
+					transformMatrices.push(next);
+					break;
+				case TRANSLATE:
+					next = translate(i);
+					transformMatrices.pop();
+					transformMatrices.push(next);
+					break;
+				case SCALE:
+					next = scale(i);
+					transformMatrices.pop();
+					transformMatrices.push(next);
+				}
+			}
+		}
+
+		world.addObjects(objects);
+
+		world.setBackgroundColor(Color.blackColor());
+		raytracer.setWorld(world);
 	}
 	
 	private Material buildMaterial(Identifier identifier) {
@@ -369,8 +372,8 @@ public class SceneBuilder {
 			localMatrix = localMatrix.scale(radius, radius, radius);
 		}
 		else if (strType.equals("plane")) {
-			Vector3d normal = identifier.getNormal("n", new Vector3d(0, 1, 0)).normalizedVector();
-			instance = new Instance(new Plane(new Point3d(0, 0, 0), normal));
+			//Vector3d normal = identifier.getNormal("n", new Vector3d(0, 0, 1)).normalizedVector();
+			instance = new Instance(new Plane());
 		}
 		else if (strType.equals("mesh")) {
 			final int[] triIndicesArray = identifier.getIntegers("triindices", null);
@@ -467,7 +470,7 @@ public class SceneBuilder {
 	
 	private void addNamedMaterial(Identifier identifier) {
 		String[] idArgs = identifier.getParameters();
-		if (idArgs.length > 0) {
+		try {
 			// Wrap the given identifier in a convenient Material one
 			String[] args = {identifier.getString("type", "matte")};
 			Identifier i = new Identifier(IdentifierType.MATERIAL, args);
@@ -480,7 +483,7 @@ public class SceneBuilder {
 				// TODO COuldn't laod material
 			}
 		}
-		else {
+		catch (SceneParseException e) {
 			// TODO Missing material name
 		}
 	}
