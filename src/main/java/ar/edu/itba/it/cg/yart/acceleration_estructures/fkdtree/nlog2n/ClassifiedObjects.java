@@ -1,7 +1,6 @@
 package ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.nlog2n;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +13,7 @@ public class ClassifiedObjects {
 
 	final List<GeometricObject> tl, tr, tp;
 	final Map<GeometricObject, Integer> sides;
+	private static double kEPSILON = 0.00001;
 
 	public ClassifiedObjects(final List<GeometricObject> tl,
 			final List<GeometricObject> tr,
@@ -46,10 +46,10 @@ public class ClassifiedObjects {
 				sides.put(e.object, 2);
 			} else if (e.type == EventType.PLANAR && e.axis == candidate.splitPoint.axis) {
 				if (e.point < candidate.splitPoint.point
-						|| (e.point == candidate.splitPoint.point && candidate.left)) {
+						|| (Math.abs(e.point - candidate.splitPoint.point)<kEPSILON && candidate.left)) {
 					sides.put(e.object, 1);
 				} else if (e.point > candidate.splitPoint.point
-						|| (e.point == candidate.splitPoint.point && !candidate.left)) {
+						|| (Math.abs(e.point - candidate.splitPoint.point)<kEPSILON && !candidate.left)) {
 					sides.put(e.object, 2);
 				}
 

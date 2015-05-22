@@ -21,17 +21,18 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.AbstractTracer;
 
-// This has O(N log N)
+// This has O(N log N) or at least we hope it does
 
 public class YAFKDTree2 {
 
 	private static double kKT = 1.5;
 	private static double kKI = 1;
-	private static int kMAX_DEPTH = 40;
-	private static int kMIN_DEPTH = 2;
-	private double kEPSILON = 0.00001;;
+	private static int kMAX_DEPTH = 15;
+
+	private static int kMIN_DEPTH = 1;
+	private static double kEPSILON = 0.00001;
 	private double kTMAX = 1000;
-	private static double kLAMBDA = 1;
+	private static double kLAMBDA = .8;
 
 	private static int leafs;
 
@@ -41,9 +42,9 @@ public class YAFKDTree2 {
 	public static KDLeafNode emptyLeaf = new KDLeafNode(null);
 
 	private static AABB buildRootAABB(final List<GeometricObject> objects) {
-		double minX = Double.POSITIVE_INFINITY;
+		double minX = -Double.MAX_VALUE;
 		double minY = minX, minZ = minX;
-		double maxX = Double.NEGATIVE_INFINITY;
+		double maxX = Double.MAX_VALUE;
 		double maxY = maxX, maxZ = maxX;
 		
 		for (GeometricObject g : objects) {
@@ -134,24 +135,6 @@ public class YAFKDTree2 {
 		final int nextDepth = currentDepth + 1;
 		SplitAxis nextAxis = SplitAxis.nextAxis(axis);
 
-		final List<GeometricObject> tl = new ArrayList<>();
-		final List<GeometricObject> tr = new ArrayList<>();
-
-//		for (final GeometricObject go : gObjects) {
-//			switch (classifiedObjects.sides.get(go)) {
-//			case 1:
-//				tl.add(go);
-//				break;
-//			case 2:
-//				tr.add(go);
-//				break;
-//			case 3:
-//				tl.add(go);
-//				tr.add(go);
-//				break;
-//			}
-//		}
-
 		final Set<PlaneCandidate> newSplits = new HashSet<>(prevs);
 		newSplits.add(bestCandidate);
 
@@ -213,7 +196,7 @@ public class YAFKDTree2 {
 			Event ei;
 
 			while (i < eventsQty && (ei = events[i]).axis.value == e.axis.value
-					&& ei.point == e.point && ei.type == EventType.END) {
+					&& Math.abs(ei.point - e.point) < kEPSILON && ei.type == EventType.END) {
 				i++;
 				switch (e.splitPoint.axis) {
 				case X:
@@ -230,7 +213,7 @@ public class YAFKDTree2 {
 				}
 			}
 			while (i < eventsQty && (ei = events[i]).axis.value == e.axis.value
-					&& ei.point == e.point && ei.type == EventType.START) {
+					&& Math.abs(ei.point - e.point) < kEPSILON && ei.type == EventType.START) {
 				i++;
 				switch (e.splitPoint.axis) {
 				case X:
@@ -247,7 +230,7 @@ public class YAFKDTree2 {
 				}
 			}
 			while (i < eventsQty && (ei = events[i]).axis.value == e.axis.value
-					&& ei.point == e.point && ei.type == EventType.PLANAR) {
+					&& Math.abs(ei.point - e.point) < kEPSILON && ei.type == EventType.PLANAR) {
 				i++;
 				switch (e.splitPoint.axis) {
 				case X:
@@ -297,7 +280,7 @@ public class YAFKDTree2 {
 				System.out.println("Holy shit the impossible happened");
 			}
 
-			if (minCost > candidate.cost ) {
+			if ( Double.isNaN(candidate.cost) || minCost > candidate.cost ) {
 				bestCandidate.cost = candidate.cost;
 				bestCandidate.splitPoint = e.splitPoint;
 				bestCandidate.boxes = candidate.boxes;
@@ -310,6 +293,8 @@ public class YAFKDTree2 {
 			final AABB box) {
 		// we first find the perfect xs
 		double[] xs = new double[2];
+		double[] ys = new double[2];
+		double[] zs = new double[2];
 		AABB b = object.getBoundingBox();
 		if (b != null) {
 			b = b.clip(box);
@@ -317,16 +302,12 @@ public class YAFKDTree2 {
 			xs[1] = b.p1.x;
 		}
 		// then the ys
-		double[] ys = new double[2];
-		b = object.getBoundingBox();
 		if (b != null) {
 			b = b.clip(box);
-			ys[0] = b.p0.y;
-			ys[1] = b.p1.y;
+			ys[0] = b.p1.y;
+			ys[1] = b.p0.y;
 		}
 		// finally the zs
-		double[] zs = new double[2];
-		b = object.getBoundingBox();
 		if (b != null) {
 			b = b.clip(box);
 			zs[0] = b.p0.z;
@@ -342,8 +323,10 @@ public class YAFKDTree2 {
 		final AABB boxL = boxes[0];
 		final AABB boxR = boxes[1];
 
-		final double pl = boxL.surfaceArea / rootAABB.surfaceArea;
-		final double pr = boxR.surfaceArea / rootAABB.surfaceArea;
+		double area = (Double.isInfinite(rootAABB.surfaceArea)) ? 10000 : rootAABB.surfaceArea;
+		
+		final double pl = boxL.surfaceArea / area;
+		final double pr = boxR.surfaceArea / area;
 
 		final double cl = kLAMBDA * (kKT + kKI * ((pl * nl + np) + (pr * nr)));
 		final double cr = kLAMBDA * (kKT + kKI * ((pl * nl) + (pr * nr + np)));
@@ -367,7 +350,7 @@ public class YAFKDTree2 {
 		double max = perfects[1];
 
 		// if they are the same, they are planar
-		if (min == max) {
+		if (max - min < kEPSILON) {
 			SplitPoint splitPoint = new SplitPoint();
 			splitPoint.axis = axis;
 			splitPoint.point = min;
@@ -380,8 +363,8 @@ public class YAFKDTree2 {
 			splitPointEnd.axis = axis;
 			splitPointEnd.point = max;
 
-			eventList.add(new Event(EventType.START, object, splitPointEnd));
-			eventList.add(new Event(EventType.END, object, splitPointStart));
+			eventList.add(new Event(EventType.START, object, splitPointStart));
+			eventList.add(new Event(EventType.END, object, splitPointEnd));
 		}
 
 		// then y
@@ -393,7 +376,7 @@ public class YAFKDTree2 {
 		max = perfects[1];
 
 		// if they are the same, they are planar
-		if (min == max) {
+		if (max - min < kEPSILON) {
 			SplitPoint splitPoint = new SplitPoint();
 			splitPoint.axis = axis;
 			splitPoint.point = min;
@@ -406,8 +389,8 @@ public class YAFKDTree2 {
 			splitPointEnd.axis = axis;
 			splitPointEnd.point = max;
 
-			eventList.add(new Event(EventType.START, object, splitPointEnd));
-			eventList.add(new Event(EventType.END, object, splitPointStart));
+			eventList.add(new Event(EventType.START, object, splitPointStart));
+			eventList.add(new Event(EventType.END, object, splitPointEnd));
 		}
 
 		// finally z
@@ -419,7 +402,7 @@ public class YAFKDTree2 {
 		max = perfects[1];
 
 		// if they are the same, they are planar
-		if (min == max) {
+		if (max - min < kEPSILON) {
 			SplitPoint splitPoint = new SplitPoint();
 			splitPoint.axis = axis;
 			splitPoint.point = min;
@@ -432,8 +415,8 @@ public class YAFKDTree2 {
 			splitPointEnd.axis = axis;
 			splitPointEnd.point = max;
 
-			eventList.add(new Event(EventType.START, object, splitPointEnd));
-			eventList.add(new Event(EventType.END, object, splitPointStart));
+			eventList.add(new Event(EventType.START, object, splitPointStart));
+			eventList.add(new Event(EventType.END, object, splitPointEnd));
 		}
 
 		return eventList;
