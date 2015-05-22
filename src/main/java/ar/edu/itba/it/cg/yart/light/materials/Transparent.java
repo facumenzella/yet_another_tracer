@@ -15,7 +15,6 @@ public class Transparent extends Phong {
 
 	private final PerfectSpecular reflectiveBRDF = new PerfectSpecular();
 	private final PerfectTransmitter specularBTDF = new PerfectTransmitter();
-	private final ColorTracer tracer = new SimpleColorTracer();
 
 	public Transparent setKa(final double ka) {
 		super.setKa(ka);
@@ -93,7 +92,7 @@ public class Transparent extends Phong {
 		final Ray reflectedRay = new Ray(sr.hitPoint, wi);
 		reflectedRay.depth = sr.depth + 1;
 		if (specularBTDF.tir(sr)) {
-			Color c = sr.world.getTree().traceRay(reflectedRay, tracer, new ShadeRec(sr.world));
+			Color c = sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world));
 			colorL.addEquals(c);
 		} else {
 			final Vector3d wt = new Vector3d(0, 0, 0);
@@ -101,7 +100,7 @@ public class Transparent extends Phong {
 			final Ray transmittedRay = new Ray(sr.hitPoint, wt);
 			transmittedRay.depth = sr.depth + 1;
 
-			Color c = sr.world.getTree().traceRay(transmittedRay, tracer, new ShadeRec(sr.world));
+			Color c = sr.world.getTree().traceRay(transmittedRay, new ShadeRec(sr.world));
 			ft.multiplyEquals(c);
 			ft.multiplyEquals(Math.abs(sr.normal.dot(wt)));
 			colorL.addEquals(ft);
