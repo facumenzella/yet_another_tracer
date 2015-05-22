@@ -269,23 +269,27 @@ public class Matrix4d {
 
 	private static Matrix4d rotateXMatrix(final double degrees) {
 		final double radians = Math.toRadians(degrees);
-		return new Matrix4d(1, 0, 0, 0, 0, Math.cos(radians),
-				-Math.sin(radians), 0, 0, Math.sin(radians), Math.cos(radians),
-				0, 0, 0, 0, 1);
+		return new Matrix4d(1, 0, 0, 0,
+				0, Math.cos(radians), -Math.sin(radians), 0, 
+				0, Math.sin(radians), Math.cos(radians), 0, 
+				0, 0, 0, 1);
 	}
 
 	private static Matrix4d rotateYMatrix(final double degrees) {
 		final double radians = Math.toRadians(degrees);
-		return new Matrix4d(Math.cos(radians), 0, Math.sin(radians), 0, 0, 1,
-				0, 0, -Math.sin(radians), 0, Math.cos(radians), 0, 0, 0, 0, 1);
+		return new Matrix4d(Math.cos(radians), 0, Math.sin(radians), 0, 
+							0, 1, 0, 0, 
+							-Math.sin(radians), 0, Math.cos(radians), 0,
+							0, 0, 0, 1);
 	}
 
 	private static Matrix4d rotateZMatrix(final double degrees) {
 		// We need radians, not degrees!!!
 		final double radians = Math.toRadians(degrees);
 		return new Matrix4d(Math.cos(radians), -Math.sin(radians), 0, 0,
-				Math.sin(radians), Math.cos(radians), 0, 0, 0, 0, 1, 0, 0, 0,
-				0, 1);
+				Math.sin(radians), Math.cos(radians), 0, 0, 
+				0, 0, 1, 0, 
+				0, 0, 0, 1);
 	}
 
 	// These methods should not be used directly as long as you do not need a

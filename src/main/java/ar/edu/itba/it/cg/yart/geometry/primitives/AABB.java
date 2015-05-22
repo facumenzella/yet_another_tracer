@@ -118,6 +118,20 @@ public class AABB implements Transformable {
 	public void applyTransformation(Matrix4d matrix) {
 		p0 = p0.transformByMatrix(matrix);
 		p1 = p1.transformByMatrix(matrix);
+		
+		double minX, minY, minZ, maxX, maxY, maxZ;
+		minX = Math.min(p0.x, p1.x);
+		minY = Math.min(p0.y, p1.y);
+		minZ = Math.min(p0.z, p1.z);
+		maxX = Math.max(p0.x, p1.x);
+		maxY = Math.max(p0.y, p1.y);
+		maxZ = Math.max(p0.z, p1.z);
+		this.p0.x = minX;
+		this.p0.y = maxY;
+		this.p0.z = minZ;
+		this.p1.x = maxX;
+		this.p1.y = minY;
+		this.p1.z = maxZ;
 	}
 
 }

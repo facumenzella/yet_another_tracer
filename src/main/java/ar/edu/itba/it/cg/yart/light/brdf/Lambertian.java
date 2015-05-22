@@ -11,12 +11,10 @@ public class Lambertian extends BRDF {
 	private Texture kd;
 	private Texture cd;
 	private final double invPi = 1 / Math.PI;
-
-	private Color sample_f = Color.blackColor();
 	
 	@Override
 	public Color f(ShadeRec sr, Vector3d wo, Vector3d wi) {
-		return rho(sr, wo).multiply(invPi);
+		return kd.getColor(sr).multiply(cd.getColor(sr)).multiply(invPi);
 	}
 
 	@Override
@@ -26,7 +24,7 @@ public class Lambertian extends BRDF {
 
 	@Override
 	public Color sample_f(ShadeRec sr, Vector3d wo, Vector3d wi) {
-		return this.sample_f;
+		return Color.blackColor();
 	}
 
 	public Texture getKd() {
