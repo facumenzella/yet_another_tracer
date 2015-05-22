@@ -45,13 +45,9 @@ public class Mesh extends GeometricObject {
 	int verticesAmount;
 	int trianglesAmount;
 
-	private ShadowTracer shadowTracer;
-
 	public Mesh(final List<Point3d> vertices, final List<Vector3d> normals,
 			final List<Integer> indices, final double[] u,
 			final double[] v, final boolean needsSmoothing) {
-		this.shadowTracer = new SimpleShadowTracer();
-
 		this.u = u;
 		this.v = v;
 		
@@ -172,7 +168,7 @@ public class Mesh extends GeometricObject {
 		if (!getBoundingBox().hit(ray)) {
 		return Double.NEGATIVE_INFINITY;
 	}
-		return kdTree.traceShadowHit(ray, this.shadowTracer);
+		return kdTree.traceShadowHit(ray);
 	}
 
 }

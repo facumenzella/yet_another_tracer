@@ -13,7 +13,6 @@ public class Directional extends AbstractLight{
 	private final double ls;
 	private final Color color;
 	private Vector3d dir;
-	private final ShadowTracer tracer;
 	
 	private Color L;
 	
@@ -22,7 +21,6 @@ public class Directional extends AbstractLight{
 		this.ls = ls;
 		this.color = color;
 		this.dir = direction.normalizedVector();
-		this.tracer = new SimpleShadowTracer();
 		this.L = this.mL(null);
 	}
 	
@@ -43,7 +41,7 @@ public class Directional extends AbstractLight{
 	@Override
 	public boolean inShadow(Ray ray, ShadeRec sr) {
 		double t;		
-		t = sr.world.getTree().traceShadowHit(ray, tracer);
+		t = sr.world.getTree().traceShadowHit(ray);
 		if(t != Double.NEGATIVE_INFINITY) {
 				return true;
 		}
