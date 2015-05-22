@@ -5,8 +5,6 @@ import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.ShadowTracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleShadowTracer;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class PointLight extends AbstractLight {
@@ -14,7 +12,7 @@ public class PointLight extends AbstractLight {
 	private final double ls;
 	private final Color color;
 	private Vector3d location;
-	private final Point3d point;
+	private Point3d point;
 
 	private Color L;
 	
@@ -61,6 +59,7 @@ public class PointLight extends AbstractLight {
 
 	@Override
 	public void applyTransformation(Matrix4d matrix) {
-		this.location = this.location.transformByMatrix(matrix);
+		this.point = this.point.transformByMatrix(matrix);
+		location = new Vector3d(point.x, point.y, point.z);
 	}
 }
