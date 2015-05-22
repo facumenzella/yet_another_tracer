@@ -97,7 +97,7 @@ public class Transparent extends Phong {
 			final Ray transmittedRay = new Ray(sr.hitPoint, wt);
 			transmittedRay.depth = sr.depth + 1;
 			
-			double srdotwi = Math.abs(sr.normal.dot(wi));
+//			double srdotwi = Math.abs(sr.normal.dot(wi));
 			double srdotwt = Math.abs(sr.normal.dot(wt));
 			
 //			colorL.addEquals(sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world)).multiply(fr).multiply(srdotwi));

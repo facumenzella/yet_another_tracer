@@ -27,9 +27,9 @@ public class YAFKDTree2 {
 
 	private static double kKT = 1.5;
 	private static double kKI = 1;
-	private static int kMAX_DEPTH = 3;
+	private static int kMAX_DEPTH = 15;
 
-	private static int kMIN_DEPTH = 10;
+	private static int kMIN_DEPTH = 1;
 	private static double kEPSILON = 0.00001;
 	private double kTMAX = 1000;
 	private static double kLAMBDA = .8;
@@ -304,8 +304,8 @@ public class YAFKDTree2 {
 		// then the ys
 		if (b != null) {
 			b = b.clip(box);
-			ys[0] = b.p0.y;
-			ys[1] = b.p1.y;
+			ys[0] = b.p1.y;
+			ys[1] = b.p0.y;
 		}
 		// finally the zs
 		if (b != null) {
@@ -363,8 +363,8 @@ public class YAFKDTree2 {
 			splitPointEnd.axis = axis;
 			splitPointEnd.point = max;
 
-			eventList.add(new Event(EventType.START, object, splitPointEnd));
-			eventList.add(new Event(EventType.END, object, splitPointStart));
+			eventList.add(new Event(EventType.START, object, splitPointStart));
+			eventList.add(new Event(EventType.END, object, splitPointEnd));
 		}
 
 		// then y
@@ -389,8 +389,8 @@ public class YAFKDTree2 {
 			splitPointEnd.axis = axis;
 			splitPointEnd.point = max;
 
-			eventList.add(new Event(EventType.START, object, splitPointEnd));
-			eventList.add(new Event(EventType.END, object, splitPointStart));
+			eventList.add(new Event(EventType.START, object, splitPointStart));
+			eventList.add(new Event(EventType.END, object, splitPointEnd));
 		}
 
 		// finally z
@@ -415,8 +415,8 @@ public class YAFKDTree2 {
 			splitPointEnd.axis = axis;
 			splitPointEnd.point = max;
 
-			eventList.add(new Event(EventType.START, object, splitPointEnd));
-			eventList.add(new Event(EventType.END, object, splitPointStart));
+			eventList.add(new Event(EventType.START, object, splitPointStart));
+			eventList.add(new Event(EventType.END, object, splitPointEnd));
 		}
 
 		return eventList;
