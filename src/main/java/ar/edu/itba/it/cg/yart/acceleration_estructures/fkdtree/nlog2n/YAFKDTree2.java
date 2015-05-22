@@ -29,7 +29,7 @@ public class YAFKDTree2 {
 	private static double kKI = 1;
 	private static int kMAX_DEPTH = 15;
 
-	private static int kMIN_DEPTH = 1;
+	private static int kMIN_DEPTH = 0;
 	private static double kEPSILON = 0.00001;
 	private double kTMAX = 1000;
 	private static double kLAMBDA = .8;
@@ -311,7 +311,7 @@ public class YAFKDTree2 {
 		if (b != null) {
 			b = b.clip(box);
 			zs[0] = b.p0.z;
-			zs[0] = b.p1.z;
+			zs[1] = b.p1.z;
 		} 
 
 		return new PerfectSplits(xs, ys, zs);
