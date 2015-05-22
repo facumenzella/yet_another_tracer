@@ -449,7 +449,7 @@ public class SceneBuilder {
 			Point3d from = identifier.getPoint("from", new Point3d(0,0,0));
 			Color l = identifier.getColor("l", Color.whiteColor());
 			PointLight light = new PointLight(gain, l, new Vector3d(from.x, from.y, from.z));
-			light.applyTransformation(transformMatrices.peek());
+			light.applyTransformation(new Matrix4d().leftMultiply(transformMatrices.peek()));
 			ret = light;
 		}
 		else if (type.equals("distant")) {
