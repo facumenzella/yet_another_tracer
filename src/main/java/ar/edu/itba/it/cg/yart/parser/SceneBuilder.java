@@ -310,6 +310,7 @@ public class SceneBuilder {
 					// Load mapping
 					if (mappingStr.equalsIgnoreCase("uv")) {
 						// TODO Add UV mapping
+						mapping = null;
 					}
 					else if (mappingStr.equalsIgnoreCase("spherical")) {
 						mapping = new SphericalMapping();
@@ -319,6 +320,7 @@ public class SceneBuilder {
 					}
 					else {
 						// TODO Mapping not recognized, defaulting to UV
+						mapping = null;
 					}
 					
 					// Load wrap type
@@ -368,6 +370,10 @@ public class SceneBuilder {
 			final int[] triIndicesArray = identifier.getIntegers("triindices", null);
 			final Point3d[] verticesArray = identifier.getPoints("P", null);
 			final Vector3d[] normalsArray = identifier.getNormals("N", null);
+			final double[] uvList = identifier.getDoubles("uv", null);
+			final double[] uList;
+			final double[] vList;
+			
 			final MeshData meshData = new MeshData(triIndicesArray, verticesArray, normalsArray);
 			
 			Mesh mesh = null;
@@ -381,19 +387,40 @@ public class SceneBuilder {
 	            List<Vector3d> normals = new ArrayList<Vector3d>(Arrays.asList(normalsArray));
 	            List<Integer> indices = new ArrayList<Integer>(triIndicesArray.length);
 	            
+	            // Load UV map
+	            if (uvList != null && uvList.length > 1) {
+	            	int items = (int) Math.ceil(uvList.length / 2);
+	            	uList = new double[items];
+	            	vList = new double[items];
+	            	for (int i = 0; i < uList.length; i++) {
+	            		uList[i] = uvList[i * 2 + 1];
+	            		vList[i] = uvList[i * 2];
+	            	}
+	            }
+	            else {
+	            	uList = null;
+	            	vList = null;
+	            }
+	            
 	            for (int i : triIndicesArray) {
 	                indices.add(i);
 	            }
 	            
-	            mesh = new Mesh(vertices, normals, indices, true);
+	            mesh = new Mesh(vertices, normals, indices, uList, vList, true);
 	            meshes.put(meshData, mesh);
 			//}
+	            if (currentMaterial == null) {
+	    			// TODO Material not set, loading default
+	    			currentMaterial = defaultMaterial;
+	    			System.out.println("Failed");
+	    		}
 			instance = new Instance(mesh);
 		}
 		
 		if (currentMaterial == null) {
 			// TODO Material not set, loading default
 			currentMaterial = defaultMaterial;
+			System.out.println("Failed");
 		}
 		
 		instance.setMaterial(currentMaterial);
@@ -433,14 +460,19 @@ public class SceneBuilder {
 	}
 	
 	private void addNamedMaterial(Identifier identifier) {
-		if (identifier.getParameters().length < 1) {
+		String[] idArgs = identifier.getParameters();
+		if (idArgs.length > 0) {
 			// Wrap the given identifier in a convenient Material one
 			String[] args = {identifier.getString("type", "matte")};
 			Identifier i = new Identifier(IdentifierType.MATERIAL, args);
 			i.addProperties(identifier.getProperties());
 			Material ret = buildMaterial(i);
-			if (ret != null)
-				namedMaterials.put(identifier.getParameters()[0], ret);
+			if (ret != null) {
+				namedMaterials.put(idArgs[0], ret);
+			}
+			else {
+				// TODO COuldn't laod material
+			}
 		}
 		else {
 			// TODO Missing material name

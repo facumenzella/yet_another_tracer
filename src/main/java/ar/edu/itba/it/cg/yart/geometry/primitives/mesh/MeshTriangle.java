@@ -36,13 +36,13 @@ public abstract class MeshTriangle extends GeometricObject {
 	}
 
 	protected double interpolateU(final double beta, final double gamma) {
-		return (1 - beta - gamma) * mesh.u.get(index0) + beta
-				* mesh.u.get(index1) + gamma * mesh.u.get(index2);
+		return (1 - beta - gamma) * mesh.u[index0] + beta
+				* mesh.u[index1] + gamma * mesh.u[index2];
 	}
 
 	protected double interpolateV(final double beta, final double gamma) {
-		return (1 - beta - gamma) * mesh.v.get(index0) + beta
-				* mesh.v.get(index1) + gamma * mesh.v.get(index2);
+		return (1 - beta - gamma) * mesh.v[index0] + beta
+				* mesh.v[index1] + gamma * mesh.v[index2];
 	}
 
 	@Override
