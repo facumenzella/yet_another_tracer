@@ -71,16 +71,11 @@ public class SceneBuilder {
 	private final Plane referencePlane = new Plane();
 	private final Material defaultMaterial;
 	
-	private static Matrix4d converseMatrix = new Matrix4d(-1, 0, 0, 0, 
-															0, 0, 1, 0, 
-															0, 1, 0, 0, 
-															0, 0, 0, 1);
-
 	public SceneBuilder() {
 		defaultMaterial = new Matte().setCd(new Color(0.75, 0.75, 0.75)).setKd(0.5).setKa(0.15);
 	}
 	
-	public void buildRayTracer(final RayTracer raytracer, final SceneParser parser) {
+	public void buildRayTracer(final RayTracer raytracer, final SceneParser parser) throws SceneParseException {
 		reset();
 		this.raytracer = raytracer;
 		this.parser = parser;
@@ -90,7 +85,7 @@ public class SceneBuilder {
 		build();
 	}
 	
-	private void build() {
+	private void build() throws SceneParseException {
 		try {
 			parser.parseFile();
 			World world = new World();
@@ -104,6 +99,9 @@ public class SceneBuilder {
 					String args[] = i.getParameters();
 					if (args.length < 1) {
 						// TODO Missing Film type throw exception
+						String error = "Film expects ";
+						LOGGER.error("");
+						throw new SceneParseException("");
 					}
 					if (!args[0].equals("fleximage")) {
 						// TODO Fire warning, only fleximage is supported
