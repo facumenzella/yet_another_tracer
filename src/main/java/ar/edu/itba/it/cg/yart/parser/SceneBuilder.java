@@ -13,6 +13,10 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ar.edu.itba.it.cg.yart.YartConstants;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Instance;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
@@ -50,6 +54,8 @@ import ar.edu.itba.it.cg.yart.textures.wrappers.Wrapper;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class SceneBuilder {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(YartConstants.LOG_FILE);
 	
 	private List<GeometricObject> objects = new ArrayList<GeometricObject>();
 	private Map<MeshData, Mesh> meshes = new HashMap<MeshData, Mesh>();
@@ -119,7 +125,10 @@ public class SceneBuilder {
 				for (Identifier i : a.getIdentifiers()) {
 					switch (i.getType()) {
 					case SHAPE:
-						objects.add(buildShape(i));
+						final GeometricObject shape = buildShape(i);
+						if (shape != null) {
+							objects.add(shape);
+						}
 						break;
 					case MATERIAL:
 						currentMaterial = buildMaterial(i);

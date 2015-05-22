@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<property name="DEFAULT_PATTERN" value="%-5level - %msg %n"
+		scope="CONTEXT" />
+	<appender name="DEBUG-FILE" class="ch.qos.logback.core.FileAppender">
+		<file>debug.log</file>
+		<level>DEBUG</level>
+		<append>false</append>
+		<encoder>
+			<pattern>${DEFAULT_PATTERN}
+			</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="yart.log">
+		<appender-ref ref="DEBUG-FILE" />
+	</logger>
+</configuration>
