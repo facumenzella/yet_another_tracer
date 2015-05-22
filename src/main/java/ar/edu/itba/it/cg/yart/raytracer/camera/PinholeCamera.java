@@ -71,14 +71,14 @@ public class PinholeCamera extends CameraAbstract {
 				final double y = adjustedPixelSize
 						* (0.5 * viewPlane.vRes - row + sp.y + distributionY);
 
-//				Vector3d d = (u.scale(p.x)).add(v.scale(p.y)).sub(w.scale(distance)).normalizedVector();
+				Vector3d d = (u.scale(x)).add(v.scale(y)).sub(w.scale(distance)).normalizedVector();
 				// ray direction
-				MutableVector3d mu = new MutableVector3d(u);
-				mu.scale(x);
-				mu.add(v.scale(y));
-				mu.sub(w.scale(distance));
-				ray.direction = mu.normalize();
-				
+//				MutableVector3d mu = new MutableVector3d(u);
+//				mu.scale(x);
+//				mu.add(v.scale(y));
+//				mu.sub(w.scale(distance));
+//				ray.direction = mu.normalize();
+				ray.direction = d;
 				Color c = world.getTree().traceRay(ray, tracer,
 						new ShadeRec(world));
 				color.addEquals(c);
@@ -91,12 +91,11 @@ public class PinholeCamera extends CameraAbstract {
 			color.multiplyEquals(invNumSamples);
 
 			// mapping color
-			Color mappedColor = null;
+			Color mappedColor = color;
 			final double maxValue = Math.max(color.r, Math.max(color.g, color.b));
 			if (maxValue > 1.0) {
 				mappedColor = color.multiplyEquals(1 / maxValue);
 			}
-			mappedColor =  color;
 			// now we display the pixel
 			result.put(col, row, mappedColor.toInt());
 			col++;
@@ -138,11 +137,6 @@ public class PinholeCamera extends CameraAbstract {
 		}
 
 		return Math.abs(pixelSize);
-	}
-
-	private void displayPixel(final int col, final int row, final Color c,
-			final ArrayIntegerMatrix result) {
-		
 	}
 
 	@Override
