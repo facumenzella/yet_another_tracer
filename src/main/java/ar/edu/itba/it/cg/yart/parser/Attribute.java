@@ -1,6 +1,5 @@
 package ar.edu.itba.it.cg.yart.parser;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,18 +18,18 @@ public class Attribute {
 	private Object parameter;
 	private List<Identifier> identifiers = new ArrayList<Identifier>();
 	
-	public Attribute(final AttributeType type, final String[] args) throws ParseException {
+	public Attribute(final AttributeType type, final String[] args) throws SceneParseException {
 		this.type = type;
 		
 		if (type == AttributeType.OBJECT) {
 			if (args == null || args.length == 0 || args[0].isEmpty()) {
-				throw new ParseException("Syntax error: ObjectBegin expects at least one parameter", 0);
+				throw new SceneParseException("Syntax error: ObjectBegin expects at least one parameter");
 			}
 			
 			String strParam = StringUtils.substringBetween(args[0], "\"");
 			
 			if (strParam == null || strParam.isEmpty()) {
-				throw new ParseException("Syntax error: ObjectBegin expects at least one parameter", 0);
+				throw new SceneParseException("Syntax error: ObjectBegin expects at least one parameter");
 			}
 			
 			parameter = strParam;

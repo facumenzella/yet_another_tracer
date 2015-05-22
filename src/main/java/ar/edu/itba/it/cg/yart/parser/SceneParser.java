@@ -46,14 +46,20 @@ public class SceneParser {
 		return filePath;
 	}
 	
-	public void parseFile() throws IOException, ParseException {
+	public void parseFile() throws SceneParseException {
 		parseFile(this.filePath);
 	}
 	
-	private void parseFile(final String filePath) throws IOException, ParseException {
+	private void parseFile(final String filePath) throws SceneParseException {
 		Path path = Paths.get(filePath);
 		String folder = path.getParent().toString();
-		Scanner scanner =  new Scanner(path, StandardCharsets.UTF_8.name());
+		Scanner scanner;
+		try {
+			scanner = new Scanner(path, StandardCharsets.UTF_8.name());
+		}
+		catch (IOException e) {
+			throw new SceneParseException("Couldn't load file " + filePath + ".");
+		}
 		while (scanner.hasNextLine() && status != ParserStatus.END) {
 			String rawLine = scanner.nextLine().trim().replaceAll("\\s", " ");
 			String uncommentedLine = StringUtils.substringBefore(rawLine, "#");
@@ -74,7 +80,7 @@ public class SceneParser {
 		return globalIdentifiers;
 	}
 	
-	private void processLine(final String line, final String folder) throws IOException, ParseException {
+	private void processLine(final String line, final String folder) throws SceneParseException {
 		String first = StringUtils.substringBefore(line, " ");
 		
 		if (first.charAt(0) == '"') { // Is a property
@@ -86,7 +92,7 @@ public class SceneParser {
 		}
 	}
 	
-	private void processProperties(final String line) throws ParseException {
+	private void processProperties(final String line) throws SceneParseException {
 		String[] properties = StringUtils.substringsBetween(line, "\"", "\"");
 		String[] values = StringUtils.substringsBetween(line, "[", "]");
 		
@@ -107,7 +113,7 @@ public class SceneParser {
 		}
 	}
 	
-	private void processAttribute(final String attribute, final String[] args, final String folder) throws IOException, ParseException {
+	private void processAttribute(final String attribute, final String[] args, final String folder) throws SceneParseException {
 		// First, check if we're dealing with an Identifier
 		IdentifierType identifierType = Identifier.getByName(attribute);
 		if (identifierType != null) {
@@ -117,7 +123,7 @@ public class SceneParser {
 		// Maybe it's an Attribute
 		else if (attribute.equals("AttributeBegin")) {
 			if (currentAttribute != null) {
-				throw new ParseException("Syntax error: Cannot create an attribute inside another", 0);
+				throw new SceneParseException("Syntax error: Cannot create an attribute inside another");
 			}
 			
 			closeAttribute();
@@ -127,7 +133,7 @@ public class SceneParser {
 		}
 		else if (attribute.equals("AttributeEnd")) {
 			if (currentAttribute == null || currentAttribute.getType() != AttributeType.ATTRIBUTE) {
-				throw new ParseException("Syntax error: AttributeEnd found without matching AttributeBegin", 0);
+				throw new SceneParseException("Syntax error: AttributeEnd found without matching AttributeBegin");
 			}
 			
 			closeAttribute();
@@ -135,7 +141,7 @@ public class SceneParser {
 		}
 		else if (attribute.equals("ObjectBegin")) {
 			if (currentAttribute != null) {
-				throw new ParseException("Syntax error: Cannot create an attribute inside another", 0);
+				throw new SceneParseException("Syntax error: Cannot create an attribute inside another");
 			}
 			
 			closeAttribute();
@@ -145,7 +151,7 @@ public class SceneParser {
 		}
 		else if (attribute.equals("ObjectEnd")) {
 			if (currentAttribute == null || currentAttribute.getType() != AttributeType.OBJECT) {
-				throw new ParseException("Syntax error: ObjectEnd found without matching ObjectBegin", 0);
+				throw new SceneParseException("Syntax error: ObjectEnd found without matching ObjectBegin");
 			}
 			
 			closeAttribute();
@@ -153,7 +159,7 @@ public class SceneParser {
 		}
 		else if (attribute.equals("TransformBegin")) {
 			if (currentAttribute != null) {
-				throw new ParseException("Syntax error: Cannot create an attribute inside another", 0);
+				throw new SceneParseException("Syntax error: Cannot create an attribute inside another");
 			}
 			
 			closeAttribute();
@@ -163,7 +169,7 @@ public class SceneParser {
 		}
 		else if (attribute.equals("TransformEnd")) {
 			if (currentAttribute == null || currentAttribute.getType() != AttributeType.TRANSFORM) {
-				throw new ParseException("Syntax error: TransformEnd found without matching TransformBegin", 0);
+				throw new SceneParseException("Syntax error: TransformEnd found without matching TransformBegin");
 			}
 			
 			closeAttribute();
@@ -171,7 +177,7 @@ public class SceneParser {
 		}
 		else if (attribute.equals("WorldBegin")) {
 			if (status != ParserStatus.GLOBAL) {
-				throw new ParseException("Syntax error: World must be defined with global scope", 0);
+				throw new SceneParseException("Syntax error: World must be defined with global scope");
 			}
 			
 			// Commit all global identifiers
@@ -180,10 +186,10 @@ public class SceneParser {
 		}
 		else if (attribute.equals("WorldEnd")) {
 			if (status == ParserStatus.ATTRIBUTE) {
-				throw new ParseException("Syntax error: WorldEnd found while an Attribute is still open", 0);
+				throw new SceneParseException("Syntax error: WorldEnd found while an Attribute is still open");
 			}
 			else if (status != ParserStatus.WORLD) {
-				throw new ParseException("Syntax error: WorldEnd found without matching WorldBegin", 0);
+				throw new SceneParseException("Syntax error: WorldEnd found without matching WorldBegin");
 			}
 			status = ParserStatus.END;
 		}
@@ -222,7 +228,7 @@ public class SceneParser {
 			Attribute attribute = null;
 			try {
 				attribute = new Attribute(AttributeType.ATTRIBUTE, null);
-			} catch (ParseException e) {
+			} catch (SceneParseException e) {
 			}
 			attributes.add(attribute);
 			for (Identifier i : accIdentifiers) {
