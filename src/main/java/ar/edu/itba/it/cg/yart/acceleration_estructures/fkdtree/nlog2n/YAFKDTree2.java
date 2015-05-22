@@ -27,10 +27,10 @@ public class YAFKDTree2 {
 
 	private static double kKT = 1.5;
 	private static double kKI = 1;
-	private static int kMAX_DEPTH = 40;
+	private static int kMAX_DEPTH = 3;
 
 	private static int kMIN_DEPTH = 10;
-	private double kEPSILON = 0.00001;;
+	private static double kEPSILON = 0.00001;
 	private double kTMAX = 1000;
 	private static double kLAMBDA = .8;
 
@@ -135,24 +135,6 @@ public class YAFKDTree2 {
 		final int nextDepth = currentDepth + 1;
 		SplitAxis nextAxis = SplitAxis.nextAxis(axis);
 
-		final List<GeometricObject> tl = new ArrayList<>();
-		final List<GeometricObject> tr = new ArrayList<>();
-
-//		for (final GeometricObject go : gObjects) {
-//			switch (classifiedObjects.sides.get(go)) {
-//			case 1:
-//				tl.add(go);
-//				break;
-//			case 2:
-//				tr.add(go);
-//				break;
-//			case 3:
-//				tl.add(go);
-//				tr.add(go);
-//				break;
-//			}
-//		}
-
 		final Set<PlaneCandidate> newSplits = new HashSet<>(prevs);
 		newSplits.add(bestCandidate);
 
@@ -214,7 +196,7 @@ public class YAFKDTree2 {
 			Event ei;
 
 			while (i < eventsQty && (ei = events[i]).axis.value == e.axis.value
-					&& ei.point == e.point && ei.type == EventType.END) {
+					&& Math.abs(ei.point - e.point) < kEPSILON && ei.type == EventType.END) {
 				i++;
 				switch (e.splitPoint.axis) {
 				case X:
@@ -231,7 +213,7 @@ public class YAFKDTree2 {
 				}
 			}
 			while (i < eventsQty && (ei = events[i]).axis.value == e.axis.value
-					&& ei.point == e.point && ei.type == EventType.START) {
+					&& Math.abs(ei.point - e.point) < kEPSILON && ei.type == EventType.START) {
 				i++;
 				switch (e.splitPoint.axis) {
 				case X:
@@ -248,7 +230,7 @@ public class YAFKDTree2 {
 				}
 			}
 			while (i < eventsQty && (ei = events[i]).axis.value == e.axis.value
-					&& ei.point == e.point && ei.type == EventType.PLANAR) {
+					&& Math.abs(ei.point - e.point) < kEPSILON && ei.type == EventType.PLANAR) {
 				i++;
 				switch (e.splitPoint.axis) {
 				case X:
@@ -311,6 +293,8 @@ public class YAFKDTree2 {
 			final AABB box) {
 		// we first find the perfect xs
 		double[] xs = new double[2];
+		double[] ys = new double[2];
+		double[] zs = new double[2];
 		AABB b = object.getBoundingBox();
 		if (b != null) {
 			b = b.clip(box);
@@ -318,16 +302,12 @@ public class YAFKDTree2 {
 			xs[1] = b.p1.x;
 		}
 		// then the ys
-		double[] ys = new double[2];
-		b = object.getBoundingBox();
 		if (b != null) {
 			b = b.clip(box);
 			ys[0] = b.p0.y;
 			ys[1] = b.p1.y;
 		}
 		// finally the zs
-		double[] zs = new double[2];
-		b = object.getBoundingBox();
 		if (b != null) {
 			b = b.clip(box);
 			zs[0] = b.p0.z;
@@ -370,7 +350,7 @@ public class YAFKDTree2 {
 		double max = perfects[1];
 
 		// if they are the same, they are planar
-		if (min == max) {
+		if (max - min < kEPSILON) {
 			SplitPoint splitPoint = new SplitPoint();
 			splitPoint.axis = axis;
 			splitPoint.point = min;
@@ -396,7 +376,7 @@ public class YAFKDTree2 {
 		max = perfects[1];
 
 		// if they are the same, they are planar
-		if (min == max) {
+		if (max - min < kEPSILON) {
 			SplitPoint splitPoint = new SplitPoint();
 			splitPoint.axis = axis;
 			splitPoint.point = min;
@@ -422,7 +402,7 @@ public class YAFKDTree2 {
 		max = perfects[1];
 
 		// if they are the same, they are planar
-		if (min == max) {
+		if (max - min < kEPSILON) {
 			SplitPoint splitPoint = new SplitPoint();
 			splitPoint.axis = axis;
 			splitPoint.point = min;

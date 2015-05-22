@@ -47,7 +47,8 @@ public class Plane extends GeometricObject {
 
 	@Override
 	public AABB createBoundingBox() {
-		return null;
+		final double v = Double.MAX_VALUE;
+		return new AABB(new Point3d(-v, v, EPSILON), new Point3d(v, -v, EPSILON));
 	}
 	
 	public double distanceFromRayOrigin(Ray ray) {

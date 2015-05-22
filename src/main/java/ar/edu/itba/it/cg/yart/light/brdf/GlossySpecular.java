@@ -10,9 +10,6 @@ public class GlossySpecular extends BRDF{
 	private double ks;
 	private double exp;
 	
-	private Color rho = Color.blackColor();
-	private Color sample_f = Color.blackColor();
-	
 	@Override
 	public Color f(final ShadeRec sr, final Vector3d wo, final Vector3d wi) {
 		MutableVector3d mNormalSR = new MutableVector3d(sr.normal);
@@ -35,20 +32,12 @@ public class GlossySpecular extends BRDF{
 
 	@Override
 	public Color rho(ShadeRec sr, Vector3d wo) {
-		return this.rho;
-	}
-	
-	public Color mRho(ShadeRec sr, Vector3d wo) {
-		return new Color(this.rho);
+		return Color.blackColor();
 	}
 	
 	@Override
 	public Color sample_f(ShadeRec sr, Vector3d wo, Vector3d wi) {
-		return this.sample_f;
-	}
-	
-	public Color mSample_f(ShadeRec sr, Vector3d wo, Vector3d wi) {
-		return new Color(this.sample_f);
+		return Color.blackColor();
 	}
 	
 	public void setExp(final double exp) {
