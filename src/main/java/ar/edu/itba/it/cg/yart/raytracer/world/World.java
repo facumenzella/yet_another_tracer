@@ -173,7 +173,7 @@ public class World {
 		addObject(waterGlass);
 		addObject(floor);
 
-		this.kdTree = YAFKDTree2.build(this.objects, 30);
+		this.kdTree = YAFKDTree2.build(this.objects, Double.POSITIVE_INFINITY);
 	}
 	
 	

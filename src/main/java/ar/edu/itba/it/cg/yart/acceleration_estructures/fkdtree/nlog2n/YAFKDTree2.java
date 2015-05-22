@@ -29,6 +29,7 @@ public class YAFKDTree2 {
 	private static double kKT = 1.5;
 	private static double kKI = 1;
 	private static int kMAX_DEPTH = 40;
+	private static int kMIN_DEPTH = 30;
 	private double kEPSILON = 0.00001;;
 	private double kTMAX = 1000;
 	private static double kLAMBDA = 1;
@@ -77,7 +78,7 @@ public class YAFKDTree2 {
 		PlaneCandidate bestCandidate = findPlane(size, box, events);
 		boolean terminate = bestCandidate.cost > (kKI * size);
 
-		if (currentDepth >= kMAX_DEPTH || terminate
+		if (currentDepth >= kMAX_DEPTH || currentDepth < kMIN_DEPTH || terminate
 				|| prevs.contains(bestCandidate)) {
 			leafs += gObjects.size();
 			return new KDLeafNode(gObjects);
@@ -111,20 +112,20 @@ public class YAFKDTree2 {
 		final List<GeometricObject> tl = new ArrayList<>();
 		final List<GeometricObject> tr = new ArrayList<>();
 
-		for (final GeometricObject go : gObjects) {
-			switch (classifiedObjects.sides.get(go)) {
-			case 1:
-				tl.add(go);
-				break;
-			case 2:
-				tr.add(go);
-				break;
-			case 3:
-				tl.add(go);
-				tr.add(go);
-				break;
-			}
-		}
+//		for (final GeometricObject go : gObjects) {
+//			switch (classifiedObjects.sides.get(go)) {
+//			case 1:
+//				tl.add(go);
+//				break;
+//			case 2:
+//				tr.add(go);
+//				break;
+//			case 3:
+//				tl.add(go);
+//				tr.add(go);
+//				break;
+//			}
+//		}
 
 		final Set<PlaneCandidate> newSplits = new HashSet<>(prevs);
 		newSplits.add(bestCandidate);
