@@ -12,6 +12,7 @@ import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.KDNode;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.PlaneCandidate;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.SplitAxis;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.SplitPoint;
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
@@ -424,8 +425,20 @@ public class YAFKDTree2 {
 	}
 
 	// Here we trace rays. Work for kids
-	public Color traceRay(final Ray ray, final ShadeRec sr) {
-		return p_traceObjectsForRay(ray, root, 0, 1000, sr);
+	public Color traceRay(final Ray ray, final ShadeRec sr, final Stack stack) {
+		
+		KDNode node = null;
+		boolean hit = false;
+		KDNode top = root;
+		stack.push(root, 0, kTMAX);
+		
+		while (!hit || node != root) {
+			
+			while(!node.isLeaf()) {
+				
+			}
+		
+		}
 	}
 
 	private Color p_traceObjectsForRay(final Ray ray, final KDNode node,
