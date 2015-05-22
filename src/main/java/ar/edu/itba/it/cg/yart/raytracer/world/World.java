@@ -46,7 +46,7 @@ public class World {
 	 * Creates a sad, empty World.
 	 */
 	public World() {
-		this.ambientLight = new AmbientLight(new Color(0.3, 0.3, 0.3));
+		this.ambientLight = new AmbientLight(new Color(0.5, 0.5, 0.5));
 	}
 	
 	public void preprocess() {
@@ -120,7 +120,7 @@ public class World {
 		setBackgroundColor(Color.blackColor());
 
 		final Instance billiardBall = new Instance(new Sphere());
-		final Matrix4d ballTrans = Matrix4d.scaleMatrix(30, 30, 30).rotateY(0).transform(40,30,0);
+		final Matrix4d ballTrans = Matrix4d.scaleMatrix(10, 10, 10).rotateY(0).transform(40,40,-20);
 		billiardBall.applyTransformation(ballTrans);
 		Reflective s1m = new Reflective();
 		s1m.setCd(billiardBallTexture);
@@ -129,7 +129,7 @@ public class World {
 		s1m.setKs(0.2);
 		s1m.setExp(200);
 		s1m.setCr(Color.whiteColor());
-		s1m.setKr(.25);
+		s1m.setKr(.05);
 		billiardBall.setMaterial(s1m);
 		
 		final Instance waterGlass = new Instance(new Sphere());
@@ -142,9 +142,9 @@ public class World {
 		.setKs(0.7)
 		.setExp(100)
 		.setCr(Color.whiteColor())
-		.setKr(0.9)
-		.setIor(1)
-		.setKt(new Color(0.1, 0.1, 0.1));
+		.setKr(0.1)
+		.setIor(1.33)
+		.setKt(new Color(0.9, 0.9, 0.9));
 		waterGlass.setMaterial(waterGlassMaterial);
 		
 		final Instance floor = new Instance(new Plane());
@@ -197,7 +197,7 @@ public class World {
 		this.objects.clear();
 		this.objects.addAll(objects);
 		preprocessed = false;
-		this.kdTree = YAFKDTree2.build(this.objects, 30);
+		this.kdTree = YAFKDTree2.build(this.objects, Double.POSITIVE_INFINITY);
 	}
 	
 	public void addObject(final GeometricObject object) {

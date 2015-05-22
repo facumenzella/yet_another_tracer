@@ -64,6 +64,16 @@ public class Transparent extends Phong {
 		reflectiveBRDF.setKr(kr);
 		return this;
 	}
+	
+	public Transparent setKr(final Color kr) {
+		reflectiveBRDF.setKr(kr);
+		return this;
+	}
+	
+	public Transparent setKr(final Texture kr) {
+		reflectiveBRDF.setKr(kr);
+		return this;
+	}
 
 	public Transparent setIor(final double ior) {
 		specularBTDF.setIor(ior);
