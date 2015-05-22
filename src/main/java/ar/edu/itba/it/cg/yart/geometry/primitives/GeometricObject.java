@@ -9,7 +9,7 @@ import ar.edu.itba.it.cg.yart.transforms.Transformable;
 
 public abstract class GeometricObject implements Transformable{
 
-	protected static final double EPSILON = 0.0001;
+	protected double EPSILON = 0.00001;
 	public Color color;
 	public Material  material;
 	private AABB boundingBox;	
