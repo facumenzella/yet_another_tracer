@@ -15,7 +15,6 @@ public class PointLight extends AbstractLight {
 	private final Color color;
 	private Vector3d location;
 	private final Point3d point;
-	private final ShadowTracer tracer;
 
 	private Color L;
 	
@@ -28,7 +27,6 @@ public class PointLight extends AbstractLight {
 		this.color = color;
 		this.location = location;
 		this.point = new Point3d(location.x, location.y, location.z);
-		this.tracer = new SimpleShadowTracer();
 		this.L = this.mL(null);
 	}
 	public PointLight(final double ls, final Color color) {
@@ -54,7 +52,7 @@ public class PointLight extends AbstractLight {
 		double t;
 		final double d = point.distance(ray.origin);
 
-		t = sr.world.getTree().traceShadowHit(ray, tracer);
+		t = sr.world.getTree().traceShadowHit(ray);
 		if (t != Double.NEGATIVE_INFINITY && t < d) {
 			return true;
 		}
