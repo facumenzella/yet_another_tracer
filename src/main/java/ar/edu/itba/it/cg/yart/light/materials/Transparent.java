@@ -100,7 +100,7 @@ public class Transparent extends Phong {
 			double srdotwi = Math.abs(sr.normal.dot(wi));
 			double srdotwt = Math.abs(sr.normal.dot(wt));
 			
-			colorL.addEquals(sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world)).multiply(fr).multiply(srdotwi));
+//			colorL.addEquals(sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world)).multiply(fr).multiply(srdotwi));
 			colorL.addEquals(sr.world.getTree().traceRay(transmittedRay, new ShadeRec(sr.world)).multiply(ft).multiply(srdotwt));
 		}
 		

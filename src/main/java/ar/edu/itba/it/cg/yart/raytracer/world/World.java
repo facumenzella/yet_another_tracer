@@ -142,9 +142,9 @@ public class World {
 		.setKs(0.7)
 		.setExp(100)
 		.setCr(Color.whiteColor())
-		.setKr(0.9)
+		.setKr(0.2)
 		.setIor(1)
-		.setKt(new Color(0.1, 0.1, 0.1));
+		.setKt(new Color(0.8, 0.8, 0.8));
 		waterGlass.setMaterial(waterGlassMaterial);
 		
 		final Instance floor = new Instance(new Plane());

@@ -53,8 +53,8 @@ public class Quadrilateral extends GeometricObject {
 		final double p2x = Math.max(corner.x, corner.x + sideA.x + sideB.x) + EPSILON;
 		final double p1y = Math.min(corner.y, corner.y + sideA.y + sideB.y) - EPSILON;
 		final double p2y = Math.max(corner.y, corner.y + sideA.y + sideB.y) + EPSILON;
-		final double p1z = Math.min(corner.z, corner.z + sideA.z + sideB.z) - EPSILON;
-		final double p2z = Math.max(corner.z, corner.z + sideA.z + sideB.z) + EPSILON;
+		final double p1z = EPSILON;
+		final double p2z = EPSILON;
 
 		final Point3d p1 = new Point3d(p1x, p2y, p1z);
 		final Point3d p2 = new Point3d(p2x, p1y, p2z);
