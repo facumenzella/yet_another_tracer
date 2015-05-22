@@ -30,3 +30,7 @@ images/
 # Test scenes #
 
 scenes
+
+# Logs
+
+*.log

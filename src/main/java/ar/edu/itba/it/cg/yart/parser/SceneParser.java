@@ -42,6 +42,10 @@ public class SceneParser {
 		status = ParserStatus.GLOBAL;
 	}
 	
+	public String getPath() {
+		return filePath;
+	}
+	
 	public void parseFile() throws IOException, ParseException {
 		parseFile(this.filePath);
 	}
