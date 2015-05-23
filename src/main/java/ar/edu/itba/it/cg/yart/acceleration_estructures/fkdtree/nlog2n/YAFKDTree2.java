@@ -2,9 +2,12 @@ package ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.nlog2n;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.KDInternalNode;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.KDLeafNode;
@@ -93,13 +96,12 @@ public class YAFKDTree2 {
 
 	private static KDNode buildTree(final AABB rootBox,
 			final List<GeometricObject> gObjects, final Event[] events) {
-		return buildKDNode(gObjects, rootBox, SplitAxis.X, 0, events,
-				new HashSet<PlaneCandidate>(), rootBox);
+		return buildKDNode(gObjects, rootBox, 0, events, rootBox);
 	}
 
 	private static KDNode buildKDNode(final List<GeometricObject> gObjects,
-			final AABB box, final SplitAxis axis, final int currentDepth,
-			Event[] events, Set<PlaneCandidate> prevs, final AABB rootAABB) {
+			final AABB box, final int currentDepth, Event[] events,
+			final AABB rootAABB) {
 		final int size = gObjects.size();
 		if (size == 0) {
 			return emptyLeaf;
@@ -107,9 +109,7 @@ public class YAFKDTree2 {
 		PlaneCandidate bestCandidate = findPlane(size, box, events, rootAABB);
 		boolean terminate = bestCandidate.cost > (kKI * size);
 
-		if (currentDepth >= kMAX_DEPTH
-				|| (terminate && currentDepth > kMIN_DEPTH)
-				|| prevs.contains(bestCandidate)) {
+		if (currentDepth >= kMAX_DEPTH || (terminate && currentDepth > kMIN_DEPTH)) {
 			leafs += gObjects.size();
 			return new KDLeafNode(gObjects);
 		}
@@ -119,11 +119,11 @@ public class YAFKDTree2 {
 		AABB[] boxes = bestCandidate.boxes;
 
 		// We classify the objects with the events (left, right, both)
-		ClassifiedObjects classifiedObjects = ClassifiedObjects.classify(
-				gObjects, events, bestCandidate);
+		ClassifiedObjects classifiedObjects = classify(gObjects, events,
+				bestCandidate);
 		// We classify the events in left and right
-		final ClassifiedEvents classifiedEvents = ClassifiedEvents.splice(
-				events, classifiedObjects, boxes[0], boxes[1]);
+		final ClassifiedEvents classifiedEvents = splice(events,
+				classifiedObjects, boxes[0], boxes[1]);
 
 		final Event[] ebl = classifiedEvents.ebl.toArray(new Event[0]);
 		final Event[] ebr = classifiedEvents.ebr.toArray(new Event[0]);
@@ -131,22 +131,17 @@ public class YAFKDTree2 {
 		Arrays.sort(ebl);
 		Arrays.sort(ebr);
 
-		final List<Event> el = Event.mergeEvents(Arrays.asList(ebl),
+		final List<Event> el = mergeEvents(Arrays.asList(ebl),
 				classifiedEvents.elo);
-		final List<Event> er = Event.mergeEvents(Arrays.asList(ebr),
+		final List<Event> er = mergeEvents(Arrays.asList(ebr),
 				classifiedEvents.ero);
 
 		final int nextDepth = currentDepth + 1;
-		SplitAxis nextAxis = SplitAxis.nextAxis(axis);
-
-		final Set<PlaneCandidate> newSplits = new HashSet<>(prevs);
-		newSplits.add(bestCandidate);
 
 		return new KDInternalNode(splitPoint, buildKDNode(classifiedObjects.tl,
-				boxes[0], nextAxis, nextDepth, el.toArray(new Event[] {}),
-				newSplits, rootAABB), buildKDNode(classifiedObjects.tr,
-				boxes[1], nextAxis, nextDepth, er.toArray(new Event[] {}),
-				newSplits, rootAABB));
+				boxes[0], nextDepth, el.toArray(new Event[] {}), rootAABB),
+				buildKDNode(classifiedObjects.tr, boxes[1], nextDepth,
+						er.toArray(new Event[] {}), rootAABB));
 	}
 
 	private static AABB[] splitAABB(final AABB box, SplitPoint p) {
@@ -198,11 +193,10 @@ public class YAFKDTree2 {
 			int pSTARTZ = 0, pENDZ = 0, pPLANARZ = 0;
 
 			Event e = events[i];
-			Event ei;
 
-			while (i < eventsQty && (ei = events[i]).axis.value == e.axis.value
-					&& Math.abs(ei.point - e.point) < kEPSILON
-					&& ei.type == EventType.END) {
+			while (i < eventsQty && events[i].axis.value == e.axis.value
+					&& events[i].point == e.point
+					&& events[i].type == EventType.END) {
 				i++;
 				switch (e.splitPoint.axis) {
 				case X:
@@ -218,9 +212,10 @@ public class YAFKDTree2 {
 					System.out.println("Holy shit the impossible happened");
 				}
 			}
-			while (i < eventsQty && (ei = events[i]).axis.value == e.axis.value
-					&& Math.abs(ei.point - e.point) < kEPSILON
-					&& ei.type == EventType.START) {
+
+			while (i < eventsQty && events[i].axis.value == e.axis.value
+					&& events[i].point == e.point
+					&& events[i].type == EventType.START) {
 				i++;
 				switch (e.splitPoint.axis) {
 				case X:
@@ -236,9 +231,9 @@ public class YAFKDTree2 {
 					System.out.println("Holy shit the impossible happened");
 				}
 			}
-			while (i < eventsQty && (ei = events[i]).axis.value == e.axis.value
-					&& Math.abs(ei.point - e.point) < kEPSILON
-					&& ei.type == EventType.PLANAR) {
+			while (i < eventsQty && events[i].axis.value == e.axis.value
+					&& events[i].point == e.point
+					&& events[i].type == EventType.PLANAR) {
 				i++;
 				switch (e.splitPoint.axis) {
 				case X:
@@ -290,7 +285,7 @@ public class YAFKDTree2 {
 
 			if (Double.isNaN(candidate.cost) || minCost > candidate.cost) {
 				bestCandidate.cost = candidate.cost;
-				bestCandidate.splitPoint = e.splitPoint;
+				bestCandidate.splitPoint = candidate.splitPoint;
 				bestCandidate.boxes = candidate.boxes;
 			}
 		}
@@ -331,8 +326,10 @@ public class YAFKDTree2 {
 		final double pl = boxL.surfaceArea / area;
 		final double pr = boxR.surfaceArea / area;
 
-		final double cl = kLAMBDA * (kKT + kKI * ((pl * nl + np) + (pr * nr)));
-		final double cr = kLAMBDA * (kKT + kKI * ((pl * nl) + (pr * nr + np)));
+		final double cl = ((nr == 0 || nl == 0) ? kLAMBDA : 1)
+				* (kKT + kKI * ((pl * nl + np) + (pr * nr)));
+		final double cr = ((nr == 0 || nl == 0) ? kLAMBDA : 1)
+				* (kKT + kKI * ((pl * nl) + (pr * nr + np)));
 
 		double cost = (cl < cr) ? cl : cr;
 		return new PlaneCandidate(boxes, p, cost, (cl < cr) ? true : false);
@@ -558,7 +555,6 @@ public class YAFKDTree2 {
 					near = internalNode.right;
 					far = internalNode.left;
 				}
-
 				final double t = diff / rayDirAxis;
 
 				// This is madness !!
@@ -637,7 +633,6 @@ public class YAFKDTree2 {
 					near = internalNode.right;
 					far = internalNode.left;
 				}
-
 				final double t = diff / rayDirAxis;
 
 				// This is madness !!
@@ -691,5 +686,210 @@ public class YAFKDTree2 {
 				return Double.NEGATIVE_INFINITY;
 			}
 		}
+	}
+
+	public static List<Event> mergeEvents(final Collection<Event> e1,
+			final Collection<Event> elo) {
+		final Iterator<Event> it1 = e1.iterator();
+		final Iterator<Event> it2 = elo.iterator();
+		final List<Event> merged = new ArrayList<>();
+
+		if (!it1.hasNext()) {
+			merged.addAll(elo);
+			return merged;
+		}
+
+		if (!it2.hasNext()) {
+			merged.addAll(e1);
+			return merged;
+		}
+
+		Event ev1 = it1.next();
+		Event ev2 = it2.next();
+
+		do {
+			if (ev1.compareTo(ev2) < 0) {
+				merged.add(ev1);
+				if (it1.hasNext()) {
+					ev1 = it1.next();
+				} else {
+					merged.add(ev2);
+					break;
+				}
+			} else {
+				merged.add(ev2);
+				if (it2.hasNext()) {
+					ev2 = it2.next();
+				} else {
+					merged.add(ev1);
+					break;
+				}
+			}
+		} while (it1.hasNext() && it2.hasNext());
+
+		while (it1.hasNext()) {
+			merged.add(it1.next());
+		}
+
+		while (it2.hasNext()) {
+			merged.add(it2.next());
+		}
+
+		return merged;
+	}
+
+	public static class Event implements Comparable<Event> {
+		public final EventType type;
+		public final GeometricObject object;
+		public final double point;
+		public final SplitAxis axis;
+		public final SplitPoint splitPoint;
+
+		public Event(final EventType type, final GeometricObject object,
+				final SplitPoint splitPoint) {
+			this.type = type;
+			this.object = object;
+			this.point = splitPoint.point;
+			this.axis = splitPoint.axis;
+			this.splitPoint = splitPoint;
+		}
+
+		@Override
+		public int compareTo(Event o) {
+			final double first = point - o.point;
+			if (first < 0) {
+				return -1;
+			}
+			if (first == 0) {
+				if (axis == o.axis) {
+					return type.value - o.type.value;
+				}
+				return axis.value - o.axis.value;
+			}
+			return 1;
+		}
+
+		@Override
+		public String toString() {
+			return "Event [axis=" + axis + ", type=" + type + ", position="
+					+ point + "]";
+		}
+	}
+
+	public static ClassifiedEvents splice(final Event[] events,
+			final ClassifiedObjects tc, final AABB leftBox, final AABB rightBox) {
+		final List<Event> elo = new ArrayList<Event>(); // left only
+		final List<Event> ero = new ArrayList<Event>(); // right only
+		final List<Event> ebl = new ArrayList<Event>(); // events overlapping
+														// left
+		final List<Event> ebr = new ArrayList<Event>(); // events overlapping
+														// right
+
+		for (int i = 0; i < events.length; i++) {
+			Event e = events[i];
+			switch (tc.sides.get(e.object)) {
+			// events for “both sides”(3) triangles get discarded
+			case 1:
+				elo.add(e);
+				break;
+			case 2:
+				ero.add(e);
+				break;
+			}
+		}
+
+		for (final Entry<GeometricObject, Integer> entry : tc.sides.entrySet()) {
+			if (entry.getValue() == 3) {
+				final GeometricObject obj = entry.getKey();
+				ebl.addAll(YAFKDTree2.generateEvents(obj, leftBox));
+				ebr.addAll(YAFKDTree2.generateEvents(obj, rightBox));
+			}
+		}
+
+		return new ClassifiedEvents(elo, ero, ebl, ebr);
+	}
+
+	public static class ClassifiedEvents {
+
+		public final List<Event> elo;
+		public final List<Event> ero;
+		public final List<Event> ebl;
+		public final List<Event> ebr;
+
+		private ClassifiedEvents(final List<Event> elo, final List<Event> ero,
+				final List<Event> ebl, final List<Event> ebr) {
+			this.elo = elo;
+			this.ero = ero;
+			this.ebl = ebl;
+			this.ebr = ebr;
+		}
+	}
+
+	public static ClassifiedObjects classify(List<GeometricObject> gObjects,
+			final Event[] events, final PlaneCandidate candidate) {
+		// 1: Left
+		// 2: Right
+		// 3: Both
+		Map<GeometricObject, Integer> sides = new HashMap<GeometricObject, Integer>();
+
+		for (final GeometricObject o : gObjects) {
+			sides.put(o, 3);
+		}
+
+		for (final Event e : events) {
+			if (e.type == EventType.END && e.axis == candidate.splitPoint.axis
+					&& e.point <= candidate.splitPoint.point) {
+				sides.put(e.object, 1);
+			} else if (e.type == EventType.START
+					&& e.axis == candidate.splitPoint.axis
+					&& e.point >= candidate.splitPoint.point) {
+				sides.put(e.object, 2);
+			} else if (e.type == EventType.PLANAR
+					&& e.axis == candidate.splitPoint.axis) {
+				if (e.point < candidate.splitPoint.point
+						|| (e.point == candidate.splitPoint.point && candidate.left)) {
+					sides.put(e.object, 1);
+				} else if (e.point > candidate.splitPoint.point
+						|| (e.point == candidate.splitPoint.point && !candidate.left)) {
+					sides.put(e.object, 2);
+				}
+
+			}
+		}
+
+		final List<GeometricObject> tl = new ArrayList<GeometricObject>();
+		final List<GeometricObject> tr = new ArrayList<GeometricObject>();
+
+		for (final Entry<GeometricObject, Integer> e : sides.entrySet()) {
+			switch (e.getValue()) {
+			case 1:
+				tl.add(e.getKey());
+				break;
+			case 2:
+				tr.add(e.getKey());
+				break;
+			case 3:
+				tl.add(e.getKey());
+				tr.add(e.getKey());
+				break;
+			}
+		}
+
+		return new ClassifiedObjects(tl, tr, sides);
+	}
+
+	public static class ClassifiedObjects {
+
+		final List<GeometricObject> tl, tr;
+		final Map<GeometricObject, Integer> sides;
+
+		public ClassifiedObjects(final List<GeometricObject> tl,
+				final List<GeometricObject> tr,
+				final Map<GeometricObject, Integer> sides) {
+			this.tl = tl;
+			this.tr = tr;
+			this.sides = sides;
+		}
+
 	}
 }

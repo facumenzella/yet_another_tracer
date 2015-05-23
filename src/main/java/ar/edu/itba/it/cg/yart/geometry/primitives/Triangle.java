@@ -96,10 +96,10 @@ public class Triangle extends GeometricObject{
 	@Override
 	public AABB createBoundingBox() {
 		return (new AABB(new Point3d(Math.min(
-				Math.min(pointA.x, pointB.x), pointC.x)
-				- EPSILON, Math.min(Math.min(pointA.y, pointB.y), pointC.y)
+				Math.min(pointA.x, pointB.x), pointC.x) - EPSILON, Math.min(Math.min(pointA.y, pointB.y), pointC.y)
 				- EPSILON, Math.min(Math.min(pointA.z, pointB.z), pointC.z)
-				- EPSILON), new Point3d(Math.max(Math.max(pointA.x, pointB.x),
+				- EPSILON), 
+				new Point3d(Math.max(Math.max(pointA.x, pointB.x),
 				pointC.x) + EPSILON, Math.max(Math.max(pointA.y, pointB.y),
 				pointC.y) + EPSILON, Math.max(Math.max(pointA.z, pointB.z),
 				pointC.z) + EPSILON)));
