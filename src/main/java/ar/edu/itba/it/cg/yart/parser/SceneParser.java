@@ -5,48 +5,46 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import ar.edu.itba.it.cg.yart.YartConstants;
 import ar.edu.itba.it.cg.yart.parser.Attribute.AttributeType;
 import ar.edu.itba.it.cg.yart.parser.Identifier.IdentifierType;
 import ar.edu.itba.it.cg.yart.parser.Property.PropertyType;
+import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
+import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
 public class SceneParser {
 	
-	private enum ParserStatus {
-		GLOBAL,
-		WORLD,
-		ATTRIBUTE,
-		END
-	}
+	private static final Logger LOGGER = LoggerFactory.getLogger(YartConstants.LOG_FILE);
 
+	private final RayTracer raytracer;
 	private final String filePath;
+	private final SceneBuilder sceneBuilder;
 	
-	private ParserStatus status;
-	
-	private Attribute currentAttribute;
 	private Identifier currentIdentifier;
 	
-	private List<Attribute> attributes = new ArrayList<Attribute>();
-	private List<Identifier> globalIdentifiers = new ArrayList<Identifier>();
-	private List<Identifier> accIdentifiers = new ArrayList<Identifier>();
 	private List<Property> accProperties = new ArrayList<Property>();
 	
-	public SceneParser(final String filePath) {
+	public SceneParser(final String filePath, final RayTracer raytracer) {
 		this.filePath = filePath;
-		status = ParserStatus.GLOBAL;
+		this.raytracer = raytracer;
+		this.sceneBuilder = new SceneBuilder(raytracer);
 	}
 	
 	public String getPath() {
 		return filePath;
 	}
 	
-	public void parseFile() throws SceneParseException {
+	public void parse() throws SceneParseException {
+		World world = new World();
+		raytracer.setWorld(world);
 		parseFile(this.filePath);
 	}
 	
@@ -60,7 +58,7 @@ public class SceneParser {
 		catch (IOException e) {
 			throw new SceneParseException("Couldn't load file " + filePath + ".");
 		}
-		while (scanner.hasNextLine() && status != ParserStatus.END) {
+		while (scanner.hasNextLine()) {
 			String rawLine = scanner.nextLine().trim().replaceAll("\\s", " ");
 			String uncommentedLine = StringUtils.substringBefore(rawLine, "#");
 			
@@ -70,14 +68,6 @@ public class SceneParser {
 		}
 		applyProperties();
 		scanner.close();
-	}
-	
-	public List<Attribute> getAttributes() {
-		return attributes;
-	}
-	
-	public List<Identifier> getGlobalIdentifiers() {
-		return globalIdentifiers;
 	}
 	
 	private void processLine(final String line, final String folder) throws SceneParseException {
@@ -118,80 +108,22 @@ public class SceneParser {
 		IdentifierType identifierType = Identifier.getByName(attribute);
 		if (identifierType != null) {
 			currentIdentifier = new Identifier(identifierType, args);
-			accIdentifiers.add(currentIdentifier);
 		}
 		// Maybe it's an Attribute
 		else if (attribute.equals("AttributeBegin")) {
-			if (currentAttribute != null) {
-				throw new SceneParseException("Syntax error: Cannot create an attribute inside another");
-			}
-			
-			closeAttribute();
-			currentAttribute = new Attribute(AttributeType.ATTRIBUTE, args);
-			attributes.add(currentAttribute);
-			status = ParserStatus.ATTRIBUTE;
-		}
-		else if (attribute.equals("AttributeEnd")) {
-			if (currentAttribute == null || currentAttribute.getType() != AttributeType.ATTRIBUTE) {
-				throw new SceneParseException("Syntax error: AttributeEnd found without matching AttributeBegin");
-			}
-			
-			closeAttribute();
-			status = ParserStatus.WORLD;
+			sceneBuilder.attributeBegin(new Attribute(AttributeType.ATTRIBUTE, args));
 		}
 		else if (attribute.equals("ObjectBegin")) {
-			if (currentAttribute != null) {
-				throw new SceneParseException("Syntax error: Cannot create an attribute inside another");
-			}
-			
-			closeAttribute();
-			currentAttribute = new Attribute(AttributeType.OBJECT, args);
-			attributes.add(currentAttribute);
-			status = ParserStatus.ATTRIBUTE;
-		}
-		else if (attribute.equals("ObjectEnd")) {
-			if (currentAttribute == null || currentAttribute.getType() != AttributeType.OBJECT) {
-				throw new SceneParseException("Syntax error: ObjectEnd found without matching ObjectBegin");
-			}
-			
-			closeAttribute();
-			status = ParserStatus.WORLD;
+			sceneBuilder.attributeBegin(new Attribute(AttributeType.OBJECT, args));
 		}
 		else if (attribute.equals("TransformBegin")) {
-			if (currentAttribute != null) {
-				throw new SceneParseException("Syntax error: Cannot create an attribute inside another");
-			}
-			
-			closeAttribute();
-			currentAttribute = new Attribute(AttributeType.TRANSFORM, args);
-			attributes.add(currentAttribute);
-			status = ParserStatus.ATTRIBUTE;
-		}
-		else if (attribute.equals("TransformEnd")) {
-			if (currentAttribute == null || currentAttribute.getType() != AttributeType.TRANSFORM) {
-				throw new SceneParseException("Syntax error: TransformEnd found without matching TransformBegin");
-			}
-			
-			closeAttribute();
-			status = ParserStatus.WORLD;
+			sceneBuilder.attributeBegin(new Attribute(AttributeType.TRANSFORM, args));
 		}
 		else if (attribute.equals("WorldBegin")) {
-			if (status != ParserStatus.GLOBAL) {
-				throw new SceneParseException("Syntax error: World must be defined with global scope");
-			}
-			
-			// Commit all global identifiers
-			closeAttribute();
-			status = ParserStatus.WORLD;
+			sceneBuilder.attributeBegin(new Attribute(AttributeType.WORLD, args));
 		}
-		else if (attribute.equals("WorldEnd")) {
-			if (status == ParserStatus.ATTRIBUTE) {
-				throw new SceneParseException("Syntax error: WorldEnd found while an Attribute is still open");
-			}
-			else if (status != ParserStatus.WORLD) {
-				throw new SceneParseException("Syntax error: WorldEnd found without matching WorldBegin");
-			}
-			status = ParserStatus.END;
+		else if (attribute.equals("AttributeEnd") || attribute.equals("ObjectEnd") || attribute.equals("TransformEnd") || attribute.equals("WorldEnd")) {
+			sceneBuilder.attributeEnd();
 		}
 		else if (attribute.equals("Include")) {
 			String path = null;
@@ -206,47 +138,17 @@ public class SceneParser {
 		}
 	}
 	
-	private void closeAttribute() {
-		applyProperties();
-		applyIdentifiers();
-		currentAttribute = null;
-	}
-	
-	private void applyIdentifiers() {
-		if (status == ParserStatus.GLOBAL) {
-			for (Identifier i : accIdentifiers) {
-				globalIdentifiers.add(i);
-			}
-		}
-		else if (currentAttribute != null) {
-			for (Identifier i : accIdentifiers) {
-				currentAttribute.addIdentifier(i);
-			}
-		}
-		else {
-			// TODO Warning here, we're trying to add identifiers without any Attribute
-			Attribute attribute = null;
-			try {
-				attribute = new Attribute(AttributeType.ATTRIBUTE, null);
-			} catch (SceneParseException e) {
-			}
-			attributes.add(attribute);
-			for (Identifier i : accIdentifiers) {
-				attribute.addIdentifier(i);
-			}
-		}
-		
-		accIdentifiers.clear();
-	}
-	
 	private void applyProperties() {
 		if (currentIdentifier != null) {
 			for (Property p : accProperties) {
 				currentIdentifier.addProperty(p);
 			}
+			sceneBuilder.addIdentifier(currentIdentifier);
+			currentIdentifier = null;
 		}
 		else {
-			// TODO Warning here, we're trying to add properties without any Identifier
+			if (!accProperties.isEmpty())
+				LOGGER.warn("Trying to apply {} orphan properties.", accProperties.size());
 		}
 		
 		accProperties.clear();

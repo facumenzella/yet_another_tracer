@@ -242,6 +242,6 @@ public class Property {
 	}
 	
 	private String getErrorMessage(String expectedType) {
-		return "Couldn't retreive " + expectedType + " property " + name + ". Found " + type + ".";
+		return "Couldn't retreive " + expectedType + " property \"" + name + "\". Found " + type + ".";
 	}
 }
