@@ -12,5 +12,6 @@ public class YartConstants {
 	public static final Point3d DEFAULT_EYE = new Point3d(0, 0, 200);
 	public static final Point3d DEFAULT_LOOKAT = new Point3d(0, 0, 0);
 	public static final Vector3d DEFAULT_UP = new Vector3d(0, 0, 1);
+	public static final double DEFAULT_FOV = 90;
 
 }
