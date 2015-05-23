@@ -16,6 +16,7 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Plane;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Quadrilateral;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Sphere;
+import ar.edu.itba.it.cg.yart.geometry.primitives.mesh.Mesh;
 import ar.edu.itba.it.cg.yart.light.AmbientLight;
 import ar.edu.itba.it.cg.yart.light.Directional;
 import ar.edu.itba.it.cg.yart.light.Light;
@@ -35,6 +36,7 @@ public class World {
 
 	private Color backgroundColor;
 	private List<GeometricObject> objects = new ArrayList<GeometricObject>();
+	private List<Mesh> meshes = new ArrayList<Mesh>();
 	private List<Light> lights = new ArrayList<Light>();
 	private List<Light> castShadowLights = new ArrayList<Light>();
 	private List<Light> doNotCastShadowLights = new ArrayList<Light>();
@@ -53,6 +55,10 @@ public class World {
 		if (!preprocessed) {
 			this.kdTree = YAFKDTree2.build(this.objects);
 			preprocessed = true;
+			
+			for (Mesh m : meshes) {
+				m.preprocess();
+			}
 		}
 	}
 	
@@ -198,8 +204,25 @@ public class World {
 	}
 	
 	public void addObject(final GeometricObject object) {
-		objects.add(object);
-		preprocessed = false;
+		Instance result;
+		if (object instanceof Instance) {
+			result = (Instance) object;
+		}
+		else {
+			result = new Instance(object);
+		}
+		addObject(result);
+	}
+	
+	public void addObject(final Instance instance) {
+		if (instance != null && instance.object != null) {
+			if (instance.object instanceof Mesh) {
+				meshes.add((Mesh) instance.object);
+			}
+			
+			objects.add(instance);
+			preprocessed = false;
+		}
 	}
 	
 	public List<GeometricObject> getObjects() {
