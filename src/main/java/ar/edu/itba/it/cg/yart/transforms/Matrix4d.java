@@ -49,6 +49,13 @@ public class Matrix4d {
 		this.m32 = m32;
 		this.m33 = m33;
 	}
+	
+	// Copy constructor
+	public Matrix4d(final Matrix4d other) {
+		this(other.m00, other.m01, other.m02, other.m03, other.m10, other.m11,
+				other.m12, other.m13, other.m20, other.m21, other.m22,
+				other.m23, other.m30, other.m31, other.m32, other.m33);
+	}
 
 	public Matrix4d rightMultiply(final Matrix4d matrix) {
 		final double m00 = (this.m00 * matrix.m00) + (this.m01 * matrix.m10)
