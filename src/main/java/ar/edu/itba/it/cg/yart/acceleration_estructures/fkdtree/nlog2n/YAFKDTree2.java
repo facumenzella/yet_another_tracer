@@ -32,9 +32,9 @@ public class YAFKDTree2 {
 
 	private static double kKT = 1.5;
 	private static double kKI = 1;
-	private static int kMAX_DEPTH = 1;
+	private static int kMAX_DEPTH = 40;
 
-	private static int kMIN_DEPTH = 0;
+	private static int kMIN_DEPTH = 30;
 	private static double kEPSILON = 0.00001;
 	private double kTMAX = 1000;
 	private static double kLAMBDA = .8;
@@ -355,7 +355,7 @@ public class YAFKDTree2 {
 			splitPoint.axis = axis;
 			splitPoint.point = min;
 			eventList.add(new Event(EventType.PLANAR, object, splitPoint));
-		} else {
+		} else if(object.isFinite()) {
 			SplitPoint splitPointStart = new SplitPoint();
 			splitPointStart.axis = axis;
 			splitPointStart.point = min;
@@ -381,7 +381,7 @@ public class YAFKDTree2 {
 			splitPoint.axis = axis;
 			splitPoint.point = min;
 			eventList.add(new Event(EventType.PLANAR, object, splitPoint));
-		} else {
+		} else if(object.isFinite()) {
 			SplitPoint splitPointStart = new SplitPoint();
 			splitPointStart.axis = axis;
 			splitPointStart.point = min;
@@ -407,7 +407,7 @@ public class YAFKDTree2 {
 			splitPoint.axis = axis;
 			splitPoint.point = min;
 			eventList.add(new Event(EventType.PLANAR, object, splitPoint));
-		} else {
+		} else if(object.isFinite()) {
 			SplitPoint splitPointStart = new SplitPoint();
 			splitPointStart.axis = axis;
 			splitPointStart.point = min;
