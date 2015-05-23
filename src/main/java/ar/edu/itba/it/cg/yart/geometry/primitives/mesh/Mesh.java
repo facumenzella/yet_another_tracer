@@ -41,6 +41,8 @@ public class Mesh extends GeometricObject {
 
 	int verticesAmount;
 	int trianglesAmount;
+	
+	private boolean preprocessed = false;
 
 	public Mesh(final List<Point3d> vertices, final List<Vector3d> normals,
 			final List<Integer> indices, final double[] u, final double[] v,
@@ -90,20 +92,21 @@ public class Mesh extends GeometricObject {
 
 			this.addTriangle(t);
 		}
-
-		this.finish();
 	}
 
-	private void finish() {
-		numTriangles += triangles.size();
-		System.out.println(this.numTriangles);
-		this.numVertices = vertices.size();
-		this.updateBoundingBox();
+	public void preprocess() {
+		if (!preprocessed) {
+			numTriangles += triangles.size();
+			this.numVertices = vertices.size();
+			this.updateBoundingBox();
+			
+			kdTree = YAFKDTree2.build(this.triangles, this.getBoundingBox());
 
-		kdTree = YAFKDTree2.build(this.triangles, this.getBoundingBox());
-
-		if (needsSmoothing) {
-			this.computeMeshNormals();
+			if (needsSmoothing) {
+				this.computeMeshNormals();
+			}
+			
+			preprocessed = true;
 		}
 	}
 
