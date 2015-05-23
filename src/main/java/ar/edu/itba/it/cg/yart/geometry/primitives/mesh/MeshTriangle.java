@@ -51,12 +51,12 @@ public abstract class MeshTriangle extends GeometricObject {
 		Point3d v1 = mesh.vertices.get(index1);
 		Point3d v2 = mesh.vertices.get(index2);
 
-		double minX = Math.min(v0.x - EPSILON, Math.min(v1.x, v2.x));
-		double minY = Math.min(v0.y - EPSILON, Math.min(v1.y, v2.y));
-		double minZ = Math.min(v0.z - EPSILON, Math.min(v1.z, v2.z));
-		double maxX = Math.max(v0.x + EPSILON, Math.max(v1.x, v2.x));
-		double maxY = Math.max(v0.y + EPSILON, Math.max(v1.y, v2.y));
-		double maxZ = Math.max(v0.z + EPSILON, Math.max(v1.z, v2.z));
+		double minX = Math.min(v0.x, Math.min(v1.x, v2.x))  - EPSILON;
+		double minY = Math.min(v0.y, Math.min(v1.y, v2.y))  - EPSILON;
+		double minZ = Math.min(v0.z, Math.min(v1.z, v2.z))  - EPSILON;
+		double maxX = Math.max(v0.x, Math.max(v1.x, v2.x))  + EPSILON;
+		double maxY = Math.max(v0.y, Math.max(v1.y, v2.y))  + EPSILON;
+		double maxZ = Math.max(v0.z, Math.max(v1.z, v2.z))  + EPSILON;
 
 		return new AABB(new Point3d(minX, maxY, minZ), new Point3d(maxX, minY,
 				maxZ));
