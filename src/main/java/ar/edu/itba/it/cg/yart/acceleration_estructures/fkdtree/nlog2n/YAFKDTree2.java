@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.KDInternalNode;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.KDLeafNode;
@@ -30,12 +32,11 @@ import ar.edu.itba.it.cg.yart.raytracer.tracer.AbstractTracer;
 
 public class YAFKDTree2 {
 
-	private static double kKT = 1.5;
-	private static double kKI = 1;
-	private static int kMAX_DEPTH = 40;
+	private static double kKT = 1;
+	private static double kKI = 1.5;
+	private static int kMAX_DEPTH = 60;
 
-	private static int kMIN_DEPTH = 30;
-	private static double kEPSILON = 0.00001;
+	public static double kEPSILON = 0.00001;
 	private double kTMAX = 1000;
 	private static double kLAMBDA = .8;
 
@@ -55,12 +56,12 @@ public class YAFKDTree2 {
 		for (GeometricObject g : objects) {
 			AABB b = g.getBoundingBox();
 			if (b != null && g.isFinite()) {
-				minX = Math.min(minX, b.p0.x);
-				minZ = Math.min(minZ, b.p0.z);
-				minY = Math.min(minY, b.p1.y);
-				maxX = Math.max(maxX, b.p1.x);
-				maxY = Math.max(maxY, b.p0.y);
-				maxZ = Math.max(maxZ, b.p1.z);
+				minX = Math.min(minX, b.p0.x - kEPSILON);
+				minZ = Math.min(minZ, b.p0.z - kEPSILON);
+				minY = Math.min(minY, b.p1.y - kEPSILON);
+				maxX = Math.max(maxX, b.p1.x + kEPSILON);
+				maxY = Math.max(maxY, b.p0.y + kEPSILON);
+				maxZ = Math.max(maxZ, b.p1.z + kEPSILON);
 			}
 		}
 		return new AABB(new Point3d(minX, maxY, minZ), new Point3d(maxX, minY,
@@ -96,20 +97,21 @@ public class YAFKDTree2 {
 
 	private static KDNode buildTree(final AABB rootBox,
 			final List<GeometricObject> gObjects, final Event[] events) {
-		return buildKDNode(gObjects, rootBox, 0, events, rootBox);
+		return buildKDNode(gObjects, rootBox, 0, events, rootBox,
+				new HashSet<PlaneCandidate>());
 	}
 
 	private static KDNode buildKDNode(final List<GeometricObject> gObjects,
 			final AABB box, final int currentDepth, Event[] events,
-			final AABB rootAABB) {
+			final AABB rootAABB, final Set<PlaneCandidate> prevs) {
 		final int size = gObjects.size();
-		if (size == 0) {
-			return emptyLeaf;
-		}
-		PlaneCandidate bestCandidate = findPlane(size, box, events, rootAABB);
+
+		PlaneCandidate bestCandidate = findPlane(size, box, events, rootAABB,
+				prevs);
 		boolean terminate = bestCandidate.cost > (kKI * size);
 
-		if (currentDepth >= kMAX_DEPTH || (terminate && currentDepth > kMIN_DEPTH)) {
+		if (size == 0 || currentDepth >= kMAX_DEPTH || bestCandidate == null
+				|| terminate || prevs.contains(bestCandidate)) {
 			leafs += gObjects.size();
 			return new KDLeafNode(gObjects);
 		}
@@ -136,12 +138,15 @@ public class YAFKDTree2 {
 		final List<Event> er = mergeEvents(Arrays.asList(ebr),
 				classifiedEvents.ero);
 
+		final Set<PlaneCandidate> prevsPlus = new HashSet<PlaneCandidate>();
+		prevsPlus.add(bestCandidate);
+
 		final int nextDepth = currentDepth + 1;
 
 		return new KDInternalNode(splitPoint, buildKDNode(classifiedObjects.tl,
-				boxes[0], nextDepth, el.toArray(new Event[] {}), rootAABB),
-				buildKDNode(classifiedObjects.tr, boxes[1], nextDepth,
-						er.toArray(new Event[] {}), rootAABB));
+				boxes[0], nextDepth, el.toArray(new Event[] {}), rootAABB,
+				prevsPlus), buildKDNode(classifiedObjects.tr, boxes[1],
+				nextDepth, er.toArray(new Event[] {}), rootAABB, prevsPlus));
 	}
 
 	private static AABB[] splitAABB(final AABB box, SplitPoint p) {
@@ -175,7 +180,8 @@ public class YAFKDTree2 {
 
 	// find a 'good' plane mother fucker!!
 	private static PlaneCandidate findPlane(final int objectsSize,
-			final AABB box, final Event[] events, final AABB rootAABB) {
+			final AABB box, final Event[] events, final AABB rootAABB,
+			Set<PlaneCandidate> prevs) {
 
 		final int size = objectsSize;
 		final int eventsQty = events.length;
@@ -283,12 +289,13 @@ public class YAFKDTree2 {
 				System.out.println("Holy shit the impossible happened");
 			}
 
-			if (Double.isNaN(candidate.cost) || minCost > candidate.cost) {
-				bestCandidate.cost = candidate.cost;
+			if (minCost > candidate.cost) {
+				minCost = candidate.cost;
 				bestCandidate.splitPoint = candidate.splitPoint;
 				bestCandidate.boxes = candidate.boxes;
 			}
 		}
+		bestCandidate.cost = minCost;
 		return bestCandidate;
 	}
 
@@ -320,8 +327,7 @@ public class YAFKDTree2 {
 		final AABB boxL = boxes[0];
 		final AABB boxR = boxes[1];
 
-		double area = (Double.isInfinite(rootAABB.surfaceArea)) ? 10000
-				: rootAABB.surfaceArea;
+		double area = rootAABB.surfaceArea;
 
 		final double pl = boxL.surfaceArea / area;
 		final double pr = boxR.surfaceArea / area;
@@ -355,7 +361,7 @@ public class YAFKDTree2 {
 			splitPoint.axis = axis;
 			splitPoint.point = min;
 			eventList.add(new Event(EventType.PLANAR, object, splitPoint));
-		} else if(object.isFinite()) {
+		} else if (object.isFinite()) {
 			SplitPoint splitPointStart = new SplitPoint();
 			splitPointStart.axis = axis;
 			splitPointStart.point = min;
@@ -381,7 +387,7 @@ public class YAFKDTree2 {
 			splitPoint.axis = axis;
 			splitPoint.point = min;
 			eventList.add(new Event(EventType.PLANAR, object, splitPoint));
-		} else if(object.isFinite()) {
+		} else if (object.isFinite()) {
 			SplitPoint splitPointStart = new SplitPoint();
 			splitPointStart.axis = axis;
 			splitPointStart.point = min;
@@ -407,7 +413,7 @@ public class YAFKDTree2 {
 			splitPoint.axis = axis;
 			splitPoint.point = min;
 			eventList.add(new Event(EventType.PLANAR, object, splitPoint));
-		} else if(object.isFinite()) {
+		} else if (object.isFinite()) {
 			SplitPoint splitPointStart = new SplitPoint();
 			splitPointStart.axis = axis;
 			splitPointStart.point = min;
@@ -772,7 +778,7 @@ public class YAFKDTree2 {
 		@Override
 		public String toString() {
 			return "Event [axis=" + axis + ", type=" + type + ", position="
-					+ point + "]";
+					+ point + object + "]";
 		}
 	}
 
