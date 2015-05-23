@@ -2,6 +2,7 @@ package ar.edu.itba.it.cg.yart.raytracer.buckets;
 
 import java.util.Deque;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer.RaytracerCallbacks;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
@@ -12,14 +13,17 @@ public class BucketWorker implements Runnable {
 	private final ArrayIntegerMatrix result;
 	private final RaytracerCallbacks callback;
 	private final Deque<Bucket> buckets;
+	private final Stack stack;
 
 	public BucketWorker(final Deque<Bucket> buckets, RayTracer raytracer,
-			final ArrayIntegerMatrix result, final RaytracerCallbacks callback) {
+			final ArrayIntegerMatrix result, final RaytracerCallbacks callback,
+			final Stack stack) {
 
 		this.buckets = buckets;
 		this.result = result;
 		this.callback = callback;
 		this.raytracer = raytracer;
+		this.stack = stack;
 	}
 
 	@Override
@@ -28,14 +32,14 @@ public class BucketWorker implements Runnable {
 			boolean emptyQueue = false;
 			Bucket bucket = buckets.poll();
 			while (!emptyQueue) {
-				raytracer.getCamera().renderScene(bucket, raytracer, result);
+				raytracer.getCamera().renderScene(bucket, raytracer, result, stack);
 				callback.onBucketFinished(bucket, result);
 				emptyQueue = buckets.isEmpty();
 				if (!emptyQueue) {
 					bucket = buckets.poll();
 				}
 			}
-		} catch (Exception e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		

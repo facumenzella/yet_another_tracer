@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.geometry.Normal3d;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
@@ -63,7 +64,7 @@ public class Quadrilateral extends GeometricObject {
 	}
 
 	@Override
-	public double hit(Ray ray, ShadeRec sr) {
+	public double hit(Ray ray, ShadeRec sr, final Stack stack) {
 		
 		final double t = corner.sub(ray.origin).dot(normal)
 				/ ray.direction.dot(normal);
@@ -92,7 +93,7 @@ public class Quadrilateral extends GeometricObject {
 	}
 
 	@Override
-	public double shadowHit(Ray ray) {
+	public double shadowHit(Ray ray, final Stack stack) {
 		
 		final double t = corner.sub(ray.origin).dot(normal)
 				/ ray.direction.dot(normal);

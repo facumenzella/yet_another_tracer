@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
@@ -15,8 +16,8 @@ public class Disc extends Plane{
 	}
 	
 	@Override
-	public double hit(final Ray ray, ShadeRec rs) {
-		double t = super.hit(ray, rs);
+	public double hit(final Ray ray, ShadeRec rs, final Stack stack) {
+		double t = super.hit(ray, rs, stack);
 		if (t<= EPSILON) {
 			return Double.NEGATIVE_INFINITY;
 		}

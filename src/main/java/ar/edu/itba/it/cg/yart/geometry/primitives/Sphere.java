@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.geometry.MutableVector3d;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
@@ -23,7 +24,7 @@ public class Sphere extends GeometricObject {
 	}
 
 	@Override
-	public double hit(final Ray ray, final ShadeRec sr) {
+	public double hit(final Ray ray, final ShadeRec sr, final Stack stack) {
 		if (!getBoundingBox().hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}
@@ -70,7 +71,7 @@ public class Sphere extends GeometricObject {
 	}
 
 	@Override
-	public double shadowHit(final Ray ray) {
+	public double shadowHit(final Ray ray, final Stack stack) {
 		// intersect the inverse transformed ray with the untransformed object
 //		if (!getBoundingBox().hit(ray)) {
 //			return Double.NEGATIVE_INFINITY;

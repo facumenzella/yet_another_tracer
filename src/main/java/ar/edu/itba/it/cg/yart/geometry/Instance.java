@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.geometry;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
@@ -29,13 +30,13 @@ public class Instance extends GeometricObject{
 	}
 
 	@Override
-	public double hit(Ray ray, ShadeRec sr) {
+	public double hit(Ray ray, ShadeRec sr, final Stack stack) {
 		Ray invRay = new Ray(ray.origin);
 		// apply the inverse set of transformations to the ray to produce an inverse transformed ray
 		invRay.origin = ray.origin.transformByMatrix(invMatrix);
 		invRay.direction = ray.direction.transformByMatrix(invMatrix);
 		
-		final double t = object.hit(invRay, sr);
+		final double t = object.hit(invRay, sr, stack);
 		if (t != Double.NEGATIVE_INFINITY) {
 			sr.normal = sr.normal.transformByMatrix(transposedInvMatrix).normalizedVector();
 		}
@@ -48,13 +49,13 @@ public class Instance extends GeometricObject{
 	}
 
 	@Override
-	public double shadowHit(Ray ray) {
+	public double shadowHit(Ray ray, final Stack stack) {
 		Ray invRay = new Ray(ray.origin);
 		// apply the inverse set of transformations to the ray to produce an inverse transformed ray
 		invRay.origin = ray.origin.transformByMatrix(invMatrix);
 		invRay.direction = ray.direction.transformByMatrix(invMatrix);
 		
-		final double t = object.shadowHit(invRay);
+		final double t = object.shadowHit(invRay, stack);
 		return t;
 	}
 	

@@ -1,7 +1,7 @@
 package ar.edu.itba.it.cg.yart.raytracer.camera;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
-import ar.edu.itba.it.cg.yart.geometry.MutableVector3d;
 import ar.edu.itba.it.cg.yart.geometry.Point2d;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
@@ -11,7 +11,6 @@ import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.ColorTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
 public class PinholeCamera extends CameraAbstract {
@@ -32,9 +31,8 @@ public class PinholeCamera extends CameraAbstract {
 
 	@Override
 	public void renderScene(final Bucket bucket, RayTracer rayTracer,
-			final ArrayIntegerMatrix result) {
+			final ArrayIntegerMatrix result, final Stack stack) {
 
-		// TODO : Its almost working, but its not finished
 		Color blackColor = Color.blackColor();
 		Color color = new Color(0, 0, 0, 0);
 		ViewPlane viewPlane = rayTracer.getViewPlane();
@@ -50,7 +48,6 @@ public class PinholeCamera extends CameraAbstract {
 		int yFinish = yStart + bucket.getHeight();
 
 		World world = rayTracer.getWorld();
-		ColorTracer tracer = rayTracer.getTracer();
 		int row = yStart;
 		int col = xStart;
 		while (row < yFinish) {
@@ -72,14 +69,8 @@ public class PinholeCamera extends CameraAbstract {
 						* (0.5 * viewPlane.vRes - row + sp.y + distributionY);
 
 				Vector3d d = (u.scale(x)).add(v.scale(y)).sub(w.scale(distance)).normalizedVector();
-				// ray direction
-//				MutableVector3d mu = new MutableVector3d(u);
-//				mu.scale(x);
-//				mu.add(v.scale(y));
-//				mu.sub(w.scale(distance));
-//				ray.direction = mu.normalize();
 				ray.direction = d;
-				Color c = world.getTree().traceRay(ray, new ShadeRec(world));
+				Color c = world.getTree().traceRay(ray, new ShadeRec(world), stack);
 				color.addEquals(c);
 				j++;
 				if (j == n) {

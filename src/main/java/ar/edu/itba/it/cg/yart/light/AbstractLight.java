@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.light;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
@@ -14,7 +15,7 @@ public abstract class AbstractLight implements Light, Transformable {
 
 	public abstract Color L(final ShadeRec sr);
 
-	public abstract boolean inShadow(final Ray ray, final ShadeRec sr);
+	public abstract boolean inShadow(final Ray ray, final ShadeRec sr, final Stack stack);
 
 	public AbstractLight() {
 		shadows = true;

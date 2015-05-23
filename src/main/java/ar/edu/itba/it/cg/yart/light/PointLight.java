@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.light;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
@@ -46,11 +47,11 @@ public class PointLight extends AbstractLight {
 	}
 
 	@Override
-	public boolean inShadow(final Ray ray, final ShadeRec sr) {
+	public boolean inShadow(final Ray ray, final ShadeRec sr, final Stack stack) {
 		double t;
 		final double d = point.distance(ray.origin);
 
-		t = sr.world.getTree().traceShadowHit(ray);
+		t = sr.world.getTree().traceShadowHit(ray, stack);
 		if (t != Double.NEGATIVE_INFINITY && t < d) {
 			return true;
 		}

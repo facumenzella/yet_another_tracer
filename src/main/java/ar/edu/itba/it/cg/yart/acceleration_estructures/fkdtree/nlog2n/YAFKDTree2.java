@@ -13,6 +13,7 @@ import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.PlaneCandidate;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.SplitAxis;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.SplitPoint;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack.StackElement;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
@@ -28,7 +29,7 @@ public class YAFKDTree2 {
 
 	private static double kKT = 1.5;
 	private static double kKI = 1;
-	private static int kMAX_DEPTH = 15;
+	private static int kMAX_DEPTH = 30;
 
 	private static int kMIN_DEPTH = 1;
 	private static double kEPSILON = 0.00001;
@@ -47,7 +48,7 @@ public class YAFKDTree2 {
 		double minY = minX, minZ = minX;
 		double maxX = Double.MAX_VALUE;
 		double maxY = maxX, maxZ = maxX;
-		
+
 		for (GeometricObject g : objects) {
 			AABB b = g.getBoundingBox();
 			if (b != null) {
@@ -57,16 +58,17 @@ public class YAFKDTree2 {
 				maxX = Math.max(maxX, b.p1.x);
 				maxY = Math.max(maxY, b.p0.y);
 				maxZ = Math.max(maxZ, b.p1.z);
-			}	
+			}
 		}
-		return new AABB(new Point3d(minX, maxY, minZ), new Point3d(maxX, minY, maxZ));
+		return new AABB(new Point3d(minX, maxY, minZ), new Point3d(maxX, minY,
+				maxZ));
 	}
-	
+
 	public static YAFKDTree2 build(final List<GeometricObject> gObjects) {
 		final AABB aabb = YAFKDTree2.buildRootAABB(gObjects);
 		return YAFKDTree2.build(gObjects, aabb);
 	}
-	
+
 	public static YAFKDTree2 build(final List<GeometricObject> gObjects,
 			final AABB aabb) {
 		final long start = System.currentTimeMillis();
@@ -79,9 +81,9 @@ public class YAFKDTree2 {
 		tree.rootAABB = aabb;
 		Event[] events = eventList.toArray(new Event[eventList.size()]);
 		Arrays.sort(events);
-		
+
 		tree.root = buildTree(tree.rootAABB, gObjects, events);
-		
+
 		System.out.println("Tree built in "
 				+ (System.currentTimeMillis() - start)
 				+ " milliseconds. \n initials" + gObjects.size() + "leafs: "
@@ -105,7 +107,8 @@ public class YAFKDTree2 {
 		PlaneCandidate bestCandidate = findPlane(size, box, events, rootAABB);
 		boolean terminate = bestCandidate.cost > (kKI * size);
 
-		if (currentDepth >= kMAX_DEPTH || (terminate && currentDepth > kMIN_DEPTH)
+		if (currentDepth >= kMAX_DEPTH
+				|| (terminate && currentDepth > kMIN_DEPTH)
 				|| prevs.contains(bestCandidate)) {
 			leafs += gObjects.size();
 			return new KDLeafNode(gObjects);
@@ -141,8 +144,9 @@ public class YAFKDTree2 {
 
 		return new KDInternalNode(splitPoint, buildKDNode(classifiedObjects.tl,
 				boxes[0], nextAxis, nextDepth, el.toArray(new Event[] {}),
-				newSplits, rootAABB), buildKDNode(classifiedObjects.tr, boxes[1],
-				nextAxis, nextDepth, er.toArray(new Event[] {}), newSplits, rootAABB));
+				newSplits, rootAABB), buildKDNode(classifiedObjects.tr,
+				boxes[1], nextAxis, nextDepth, er.toArray(new Event[] {}),
+				newSplits, rootAABB));
 	}
 
 	private static AABB[] splitAABB(final AABB box, SplitPoint p) {
@@ -197,7 +201,8 @@ public class YAFKDTree2 {
 			Event ei;
 
 			while (i < eventsQty && (ei = events[i]).axis.value == e.axis.value
-					&& Math.abs(ei.point - e.point) < kEPSILON && ei.type == EventType.END) {
+					&& Math.abs(ei.point - e.point) < kEPSILON
+					&& ei.type == EventType.END) {
 				i++;
 				switch (e.splitPoint.axis) {
 				case X:
@@ -214,7 +219,8 @@ public class YAFKDTree2 {
 				}
 			}
 			while (i < eventsQty && (ei = events[i]).axis.value == e.axis.value
-					&& Math.abs(ei.point - e.point) < kEPSILON && ei.type == EventType.START) {
+					&& Math.abs(ei.point - e.point) < kEPSILON
+					&& ei.type == EventType.START) {
 				i++;
 				switch (e.splitPoint.axis) {
 				case X:
@@ -231,7 +237,8 @@ public class YAFKDTree2 {
 				}
 			}
 			while (i < eventsQty && (ei = events[i]).axis.value == e.axis.value
-					&& Math.abs(ei.point - e.point) < kEPSILON && ei.type == EventType.PLANAR) {
+					&& Math.abs(ei.point - e.point) < kEPSILON
+					&& ei.type == EventType.PLANAR) {
 				i++;
 				switch (e.splitPoint.axis) {
 				case X:
@@ -281,7 +288,7 @@ public class YAFKDTree2 {
 				System.out.println("Holy shit the impossible happened");
 			}
 
-			if ( Double.isNaN(candidate.cost) || minCost > candidate.cost ) {
+			if (Double.isNaN(candidate.cost) || minCost > candidate.cost) {
 				bestCandidate.cost = candidate.cost;
 				bestCandidate.splitPoint = e.splitPoint;
 				bestCandidate.boxes = candidate.boxes;
@@ -313,19 +320,21 @@ public class YAFKDTree2 {
 			b = b.clip(box);
 			zs[0] = b.p0.z;
 			zs[0] = b.p1.z;
-		} 
+		}
 
 		return new PerfectSplits(xs, ys, zs);
 	}
 
 	private static PlaneCandidate sah(final SplitPoint p, final AABB box,
-			final double nl, final double nr, final double np, final AABB rootAABB) {
+			final double nl, final double nr, final double np,
+			final AABB rootAABB) {
 		AABB boxes[] = splitAABB(box, p);
 		final AABB boxL = boxes[0];
 		final AABB boxR = boxes[1];
 
-		double area = (Double.isInfinite(rootAABB.surfaceArea)) ? 10000 : rootAABB.surfaceArea;
-		
+		double area = (Double.isInfinite(rootAABB.surfaceArea)) ? 10000
+				: rootAABB.surfaceArea;
+
 		final double pl = boxL.surfaceArea / area;
 		final double pr = boxR.surfaceArea / area;
 
@@ -429,243 +438,255 @@ public class YAFKDTree2 {
 		double tNear = 0;
 		double tFar = kTMAX;
 		KDNode node = null;
-		boolean hit = false;
-		KDNode top = root;
+
+		int top = stack.index;
 		stack.push(root, tNear, tFar);
-		
-		while (!hit || node != root) {
-			
-			while(!node.isLeaf()) {
-				
-			}
-		
-		}
-	}
 
-	private Color p_traceObjectsForRay(final Ray ray, final KDNode node,
-			final double min, final double max, final ShadeRec sr) {
+		while (true) {
+			StackElement e = stack.pop();
+			node = e.node;
+			tNear = e.min;
+			tFar = e.max;
+			while (!node.isLeaf()) {
+				double dir[] = { ray.direction.x, ray.direction.y,
+						ray.direction.z };
+				double origin[] = { ray.origin.x, ray.origin.y, ray.origin.z };
 
-		if (node.isLeaf()) {
-			KDLeafNode leaf = (KDLeafNode)node;
-			List<GeometricObject> objects = leaf.gObjects;
-			if (ray.depth >= AbstractTracer.MAX_DEPTH || objects == null || objects.size() == 0) {
-				return Color.blackColor();
-			}
-			Vector3d normal = null;
-			Point3d localHitPoint = null;
-			double tMin = max;
-			for (int i = 0; i < objects.size(); i++) {
-				GeometricObject object = objects.get(i);
-				double t = object.hit(ray, sr);
-				if (t != Double.NEGATIVE_INFINITY && t < tMin) {
-					sr.hitObject = true;
-					sr.material = object.getMaterial();
-					sr.hitPoint = sr.localHitPoint.transformByMatrix(object.matrix);
-					normal = sr.normal;
-					localHitPoint = sr.localHitPoint;
-					tMin = t;
+				KDInternalNode internalNode = (KDInternalNode) node;
+
+				KDNode near = null, far = null;
+				final double splitPoint = internalNode.splitPoint.point;
+				final double rayDirAxis = dir[internalNode.splitPoint.axis.value];
+				final double rayOriginAxis = origin[internalNode.splitPoint.axis.value];
+
+				final double diff = splitPoint - rayOriginAxis;
+
+				if (diff > 0) {
+					near = internalNode.left;
+					far = internalNode.right;
+				} else {
+					near = internalNode.right;
+					far = internalNode.left;
+				}
+
+				final double t = diff / rayDirAxis;
+
+				// This is madness !!
+				if (t > tFar || t < kEPSILON) {
+					// its on the near node
+					node = near;
+				} else {
+					if (t < tNear) {
+						// its on the far node
+						node = far;
+					} else {
+						// the ray might hit in both nodes, so we split the ray
+						stack.push(far, t, tFar);
+						node = near;
+						tFar = t;
+					}
 				}
 			}
-
-			if (sr.hitObject) {
-				sr.depth = ray.depth;
-				sr.t = tMin;
-				sr.normal = normal;
-				sr.localHitPoint = localHitPoint;
-				sr.ray = ray;
-				return sr.material.shade(sr);
-			}
-			
-			return sr.world.getBackgroundColor();
-		}
-
-		double dir[] = { ray.direction.x, ray.direction.y, ray.direction.z };
-		double origin[] = { ray.origin.x, ray.origin.y, ray.origin.z };
-
-		KDInternalNode internalNode = (KDInternalNode) node;
-
-		KDNode near = null, far = null;
-		final double splitPoint = internalNode.splitPoint.point;
-		final double rayDirAxis = dir[internalNode.splitPoint.axis.value];
-		final double rayOriginAxis = origin[internalNode.splitPoint.axis.value];
-
-		final double diff = splitPoint - rayOriginAxis;
-
-		if (diff > 0) {
-			near = internalNode.left;
-			far = internalNode.right;
-		} else {
-			near = internalNode.right;
-			far = internalNode.left;
-		}
-
-		final double t = diff / rayDirAxis;
-
-		// This is madness !!
-		if (t > max || t < kEPSILON) {
-			// its on the near node
-			return p_traceObjectsForRay(ray, near, min, max, sr);
-		} else {
-			if (t < min) {
-				// its on the far node
-				return p_traceObjectsForRay(ray, far, min, max, sr);
-			} else {
-				// the ray might hit in both nodes, so we split the ray
-				Color nearColor = p_traceObjectsForRay(ray, near, min, t, sr);
+			KDLeafNode leaf = (KDLeafNode) node;
+			List<GeometricObject> objects = leaf.gObjects;
+			if (ray.depth < AbstractTracer.MAX_DEPTH && objects != null) {
+				Vector3d normal = null;
+				Point3d localHitPoint = null;
+				double tMin = tFar;
+				for (int i = 0; i < objects.size(); i++) {
+					GeometricObject object = objects.get(i);
+					double t = object.hit(ray, sr, stack);
+					if (t != Double.NEGATIVE_INFINITY && t < tMin) {
+						sr.hitObject = true;
+						sr.material = object.getMaterial();
+						sr.hitPoint = sr.localHitPoint
+								.transformByMatrix(object.matrix);
+						normal = sr.normal;
+						localHitPoint = sr.localHitPoint;
+						tMin = t;
+					}
+				}
+				Color color = null;
 				if (sr.hitObject) {
-					return nearColor;
+					sr.depth = ray.depth;
+					sr.t = tMin;
+					sr.normal = normal;
+					sr.localHitPoint = localHitPoint;
+					sr.ray = ray;
+					color = sr.material.shade(sr, stack);
+					stack.index = top;
+					return color;
 				}
-				return p_traceObjectsForRay(ray, far, t, max, sr);
+			}
+
+			// If stack is empty
+			if (stack.peek() == top) {
+				return sr.world.getBackgroundColor();
 			}
 		}
 	}
 
-	public double traceShadowHit(final Ray ray) {
-		return p_traceObjectsForShadowHit(ray, root, kEPSILON, kTMAX);
-	}
+	public double traceShadowHit(final Ray ray, final Stack stack) {
+		double tNear = 0;
+		double tFar = kTMAX;
+		KDNode node = null;
 
-	private double p_traceObjectsForShadowHit(final Ray ray, final KDNode node,
-			final double min, final double max) {
+		int top = stack.index;
+		stack.push(root, tNear, tFar);
 
-		if (node.isLeaf()) {
-			KDLeafNode leaf = (KDLeafNode)node;
+		while (true) {
+			StackElement e = stack.pop();
+			node = e.node;
+			tNear = e.min;
+			tFar = e.max;
+			while (!node.isLeaf()) {
+				double dir[] = { ray.direction.x, ray.direction.y,
+						ray.direction.z };
+				double origin[] = { ray.origin.x, ray.origin.y, ray.origin.z };
+
+				KDInternalNode internalNode = (KDInternalNode) node;
+
+				KDNode near = null, far = null;
+				final double splitPoint = internalNode.splitPoint.point;
+				final double rayDirAxis = dir[internalNode.splitPoint.axis.value];
+				final double rayOriginAxis = origin[internalNode.splitPoint.axis.value];
+
+				final double diff = splitPoint - rayOriginAxis;
+
+				if (diff > 0) {
+					near = internalNode.left;
+					far = internalNode.right;
+				} else {
+					near = internalNode.right;
+					far = internalNode.left;
+				}
+
+				final double t = diff / rayDirAxis;
+
+				// This is madness !!
+				if (t > tFar || t < kEPSILON) {
+					// its on the near node
+					node = near;
+				} else {
+					if (t < tNear) {
+						// its on the far node
+						node = far;
+					} else {
+						// the ray might hit in both nodes, so we split the ray
+						stack.push(far, t, tFar);
+						node = near;
+						tFar = t;
+					}
+				}
+			}
+			KDLeafNode leaf = (KDLeafNode) node;
 			List<GeometricObject> objects = leaf.gObjects;
-			if (ray.depth >= AbstractTracer.MAX_DEPTH || objects == null || objects.size() == 0) {
+			if (ray.depth < AbstractTracer.MAX_DEPTH && objects != null) {
+				double tMin = tFar;
+				boolean hit = false;
+				for (int i = 0; i < objects.size(); i++) {
+					GeometricObject object = objects.get(i);
+					double t = object.shadowHit(ray, stack);
+					if (t != Double.NEGATIVE_INFINITY && t < tMin) {
+						tMin = t;
+						hit = true;
+					}
+				}
+				if (hit) {
+					stack.index = top;
+					return tMin;
+				}
+			}
+			// If stack is empty
+			if (stack.peek() == top) {
 				return Double.NEGATIVE_INFINITY;
 			}
-			double tMin = max;
-			boolean hit = false;
-			for (int i = 0; i < objects.size(); i++) {
-				GeometricObject object = objects.get(i);
-				double t = object.shadowHit(ray);
-				if (t != Double.NEGATIVE_INFINITY && t < tMin) {
-					tMin = t;
-					hit = true;
-				}
-			}
-			if (hit) {
-				return tMin;
-			}
-			return Double.NEGATIVE_INFINITY;
-		}
-
-		double dir[] = { ray.direction.x, ray.direction.y, ray.direction.z };
-		double origin[] = { ray.origin.x, ray.origin.y, ray.origin.z };
-
-		KDInternalNode internalNode = (KDInternalNode) node;
-
-		KDNode near = null, far = null;
-		final double splitPoint = internalNode.splitPoint.point;
-		final double rayDirAxis = dir[internalNode.splitPoint.axis.value];
-		final double rayOriginAxis = origin[internalNode.splitPoint.axis.value];
-
-		final double diff = splitPoint - rayOriginAxis;
-
-		if (diff > 0) {
-			near = internalNode.left;
-			far = internalNode.right;
-		} else {
-			near = internalNode.right;
-			far = internalNode.left;
-		}
-
-		final double t = diff / rayDirAxis;
-
-		// This is madness !!
-		if (t > max || t < kEPSILON) {
-			// its on the near node
-			return p_traceObjectsForShadowHit(ray, near, min, max);
-		} else {
-			if (t < min) {
-				// its on the far node
-				return p_traceObjectsForShadowHit(ray, far, min, max);
-			} else {
-				// the ray might hit in both nodes, so we split the ray
-				double hit = p_traceObjectsForShadowHit(ray, near, min, t);
-				if (t != Double.NEGATIVE_INFINITY) {
-					return hit;
-				}
-				return p_traceObjectsForShadowHit(ray, far, t, max);
-			}
 		}
 	}
 
-	public double traceRayHit(final Ray ray, final ShadeRec sr) {
-		return p_traceObjectsForRayHit(ray, root, kEPSILON, kTMAX, sr);
-	}
+	public double traceRayHit(final Ray ray, final ShadeRec sr,
+			final Stack stack) {
+		double tNear = 0;
+		double tFar = kTMAX;
+		KDNode node = null;
 
-	private double p_traceObjectsForRayHit(final Ray ray, final KDNode node,
-			final double min, final double max, final ShadeRec sr) {
+		int top = stack.index;
+		stack.push(root, tNear, tFar);
 
-		if (node.isLeaf()) {
-			KDLeafNode leaf = (KDLeafNode)node;
+		while (true) {
+			StackElement e = stack.pop();
+			node = e.node;
+			tNear = e.min;
+			tFar = e.max;
+			while (!node.isLeaf()) {
+				double dir[] = { ray.direction.x, ray.direction.y,
+						ray.direction.z };
+				double origin[] = { ray.origin.x, ray.origin.y, ray.origin.z };
+
+				KDInternalNode internalNode = (KDInternalNode) node;
+
+				KDNode near = null, far = null;
+				final double splitPoint = internalNode.splitPoint.point;
+				final double rayDirAxis = dir[internalNode.splitPoint.axis.value];
+				final double rayOriginAxis = origin[internalNode.splitPoint.axis.value];
+
+				final double diff = splitPoint - rayOriginAxis;
+
+				if (diff > 0) {
+					near = internalNode.left;
+					far = internalNode.right;
+				} else {
+					near = internalNode.right;
+					far = internalNode.left;
+				}
+
+				final double t = diff / rayDirAxis;
+
+				// This is madness !!
+				if (t > tFar || t < kEPSILON) {
+					// its on the near node
+					node = near;
+				} else {
+					if (t < tNear) {
+						// its on the far node
+						node = far;
+					} else {
+						// the ray might hit in both nodes, so we split the ray
+						stack.push(far, t, tFar);
+						node = near;
+						tFar = t;
+					}
+				}
+			}
+			KDLeafNode leaf = (KDLeafNode) node;
 			List<GeometricObject> objects = leaf.gObjects;
-			if (objects == null || objects.size() == 0) {
+			if (ray.depth < AbstractTracer.MAX_DEPTH && objects != null) {
+				double tMin = tFar;
+				boolean hit = false;
+				Vector3d normal = null;
+				Point3d localHitPoint = null;
+				GeometricObject object = null;
+				for (int i = 0; i < objects.size(); i++) {
+					object = objects.get(i);
+					double t = object.hit(ray, sr, stack);
+					if (t != Double.NEGATIVE_INFINITY && t < tMin) {
+						tMin = t;
+						normal = sr.normal;
+						localHitPoint = sr.localHitPoint;
+						hit = true;
+					}
+				}
+				if (hit) {
+					sr.normal = normal;
+					sr.localHitPoint = localHitPoint;
+					stack.index = top;
+					return tMin;
+				}
+			}
+			// If stack is empty
+			if (stack.peek() == top) {
 				return Double.NEGATIVE_INFINITY;
 			}
-			
-			double tMin = max;
-			boolean hit = false;
-			Vector3d normal = null;
-			Point3d localHitPoint = null;
-			GeometricObject object = null;
-			for (int i = 0; i < objects.size(); i++) {
-				object = objects.get(i);
-				double t = object.hit(ray, sr);
-				if (t != Double.NEGATIVE_INFINITY && t < tMin) {
-					tMin = t;
-					normal = sr.normal;
-					localHitPoint = sr.localHitPoint;
-					hit = true;
-				}
-			}
-			if (hit) {
-				sr.normal = normal;
-				sr.localHitPoint = localHitPoint;
-				return tMin;
-			}
-			return Double.NEGATIVE_INFINITY;
-		}
-
-		double dir[] = { ray.direction.x, ray.direction.y, ray.direction.z };
-		double origin[] = { ray.origin.x, ray.origin.y, ray.origin.z };
-
-		KDInternalNode internalNode = (KDInternalNode) node;
-
-		KDNode near = null, far = null;
-		final double splitPoint = internalNode.splitPoint.point;
-		final double rayDirAxis = dir[internalNode.splitPoint.axis.value];
-		final double rayOriginAxis = origin[internalNode.splitPoint.axis.value];
-
-		final double diff = splitPoint - rayOriginAxis;
-
-		if (diff > 0) {
-			near = internalNode.left;
-			far = internalNode.right;
-		} else {
-			near = internalNode.right;
-			far = internalNode.left;
-		}
-
-		final double t = diff / rayDirAxis;
-
-		// This is madness !!
-		if (t > max || t < kEPSILON) {
-			// its on the near node
-			return p_traceObjectsForRayHit(ray, near, min, max, sr);
-		} else {
-			if (t < min) {
-				// its on the far node
-				return p_traceObjectsForRayHit(ray, far, min, max, sr);
-			} else {
-				// the ray might hit in both nodes, so we split the ray
-				double distance = p_traceObjectsForRayHit(ray, near, min, t, sr);
-				if (distance != Double.NEGATIVE_INFINITY) {
-					return distance;
-				}
-				return p_traceObjectsForRayHit(ray, far, t, max, sr);
-			}
 		}
 	}
-
 }

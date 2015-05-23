@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.nlog2n.YAFKDTree2;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
@@ -42,11 +43,11 @@ public class Mesh extends GeometricObject {
 	int trianglesAmount;
 
 	public Mesh(final List<Point3d> vertices, final List<Vector3d> normals,
-			final List<Integer> indices, final double[] u,
-			final double[] v, final boolean needsSmoothing) {
+			final List<Integer> indices, final double[] u, final double[] v,
+			final boolean needsSmoothing) {
 		this.u = u;
 		this.v = v;
-		
+
 		this.vertices = vertices;
 		this.normals = normals;
 		this.indices = indices;
@@ -97,7 +98,7 @@ public class Mesh extends GeometricObject {
 		this.numTriangles = triangles.size();
 		this.numVertices = vertices.size();
 		this.updateBoundingBox();
-		
+
 		kdTree = YAFKDTree2.build(this.triangles, this.getBoundingBox());
 
 		if (needsSmoothing) {
@@ -149,19 +150,19 @@ public class Mesh extends GeometricObject {
 	}
 
 	@Override
-	public double hit(Ray ray, ShadeRec sr) {
+	public double hit(Ray ray, ShadeRec sr, final Stack stack) {
 		if (!getBoundingBox().hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}
-		return kdTree.traceRayHit(ray, sr);
+		return kdTree.traceRayHit(ray, sr, stack);
 	}
 
 	@Override
-	public double shadowHit(Ray ray) {
+	public double shadowHit(Ray ray, final Stack stack) {
 		if (!getBoundingBox().hit(ray)) {
-		return Double.NEGATIVE_INFINITY;
-	}
-		return kdTree.traceShadowHit(ray);
+			return Double.NEGATIVE_INFINITY;
+		}
+		return kdTree.traceShadowHit(ray, stack);
 	}
 
 }
