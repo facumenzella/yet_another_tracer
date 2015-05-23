@@ -29,7 +29,7 @@ public class YAFKDTree2 {
 
 	private static double kKT = 1.5;
 	private static double kKI = 1;
-	private static int kMAX_DEPTH = 30;
+	private static int kMAX_DEPTH = 1;
 
 	private static int kMIN_DEPTH = 1;
 	private static double kEPSILON = 0.00001;
@@ -44,14 +44,14 @@ public class YAFKDTree2 {
 	public static KDLeafNode emptyLeaf = new KDLeafNode(null);
 
 	private static AABB buildRootAABB(final List<GeometricObject> objects) {
-		double minX = -Double.MAX_VALUE;
+		double minX = Double.MAX_VALUE;
 		double minY = minX, minZ = minX;
-		double maxX = Double.MAX_VALUE;
+		double maxX = -Double.MAX_VALUE;
 		double maxY = maxX, maxZ = maxX;
 
 		for (GeometricObject g : objects) {
 			AABB b = g.getBoundingBox();
-			if (b != null) {
+			if (b != null && g.isFinite()) {
 				minX = Math.min(minX, b.p0.x);
 				minZ = Math.min(minZ, b.p0.z);
 				minY = Math.min(minY, b.p1.y);
@@ -299,27 +299,21 @@ public class YAFKDTree2 {
 
 	public static PerfectSplits perfectSplits(final GeometricObject object,
 			final AABB box) {
-		// we first find the perfect xs
 		double[] xs = new double[2];
 		double[] ys = new double[2];
 		double[] zs = new double[2];
 		AABB b = object.getBoundingBox();
 		if (b != null) {
 			b = b.clip(box);
+			// we first find the perfect xs
 			xs[0] = b.p0.x;
 			xs[1] = b.p1.x;
-		}
-		// then the ys
-		if (b != null) {
-			b = b.clip(box);
+			// then the ys
 			ys[0] = b.p1.y;
 			ys[1] = b.p0.y;
-		}
-		// finally the zs
-		if (b != null) {
-			b = b.clip(box);
+			// finally the zs
 			zs[0] = b.p0.z;
-			zs[0] = b.p1.z;
+			zs[1] = b.p1.z;
 		}
 
 		return new PerfectSplits(xs, ys, zs);
@@ -493,6 +487,7 @@ public class YAFKDTree2 {
 				Vector3d normal = null;
 				Point3d localHitPoint = null;
 				double tMin = tFar;
+				double u = 0, v = 0;
 				for (int i = 0; i < objects.size(); i++) {
 					GeometricObject object = objects.get(i);
 					double t = object.hit(ray, sr, stack);
@@ -502,6 +497,8 @@ public class YAFKDTree2 {
 						sr.hitPoint = sr.localHitPoint
 								.transformByMatrix(object.matrix);
 						normal = sr.normal;
+						u = sr.u;
+						v = sr.v;
 						localHitPoint = sr.localHitPoint;
 						tMin = t;
 					}
@@ -513,6 +510,8 @@ public class YAFKDTree2 {
 					sr.normal = normal;
 					sr.localHitPoint = localHitPoint;
 					sr.ray = ray;
+					sr.u = u;
+					sr.v = v;
 					color = sr.material.shade(sr, stack);
 					stack.index = top;
 					return color;
@@ -666,6 +665,7 @@ public class YAFKDTree2 {
 				Vector3d normal = null;
 				Point3d localHitPoint = null;
 				GeometricObject object = null;
+				double u = 0, v = 0;
 				for (int i = 0; i < objects.size(); i++) {
 					object = objects.get(i);
 					double t = object.hit(ray, sr, stack);
@@ -673,6 +673,8 @@ public class YAFKDTree2 {
 						tMin = t;
 						normal = sr.normal;
 						localHitPoint = sr.localHitPoint;
+						u = sr.u;
+						v = sr.v;
 						hit = true;
 					}
 				}
@@ -680,6 +682,8 @@ public class YAFKDTree2 {
 					sr.normal = normal;
 					sr.localHitPoint = localHitPoint;
 					stack.index = top;
+					sr.u = u;
+					sr.v = v;
 					return tMin;
 				}
 			}

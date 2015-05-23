@@ -55,5 +55,10 @@ public class Plane extends GeometricObject {
 	public double distanceFromRayOrigin(Ray ray) {
 		return (p.sub(ray.origin)).dot(normal) / ray.direction.dot(normal);
 	}
+
+	@Override
+	public boolean isFinite() {
+		return false;
+	}
 	
 }

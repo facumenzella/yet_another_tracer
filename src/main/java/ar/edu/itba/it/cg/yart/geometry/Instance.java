@@ -65,4 +65,13 @@ public class Instance extends GeometricObject{
 		updateBoundingBox();
 	}
 
+	@Override
+	public boolean isFinite(){
+		return this.object.isFinite();
+	}
+	
+	@Override
+	public String toString() {
+		return this.object.getClass().toString();
+	}
 }
