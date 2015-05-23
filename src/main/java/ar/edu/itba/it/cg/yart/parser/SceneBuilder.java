@@ -68,12 +68,9 @@ public class SceneBuilder {
 	
 	private final Sphere referenceSphere = new Sphere();
 	private final Plane referencePlane = new Plane();
-	private final Material defaultMaterial;
 	
 	public SceneBuilder(final RayTracer raytracer) {
 		this.raytracer = raytracer;
-		defaultMaterial = new Matte().setCd(new Color(0.75, 0.75, 0.75)).setKd(0.5).setKa(0.15);
-		
 		transformMatrices.push(new Matrix4d());
 	}
 
@@ -159,14 +156,11 @@ public class SceneBuilder {
 					i.getInteger("yresolution", YartConstants.DEFAULT_YRES));
 			break;
 		case LOOKAT:
-			String[] params = i.getParameters();
+			double[] params = ParserUtils.parseDoubleArray(i.getParameters());
 			raytracer.setViewParameters(
-					new Point3d(Double.valueOf(params[0]), Double
-							.valueOf(params[1]), Double.valueOf(params[2])),
-					new Point3d(Double.valueOf(params[3]), Double
-							.valueOf(params[4]), Double.valueOf(params[5])),
-					new Vector3d(Double.valueOf(params[6]), Double
-							.valueOf(params[7]), Double.valueOf(params[8])));
+					new Point3d(params[0], params[1], params[2]),
+					new Point3d(params[3], params[4], params[5]),
+					new Vector3d(params[6], params[7], params[8]));
 			break;
 		}
 		
@@ -240,7 +234,7 @@ public class SceneBuilder {
 				ret = mat;
 			}
 		}
-		catch (ClassCastException e) {
+		catch (Exception e) {
 			LOGGER.warn(e.getMessage());
 		}
 		
@@ -258,7 +252,7 @@ public class SceneBuilder {
 		else if (type == PropertyType.TEXTURE) {
 			String textureName = identifier.getString(property, null);
 			if (!textures.containsKey(textureName)) {
-				LOGGER.warn("Texture \"{}\" not found. Using default color");
+				LOGGER.warn("Texture \"{}\" not found. Using default color", textureName);
 				ret = new ConstantColor(defaultColor);
 			}
 			else {
@@ -324,10 +318,7 @@ public class SceneBuilder {
 				LOGGER.warn("Texture type \"{}\" unsupported", type);
 			}
 		}
-		catch (IOException e) {
-			LOGGER.warn("Couldn't load texture \"{}\": {}", name, e.getMessage());
-		}
-		catch (PropertyNotFoundException e) {
+		catch (Exception e) {
 			LOGGER.warn("Couldn't load texture \"{}\": {}", name, e.getMessage());
 		}
 		
@@ -410,7 +401,7 @@ public class SceneBuilder {
 		
 		// If there is no material set, use the default one
 		if (currentMaterial == null) {
-			currentMaterial = defaultMaterial;
+			currentMaterial = ParserUtils.defaultMaterial;
 		}
 		
 		if (instance != null) {
@@ -470,54 +461,65 @@ public class SceneBuilder {
 				LOGGER.warn("Couldn't create named material \"{}\"", idArgs[0]);
 			}
 		}
-		catch (SceneParseException e) {
+		catch (Exception e) {
 			LOGGER.warn(e.getMessage());
 		}
 	}
 	
 	private Camera buildCamera(Identifier identifier) {
 		Camera ret = null;
+		final String type = identifier.getParameters()[0];
 		
-		if (identifier.getParameters()[0].equals("perspective")) {
-			PinholeCamera cam = new PinholeCamera(YartConstants.DEFAULT_EYE, YartConstants.DEFAULT_LOOKAT, YartConstants.DEFAULT_UP, 500, 1);
-			cam.setFov(identifier.getDouble("fov", 90));
-			ret = cam;
+		try {
+			if (type.equals("perspective")) {
+				PinholeCamera cam = new PinholeCamera(YartConstants.DEFAULT_EYE, YartConstants.DEFAULT_LOOKAT, YartConstants.DEFAULT_UP, 500, 1);
+				cam.setFov(identifier.getDouble("fov", YartConstants.DEFAULT_FOV));
+				ret = cam;
+			}
+			else {
+				LOGGER.warn("Camera type \"{}\" unsupported", type);
+			}
+		}
+		catch (Exception e) {
+			LOGGER.warn(e.getMessage());
 		}
 		
 		return ret;
 	}
 	
 	private Matrix4d transform(Identifier identifier) {
-		final double m00 = Double.valueOf(identifier.getParameters()[0]);
-		final double m10 = Double.valueOf(identifier.getParameters()[1]);
-		final double m20 = Double.valueOf(identifier.getParameters()[2]);
-		final double m30 = Double.valueOf(identifier.getParameters()[3]);
+		double[] array = ParserUtils.parseDoubleArray(identifier.getParameters());
+		final double m00 = array[0];
+		final double m10 = array[1];
+		final double m20 = array[2];
+		final double m30 = array[3];
 
-		final double m01 = Double.valueOf(identifier.getParameters()[4]);
-		final double m11 = Double.valueOf(identifier.getParameters()[5]);
-		final double m21 = Double.valueOf(identifier.getParameters()[6]);
-		final double m31 = Double.valueOf(identifier.getParameters()[7]);
+		final double m01 = array[4];
+		final double m11 = array[5];
+		final double m21 = array[6];
+		final double m31 = array[7];
 
-		final double m02 = Double.valueOf(identifier.getParameters()[8]);
-		final double m12 = Double.valueOf(identifier.getParameters()[9]);
-		final double m22 = Double.valueOf(identifier.getParameters()[10]);
-		final double m32 = Double.valueOf(identifier.getParameters()[11]);
+		final double m02 = array[8];
+		final double m12 = array[9];
+		final double m22 = array[10];
+		final double m32 = array[11];
 
-		final double m03 = Double.valueOf(identifier.getParameters()[12]);
-		final double m13 = Double.valueOf(identifier.getParameters()[13]);
-		final double m23 = Double.valueOf(identifier.getParameters()[14]);
-		final double m33 = Double.valueOf(identifier.getParameters()[15]);
+		final double m03 = array[12];
+		final double m13 = array[13];
+		final double m23 = array[14];
+		final double m33 = array[15];
 
 		return new Matrix4d(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
  }
 	
 	private Matrix4d rotate(Identifier identifier) {
 		Matrix4d current = transformMatrices.peek();
+		double[] params = ParserUtils.parseDoubleArray(identifier.getParameters());
 		
-		double degrees = Double.valueOf(identifier.getParameters()[0]);
-		int rotateX = Integer.valueOf(identifier.getParameters()[1]);
-		int rotateY = Integer.valueOf(identifier.getParameters()[2]);
-		int rotateZ = Integer.valueOf(identifier.getParameters()[3]);
+		double degrees = params[0];
+		int rotateX = (int) params[1];
+		int rotateY = (int) params[2];
+		int rotateZ = (int) params[3];
 		
 		if (rotateX != 0) {
 			current = current.rotateX(degrees);
@@ -537,9 +539,11 @@ public class SceneBuilder {
 	private Matrix4d translate(Identifier identifier) {
 		Matrix4d current = transformMatrices.peek();
 		
-		double translateX = Double.valueOf(identifier.getParameters()[1]);
-		double translateY = Double.valueOf(identifier.getParameters()[2]);
-		double translateZ = Double.valueOf(identifier.getParameters()[3]);
+		double[] params = ParserUtils.parseDoubleArray(identifier.getParameters());
+		
+		double translateX = params[1];
+		double translateY = params[2];
+		double translateZ = params[3];
 		
 		current.transform(translateX, translateY, translateZ);
 		
@@ -549,9 +553,11 @@ public class SceneBuilder {
 	private Matrix4d scale(Identifier identifier) {
 		Matrix4d current = transformMatrices.peek();
 		
-		double scaleX = Double.valueOf(identifier.getParameters()[1]);
-		double scaleY = Double.valueOf(identifier.getParameters()[2]);
-		double scaleZ = Double.valueOf(identifier.getParameters()[3]);
+		double[] params = ParserUtils.parseDoubleArray(identifier.getParameters());
+		
+		double scaleX = params[1];
+		double scaleY = params[2];
+		double scaleZ = params[3];
 		
 		current.scale(scaleX, scaleY, scaleZ);
 		

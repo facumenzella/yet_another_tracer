@@ -133,7 +133,7 @@ public class YartApp {
 		} catch (NumberFormatException ex) {
 			printHelp(options);
 		} catch (SceneParseException ex) {
-			System.out.println(ex.getMessage());
+			System.out.println("Failed to load scene file \"" + sceneFile + "\": " + ex.getMessage());
 		}
 	}
 	

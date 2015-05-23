@@ -32,6 +32,9 @@ public class SceneParser {
 	
 	private List<Property> accProperties = new ArrayList<Property>();
 	
+	private int lastLine = 1; // Updated only when finding an Attribute or Identifier
+	private int currentLine = 1;
+	
 	public SceneParser(final String filePath, final RayTracer raytracer) {
 		this.filePath = filePath;
 		this.raytracer = raytracer;
@@ -49,7 +52,7 @@ public class SceneParser {
 			parseFile(this.filePath);
 		}
 		catch (Exception e) {
-			final String err = e.getMessage();
+			final String err = "In line " + lastLine + ": " + e.getMessage(); 
 			LOGGER.error(err);
 			throw new SceneParseException(err);
 		}
@@ -72,6 +75,7 @@ public class SceneParser {
 			if (uncommentedLine != null && !uncommentedLine.isEmpty()) {
 				processLine(uncommentedLine, folder);
 			}
+			currentLine++;
 		}
 		applyProperties();
 		scanner.close();
@@ -85,6 +89,7 @@ public class SceneParser {
 		}
 		else if (Character.isUpperCase(first.charAt(0))) { // Is an attribute
 			applyProperties();
+			lastLine = currentLine;
 			processAttribute(first, StringUtils.substringAfter(line, " ").split("\\s"), folder);
 		}
 	}

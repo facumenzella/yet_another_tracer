@@ -1,6 +1,12 @@
 package ar.edu.itba.it.cg.yart.parser;
 
+import ar.edu.itba.it.cg.yart.color.Color;
+import ar.edu.itba.it.cg.yart.light.materials.Material;
+import ar.edu.itba.it.cg.yart.light.materials.Matte;
+
 public class ParserUtils {
+	
+	public static Material defaultMaterial = new Matte().setCd(new Color(0.75, 0.75, 0.75)).setKd(0.5).setKa(0.15);
 	
 	public static double[] parseDoubleArray(final String[] array) {
 		double[] ret = new double[array.length];
