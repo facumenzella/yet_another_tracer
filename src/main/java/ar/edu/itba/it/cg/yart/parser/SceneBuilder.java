@@ -118,11 +118,7 @@ public class SceneBuilder {
 		case NAMED_MATERIAL:
 			String args[] = i.getParameters();
 			Material ret;
-			if (args.length < 1) {
-				// TODO Missing material name
-			} else if ((ret = namedMaterials.get(args[0])) == null) {
-				// TODO Error building material
-			} else {
+			if ((ret = namedMaterials.get(args[0])) != null) {
 				currentMaterial = ret;
 			}
 			break;
@@ -158,11 +154,11 @@ public class SceneBuilder {
 			raytracer.setCamera(buildCamera(i));
 			break;
 		case FILM:
-			if (!i.getParameters().equals("fleximage")) {
-				// TODO Fire warning, only fleximage is supported
+			if (!i.getParameters()[0].equals("fleximage")) {
+				LOGGER.warn("Only fleximage Film type is supported");
 			}
-			raytracer.setResolution(i.getInteger("xresolution", 800),
-					i.getInteger("yresolution", 600));
+			raytracer.setResolution(i.getInteger("xresolution", YartConstants.DEFAULT_XRES),
+					i.getInteger("yresolution", YartConstants.DEFAULT_YRES));
 			break;
 		case LOOKAT:
 			String[] params = i.getParameters();
@@ -227,11 +223,11 @@ public class SceneBuilder {
 				double finalRoughness = Math.max(uroughness, vroughness);
 				
 				if (finalRoughness <= 0) {
-					// TODO Roughness cannot be a negative number
+					LOGGER.warn("Metal roughness must be a number between 0 and 1");
 					finalRoughness = 0.001;
 				}
 				else if (finalRoughness > 1) {
-					// TODO Roughness cannot be greater than 1
+					LOGGER.warn("Metal roughness must be a number between 0 and 1");
 					finalRoughness = 1;
 				}
 				
