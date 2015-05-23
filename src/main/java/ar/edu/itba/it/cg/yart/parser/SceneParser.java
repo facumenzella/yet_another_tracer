@@ -88,18 +88,23 @@ public class SceneParser {
 		
 		int total = Math.min(properties.length, values.length);
 		
-		for (int i = 0; i < total; i++) {
-			String[] p = properties[i].split("\\s+");
-			PropertyType type = Property.getType(p[0]);
-			if (type == null) {
-				// TODO Unkown type, say something here
+		try {
+			for (int i = 0; i < total; i++) {
+				String[] p = properties[i].split("\\s+");
+				PropertyType type = Property.getType(p[0]);
+				if (type == null) {
+					LOGGER.warn("Unkown property type \"" + p[0] + "\".");
+				}
+				else if (p.length < 2) {
+					LOGGER.warn("Unkown property type \"" + p[0] + "\".");
+				}
+				else {
+					accProperties.add(new Property(p[1], type, values[i]));
+				}
 			}
-			else if (p.length < 2) {
-				// TODO Missing property name
-			}
-			else {
-				accProperties.add(new Property(p[1], type, values[i]));
-			}
+		}
+		catch (IllegalArgumentException e) {
+			throw new SceneParseException(e.getMessage());
 		}
 	}
 	
@@ -135,6 +140,9 @@ public class SceneParser {
 				path = folder + File.separator + file;
 			}
 			parseFile(path);
+		}
+		else {
+			LOGGER.info("Identifier \"" + attribute + "\" not recognized. Skipping...");
 		}
 	}
 	
