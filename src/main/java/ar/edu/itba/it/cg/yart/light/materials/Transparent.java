@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.light.materials;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.light.brdf.PerfectSpecular;
@@ -9,7 +10,7 @@ import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.Texture;
 
-public class Transparent extends Phong {
+public class Transparent extends Phong implements Material{
 
 	private final PerfectSpecular reflectiveBRDF = new PerfectSpecular();
 	private final PerfectTransmitter specularBTDF = new PerfectTransmitter();
@@ -91,8 +92,8 @@ public class Transparent extends Phong {
 	}
 
 	@Override
-	public Color shade(ShadeRec sr) {
-		Color colorL = super.shade(sr);
+	public Color shade(ShadeRec sr, final Stack stack) {
+		Color colorL = super.shade(sr, stack);
 		final Vector3d wo = sr.ray.direction.inverse();
 		final Vector3d wi = new Vector3d(0, 0, 0);
 
@@ -100,7 +101,7 @@ public class Transparent extends Phong {
 		final Ray reflectedRay = new Ray(sr.hitPoint, wi);
 		reflectedRay.depth = sr.depth + 1;
 		if (specularBTDF.tir(sr)) {
-			colorL.addEquals(sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world)));
+			colorL.addEquals(sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world), stack));
 		} else {
 			final Vector3d wt = new Vector3d(0, 0, 0);
 			final Color ft = specularBTDF.sample_f(sr, wo, wt);
@@ -111,7 +112,7 @@ public class Transparent extends Phong {
 			double srdotwt = Math.abs(sr.normal.dot(wt));
 			
 //			colorL.addEquals(sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world)).multiply(fr).multiply(srdotwi));
-			colorL.addEquals(sr.world.getTree().traceRay(transmittedRay, new ShadeRec(sr.world)).multiply(ft).multiply(srdotwt));
+			colorL.addEquals(sr.world.getTree().traceRay(transmittedRay, new ShadeRec(sr.world), stack).multiply(ft).multiply(srdotwt));
 		}
 		
 		return colorL;

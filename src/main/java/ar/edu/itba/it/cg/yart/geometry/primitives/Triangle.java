@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
@@ -28,7 +29,7 @@ public class Triangle extends GeometricObject{
 	}
 
 	@Override
-	public double hit(Ray ray, ShadeRec sr) {
+	public double hit(Ray ray, ShadeRec sr, final Stack stack) {
 		if (!getBoundingBox().hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}
@@ -88,7 +89,7 @@ public class Triangle extends GeometricObject{
 	}
 
 	@Override
-	public double shadowHit(final Ray ray) {
+	public double shadowHit(final Ray ray, final Stack stack) {
 		return Double.NEGATIVE_INFINITY;
 	}
 

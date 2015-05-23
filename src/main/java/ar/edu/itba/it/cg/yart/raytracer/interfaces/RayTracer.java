@@ -6,7 +6,6 @@ import ar.edu.itba.it.cg.yart.raytracer.RenderResult;
 import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer.RaytracerCallbacks;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.ColorTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
 public interface RayTracer {
@@ -21,7 +20,6 @@ public interface RayTracer {
 	public void setCallbacks(final RaytracerCallbacks callbacks);
 	
 	public ViewPlane getViewPlane();
-	public ColorTracer getTracer();
 	public int getNumSamples();
 	public void setNumSamples(final int numSamples);
 	public void setResolution(final int xRes, final int yRes);

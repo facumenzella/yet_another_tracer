@@ -2,6 +2,7 @@ package ar.edu.itba.it.cg.yart.light.materials;
 
 import java.util.List;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.light.Light;
@@ -19,7 +20,7 @@ public class Phong extends MaterialAbstract {
 	private final GlossySpecular specularBRDF = new GlossySpecular();
 
 	@Override
-	public Color shade(ShadeRec sr) {
+	public Color shade(ShadeRec sr, final Stack stack) {
 
 		Vector3d wo = sr.ray.direction.inverse();
 		final Color colorL = ambientBRDF.rho(sr, wo);
@@ -50,7 +51,7 @@ public class Phong extends MaterialAbstract {
 				boolean inShadow = false;
 
 				Ray shadowRay = new Ray(sr.hitPoint, wi);
-				inShadow = light.inShadow(shadowRay, sr);
+				inShadow = light.inShadow(shadowRay, sr, stack);
 				if (!inShadow) {
 					Color aux = diffuseBRDF.f(sr, wo, wi);
 					aux.addEquals(specularBRDF.f(sr, wo, wi));
@@ -95,5 +96,4 @@ public class Phong extends MaterialAbstract {
 		specularBRDF.setExp(exp);
 		return this;
 	}
-
 }

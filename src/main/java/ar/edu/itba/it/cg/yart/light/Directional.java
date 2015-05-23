@@ -1,11 +1,10 @@
 package ar.edu.itba.it.cg.yart.light;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.ShadowTracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleShadowTracer;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class Directional extends AbstractLight{
@@ -39,9 +38,9 @@ public class Directional extends AbstractLight{
 	}
 	
 	@Override
-	public boolean inShadow(Ray ray, ShadeRec sr) {
+	public boolean inShadow(Ray ray, ShadeRec sr, final Stack stack) {
 		double t;		
-		t = sr.world.getTree().traceShadowHit(ray);
+		t = sr.world.getTree().traceShadowHit(ray, stack);
 		if(t != Double.NEGATIVE_INFINITY) {
 				return true;
 		}

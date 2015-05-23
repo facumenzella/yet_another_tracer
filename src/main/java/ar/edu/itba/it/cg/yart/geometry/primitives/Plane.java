@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.geometry.Normal3d;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
@@ -22,7 +23,7 @@ public class Plane extends GeometricObject {
 	}
 
 	@Override
-	public double hit(final Ray ray, final ShadeRec sr) {		
+	public double hit(final Ray ray, final ShadeRec sr, final Stack stack) {		
 		double t = (p.sub(ray.origin)).dot(normal) / ray.direction.dot(normal);
 
 		if (t > EPSILON) {
@@ -35,7 +36,7 @@ public class Plane extends GeometricObject {
 	}
 
 	@Override
-	public double shadowHit(final Ray ray) {
+	public double shadowHit(final Ray ray, final Stack stack) {
 		double t = (p.sub(ray.origin)).dot(normal) / ray.direction.dot(normal);
 
 		if (t > EPSILON) {

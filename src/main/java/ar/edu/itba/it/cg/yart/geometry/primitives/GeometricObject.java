@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
@@ -49,6 +50,6 @@ public abstract class GeometricObject implements Transformable{
 	}
 	
 	public abstract AABB createBoundingBox();
-	public abstract double hit(final Ray ray, final ShadeRec sr);
-	public abstract double shadowHit(final Ray ray);
+	public abstract double hit(final Ray ray, final ShadeRec sr, final Stack stack);
+	public abstract double shadowHit(final Ray ray, final Stack stack);
 }

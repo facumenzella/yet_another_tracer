@@ -2,6 +2,7 @@ package ar.edu.itba.it.cg.yart.light.materials;
 
 import java.util.List;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.light.Light;
@@ -17,7 +18,7 @@ public class Matte extends MaterialAbstract {
 	private Lambertian diffuseBRDF = new Lambertian();
 
 	@Override
-	public Color shade(ShadeRec sr) {
+	public Color shade(ShadeRec sr, final Stack stack) {
 		final Vector3d wo = sr.ray.direction.inverse();
 		final Color colorL = diffuseBRDF.rho(sr, wo);
 		colorL.multiplyEquals(sr.world.getAmbientLight().L(sr));
@@ -46,7 +47,7 @@ public class Matte extends MaterialAbstract {
 			if (ndotwi > 0.0) {
 				boolean inShadow = false;
 				Ray shadowRay = new Ray(sr.hitPoint, wi);
-				inShadow = light.inShadow(shadowRay, sr);
+				inShadow = light.inShadow(shadowRay, sr, stack);
 				if (!inShadow) {
 					final Color aux = diffuseBRDF.f(sr, wo, wi);
 					aux.multiplyEquals(light.L(sr));
@@ -94,5 +95,4 @@ public class Matte extends MaterialAbstract {
 		diffuseBRDF.setCd(cd);
 		return this;
 	}
-
 }

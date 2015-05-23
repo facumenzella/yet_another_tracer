@@ -3,6 +3,7 @@ package ar.edu.itba.it.cg.yart.geometry.primitives;
 import java.util.ArrayList;
 import java.util.List;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.geometry.Instance;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
@@ -68,13 +69,13 @@ public class Box extends GeometricObject {
 	}
 
 	@Override
-	public double hit(Ray ray, ShadeRec sr) {
+	public double hit(Ray ray, ShadeRec sr, final Stack stack) {
 		double tMax = Double.MAX_VALUE;
 		Vector3d normal = null;
 		Point3d localHitPoint = null;
 		double tMin = tMax;
 		for (final GeometricObject face : faces) {
-			double t = face.hit(ray, sr);
+			double t = face.hit(ray, sr, stack);
 			if (t != Double.NEGATIVE_INFINITY && t < tMin) {
 				sr.hitObject = true;
 				sr.material = getMaterial();
@@ -98,12 +99,12 @@ public class Box extends GeometricObject {
 	}
 
 	@Override
-	public double shadowHit(Ray ray) {
+	public double shadowHit(Ray ray, final Stack stack) {
 		double tMax = Double.MAX_VALUE;
 		boolean hitObject = false;
 		double tMin = tMax;
 		for (final GeometricObject face : faces) {
-			double t = face.shadowHit(ray);
+			double t = face.shadowHit(ray, stack);
 			if (t != Double.NEGATIVE_INFINITY && t < tMin) {
 				hitObject = true;
 				tMin = t;

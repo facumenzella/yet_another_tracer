@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives.mesh;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
@@ -12,7 +13,7 @@ public class FlatMeshTriangle extends MeshTriangle {
 	}
 
 	@Override
-	public double hit(Ray ray, ShadeRec sr) {
+	public double hit(Ray ray, ShadeRec sr, final Stack stack) {
 		if (!getBoundingBox().hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}
@@ -66,7 +67,7 @@ public class FlatMeshTriangle extends MeshTriangle {
 	}
 
 	@Override
-	public double shadowHit(Ray ray) {		
+	public double shadowHit(Ray ray, final Stack stack) {		
 		if (!getBoundingBox().hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}

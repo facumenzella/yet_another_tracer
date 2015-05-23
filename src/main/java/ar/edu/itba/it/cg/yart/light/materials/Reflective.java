@@ -1,16 +1,15 @@
 package ar.edu.itba.it.cg.yart.light.materials;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.light.brdf.PerfectSpecular;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.ColorTracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleColorTracer;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.Texture;
 
-public class Reflective extends Phong {
+public class Reflective extends Phong implements Material{
 
 	private final PerfectSpecular reflectiveBRDF = new PerfectSpecular();
 	//private final Vector3d wi = new Vector3d(0,0,0);
@@ -69,15 +68,15 @@ public class Reflective extends Phong {
 	}
 
 	@Override
-	public Color shade(ShadeRec sr) {
-		Color colorL = super.shade(sr);
+	public Color shade(ShadeRec sr, final Stack stack) {
+		Color colorL = super.shade(sr, stack);
 		Vector3d wo = sr.ray.direction.inverse();
 		Vector3d wi = new Vector3d(0,0,0);
 		Color fr = reflectiveBRDF.sample_f(sr, wo, wi);
 		Ray reflectedRay = new Ray(sr.hitPoint, wi);
 		reflectedRay.depth = sr.depth + 1;
 
-		Color c = sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world));
+		Color c = sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world), stack);
 		fr.multiplyEquals(c);
 		fr.multiplyEquals(sr.normal.dot(wi));
 		colorL.addEquals(fr);

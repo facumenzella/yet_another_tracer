@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
@@ -13,8 +14,6 @@ import ar.edu.itba.it.cg.yart.raytracer.buckets.BucketWorker;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.ColorTracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.SimpleColorTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 import ar.edu.itba.it.cg.yart.utils.YartExecutorFactory;
 
@@ -39,8 +38,7 @@ public class SimpleRayTracer implements RayTracer {
 	private final ExecutorService executor;
 	private Deque<Bucket> buckets;
 	private Camera camera;
-	private ColorTracer tracer;
-
+	private Stack[] stacks;
 
 	public interface RaytracerCallbacks {
 		public void onBucketFinished(final Bucket bucket,
@@ -54,7 +52,10 @@ public class SimpleRayTracer implements RayTracer {
 		this.cores = cores;
 		this.bucketSize = bucketSize;
 		this.executor = YartExecutorFactory.newFixedThreadPool(this.cores);
-		
+		this.stacks = new Stack[this.cores];
+		for (int i = 0; i < stacks.length; i++) {
+			this.stacks[i] = new Stack();
+		}
 		this.renderResult = renderResult;
 		
 		setResolution(800, 600);
@@ -73,7 +74,7 @@ public class SimpleRayTracer implements RayTracer {
 		while (!buckets.isEmpty()) {
 			Bucket bucket = buckets.poll();
 
-			camera.renderScene(bucket, this, result);
+			camera.renderScene(bucket, this, result, this.stacks[0]);
 
 			if (callbacks != null) {
 				callbacks.onBucketFinished(bucket, result);
@@ -123,7 +124,7 @@ public class SimpleRayTracer implements RayTracer {
 							}
 							latch.countDown();
 						}
-						}));
+						}, this.stacks[i]));
 		}
 
 		try {
@@ -191,15 +192,6 @@ public class SimpleRayTracer implements RayTracer {
 		}
 
 		return buckets;
-	}
-	
-	@Override
-	public ColorTracer getTracer() {
-		if (tracer == null) {
-			tracer = new SimpleColorTracer();
-		}
-		
-		return tracer;
 	}
 	
 	@Override
