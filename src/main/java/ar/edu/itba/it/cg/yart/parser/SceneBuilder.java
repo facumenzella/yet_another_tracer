@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import javax.imageio.ImageIO;
 
@@ -57,137 +59,126 @@ public class SceneBuilder {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(YartConstants.LOG_FILE);
 	
-	private List<GeometricObject> objects = new ArrayList<GeometricObject>();
 	private Map<MeshData, Mesh> meshes = new HashMap<MeshData, Mesh>();
-	private RayTracer raytracer;
-	private SceneParser parser;
+	private final RayTracer raytracer;
 	
 	private Map<String, Texture> textures = new HashMap<String, Texture>();
 	private Map<String, Material> namedMaterials = new HashMap<String, Material>();
 	private Material currentMaterial;
 	
 	private Deque<Matrix4d> transformMatrices = new ArrayDeque<Matrix4d>();
+	private Deque<Attribute> attributes = new ArrayDeque<Attribute>();
 	
 	private final Sphere referenceSphere = new Sphere();
 	private final Plane referencePlane = new Plane();
 	private final Material defaultMaterial;
 	
-	public SceneBuilder() {
-		defaultMaterial = new Matte().setCd(new Color(0.75, 0.75, 0.75)).setKd(0.5).setKa(0.15);
-	}
-	
-	public void buildRayTracer(final RayTracer raytracer, final SceneParser parser) throws SceneParseException {
-		reset();
+	public SceneBuilder(final RayTracer raytracer) {
 		this.raytracer = raytracer;
-		this.parser = parser;
+		defaultMaterial = new Matte().setCd(new Color(0.75, 0.75, 0.75)).setKd(0.5).setKa(0.15);
 		
 		transformMatrices.push(new Matrix4d());
-		
-		build();
+	}
+
+	public void attributeBegin(final Attribute attribute) {
+		if (attribute != null) {
+			transformMatrices.push(new Matrix4d(transformMatrices.peek()));
+			attributes.push(attribute);
+		}
 	}
 	
-	private void build() throws SceneParseException {
-		parser.parseFile();
-		World world = new World();
-
-		for (Identifier i : parser.getGlobalIdentifiers()) {
-			switch (i.getType()) {
-			case CAMERA:
-				raytracer.setCamera(buildCamera(i));
-				break;
-			case FILM:
-				String args[] = i.getParameters();
-				if (args.length < 1) {
-					// TODO Missing Film type throw exception
-					String error = "Film expects ";
-					LOGGER.error("");
-					throw new SceneParseException("");
-				}
-				if (!args[0].equals("fleximage")) {
-					// TODO Fire warning, only fleximage is supported
-				}
-				raytracer.setResolution(i.getInteger("xresolution", 800),
-						i.getInteger("yresolution", 600));
-				break;
-			case LOOKAT:
-				String[] params = i.getParameters();
-				raytracer
-						.setViewParameters(
-								new Point3d(Double.valueOf(params[0]), Double
-										.valueOf(params[1]), Double
-										.valueOf(params[2])),
-								new Point3d(Double.valueOf(params[3]), Double
-										.valueOf(params[4]), Double
-										.valueOf(params[5])),
-								new Vector3d(Double.valueOf(params[6]), Double
-										.valueOf(params[7]), Double
-										.valueOf(params[8])));
-				break;
-			}
+	public void attributeEnd() {
+		transformMatrices.pop();
+		attributes.pop();
+	}
+	
+	public void addIdentifier(final Identifier i) {
+		if (i == null) {
+			return;
 		}
-
-		for (Attribute a : parser.getAttributes()) {
-			for (Identifier i : a.getIdentifiers()) {
-				switch (i.getType()) {
-				case SHAPE:
-					final GeometricObject shape = buildShape(i);
-					if (shape != null) {
-						objects.add(shape);
-					}
-					break;
-				case MATERIAL:
-					currentMaterial = buildMaterial(i);
-					break;
-				case LIGHT_SOURCE:
-					world.addLight(buildLight(i));
-					break;
-				case NAMED_MATERIAL:
-					String args[] = i.getParameters();
-					Material ret;
-					if (args.length < 1) {
-						// TODO Missing material name
-					} else if ((ret = namedMaterials.get(args[0])) == null) {
-						// TODO Error building material
-					} else {
-						currentMaterial = ret;
-					}
-					break;
-				case MAKE_NAMED_MATERIAL:
-					addNamedMaterial(i);
-					break;
-				case TEXTURE:
-					buildTexture(i);
-					break;
-				case IDENTITY:
-					transformMatrices.pop();
-					transformMatrices.push(new Matrix4d());
-					break;
-				case TRANSFORM:
-					transformMatrices.pop();
-					transformMatrices.push(transform(i));
-					break;
-				case ROTATE:
-					Matrix4d next = rotate(i);
-					transformMatrices.pop();
-					transformMatrices.push(next);
-					break;
-				case TRANSLATE:
-					next = translate(i);
-					transformMatrices.pop();
-					transformMatrices.push(next);
-					break;
-				case SCALE:
-					next = scale(i);
-					transformMatrices.pop();
-					transformMatrices.push(next);
-				}
+		
+		LOGGER.debug("Adding identifier {}", i);
+		
+		switch (i.getType()) {
+		case SHAPE:
+			final GeometricObject shape = buildShape(i);
+			if (shape != null) {
+				raytracer.getWorld().addObject(shape);
 			}
+			break;
+		case MATERIAL:
+			currentMaterial = buildMaterial(i);
+			break;
+		case LIGHT_SOURCE:
+			final Light light = buildLight(i);
+			if (light != null) {
+				raytracer.getWorld().addLight(light);
+			}
+			break;
+		case NAMED_MATERIAL:
+			String args[] = i.getParameters();
+			Material ret;
+			if (args.length < 1) {
+				// TODO Missing material name
+			} else if ((ret = namedMaterials.get(args[0])) == null) {
+				// TODO Error building material
+			} else {
+				currentMaterial = ret;
+			}
+			break;
+		case MAKE_NAMED_MATERIAL:
+			addNamedMaterial(i);
+			break;
+		case TEXTURE:
+			buildTexture(i);
+			break;
+		case IDENTITY:
+			transformMatrices.pop();
+			transformMatrices.push(new Matrix4d());
+			break;
+		case TRANSFORM:
+			transformMatrices.pop();
+			transformMatrices.push(transform(i));
+			break;
+		case ROTATE:
+			Matrix4d next = rotate(i);
+			transformMatrices.pop();
+			transformMatrices.push(next);
+			break;
+		case TRANSLATE:
+			next = translate(i);
+			transformMatrices.pop();
+			transformMatrices.push(next);
+			break;
+		case SCALE:
+			next = scale(i);
+			transformMatrices.pop();
+			transformMatrices.push(next);
+		case CAMERA:
+			raytracer.setCamera(buildCamera(i));
+			break;
+		case FILM:
+			if (!i.getParameters().equals("fleximage")) {
+				// TODO Fire warning, only fleximage is supported
+			}
+			raytracer.setResolution(i.getInteger("xresolution", 800),
+					i.getInteger("yresolution", 600));
+			break;
+		case LOOKAT:
+			String[] params = i.getParameters();
+			raytracer.setViewParameters(
+					new Point3d(Double.valueOf(params[0]), Double
+							.valueOf(params[1]), Double.valueOf(params[2])),
+					new Point3d(Double.valueOf(params[3]), Double
+							.valueOf(params[4]), Double.valueOf(params[5])),
+					new Vector3d(Double.valueOf(params[6]), Double
+							.valueOf(params[7]), Double.valueOf(params[8])));
+			break;
 		}
-
-		world.addObjects(objects);
-
-		world.setBackgroundColor(Color.blackColor());
-		raytracer.setWorld(world);
+		
+		if (attributes.peek() != null) {
+			attributes.peek().addIdentifier(i);
+		}
 	}
 	
 	private Material buildMaterial(Identifier identifier) {
@@ -373,7 +364,7 @@ public class SceneBuilder {
 		}
 		else if (strType.equals("plane")) {
 			//Vector3d normal = identifier.getNormal("n", new Vector3d(0, 0, 1)).normalizedVector();
-			instance = new Instance(new Plane());
+			instance = new Instance(referencePlane);
 		}
 		else if (strType.equals("mesh")) {
 			final int[] triIndicesArray = identifier.getIntegers("triindices", null);
@@ -383,7 +374,7 @@ public class SceneBuilder {
 			final double[] uList;
 			final double[] vList;
 			
-			final MeshData meshData = new MeshData(triIndicesArray, verticesArray, normalsArray);
+			final MeshData meshData = new MeshData(triIndicesArray, verticesArray, normalsArray, uvList);
 			
 			Mesh mesh = null;
 			
@@ -416,12 +407,6 @@ public class SceneBuilder {
 	            
 	            mesh = new Mesh(vertices, normals, indices, uList, vList, true);
 	            meshes.put(meshData, mesh);
-	            
-	            if (currentMaterial == null) {
-	    			// TODO Material not set, loading default
-	    			currentMaterial = defaultMaterial;
-	    			System.out.println("Failed");
-	    		}
 			}
 			instance = new Instance(mesh);
 		}
@@ -429,7 +414,6 @@ public class SceneBuilder {
 		if (currentMaterial == null) {
 			// TODO Material not set, loading default
 			currentMaterial = defaultMaterial;
-			System.out.println("Failed");
 		}
 		
 		instance.setMaterial(currentMaterial);
@@ -582,10 +566,4 @@ public class SceneBuilder {
 		
 		return current;
 	}
-	
-	private void reset() {
-		raytracer = null;
-		objects.clear();
-	}
-
 }

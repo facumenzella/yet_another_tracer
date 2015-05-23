@@ -51,8 +51,7 @@ public class World {
 	
 	public void preprocess() {
 		if (!preprocessed) {
-//			this.bspTree = new BSPAxisAligned(200, 1000, 0, 1000);
-//			this.bspTree.buildTree(objects);
+			this.kdTree = YAFKDTree2.build(this.objects);
 			preprocessed = true;
 		}
 	}
@@ -172,8 +171,6 @@ public class World {
 //		addObject(menzella);
 		addObject(waterGlass);
 		addObject(floor);
-
-		this.kdTree = YAFKDTree2.build(this.objects);
 	}
 	
 	
@@ -194,10 +191,10 @@ public class World {
 	}
 	
 	public void addObjects(final List<GeometricObject> objects) {
-		this.objects.clear();
-		this.objects.addAll(objects);
+		for (GeometricObject o : objects) {
+			addObject(o);
+		}
 		preprocessed = false;
-		this.kdTree = YAFKDTree2.build(this.objects);
 	}
 	
 	public void addObject(final GeometricObject object) {

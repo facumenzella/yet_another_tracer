@@ -8,7 +8,6 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
 
-import ar.edu.itba.it.cg.yart.parser.SceneBuilder;
 import ar.edu.itba.it.cg.yart.parser.SceneParseException;
 import ar.edu.itba.it.cg.yart.parser.SceneParser;
 import ar.edu.itba.it.cg.yart.raytracer.RenderResult;
@@ -102,8 +101,8 @@ public class YartApp {
 			}
 			else {
 				renderResult.startSceneLoading();
-				SceneBuilder builder = new SceneBuilder();
-				builder.buildRayTracer(raytracer, new SceneParser(sceneFile));
+				SceneParser sceneParser = new SceneParser(sceneFile, raytracer);
+				sceneParser.parse();
 				renderResult.finishSceneLoading();
 			}
 

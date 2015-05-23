@@ -10,11 +10,13 @@ public class MeshData {
     private final int[] triindices;
     private final Point3d[] vertices;
     private final Vector3d[] normals;
+    private final double[] uvMap;
     
-    public MeshData(final int[] triindices, final Point3d[] vertices, final Vector3d[] normals) {
+    public MeshData(final int[] triindices, final Point3d[] vertices, final Vector3d[] normals, final double[] uvMap) {
         this.triindices = triindices;
         this.vertices = vertices;
         this.normals = normals;
+        this.uvMap = uvMap;
     }
     
     @Override
