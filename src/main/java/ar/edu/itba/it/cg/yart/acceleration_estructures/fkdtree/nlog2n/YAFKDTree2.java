@@ -11,6 +11,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ar.edu.itba.it.cg.yart.YartConstants;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.KDInternalNode;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.KDLeafNode;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.KDNode;
@@ -31,6 +35,8 @@ import ar.edu.itba.it.cg.yart.raytracer.tracer.AbstractTracer;
 // This has O(N log N) or at least we hope it does
 
 public class YAFKDTree2 {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(YartConstants.LOG_FILE);
 
 	private static double kKT = 1;
 	private static double kKI = 1.5;
@@ -87,11 +93,8 @@ public class YAFKDTree2 {
 		Arrays.sort(events);
 
 		tree.root = buildTree(tree.rootAABB, gObjects, events);
-
-		System.out.println("Tree built in "
-				+ (System.currentTimeMillis() - start)
-				+ " milliseconds. \n initials" + gObjects.size() + "leafs: "
-				+ leafs);
+		
+		LOGGER.info("Tree built in {}ms. Initials: {}. Leaves: {}. ", (System.currentTimeMillis() - start), gObjects.size(), leafs);
 		return tree;
 	}
 
