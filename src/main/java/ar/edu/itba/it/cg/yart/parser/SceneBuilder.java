@@ -8,10 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 import javax.imageio.ImageIO;
 
@@ -42,7 +40,6 @@ import ar.edu.itba.it.cg.yart.parser.Property.PropertyType;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
-import ar.edu.itba.it.cg.yart.raytracer.world.World;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.ImageTexture;
 import ar.edu.itba.it.cg.yart.textures.Texture;
@@ -92,12 +89,10 @@ public class SceneBuilder {
 		attributes.pop();
 	}
 	
-	public void addIdentifier(final Identifier i) {
+	public void addIdentifier(final Identifier i) throws SceneParseException {
 		if (i == null) {
 			return;
 		}
-		
-		LOGGER.debug("Adding identifier {}", i);
 		
 		switch (i.getType()) {
 		case SHAPE:
@@ -117,8 +112,11 @@ public class SceneBuilder {
 			break;
 		case NAMED_MATERIAL:
 			String args[] = i.getParameters();
-			Material ret;
-			if ((ret = namedMaterials.get(args[0])) != null) {
+			Material ret = namedMaterials.get(args[0]);
+			if (ret == null) {
+				LOGGER.warn("Named material \"{}\" not defined", args[0]);
+			}
+			else {
 				currentMaterial = ret;
 			}
 			break;
@@ -243,7 +241,7 @@ public class SceneBuilder {
 			}
 		}
 		catch (ClassCastException e) {
-			// TODO Print warning
+			LOGGER.warn(e.getMessage());
 		}
 		
 		return ret;
@@ -260,7 +258,7 @@ public class SceneBuilder {
 		else if (type == PropertyType.TEXTURE) {
 			String textureName = identifier.getString(property, null);
 			if (!textures.containsKey(textureName)) {
-				// TODO Texture not found, fire some warning
+				LOGGER.warn("Texture \"{}\" not found. Using default color");
 				ret = new ConstantColor(defaultColor);
 			}
 			else {
@@ -278,171 +276,180 @@ public class SceneBuilder {
 		Texture ret = null;
 		final String[] args = identifier.getParameters();
 		
-		if (args.length >= 3) {
-			final String name = args[0];
-			final String color = args[1];
-			final String type = args[2];
-			
-			if (!color.equalsIgnoreCase("color")) {
-				// TODO We only support color right now, fire some warning, but carry on
-			}
-			
+		final String name = args[0];
+		final String color = args[1];
+		final String type = args[2];
+		
+		if (!color.equalsIgnoreCase("color")) {
+			LOGGER.warn("Texture option \"{}\" unsupported. Defaulting to \"color\"", color);
+		}
+		
+		try {
 			if (type.equalsIgnoreCase("imagemap")) {
-				try {
-					if (!identifier.hasProperty("filename")) {
-						// TODO Missing filename
-						return null;
-					}
-					else if (!identifier.hasProperty("wrap")) {
-						// TODO Missing wrap type
-						return null;
-					}
-					BufferedImage image = ImageIO.read(new File(identifier.getString("filename", null)));
-					Mapping mapping = null;
-					Wrapper wrapper = null;
-					String mappingStr = identifier.getString("mapping", "uv");
-					String wrapperStr = identifier.getString("wrap", null);
-					
-					// Load mapping
-					if (mappingStr.equalsIgnoreCase("uv")) {
-						// TODO Add UV mapping
-						mapping = null;
-					}
-					else if (mappingStr.equalsIgnoreCase("spherical")) {
-						mapping = new SphericalMapping();
-					}
-					else if (mappingStr.equalsIgnoreCase("planar")) {
-						mapping = new RectangularMapping();
-					}
-					else {
-						// TODO Mapping not recognized, defaulting to UV
-						mapping = null;
-					}
-					
-					// Load wrap type
-					if (wrapperStr.equalsIgnoreCase("repeat")) {
-						wrapper = new RepeatWrap();
-					}
-					else if (wrapperStr.equalsIgnoreCase("black")) {
-						wrapper = new ColorWrap();
-					}
-					else if (wrapperStr.equalsIgnoreCase("clamp")) {
-						wrapper = new ClampWrap();
-					}
-					
-					ret = new ImageTexture(image, mapping, wrapper);
+				BufferedImage image = ImageIO.read(new File(identifier.getString("filename")));
+				Mapping mapping = null;
+				Wrapper wrapper = null;
+				String mappingStr = identifier.getString("mapping", "uv");
+				String wrapperStr = identifier.getString("wrap");
+				
+				// Load mapping
+				if (mappingStr.equalsIgnoreCase("uv")) {
+					mapping = null;
 				}
-				catch (IOException e) {
-					// TODO Couldn't load texture
+				else if (mappingStr.equalsIgnoreCase("spherical")) {
+					mapping = new SphericalMapping();
 				}
+				else if (mappingStr.equalsIgnoreCase("planar")) {
+					mapping = new RectangularMapping();
+				}
+				else {
+					LOGGER.warn("Mapping type \"{}\" unrecognized. Defaulting to \"uv\"", mapping);
+					mapping = null;
+				}
+				
+				// Load wrap type
+				if (wrapperStr.equalsIgnoreCase("repeat")) {
+					wrapper = new RepeatWrap();
+				}
+				else if (wrapperStr.equalsIgnoreCase("black")) {
+					wrapper = new ColorWrap();
+				}
+				else if (wrapperStr.equalsIgnoreCase("clamp")) {
+					wrapper = new ClampWrap();
+				}
+				
+				ret = new ImageTexture(image, mapping, wrapper);
 			}
 			else {
-				// TODO We only support imagemaps, fire some warning
+				LOGGER.warn("Texture type \"{}\" unsupported", type);
 			}
-			
-			if (ret != null) {
-				textures.put(name, ret);
-			}
+		}
+		catch (IOException e) {
+			LOGGER.warn("Couldn't load texture \"{}\": {}", name, e.getMessage());
+		}
+		catch (PropertyNotFoundException e) {
+			LOGGER.warn("Couldn't load texture \"{}\": {}", name, e.getMessage());
+		}
+		
+		if (ret != null) {
+			textures.put(name, ret);
 		}
 		
 		return ret;
 	}
 	
-	private GeometricObject buildShape(Identifier identifier) {
+	private GeometricObject buildShape(Identifier identifier) throws SceneParseException {
 		Instance instance = null;
 		Matrix4d localMatrix = new Matrix4d();
 		
 		String strType = identifier.getParameters()[0];
-		if (strType.equals("sphere")) {
-			double radius = identifier.getDouble("radius", 1.0);
-			instance = new Instance(referenceSphere);
-			localMatrix = localMatrix.scale(radius, radius, radius);
-		}
-		else if (strType.equals("plane")) {
-			//Vector3d normal = identifier.getNormal("n", new Vector3d(0, 0, 1)).normalizedVector();
-			instance = new Instance(referencePlane);
-		}
-		else if (strType.equals("mesh")) {
-			final int[] triIndicesArray = identifier.getIntegers("triindices", null);
-			final Point3d[] verticesArray = identifier.getPoints("P", null);
-			final Vector3d[] normalsArray = identifier.getNormals("N", null);
-			final double[] uvList = identifier.getDoubles("uv", null);
-			final double[] uList;
-			final double[] vList;
-			
-			final MeshData meshData = new MeshData(triIndicesArray, verticesArray, normalsArray, uvList);
-			
-			Mesh mesh = null;
-			
-			if (meshes.containsKey(meshData)) {
-			    mesh = meshes.get(meshData);
+		
+		try {
+			if (strType.equals("sphere")) {
+				double radius = identifier.getDouble("radius", 1.0);
+				instance = new Instance(referenceSphere);
+				localMatrix = localMatrix.scale(radius, radius, radius);
 			}
-			else {
-			    List<Point3d> vertices = new ArrayList<Point3d>(Arrays.asList(verticesArray));
-	            List<Vector3d> normals = new ArrayList<Vector3d>(Arrays.asList(normalsArray));
-	            List<Integer> indices = new ArrayList<Integer>(triIndicesArray.length);
-	            
-	            // Load UV map
-	            if (uvList != null && uvList.length > 1) {
-	            	int items = (int) Math.ceil(uvList.length / 2);
-	            	uList = new double[items];
-	            	vList = new double[items];
-	            	for (int i = 0; i < uList.length; i++) {
-	            		uList[i] = uvList[i * 2 + 1];
-	            		vList[i] = uvList[i * 2];
-	            	}
-	            }
-	            else {
-	            	uList = null;
-	            	vList = null;
-	            }
-	            
-	            for (int i : triIndicesArray) {
-	                indices.add(i);
-	            }
-	            
-	            mesh = new Mesh(vertices, normals, indices, uList, vList, true);
-	            meshes.put(meshData, mesh);
+			else if (strType.equals("plane")) {
+				Vector3d normal = identifier.getNormal("n", new Vector3d(0, 0, 1)).normalizedVector();
+				instance = new Instance(referencePlane);
 			}
-			instance = new Instance(mesh);
+			else if (strType.equals("mesh")) {
+				final int[] triIndicesArray = identifier.getIntegers("triindices");
+				final Point3d[] verticesArray = identifier.getPoints("P");
+				final Vector3d[] normalsArray = identifier.getNormals("N", null);
+				final double[] uvList = identifier.getDoubles("uv", null);
+				final double[] uList;
+				final double[] vList;
+				
+				final MeshData meshData = new MeshData(triIndicesArray, verticesArray, normalsArray, uvList);
+				
+				Mesh mesh = null;
+				
+				if (meshes.containsKey(meshData)) {
+				    mesh = meshes.get(meshData);
+				}
+				else {
+					List<Vector3d> normals = null;
+				    List<Point3d> vertices = new ArrayList<Point3d>(Arrays.asList(verticesArray));
+		            List<Integer> indices = new ArrayList<Integer>(triIndicesArray.length);
+		            
+		            // Load normals
+		            if (normalsArray != null) {
+		            	normals = new ArrayList<Vector3d>(Arrays.asList(normalsArray));
+		            }
+		            
+		            // Load UV map
+		            if (uvList != null && uvList.length > 1) {
+		            	int items = (int) Math.ceil(uvList.length / 2);
+		            	uList = new double[items];
+		            	vList = new double[items];
+		            	for (int i = 0; i < uList.length; i++) {
+		            		uList[i] = uvList[i * 2 + 1];
+		            		vList[i] = uvList[i * 2];
+		            	}
+		            }
+		            else {
+		            	uList = null;
+		            	vList = null;
+		            }
+		            
+		            for (int i : triIndicesArray) {
+		                indices.add(i);
+		            }
+		            
+		            mesh = new Mesh(vertices, normals, indices, uList, vList, true);
+		            meshes.put(meshData, mesh);
+				}
+				instance = new Instance(mesh);
+			}
+		}
+		catch (Exception e) {
+			LOGGER.warn(e.getMessage());
 		}
 		
+		// If there is no material set, use the default one
 		if (currentMaterial == null) {
-			// TODO Material not set, loading default
 			currentMaterial = defaultMaterial;
 		}
 		
-		instance.setMaterial(currentMaterial);
-		Matrix4d matrix = transformMatrices.peek();
-		instance.applyTransformation(localMatrix.leftMultiply(matrix));
+		if (instance != null) {
+			instance.setMaterial(currentMaterial);
+			Matrix4d matrix = transformMatrices.peek();
+			instance.applyTransformation(localMatrix.leftMultiply(matrix));
+		}
+		
 		return instance;
 	}
 	
 	private Light buildLight(Identifier identifier) {
 		Light ret = null;
 		
-		String type = identifier.getParameters()[0];
-		
-		double gain = identifier.getDouble("gain", 1.0f);
-		
-		if (type.equals("point")) {
-			Point3d from = identifier.getPoint("from", new Point3d(0,0,0));
-			Color l = identifier.getColor("l", Color.whiteColor());
-			PointLight light = new PointLight(gain, l, new Vector3d(from.x, from.y, from.z));
-			light.applyTransformation(new Matrix4d().leftMultiply(transformMatrices.peek()));
-			ret = light;
+		try {
+			String type = identifier.getParameters()[0];
+			double gain = identifier.getDouble("gain", 1.0f);
+			if (type.equals("point")) {
+				Point3d from = identifier.getPoint("from", new Point3d(0,0,0));
+				Color l = identifier.getColor("l", Color.whiteColor());
+				PointLight light = new PointLight(gain, l, new Vector3d(from.x, from.y, from.z));
+				light.applyTransformation(new Matrix4d().leftMultiply(transformMatrices.peek()));
+				ret = light;
+			}
+			else if (type.equals("distant")) {
+				Color l = identifier.getColor("l", Color.whiteColor());
+				Point3d[] def = {new Point3d(0,0,0), new Point3d(1,1,1)};
+				Point3d[] fromTo = identifier.getPoints("from/to", def);
+				Directional light = new Directional(2, l, fromTo[1].sub(fromTo[0]));
+				ret = light;
+			}
+			else if (type.equals("infinite")) {
+				Color l = identifier.getColor("l", Color.whiteColor());
+				AmbientLight light = new AmbientLight(l);
+				ret = light;
+			}
 		}
-		else if (type.equals("distant")) {
-			Color l = identifier.getColor("l", Color.whiteColor());
-			Point3d[] def = {new Point3d(0,0,0), new Point3d(1,1,1)};
-			Point3d[] fromTo = identifier.getPoints("from/to", def);
-			Directional light = new Directional(2, l, fromTo[1].sub(fromTo[0]));
-			ret = light;
-		}
-		else if (type.equals("infinite")) {
-			Color l = identifier.getColor("l", Color.whiteColor());
-			AmbientLight light = new AmbientLight(l);
-			ret = light;
+		catch (Exception e) {
+			LOGGER.warn(e.getMessage());
 		}
 		
 		return ret;
@@ -460,11 +467,11 @@ public class SceneBuilder {
 				namedMaterials.put(idArgs[0], ret);
 			}
 			else {
-				// TODO COuldn't laod material
+				LOGGER.warn("Couldn't create named material \"{}\"", idArgs[0]);
 			}
 		}
 		catch (SceneParseException e) {
-			// TODO Missing material name
+			LOGGER.warn(e.getMessage());
 		}
 	}
 	
@@ -472,7 +479,7 @@ public class SceneBuilder {
 		Camera ret = null;
 		
 		if (identifier.getParameters()[0].equals("perspective")) {
-			PinholeCamera cam = new PinholeCamera(new Point3d(0,0,200), new Point3d(0,0,0), new Vector3d(0,1,0), 500, 1);
+			PinholeCamera cam = new PinholeCamera(YartConstants.DEFAULT_EYE, YartConstants.DEFAULT_LOOKAT, YartConstants.DEFAULT_UP, 500, 1);
 			cam.setFov(identifier.getDouble("fov", 90));
 			ret = cam;
 		}
@@ -480,40 +487,28 @@ public class SceneBuilder {
 		return ret;
 	}
 	
-	 private Matrix4d transform(Identifier identifier) {
-         final double m00 = Double.valueOf(identifier.getParameters()[0]);
-         final double m10 = Double.valueOf(identifier.getParameters()[1]);
-         final double m20 = Double.valueOf(identifier.getParameters()[2]);
-         final double m30 = Double.valueOf(identifier.getParameters()[3]);
-        
-         final double m01 = Double.valueOf(identifier.getParameters()[4]);
-         final double m11 = Double.valueOf(identifier.getParameters()[5]);
-         final double m21 = Double.valueOf(identifier.getParameters()[6]);
-         final double m31 = Double.valueOf(identifier.getParameters()[7]);
-        
-         final double m02 = Double.valueOf(identifier.getParameters()[8]);
-         final double m12 = Double.valueOf(identifier.getParameters()[9]);
-         final double m22 = Double.valueOf(identifier.getParameters()[10]);
-         final double m32 = Double.valueOf(identifier.getParameters()[11]);
-         
-         final double m03 = Double.valueOf(identifier.getParameters()[12]);
-         final double m13 = Double.valueOf(identifier.getParameters()[13]);
-         final double m23 = Double.valueOf(identifier.getParameters()[14]);
-         final double m33 = Double.valueOf(identifier.getParameters()[15]);
-        
-         Matrix4d transformMatrix = new Matrix4d(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
-        
-//         transformMatrix = converseMatrix.leftMultiply(transformMatrix).leftMultiply(converseMatrix);
-//         transformMatrix.m01 = transformMatrix.m02;
-//         transformMatrix.m02 = transformMatrix.m01;
-//         transformMatrix.m10 = transformMatrix.m20;
-//         transformMatrix.m20 = transformMatrix.m10;
-//         transformMatrix.m11 = transformMatrix.m22;
-//         transformMatrix.m22 = transformMatrix.m11;
-//         transformMatrix.m12 = transformMatrix.m21;
-//         transformMatrix.m21 = transformMatrix.m12;
-         
-         return transformMatrix;
+	private Matrix4d transform(Identifier identifier) {
+		final double m00 = Double.valueOf(identifier.getParameters()[0]);
+		final double m10 = Double.valueOf(identifier.getParameters()[1]);
+		final double m20 = Double.valueOf(identifier.getParameters()[2]);
+		final double m30 = Double.valueOf(identifier.getParameters()[3]);
+
+		final double m01 = Double.valueOf(identifier.getParameters()[4]);
+		final double m11 = Double.valueOf(identifier.getParameters()[5]);
+		final double m21 = Double.valueOf(identifier.getParameters()[6]);
+		final double m31 = Double.valueOf(identifier.getParameters()[7]);
+
+		final double m02 = Double.valueOf(identifier.getParameters()[8]);
+		final double m12 = Double.valueOf(identifier.getParameters()[9]);
+		final double m22 = Double.valueOf(identifier.getParameters()[10]);
+		final double m32 = Double.valueOf(identifier.getParameters()[11]);
+
+		final double m03 = Double.valueOf(identifier.getParameters()[12]);
+		final double m13 = Double.valueOf(identifier.getParameters()[13]);
+		final double m23 = Double.valueOf(identifier.getParameters()[14]);
+		final double m33 = Double.valueOf(identifier.getParameters()[15]);
+
+		return new Matrix4d(m00, m01, m02, m03, m10, m11, m12, m13, m20, m21, m22, m23, m30, m31, m32, m33);
  }
 	
 	private Matrix4d rotate(Identifier identifier) {

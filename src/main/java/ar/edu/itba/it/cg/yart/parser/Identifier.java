@@ -123,6 +123,20 @@ public class Identifier {
 		return null;
 	}
 	
+	public boolean getBoolean(final String propertyName) throws PropertyNotFoundException {
+		if (!hasProperty(propertyName)) {
+			throw new PropertyNotFoundException(propertyName, getType(), PropertyType.BOOL);
+		}
+		return getProperty(propertyName).getBoolean();
+	}
+	
+	public boolean[] getBooleans(final String propertyName) throws PropertyNotFoundException {
+		if (!hasProperty(propertyName)) {
+			throw new PropertyNotFoundException(propertyName, getType(), PropertyType.BOOL);
+		}
+		return getProperty(propertyName).getBooleans();
+	}
+	
 	public boolean getBoolean(final String propertyName, boolean defaultValue) {
 		if (hasProperty(propertyName)) {
 			return getProperty(propertyName).getBoolean();
@@ -139,6 +153,20 @@ public class Identifier {
 		else {
 			return defaultValue;
 		}
+	}
+	
+	public double getDouble(final String propertyName) throws PropertyNotFoundException {
+		if (!hasProperty(propertyName)) {
+			throw new PropertyNotFoundException(propertyName, getType(), PropertyType.FLOAT);
+		}
+		return getProperty(propertyName).getDouble();
+	}
+	
+	public double[] getDoubles(final String propertyName) throws PropertyNotFoundException {
+		if (!hasProperty(propertyName)) {
+			throw new PropertyNotFoundException(propertyName, getType(), PropertyType.FLOAT);
+		}
+		return getProperty(propertyName).getDoubles();
 	}
 	
 	public double getDouble(final String propertyName, double defaultValue) {
@@ -159,6 +187,20 @@ public class Identifier {
 		}
 	}
 	
+	public int getInteger(final String propertyName) throws PropertyNotFoundException {
+		if (!hasProperty(propertyName)) {
+			throw new PropertyNotFoundException(propertyName, getType(), PropertyType.INTEGER);
+		}
+		return getProperty(propertyName).getInteger();
+	}
+	
+	public int[] getIntegers(final String propertyName) throws PropertyNotFoundException {
+		if (!hasProperty(propertyName)) {
+			throw new PropertyNotFoundException(propertyName, getType(), PropertyType.INTEGER);
+		}
+		return getProperty(propertyName).getIntegers();
+	}
+	
 	public int getInteger(final String propertyName, int defaultValue) {
 		if (hasProperty(propertyName)) {
 			return getProperty(propertyName).getInteger();
@@ -175,6 +217,20 @@ public class Identifier {
 		else {
 			return defaultValue;
 		}
+	}
+	
+	public Vector3d getVector(final String propertyName) throws PropertyNotFoundException {
+		if (!hasProperty(propertyName)) {
+			throw new PropertyNotFoundException(propertyName, getType(), PropertyType.VECTOR);
+		}
+		return getProperty(propertyName).getVector();
+	}
+	
+	public Vector3d[] getVectors(final String propertyName) throws PropertyNotFoundException {
+		if (!hasProperty(propertyName)) {
+			throw new PropertyNotFoundException(propertyName, getType(), PropertyType.VECTOR);
+		}
+		return getProperty(propertyName).getVectors();
 	}
 	
 	public Vector3d getVector(final String propertyName, Vector3d defaultValue) {
@@ -195,12 +251,34 @@ public class Identifier {
 		}
 	}
 	
+	public Vector3d getNormal(final String propertyName) throws PropertyNotFoundException {
+		return getVector(propertyName);
+	}
+	
+	public Vector3d[] getNormals(final String propertyName) throws PropertyNotFoundException {
+		return getVectors(propertyName);
+	}
+	
 	public Vector3d getNormal(final String propertyName, Vector3d defaultValue) {
 		return getVector(propertyName, defaultValue);
 	}
 	
 	public Vector3d[] getNormals(final String propertyName, Vector3d[] defaultValue) {
 		return getVectors(propertyName, defaultValue);
+	}
+	
+	public Color getColor(final String propertyName) throws PropertyNotFoundException {
+		if (!hasProperty(propertyName)) {
+			throw new PropertyNotFoundException(propertyName, getType(), PropertyType.COLOR);
+		}
+		return getProperty(propertyName).getColor();
+	}
+	
+	public Color[] getColors(final String propertyName) throws PropertyNotFoundException {
+		if (!hasProperty(propertyName)) {
+			throw new PropertyNotFoundException(propertyName, getType(), PropertyType.COLOR);
+		}
+		return getProperty(propertyName).getColors();
 	}
 	
 	public Color getColor(final String propertyName, Color defaultValue) {
@@ -221,6 +299,20 @@ public class Identifier {
 		}
 	}
 	
+	public String getString(final String propertyName) throws PropertyNotFoundException {
+		if (!hasProperty(propertyName)) {
+			throw new PropertyNotFoundException(propertyName, getType(), PropertyType.STRING);
+		}
+		return getProperty(propertyName).getString();
+	}
+	
+	public String[] getStrings(final String propertyName) throws PropertyNotFoundException {
+		if (!hasProperty(propertyName)) {
+			throw new PropertyNotFoundException(propertyName, getType(), PropertyType.STRING);
+		}
+		return getProperty(propertyName).getStrings();
+	}
+	
 	public String getString(final String propertyName, String defaultValue) {
 		if (hasProperty(propertyName)) {
 			return getProperty(propertyName).getString();
@@ -237,6 +329,20 @@ public class Identifier {
 		else {
 			return defaultValue;
 		}
+	}
+	
+	public Point3d getPoint(final String propertyName) throws PropertyNotFoundException {
+		if (!hasProperty(propertyName)) {
+			throw new PropertyNotFoundException(propertyName, getType(), PropertyType.POINT);
+		}
+		return getProperty(propertyName).getPoint();
+	}
+	
+	public Point3d[] getPoints(final String propertyName) throws PropertyNotFoundException {
+		if (!hasProperty(propertyName)) {
+			throw new PropertyNotFoundException(propertyName, getType(), PropertyType.POINT);
+		}
+		return getProperty(propertyName).getPoints();
 	}
 	
 	public Point3d getPoint(final String propertyName, Point3d defaultValue) {

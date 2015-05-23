@@ -43,7 +43,7 @@ public class Property {
 		return null;
 	}
 	
-	public Property(final String name, final PropertyType type, final String value) {
+	public Property(final String name, final PropertyType type, final String value) throws IllegalArgumentException {
 		this.name = name;
 		this.type = type;
 		
@@ -52,34 +52,31 @@ public class Property {
 		if (type == null) {
 			throw new IllegalArgumentException("Property type cannot be null");
 		}
+		else if (name == null || name.isEmpty()) {
+			throw new IllegalArgumentException("Missing property name");
+		}
+		
+		double[] doubleValues;
 		
 		switch (type) {
 		case BOOL:
-			this.value = new boolean[values.length];
-			for (int i = 0; i < values.length; i++) {
-				((boolean[]) this.value)[i] = Boolean.valueOf(values[i]);
-			}
+			this.value = ParserUtils.parseBooleanArray(values);
 			break;
 		case COLOR:
 			if (values.length % 3 != 0) {
 				throw new IllegalArgumentException("Color properties need multiple of 3 values, found " + values.length);
 			}
 			this.value = new Color[values.length / 3];
+			doubleValues = ParserUtils.parseDoubleArray(values);
 			for (int i = 0; i < values.length; i += 3) {
-				((Color[]) this.value)[i / 3] = new Color(Double.valueOf(values[i]), Double.valueOf(values[i+1]), Double.valueOf(values[i+2]));
+				((Color[]) this.value)[i / 3] = new Color(doubleValues[i], doubleValues[i+1], doubleValues[i+2]);
 			}
 			break;
 		case FLOAT:
-			this.value = new double[values.length];
-			for (int i = 0; i < values.length; i++) {
-				((double[]) this.value)[i] = Double.valueOf(values[i]);
-			}
+			this.value = ParserUtils.parseDoubleArray(values);
 			break;
 		case INTEGER:
-			this.value = new int[values.length];
-			for (int i = 0; i < values.length; i++) {
-				((int[]) this.value)[i] = Integer.valueOf(values[i]);
-			}
+			this.value = ParserUtils.parseIntegerArray(values);
 			break;
 		case VECTOR:
 		case NORMAL:
@@ -87,8 +84,9 @@ public class Property {
 				throw new IllegalArgumentException("Vector properties need multiple of 3 values, found " + values.length);
 			}
 			this.value = new Vector3d[values.length / 3];
+			doubleValues = ParserUtils.parseDoubleArray(values);
 			for (int i = 0; i < values.length; i += 3) {
-				((Vector3d[]) this.value)[i / 3] = new Vector3d(Double.valueOf(values[i]), Double.valueOf(values[i+1]), Double.valueOf(values[i+2]));
+				((Vector3d[]) this.value)[i / 3] = new Vector3d(doubleValues[i], doubleValues[i+1], doubleValues[i+2]);
 			}
 			break;
 		case POINT:
@@ -96,18 +94,21 @@ public class Property {
 				throw new IllegalArgumentException("Point properties need multiple of 3 values, found " + values.length);
 			}
 			this.value = new Point3d[values.length / 3];
+			doubleValues = ParserUtils.parseDoubleArray(values);
 			for (int i = 0; i < values.length; i += 3) {
-				((Point3d[]) this.value)[i / 3] = new Point3d(Double.valueOf(values[i]), Double.valueOf(values[i+1]), Double.valueOf(values[i+2]));
+				((Point3d[]) this.value)[i / 3] = new Point3d(doubleValues[i], doubleValues[i+1], doubleValues[i+2]);
 			}
 			break;
 		case TEXTURE:
-			this.value = new String[1];
-			((String[]) this.value)[0] = value.replaceAll("\"", "");
-		break;
 		case STRING:
 			this.value = new String[values.length];
+			boolean empty = true;
 			for (int i = 0; i < values.length; i++) {
 				((String[]) this.value)[i] = values[i].replaceAll("\"", "");
+				empty &= ((String[]) this.value)[i].isEmpty();
+			}
+			if (empty) {
+				throw new IllegalArgumentException("String property must be non-empty");
 			}
 			break;
 		default:

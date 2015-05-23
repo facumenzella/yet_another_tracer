@@ -43,9 +43,16 @@ public class SceneParser {
 	}
 	
 	public void parse() throws SceneParseException {
-		World world = new World();
-		raytracer.setWorld(world);
-		parseFile(this.filePath);
+		try {
+			World world = new World();
+			raytracer.setWorld(world);
+			parseFile(this.filePath);
+		}
+		catch (Exception e) {
+			final String err = e.getMessage();
+			LOGGER.error(err);
+			throw new SceneParseException(err);
+		}
 	}
 	
 	private void parseFile(final String filePath) throws SceneParseException {
@@ -86,25 +93,38 @@ public class SceneParser {
 		String[] properties = StringUtils.substringsBetween(line, "\"", "\"");
 		String[] values = StringUtils.substringsBetween(line, "[", "]");
 		
-		int total = Math.min(properties.length, values.length);
+		int pLength = 0;
+		int vLength = 0;
+		
+		if (properties != null)
+			pLength = properties.length;
+		if (values != null)
+			vLength = values.length;
+		
+		int total = Math.min(pLength, vLength);
 		
 		try {
 			for (int i = 0; i < total; i++) {
 				String[] p = properties[i].split("\\s+");
-				PropertyType type = Property.getType(p[0]);
-				if (type == null) {
-					LOGGER.warn("Unkown property type \"" + p[0] + "\".");
-				}
-				else if (p.length < 2) {
-					LOGGER.warn("Unkown property type \"" + p[0] + "\".");
+				if (p.length < 2) {
+					LOGGER.warn("Properties need a type and a name");
 				}
 				else {
-					accProperties.add(new Property(p[1], type, values[i]));
+					PropertyType type = Property.getType(p[0]);
+					if (type == null) {
+						LOGGER.warn("Unkown property type \"" + p[0] + "\"");
+					}
+					else if (p.length < 2) {
+						LOGGER.warn("Unkown property type \"" + p[0] + "\"");
+					}
+					else {
+						accProperties.add(new Property(p[1], type, values[i]));
+					}
 				}
 			}
 		}
 		catch (IllegalArgumentException e) {
-			throw new SceneParseException(e.getMessage());
+			LOGGER.warn(e.getMessage());
 		}
 	}
 	
@@ -142,11 +162,11 @@ public class SceneParser {
 			parseFile(path);
 		}
 		else {
-			LOGGER.info("Identifier \"" + attribute + "\" not recognized. Skipping...");
+			LOGGER.info("Identifier \"" + attribute + "\" not recognized");
 		}
 	}
 	
-	private void applyProperties() {
+	private void applyProperties() throws SceneParseException {
 		if (currentIdentifier != null) {
 			for (Property p : accProperties) {
 				currentIdentifier.addProperty(p);
@@ -156,7 +176,7 @@ public class SceneParser {
 		}
 		else {
 			if (!accProperties.isEmpty())
-				LOGGER.warn("Trying to apply {} orphan properties.", accProperties.size());
+				LOGGER.info("Discarded {} orphan properties", accProperties.size());
 		}
 		
 		accProperties.clear();
