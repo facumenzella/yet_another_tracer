@@ -37,7 +37,23 @@ public class Plane extends GeometricObject {
 
 	@Override
 	public double shadowHit(final Ray ray, final Stack stack) {
-		double t = (p.sub(ray.origin)).dot(normal) / ray.direction.dot(normal);
+		// double t = (p.sub(ray.origin)).dot(normal) /
+				// ray.direction.dot(normal);
+
+				// p.sub(ray.origin)
+				double dx = p.x - ray.origin.x;
+				double dy = p.y - ray.origin.y;
+				double dz = p.z - ray.origin.z;
+				// (p.sub(ray.origin)).dot(normal)
+				dx = dx * normal.x;
+				dy = dy * normal.y;
+				dz = dz * normal.z;
+
+				// ray.direction.dot(normal);
+				final double denominator = ray.direction.x * normal.x + ray.direction.y
+						* normal.y + ray.direction.z * normal.z;
+
+				double t = (dx + dy + dz) / denominator;
 
 		if (t > EPSILON) {
 			return t;
