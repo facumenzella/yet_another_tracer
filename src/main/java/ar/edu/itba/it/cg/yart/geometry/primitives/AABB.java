@@ -133,5 +133,11 @@ public class AABB implements Transformable {
 		this.p1.y = minY;
 		this.p1.z = maxZ;
 	}
+	
+	@Override
+	public String toString() {
+		return "[" + "x:" + this.p0.x + " y: " + this.p0.y + " z: " + this.p0.z + "] \n" +
+				"[" + "x:" + this.p1.x + " y: " + this.p1.y + " z: " + this.p1.z + "]";
+	}
 
 }
