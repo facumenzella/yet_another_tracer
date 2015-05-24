@@ -36,7 +36,8 @@ public class PerfectSpecular extends BRDF {
 		
 		wi.copy(mWo); 
 		final double aux = sr.normal.dot(wi);
-		return (cr.getColor(sr).multiply(kr.getColor(sr)).multiply(1/aux));
+		final Color result = cr.getColor(sr).multiply(kr.getColor(sr));
+		return result.multiply(1.0/aux);
 	}
 	
 	public void setCr(final Color cr) {

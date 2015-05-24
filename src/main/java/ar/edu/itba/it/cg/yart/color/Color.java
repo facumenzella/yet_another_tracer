@@ -118,6 +118,15 @@ public class Color {
 		return new Color(1.0,1.0,0,1.0);
 	}
 	
+	public void correctColor() {
+		double max = Math.max(r, Math.max(g, b));
+		if (max > 1.0) {
+			r /= max;
+			g /= max;
+			b /= max;
+		}
+	}
+	
 	@Override
 	public String toString() {
 		return "(r: " + r + ", g: " + g + ", b: " + b + ", a: " + a + ")";
