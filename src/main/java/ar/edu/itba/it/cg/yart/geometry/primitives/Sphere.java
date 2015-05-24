@@ -29,69 +29,64 @@ public class Sphere extends GeometricObject {
 		if (!getBoundingBox().hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}
-
-		// MutableVector3d tmp = ray.origin.mutableSub(center);
-		// MutableVector3d rayTmp = new MutableVector3d(ray.direction);
+		double tMin;
+		double t;
 		double tx = ray.origin.x - center.x;
 		double ty = ray.origin.y - center.y;
 		double tz = ray.origin.z - center.z;
 
-		// ray.direction.dot(ray.direction);
-
-		double a = ray.direction[0] * ray.direction[0] + ray.direction[1]
-				* ray.direction[1] + ray.direction[2] * ray.direction[2];
-		double b = 2.0 * tx * ray.direction[0] + ty * ray.direction[1] + tz
-				* ray.direction[2];
-		double c = tx * tx + ty * ty + tz * tz - radius * radius;
+		double a = (ray.direction[0] * ray.direction[0])
+				+ (ray.direction[1] * ray.direction[1])
+				+ (ray.direction[2] * ray.direction[2]);
+		double b = 2.0 * (tx * ray.direction[0] + ty * ray.direction[1] + tz
+				* ray.direction[2]);
+		double c = (tx * tx + ty * ty + tz * tz) - radius * radius;
 		double disc = b * b - 4.0 * a * c;
 
-		if (disc < 0.0) { // No hit
+		if (disc < 0.0)
 			return Double.NEGATIVE_INFINITY;
-		}
+		else {
+			double e = Math.sqrt(disc);
+			double denom = 2.0 * a;
+			t = (-b - e) / denom; // smaller root
 
-		double e = Math.sqrt(disc);
-		double denom = 2.0 * a;
-		double t;
+			if (t > EPSILON) {
+				tMin = t;
 
-		t = (-b - e) / denom;
+				double nx = tx + (ray.direction[0] * t);
+				double ny = ty + (ray.direction[1] * t);
+				double nz = tz + (ray.direction[2] * t);
+				nx = nx / radius;
+				ny = ny / radius;
+				nz = nz / radius;
+				sr.normal = new Vector3d(nx, ny, nz);
+				double x = ray.origin.x + (ray.direction[0] * t);
+				double y = ray.origin.y + (ray.direction[1] * t);
+				double z = ray.origin.z + (ray.direction[2] * t);
 
-		if (t > EPSILON) {
-			double rx = ray.direction[0] * t;
-			double ry = ray.direction[1] * t;
-			double rz = ray.direction[2] * t;
+				sr.localHitPoint = new Point3d(x, y, z);
+				return tMin;
+			}
 
-			tx = (tx + rx) / radius;
-			ty = (ty + ry) / radius;
-			rz = (tz + rz) / radius;
+			t = (-b + e) / denom; // larger root
 
-			final double length = Math.sqrt(tx*tx + ty*ty + tz*tz);
-			sr.normal = new Vector3d(tx / length, ty / length, tz / length);
-			double x = ray.origin.x + (ray.direction[0] * t);
-			double y = ray.origin.y + (ray.direction[1] * t);
-			double z = ray.origin.z + (ray.direction[2] * t);
+			if (t > EPSILON) {
+				tMin = t;
 
-			sr.localHitPoint = new Point3d(x, y, z);
-			return t;
-		}
+				double nx = tx + (ray.direction[0] * t);
+				double ny = ty + (ray.direction[1] * t);
+				double nz = tz + (ray.direction[2] * t);
+				nx = nx / radius;
+				ny = ny / radius;
+				nz = nz / radius;
+				sr.normal = new Vector3d(nx, ny, nz);
+				double x = ray.origin.x + (ray.direction[0] * t);
+				double y = ray.origin.y + (ray.direction[1] * t);
+				double z = ray.origin.z + (ray.direction[2] * t);
 
-		t = (-b + e) / denom;
-
-		if (t > EPSILON) {
-			double rx = ray.direction[0] * t;
-			double ry = ray.direction[1] * t;
-			double rz = ray.direction[2] * t;
-
-			tx = (tx + rx) / radius;
-			ty = (ty + ry) / radius;
-			rz = (tz + rz) / radius;
-			final double length = Math.sqrt(tx*tx + ty*ty + tz*tz);
-			sr.normal = new Vector3d(tx / length, ty / length, tz / length);
-			// ray.origin.add(ray.direction.scale(t));
-			double x = ray.origin.x + (ray.direction[0] * t);
-			double y = ray.origin.y + (ray.direction[1] * t);
-			double z = ray.origin.z + (ray.direction[2] * t);
-			sr.localHitPoint = new Point3d(x, y, z);
-			return t;
+				sr.localHitPoint = new Point3d(x, y, z);
+				return tMin;
+			}
 		}
 
 		return Double.NEGATIVE_INFINITY;
@@ -102,40 +97,39 @@ public class Sphere extends GeometricObject {
 		if (!getBoundingBox().hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}
-
-		// MutableVector3d tmp = ray.origin.mutableSub(center);
-		// MutableVector3d rayTmp = new MutableVector3d(ray.direction);
+		double tMin;
+		double t;
 		double tx = ray.origin.x - center.x;
 		double ty = ray.origin.y - center.y;
 		double tz = ray.origin.z - center.z;
 
-		// ray.direction.dot(ray.direction);
-
-		double a = ray.direction[0] * ray.direction[0] + ray.direction[1]
-				* ray.direction[1] + ray.direction[2] * ray.direction[2];
-		double b = 2.0 * tx * ray.direction[0] + ty * ray.direction[1] + tz
-				* ray.direction[2];
-		double c = tx * tx + ty * ty + tz * tz - radius * radius;
+		double a = (ray.direction[0] * ray.direction[0])
+				+ (ray.direction[1] * ray.direction[1])
+				+ (ray.direction[2] * ray.direction[2]);
+		double b = 2.0 * (tx * ray.direction[0] + ty * ray.direction[1] + tz
+				* ray.direction[2]);
+		double c = (tx * tx + ty * ty + tz * tz) - radius * radius;
 		double disc = b * b - 4.0 * a * c;
 
-		if (disc < 0.0) { // No hit
+		if (disc < 0.0)
 			return Double.NEGATIVE_INFINITY;
-		}
+		else {
+			double e = Math.sqrt(disc);
+			double denom = 2.0 * a;
+			t = (-b - e) / denom; // smaller root
 
-		double e = Math.sqrt(disc);
-		double denom = 2.0 * a;
-		double t;
+			if (t > EPSILON) {
+				tMin = t;
 
-		t = (-b - e) / denom;
+				return tMin;
+			}
 
-		if (t > EPSILON) {
-			return t;
-		}
+			t = (-b + e) / denom; // larger root
 
-		t = (-b + e) / denom;
-
-		if (t > EPSILON) {
-			return t;
+			if (t > EPSILON) {
+				tMin = t;
+				return tMin;
+			}
 		}
 
 		return Double.NEGATIVE_INFINITY;
