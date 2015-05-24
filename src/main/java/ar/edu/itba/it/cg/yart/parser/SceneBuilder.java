@@ -350,6 +350,14 @@ public class SceneBuilder {
 			}
 			else if (strType.equals("plane")) {
 				Vector3d normal = identifier.getNormal("n", new Vector3d(0, 0, 1)).normalizedVector();
+				if (normal.x == 0 && normal.y == 0 && normal.z == 0) {
+					LOGGER.warn("Plane normal cannot have zero length");
+					normal = new Vector3d(0, 0, 1);
+				}
+				double rX = Math.toDegrees(Math.atan2(normal.y, normal.z));
+				double rY = Math.toDegrees(Math.atan2(normal.x, normal.z));
+				double rZ = Math.toDegrees(Math.atan2(normal.y, normal.x));
+				localMatrix = localMatrix.rotateX(rX).rotateY(rY).rotateZ(rZ);
 				instance = new Instance(referencePlane);
 			}
 			else if (strType.equals("mesh")) {
@@ -429,20 +437,28 @@ public class SceneBuilder {
 			if (type.equals("point")) {
 				Point3d from = identifier.getPoint("from", new Point3d(0,0,0));
 				Color l = identifier.getColor("l", Color.whiteColor());
-				PointLight light = new PointLight(gain, l, new Vector3d(from.x, from.y, from.z));
-				light.applyTransformation(new Matrix4d().leftMultiply(transformMatrices.peek()));
+				PointLight light = new PointLight(gain, l, new Vector3d(0, 0, 0));
+				light.applyTransformation(new Matrix4d().transform(from.x, from.y, from.z).leftMultiply(transformMatrices.peek()));
 				ret = light;
 			}
 			else if (type.equals("distant")) {
 				Color l = identifier.getColor("l", Color.whiteColor());
-				Point3d[] def = {new Point3d(0,0,0), new Point3d(1,1,1)};
-				Point3d[] fromTo = identifier.getPoints("from/to", def);
-				Directional light = new Directional(2, l, fromTo[1].sub(fromTo[0]));
+				Point3d from = identifier.getPoint("from", new Point3d(0,0,0));
+				Point3d to = identifier.getPoint("to", new Point3d(0,0,1));
+				
+				if (from.equals(to)) {
+					LOGGER.warn("TO and FROM points can't be equal. Using default values");
+					from = new Point3d(0,0,0);
+					to = new Point3d(0,0,1);
+				}
+				
+				Vector3d result = from.sub(to).transformByMatrix(new Matrix4d().leftMultiply(transformMatrices.peek()));
+				Directional light = new Directional(gain, l, result);
 				ret = light;
 			}
 			else if (type.equals("infinite")) {
 				Color l = identifier.getColor("l", Color.whiteColor());
-				AmbientLight light = new AmbientLight(l);
+				AmbientLight light = new AmbientLight(gain, l);
 				ret = light;
 			}
 		}
