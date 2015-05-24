@@ -1,6 +1,7 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives.mesh;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
@@ -53,7 +54,12 @@ public class SmoothMeshTriangle extends MeshTriangle{
 		}
 		sr.normal = this.interpolateNormal(beta, gamma);
 		
-		sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
+//		ray.origin.add(ray.direction.scale(t));
+		double x = ray.origin.x + (ray.direction.x * t);
+		double y = ray.origin.y + (ray.direction.y * t);
+		double z = ray.origin.z + (ray.direction.z * t);
+		
+		sr.localHitPoint = new Point3d(x, y, z);
 		if (mesh.u != null && mesh.v != null) {
 			sr.u = interpolateU(beta, gamma);
 			sr.v = interpolateV(beta, gamma);
