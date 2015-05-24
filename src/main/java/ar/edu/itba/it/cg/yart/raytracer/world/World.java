@@ -49,6 +49,7 @@ public class World {
 	 */
 	public World() {
 		this.ambientLight = new AmbientLight(new Color(0.5, 0.5, 0.5));
+		setBackgroundColor(Color.blackColor());
 	}
 	
 	public void preprocess() {
