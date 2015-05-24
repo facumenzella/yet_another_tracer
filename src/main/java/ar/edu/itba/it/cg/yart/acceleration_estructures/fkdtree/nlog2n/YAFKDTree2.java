@@ -133,7 +133,6 @@ public class YAFKDTree2 {
 
 		if (size == 0 || currentDepth >= kMAX_DEPTH || bestCandidate == null
 				|| terminate || prevs.contains(bestCandidate)) {
-			leafs += gObjects.size();
 			return new KDLeafNode(gObjects);
 		}
 
