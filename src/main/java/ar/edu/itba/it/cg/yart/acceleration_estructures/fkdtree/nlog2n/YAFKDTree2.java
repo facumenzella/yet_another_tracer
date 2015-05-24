@@ -51,6 +51,8 @@ public class YAFKDTree2 {
 	private KDNode root;
 	private AABB rootAABB;
 
+	public static KDLeafNode emptyLeaf = new KDLeafNode(null);
+
 	private static AABB buildInfiniteRootAABB(final List<GeometricObject> objects) {
 		double minX = -Double.MAX_VALUE;
 		double minY = minX, minZ = minX;
@@ -616,12 +618,17 @@ public class YAFKDTree2 {
 			List<GeometricObject> objects = leaf.gObjects;
 			if (ray.depth < AbstractTracer.MAX_DEPTH && objects != null) {
 				double tMin = tFar;
+				boolean hit = false;
 				for (GeometricObject object : objects) {
 					double t = object.shadowHit(ray, stack);
 					if (t != Double.NEGATIVE_INFINITY && t < tMin && t > tNear) {
-						stack.index = top;
-						return tMin;
+						tMin = t;
+						hit = true;
 					}
+				}
+				if (hit) {
+					stack.index = top;
+					return tMin;
 				}
 			}
 			// If stack is empty
