@@ -70,6 +70,10 @@ public class YartApp {
 				sceneFile = cmd.getOptionValue('i');
 			}
 			
+			if (cmd.hasOption('t')) {
+				renderResult.setDisplayRenderTime(true);
+			}
+			
 			if (cmd.hasOption("aa")) {
 				numSamples = Integer.valueOf(cmd.getOptionValue("aa"));
 				
@@ -125,7 +129,7 @@ public class YartApp {
 			
 			if (!StringUtils.isEmpty(imageName)) {
 				ImageSaver imageSaver = new ImageSaver();
-				imageSaver.saveImage(renderResult.getPixels(), imageName, imageExtension);
+				imageSaver.saveImage(renderResult.getPixels(), imageName, imageExtension, renderResult);
 			}
 		} catch (ParseException ex) {
 			System.out.println(ex.getMessage());

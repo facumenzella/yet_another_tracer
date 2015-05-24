@@ -6,13 +6,13 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 
-public class RenderResult extends JComponent {
+public class RenderImageResult extends JComponent {
 
 	private static final long serialVersionUID = 1L;
 	
 	private final BufferedImage bi;
 	
-	public RenderResult(final BufferedImage bi) {
+	public RenderImageResult(final BufferedImage bi) {
 		this.bi = bi;
 		
 		setPreferredSize(new Dimension(bi.getWidth(), bi.getHeight()));

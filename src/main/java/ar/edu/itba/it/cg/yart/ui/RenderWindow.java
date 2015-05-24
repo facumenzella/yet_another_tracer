@@ -10,10 +10,11 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
+import ar.edu.itba.it.cg.yart.raytracer.RenderResult;
 import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer.RaytracerCallbacks;
 import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
+import ar.edu.itba.it.cg.yart.utils.ImageSaver;
 
 public class RenderWindow extends JFrame implements RaytracerCallbacks {
 
@@ -25,13 +26,16 @@ public class RenderWindow extends JFrame implements RaytracerCallbacks {
 	private static final int MAX_HEIGHT = 600;
 	
 	private final BufferedImage bi;
+	private final RayTracer raytracer;
 	
-	RenderResult resultPanel;
+	RenderImageResult resultPanel;
 	JScrollPane scrollPane;
 	
 	public RenderWindow(RayTracer raytracer) {
 		int width = raytracer.getHorizontalRes();
 		int height = raytracer.getVerticalRes();
+		
+		this.raytracer = raytracer;
 		
 		raytracer.setCallbacks(this);
 		
@@ -47,7 +51,7 @@ public class RenderWindow extends JFrame implements RaytracerCallbacks {
 		panel.setLayout(new GridBagLayout());
 		panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		
-		resultPanel = new RenderResult(bi);
+		resultPanel = new RenderImageResult(bi);
 		
 		panel.add(resultPanel);
 		
@@ -90,7 +94,7 @@ public class RenderWindow extends JFrame implements RaytracerCallbacks {
 	}
 
 	@Override
-	public void onBucketFinished(final Bucket bucket, final ArrayIntegerMatrix result) {
+	public void onBucketFinished(final Bucket bucket, final RenderResult result) {
 		int xStart = bucket.getX();
 		int xFinish = bucket.getX() + bucket.getWidth();
 		int yStart = bucket.getY();
@@ -98,7 +102,7 @@ public class RenderWindow extends JFrame implements RaytracerCallbacks {
 		
 		for (int y = yStart; y < yFinish; y++) {
 			for (int x = xStart; x < xFinish; x++) {
-				bi.setRGB(x, y, result.get(x, y));
+				bi.setRGB(x, y, result.getPixels().get(x, y));
 			}
 		}
 		
@@ -106,7 +110,8 @@ public class RenderWindow extends JFrame implements RaytracerCallbacks {
 	}
 
 	@Override
-	public void onRenderFinished(ArrayIntegerMatrix result) {
+	public void onRenderFinished(RenderResult result) {
+		ImageSaver.printRenderTime(bi, result);
 		resultPanel.repaint();
 	}
 
