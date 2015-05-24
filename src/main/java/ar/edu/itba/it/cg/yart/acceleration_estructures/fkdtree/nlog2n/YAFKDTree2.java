@@ -221,9 +221,10 @@ public class YAFKDTree2 {
 
 			Event e = events[i];
 
+//			END(0), PLANAR(1), START(2);
 			while (i < eventsQty && events[i].axis == e.axis
 					&& events[i].point == e.point
-					&& events[i].type == EventType.END) {
+					&& events[i].type == 0) {
 				i++;
 				switch (e.splitPoint.axis) {
 				case 0:
@@ -242,7 +243,7 @@ public class YAFKDTree2 {
 
 			while (i < eventsQty && events[i].axis == e.axis
 					&& events[i].point == e.point
-					&& events[i].type == EventType.START) {
+					&& events[i].type == 2) {
 				i++;
 				switch (e.splitPoint.axis) {
 				case 0:
@@ -260,7 +261,7 @@ public class YAFKDTree2 {
 			}
 			while (i < eventsQty && events[i].axis == e.axis
 					&& events[i].point == e.point
-					&& events[i].type == EventType.PLANAR) {
+					&& events[i].type == 1) {
 				i++;
 				switch (e.splitPoint.axis) {
 				case 0:
@@ -377,11 +378,12 @@ public class YAFKDTree2 {
 		double max = perfects[1];
 
 		// if they are the same, they are planar
+//		END(0), PLANAR(1), START(2);
 		if (max - min < kEPSILON) {
 			SplitPoint splitPoint = new SplitPoint();
 			splitPoint.axis = axis;
 			splitPoint.point = min;
-			eventList.add(new Event(EventType.PLANAR, object, splitPoint));
+			eventList.add(new Event(1, object, splitPoint));
 		} else if (object.isFinite()) {
 			SplitPoint splitPointStart = new SplitPoint();
 			splitPointStart.axis = axis;
@@ -390,8 +392,8 @@ public class YAFKDTree2 {
 			splitPointEnd.axis = axis;
 			splitPointEnd.point = max;
 
-			eventList.add(new Event(EventType.START, object, splitPointStart));
-			eventList.add(new Event(EventType.END, object, splitPointEnd));
+			eventList.add(new Event(2, object, splitPointStart));
+			eventList.add(new Event(0, object, splitPointEnd));
 		}
 
 		// then y
@@ -403,11 +405,12 @@ public class YAFKDTree2 {
 		max = perfects[1];
 
 		// if they are the same, they are planar
+//		END(0), PLANAR(1), START(2);
 		if (max - min < kEPSILON) {
 			SplitPoint splitPoint = new SplitPoint();
 			splitPoint.axis = axis;
 			splitPoint.point = min;
-			eventList.add(new Event(EventType.PLANAR, object, splitPoint));
+			eventList.add(new Event(1, object, splitPoint));
 		} else if (object.isFinite()) {
 			SplitPoint splitPointStart = new SplitPoint();
 			splitPointStart.axis = axis;
@@ -416,8 +419,8 @@ public class YAFKDTree2 {
 			splitPointEnd.axis = axis;
 			splitPointEnd.point = max;
 
-			eventList.add(new Event(EventType.START, object, splitPointStart));
-			eventList.add(new Event(EventType.END, object, splitPointEnd));
+			eventList.add(new Event(2, object, splitPointStart));
+			eventList.add(new Event(0, object, splitPointEnd));
 		}
 
 		// finally z
@@ -429,11 +432,12 @@ public class YAFKDTree2 {
 		max = perfects[1];
 
 		// if they are the same, they are planar
+//		END(0), PLANAR(1), START(2);
 		if (max - min < kEPSILON) {
 			SplitPoint splitPoint = new SplitPoint();
 			splitPoint.axis = axis;
 			splitPoint.point = min;
-			eventList.add(new Event(EventType.PLANAR, object, splitPoint));
+			eventList.add(new Event(1, object, splitPoint));
 		} else if (object.isFinite()) {
 			SplitPoint splitPointStart = new SplitPoint();
 			splitPointStart.axis = axis;
@@ -442,8 +446,8 @@ public class YAFKDTree2 {
 			splitPointEnd.axis = axis;
 			splitPointEnd.point = max;
 
-			eventList.add(new Event(EventType.START, object, splitPointStart));
-			eventList.add(new Event(EventType.END, object, splitPointEnd));
+			eventList.add(new Event(2, object, splitPointStart));
+			eventList.add(new Event(0, object, splitPointEnd));
 		}
 
 		return eventList;
@@ -767,13 +771,13 @@ public class YAFKDTree2 {
 	}
 
 	public static class Event implements Comparable<Event> {
-		public final EventType type;
+		public final int type; //END(0), PLANAR(1), START(2);
 		public final GeometricObject object;
 		public final double point;
 		public final int axis; // x=0, y=1, z=2
 		public final SplitPoint splitPoint;
 
-		public Event(final EventType type, final GeometricObject object,
+		public Event(final int type, final GeometricObject object,
 				final SplitPoint splitPoint) {
 			this.type = type;
 			this.object = object;
@@ -790,7 +794,7 @@ public class YAFKDTree2 {
 			}
 			if (first == 0) {
 				if (axis == o.axis) {
-					return type.value - o.type.value;
+					return type - o.type;
 				}
 				return axis - o.axis;
 			}
@@ -864,15 +868,16 @@ public class YAFKDTree2 {
 			sides.put(o, 3);
 		}
 
+//		END(0), PLANAR(1), START(2);
 		for (final Event e : events) {
-			if (e.type == EventType.END && e.axis == candidate.splitPoint.axis
+			if (e.type == 0 && e.axis == candidate.splitPoint.axis
 					&& e.point <= candidate.splitPoint.point) {
 				sides.put(e.object, 1);
-			} else if (e.type == EventType.START
+			} else if (e.type == 2
 					&& e.axis == candidate.splitPoint.axis
 					&& e.point >= candidate.splitPoint.point) {
 				sides.put(e.object, 2);
-			} else if (e.type == EventType.PLANAR
+			} else if (e.type == 1
 					&& e.axis == candidate.splitPoint.axis) {
 				if (e.point < candidate.splitPoint.point
 						|| (e.point == candidate.splitPoint.point && candidate.left)) {
