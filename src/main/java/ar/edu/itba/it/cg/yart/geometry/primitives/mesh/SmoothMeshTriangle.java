@@ -1,8 +1,6 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives.mesh;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
-import ar.edu.itba.it.cg.yart.geometry.MutableVector3d;
-import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
@@ -53,7 +51,8 @@ public class SmoothMeshTriangle extends MeshTriangle{
 		if (t < EPSILON) {
 			return Double.NEGATIVE_INFINITY;
 		}
-		sr.normal = this.interpolateNormal(beta, gamma);;
+		sr.normal = this.interpolateNormal(beta, gamma);
+		
 		sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
 		if (mesh.u != null && mesh.v != null) {
 			sr.u = interpolateU(beta, gamma);
@@ -108,12 +107,28 @@ public class SmoothMeshTriangle extends MeshTriangle{
 	
 	public Vector3d interpolateNormal(final double beta, final double gamma) {
 		final Mesh mesh = this.mesh;
-		final MutableVector3d n0 = new MutableVector3d(mesh.normals[index0].scale(1 - beta - gamma));
-		final Vector3d n1 = mesh.normals[index1].scale(beta);
-		final Vector3d n2 = mesh.normals[index2].scale(gamma);
-		n0.add(n1);
-		n0.add(n2);
-		return n0.normalize();
+		Vector3d n1 = mesh.normals[index0];
+		double n1x = n1.x * (1 - beta - gamma);
+		double n1y = n1.y * (1 - beta - gamma);
+		double n1z = n1.z * (1 - beta - gamma);
+		
+		Vector3d n2 = mesh.normals[index1];
+		double n2x = n2.x * (beta);
+		double n2y = n2.y * (beta);
+		double n2z = n2.z * (beta);
+		
+		Vector3d n3 = mesh.normals[index2];
+		double n3x = n3.x * (gamma);
+		double n3y = n3.y * (gamma);
+		double n3z = n3.z * (gamma);
+		
+		double x = n1x + n2x + n3x;
+		double y = n1y + n2y + n3y;
+		double z = n1z + n2z + n3z;
+		
+		double length = x*x + y*y + z*z;
+		
+		return new Vector3d(x/length, y/length, z/length);
 	}
 
 }
