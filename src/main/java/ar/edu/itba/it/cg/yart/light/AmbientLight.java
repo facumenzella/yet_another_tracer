@@ -17,7 +17,11 @@ public class AmbientLight extends AbstractLight {
 	private Color L;
 	
 	public AmbientLight(final Color color) {
-		this.ls = 1;
+		this(1, color);
+	}
+	
+	public AmbientLight(final double ls, final Color color) {
+		this.ls = ls;
 		this.color = color;
 		this.direction = new Vector3d(0,0,0);
 		this.L = this.mL(null);
