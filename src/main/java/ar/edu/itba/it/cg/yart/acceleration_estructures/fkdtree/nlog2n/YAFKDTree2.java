@@ -30,6 +30,7 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.AbstractTracer;
+import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 // This has O(N log N) or at least we hope it does
 
@@ -518,13 +519,13 @@ public class YAFKDTree2 {
 				Point3d localHitPoint = null;
 				double tMin = tFar;
 				double u = 0, v = 0;
+				Matrix4d m = null;
 				for (GeometricObject object : objects) {
 					double t = object.hit(ray, sr, stack);
 					if (t != Double.NEGATIVE_INFINITY && t < tMin && t > tNear) {
 						sr.hitObject = true;
 						sr.material = object.getMaterial();
-						sr.hitPoint = sr.localHitPoint
-								.transformByMatrix(object.matrix);
+						m = object.matrix;
 						normal = sr.normal;
 						u = sr.u;
 						v = sr.v;
@@ -541,6 +542,8 @@ public class YAFKDTree2 {
 					sr.ray = ray;
 					sr.u = u;
 					sr.v = v;
+					sr.hitPoint = sr.localHitPoint
+							.transformByMatrix(m);
 					color = sr.material.shade(sr, stack);
 					stack.index = top;
 					return color;
