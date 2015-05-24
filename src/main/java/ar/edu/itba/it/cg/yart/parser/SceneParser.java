@@ -48,7 +48,7 @@ public class SceneParser {
 			parseFile(filePath);
 		}
 		catch (Exception e) {
-			final String err = e.getMessage(); 
+			final String err = e.getMessage();
 			LOGGER.error(err);
 			throw new SceneParseException(err);
 		}

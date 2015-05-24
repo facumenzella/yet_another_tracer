@@ -548,13 +548,11 @@ public class SceneBuilder {
 		
 		double[] params = ParserUtils.parseDoubleArray(identifier.getParameters());
 		
-		double translateX = params[1];
-		double translateY = params[2];
-		double translateZ = params[3];
+		double translateX = params[0];
+		double translateY = params[1];
+		double translateZ = params[2];
 		
-		current.transform(translateX, translateY, translateZ);
-		
-		return current;
+		return current.transform(translateX, translateY, translateZ);
 	}
 	
 	private Matrix4d scale(Identifier identifier) {
@@ -562,12 +560,10 @@ public class SceneBuilder {
 		
 		double[] params = ParserUtils.parseDoubleArray(identifier.getParameters());
 		
-		double scaleX = params[1];
-		double scaleY = params[2];
-		double scaleZ = params[3];
+		double scaleX = params[0];
+		double scaleY = params[1];
+		double scaleZ = params[2];
 		
-		current.scale(scaleX, scaleY, scaleZ);
-		
-		return current;
+		return current.scale(scaleX, scaleY, scaleZ);
 	}
 }
