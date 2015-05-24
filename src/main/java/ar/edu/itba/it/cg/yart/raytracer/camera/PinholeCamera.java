@@ -41,12 +41,15 @@ public class PinholeCamera extends CameraAbstract {
 		final int n = (int) Math.sqrt((double) rayTracer.getNumSamples());
 		final double invNumSamples = 1 / (double) rayTracer.getNumSamples();
 
+		
 		int xStart = bucket.getX();
 		int xFinish = xStart + bucket.getWidth();
 		int yStart = bucket.getY();
 		int yFinish = yStart + bucket.getHeight();
 
 		World world = rayTracer.getWorld();
+		ShadeRec sr =  new ShadeRec(world);
+
 		int row = yStart;
 		int col = xStart;
 		while (row < yFinish) {
@@ -69,7 +72,8 @@ public class PinholeCamera extends CameraAbstract {
 
 				Vector3d d = (u.scale(x)).add(v.scale(y)).sub(w.scale(distance)).normalizedVector();
 				ray.direction = d;
-				Color c = world.getTree().traceRay(ray, new ShadeRec(world), stack);
+				sr.hitObject = false;
+				Color c = world.getTree().traceRay(ray, sr, stack);
 				color.addEquals(c);
 				j++;
 				if (j == n) {
