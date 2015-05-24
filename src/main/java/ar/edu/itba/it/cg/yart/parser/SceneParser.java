@@ -1,6 +1,5 @@
 package ar.edu.itba.it.cg.yart.parser;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -25,48 +24,44 @@ public class SceneParser {
 	private static final Logger LOGGER = LoggerFactory.getLogger(YartConstants.LOG_FILE);
 
 	private final RayTracer raytracer;
-	private final String filePath;
 	private final SceneBuilder sceneBuilder;
 	
 	private Identifier currentIdentifier;
 	
 	private List<Property> accProperties = new ArrayList<Property>();
 	
-	private int lastLine = 1; // Updated only when finding an Attribute or Identifier
-	private int currentLine = 1;
+	private final Path basePath;
+	private final Path filePath;
 	
 	public SceneParser(final String filePath, final RayTracer raytracer) {
-		this.filePath = filePath;
 		this.raytracer = raytracer;
 		this.sceneBuilder = new SceneBuilder(raytracer);
-	}
-	
-	public String getPath() {
-		return filePath;
+		this.filePath = Paths.get(filePath).normalize();
+		this.basePath = this.filePath.getParent();
 	}
 	
 	public void parse() throws SceneParseException {
 		try {
+			sceneBuilder.setBasePath(basePath);
 			World world = new World();
 			raytracer.setWorld(world);
-			parseFile(this.filePath);
+			parseFile(filePath);
 		}
 		catch (Exception e) {
-			final String err = "In line " + lastLine + ": " + e.getMessage(); 
+			final String err = e.getMessage(); 
 			LOGGER.error(err);
 			throw new SceneParseException(err);
 		}
 	}
 	
-	private void parseFile(final String filePath) throws SceneParseException {
-		Path path = Paths.get(filePath);
+	private void parseFile(final Path path) throws SceneParseException {
 		String folder = path.getParent().toString();
 		Scanner scanner;
 		try {
 			scanner = new Scanner(path, StandardCharsets.UTF_8.name());
 		}
 		catch (IOException e) {
-			throw new SceneParseException("Couldn't load file " + filePath + ".");
+			throw new SceneParseException("Couldn't load file " + path + ".");
 		}
 		while (scanner.hasNextLine()) {
 			String rawLine = scanner.nextLine().trim().replaceAll("\\s", " ");
@@ -75,7 +70,6 @@ public class SceneParser {
 			if (uncommentedLine != null && !uncommentedLine.isEmpty()) {
 				processLine(uncommentedLine, folder);
 			}
-			currentLine++;
 		}
 		applyProperties();
 		scanner.close();
@@ -89,7 +83,6 @@ public class SceneParser {
 		}
 		else if (Character.isUpperCase(first.charAt(0))) { // Is an attribute
 			applyProperties();
-			lastLine = currentLine;
 			processAttribute(first, StringUtils.substringAfter(line, " ").split("\\s"), folder);
 		}
 	}
@@ -117,10 +110,10 @@ public class SceneParser {
 				else {
 					PropertyType type = Property.getType(p[0]);
 					if (type == null) {
-						LOGGER.warn("Unkown property type \"" + p[0] + "\"");
+						LOGGER.warn("Unkown property type \"{}\"", p[0]);
 					}
 					else if (p.length < 2) {
-						LOGGER.warn("Unkown property type \"" + p[0] + "\"");
+						LOGGER.warn("Unkown property type \"{}\"", p[0]);
 					}
 					else {
 						accProperties.add(new Property(p[1], type, values[i]));
@@ -156,15 +149,7 @@ public class SceneParser {
 			sceneBuilder.attributeEnd();
 		}
 		else if (attribute.equals("Include")) {
-			String path = null;
-			String file = StringUtils.substringBetween(args[0], "\"");
-			if (StringUtils.isEmpty(folder)) {
-				path = file;
-			}
-			else {
-				path = folder + File.separator + file;
-			}
-			parseFile(path);
+			parseFile(basePath.resolve(Paths.get(StringUtils.substringBetween(args[0], "\""))));
 		}
 		else {
 			LOGGER.info("Identifier \"" + attribute + "\" not recognized");

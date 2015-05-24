@@ -32,7 +32,7 @@ public class YartApp {
 		
 		RenderResult renderResult = new RenderResult();
 		
-		int numSamples = 16;
+		int numSamples = 4;
 		int benchmarkRuns = 0;
 		boolean guiRender = false;
 		String sceneFile = null;
@@ -104,6 +104,7 @@ public class YartApp {
 				SceneParser sceneParser = new SceneParser(sceneFile, raytracer);
 				sceneParser.parse();
 				renderResult.finishSceneLoading();
+				System.out.println("Scene loading time: " + renderResult.getSceneLoadingTime());
 			}
 
 			if (guiRender) {
@@ -116,7 +117,6 @@ public class YartApp {
 			else {
 				renderResult = raytracer.render();
 				System.out.println("Render finished!");
-				System.out.println("Scene loading time: " + renderResult.getSceneLoadingTime());
 				System.out.println("Preprocessing time: " + renderResult.getPreprocessingTime());
 				System.out.println("Render time: " + renderResult.getRenderTime());
 				System.out.println("-------------------");
