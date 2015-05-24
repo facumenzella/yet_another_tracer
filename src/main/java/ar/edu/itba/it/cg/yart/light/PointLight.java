@@ -17,8 +17,6 @@ public class PointLight extends AbstractLight {
 
 	private Color L;
 	
-	
-	
 	public PointLight(final double ls, final Color color,
 			final Vector3d location) {
 		super();
@@ -49,7 +47,12 @@ public class PointLight extends AbstractLight {
 	@Override
 	public boolean inShadow(final Ray ray, final ShadeRec sr, final Stack stack) {
 		double t;
-		final double d = point.distance(ray.origin);
+		
+		final double dx = point.x - ray.origin.x;
+		final double dy = point.y - ray.origin.y;
+		final double dz = point.z - ray.origin.z;
+		
+		final double d = Math.sqrt(dx*dx + dy*dy + dz*dz);
 
 		t = sr.world.getTree().traceShadowHit(ray, stack);
 		if (t != Double.NEGATIVE_INFINITY && t < d) {
