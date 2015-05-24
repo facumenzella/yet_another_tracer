@@ -93,13 +93,9 @@ public class PinholeCamera extends CameraAbstract {
 			color.multiplyEquals(invNumSamples);
 
 			// mapping color
-			Color mappedColor = color;
-			final double maxValue = Math.max(color.r, Math.max(color.g, color.b));
-			if (maxValue > 1.0) {
-				mappedColor = color.multiplyEquals(1 / maxValue);
-			}
+			color.correctColor();
 			// now we display the pixel
-			result.put(col, row, mappedColor.toInt());
+			result.put(col, row, color.toInt());
 			col++;
 			if (col == xFinish) {
 				col = xStart;
