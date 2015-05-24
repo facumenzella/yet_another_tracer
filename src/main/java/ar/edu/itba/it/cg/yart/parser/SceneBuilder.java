@@ -1,8 +1,8 @@
 package ar.edu.itba.it.cg.yart.parser;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -69,9 +69,15 @@ public class SceneBuilder {
 	private final Sphere referenceSphere = new Sphere();
 	private final Plane referencePlane = new Plane();
 	
+	private Path basePath = Paths.get(".").normalize();
+	
 	public SceneBuilder(final RayTracer raytracer) {
 		this.raytracer = raytracer;
 		transformMatrices.push(new Matrix4d());
+	}
+	
+	public void setBasePath(final Path path) {
+		basePath = path;
 	}
 
 	public void attributeBegin(final Attribute attribute) {
@@ -280,7 +286,8 @@ public class SceneBuilder {
 		
 		try {
 			if (type.equalsIgnoreCase("imagemap")) {
-				BufferedImage image = ImageIO.read(new File(identifier.getString("filename")));
+				String filename = identifier.getString("filename");
+				BufferedImage image = ImageIO.read(basePath.resolve(filename).toFile());
 				Mapping mapping = null;
 				Wrapper wrapper = null;
 				String mappingStr = identifier.getString("mapping", "uv");
