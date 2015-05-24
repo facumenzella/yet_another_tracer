@@ -496,6 +496,14 @@ public class SceneBuilder {
 		try {
 			if (type.equals("perspective")) {
 				PinholeCamera cam = new PinholeCamera(YartConstants.DEFAULT_EYE, YartConstants.DEFAULT_LOOKAT, YartConstants.DEFAULT_UP, 500, 1);
+				double[] defaults = {-1, 1, -1, 1};
+				double[] screenWindow = identifier.getDoubles("screenwindow", defaults);
+				
+				if (screenWindow.length < 4) {
+					LOGGER.warn("Screen Window needs 4 floats. Using default value");
+					screenWindow = defaults;
+				}
+				cam.setScreenWindow(screenWindow[0], screenWindow[1], screenWindow[2], screenWindow[3]);
 				cam.setFov(identifier.getDouble("fov", YartConstants.DEFAULT_FOV));
 				ret = cam;
 			}
