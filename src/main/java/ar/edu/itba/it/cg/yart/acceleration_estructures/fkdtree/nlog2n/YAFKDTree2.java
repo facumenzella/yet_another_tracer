@@ -52,6 +52,9 @@ public class YAFKDTree2 {
 	private AABB rootAABB;
 
 	public static KDLeafNode emptyLeaf = new KDLeafNode(null);
+	
+	private final double dir[] = new double[3];
+	private final double origin[] = new double[3];
 
 	private static AABB buildRootAABB(final List<GeometricObject> objects) {
 		double minX = Double.MAX_VALUE;
@@ -440,6 +443,13 @@ public class YAFKDTree2 {
 
 		int top = stack.index;
 		stack.push(root, tNear, tFar);
+		
+		dir[0] = ray.direction.x;
+		dir[1] = ray.direction.y;
+		dir[2] = ray.direction.z;
+		origin[0] = ray.origin.x;
+		origin[1] = ray.origin.y;
+		origin[2] = ray.origin.z;
 
 		while (true) {
 			StackElement e = stack.pop();
@@ -447,9 +457,6 @@ public class YAFKDTree2 {
 			tNear = e.min;
 			tFar = e.max;
 			while (!node.isLeaf()) {
-				double dir[] = { ray.direction.x, ray.direction.y,
-						ray.direction.z };
-				double origin[] = { ray.origin.x, ray.origin.y, ray.origin.z };
 
 				KDInternalNode internalNode = (KDInternalNode) node;
 
@@ -493,8 +500,7 @@ public class YAFKDTree2 {
 				Point3d localHitPoint = null;
 				double tMin = tFar;
 				double u = 0, v = 0;
-				for (int i = 0; i < objects.size(); i++) {
-					GeometricObject object = objects.get(i);
+				for (GeometricObject object : objects) {
 					double t = object.hit(ray, sr, stack);
 					if (t != Double.NEGATIVE_INFINITY && t < tMin) {
 						sr.hitObject = true;
@@ -537,6 +543,13 @@ public class YAFKDTree2 {
 
 		int top = stack.index;
 		stack.push(root, tNear, tFar);
+		
+		dir[0] = ray.direction.x;
+		dir[1] = ray.direction.y;
+		dir[2] = ray.direction.z;
+		origin[0] = ray.origin.x;
+		origin[1] = ray.origin.y;
+		origin[2] = ray.origin.z;
 
 		while (true) {
 			StackElement e = stack.pop();
@@ -544,9 +557,6 @@ public class YAFKDTree2 {
 			tNear = e.min;
 			tFar = e.max;
 			while (!node.isLeaf()) {
-				double dir[] = { ray.direction.x, ray.direction.y,
-						ray.direction.z };
-				double origin[] = { ray.origin.x, ray.origin.y, ray.origin.z };
 
 				KDInternalNode internalNode = (KDInternalNode) node;
 
@@ -587,8 +597,7 @@ public class YAFKDTree2 {
 			if (ray.depth < AbstractTracer.MAX_DEPTH && objects != null) {
 				double tMin = tFar;
 				boolean hit = false;
-				for (int i = 0; i < objects.size(); i++) {
-					GeometricObject object = objects.get(i);
+				for (GeometricObject object : objects) {
 					double t = object.shadowHit(ray, stack);
 					if (t != Double.NEGATIVE_INFINITY && t < tMin) {
 						tMin = t;
@@ -612,6 +621,9 @@ public class YAFKDTree2 {
 		double tNear = 0;
 		double tFar = kTMAX;
 		KDNode node = null;
+		
+		final double dir[] = new double[3];
+		final double origin[] = new double[3];
 
 		int top = stack.index;
 		stack.push(root, tNear, tFar);
@@ -622,9 +634,12 @@ public class YAFKDTree2 {
 			tNear = e.min;
 			tFar = e.max;
 			while (!node.isLeaf()) {
-				double dir[] = { ray.direction.x, ray.direction.y,
-						ray.direction.z };
-				double origin[] = { ray.origin.x, ray.origin.y, ray.origin.z };
+				dir[0] = ray.direction.x;
+				dir[1] = ray.direction.y;
+				dir[2] = ray.direction.z;
+				origin[0] = ray.origin.x;
+				origin[1] = ray.origin.y;
+				origin[2] = ray.origin.z;
 
 				KDInternalNode internalNode = (KDInternalNode) node;
 
@@ -667,10 +682,8 @@ public class YAFKDTree2 {
 				boolean hit = false;
 				Vector3d normal = null;
 				Point3d localHitPoint = null;
-				GeometricObject object = null;
 				double u = 0, v = 0;
-				for (int i = 0; i < objects.size(); i++) {
-					object = objects.get(i);
+				for (GeometricObject object : objects) {
 					double t = object.hit(ray, sr, stack);
 					if (t != Double.NEGATIVE_INFINITY && t < tMin) {
 						tMin = t;

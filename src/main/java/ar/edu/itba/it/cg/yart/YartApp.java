@@ -139,8 +139,7 @@ public class YartApp {
 			}
 			
 			if (!StringUtils.isEmpty(imageName)) {
-				ImageSaver imageSaver = new ImageSaver();
-				imageSaver.saveImage(renderResult.getPixels(), imageName, imageExtension, renderResult);
+				ImageSaver.saveImage(renderResult.getPixels(), imageName, imageExtension, renderResult);
 			}
 		} catch (ParseException ex) {
 			System.out.println(ex.getMessage());

@@ -9,9 +9,13 @@ public abstract class MeshTriangle extends GeometricObject {
 
 	public Mesh mesh;
 
-	public int index0;
-	public int index1;
-	public int index2;
+	public final int index0;
+	public final int index1;
+	public final int index2;
+	
+	public final Point3d p0;
+	public final Point3d p1;
+	public final Point3d p2;
 
 	protected Vector3d normal;
 	protected double area;
@@ -24,11 +28,15 @@ public abstract class MeshTriangle extends GeometricObject {
 		this.index2 = index2;
 		this.mesh = mesh;
 		this.computeNormal(reverse);
+		
+		p0 = mesh.vertices[index0];
+		p1 = mesh.vertices[index1];
+		p2 = mesh.vertices[index2];
 	}
 
 	private void computeNormal(boolean reverse) {
-		normal = (mesh.vertices.get(index1).sub(mesh.vertices.get(index0)))
-				.cross((mesh.vertices.get(index2).sub(mesh.vertices.get(index0))));
+		normal = (mesh.vertices[index1].sub(mesh.vertices[index0]))
+				.cross((mesh.vertices[index2].sub(mesh.vertices[index0])));
 		normal = normal.normalizedVector();
 
 		if (reverse)
@@ -47,9 +55,9 @@ public abstract class MeshTriangle extends GeometricObject {
 
 	@Override
 	public AABB createBoundingBox() {
-		Point3d v0 = mesh.vertices.get(index0);
-		Point3d v1 = mesh.vertices.get(index1);
-		Point3d v2 = mesh.vertices.get(index2);
+		Point3d v0 = mesh.vertices[index0];
+		Point3d v1 = mesh.vertices[index1];
+		Point3d v2 = mesh.vertices[index2];
 
 		double minX = Math.min(v0.x, Math.min(v1.x, v2.x))  - EPSILON;
 		double minY = Math.min(v0.y, Math.min(v1.y, v2.y))  - EPSILON;

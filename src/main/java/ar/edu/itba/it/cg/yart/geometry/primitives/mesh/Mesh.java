@@ -17,11 +17,11 @@ import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 
 public class Mesh extends GeometricObject {
 
-	public List<Point3d> vertices;
+	public Point3d[] vertices;
 	public double[] u;
 	public double[] v;
-	public List<Integer> indices;
-	public List<Vector3d> normals; // average normal at each vertex
+	public int[] indices;
+	public Vector3d[] normals; // average normal at each vertex
 	public Map<Integer, List<MeshTriangle>> faces; // the faces shared by each
 													// vertex, we need it for
 													// smooth mesh
@@ -44,8 +44,8 @@ public class Mesh extends GeometricObject {
 	
 	private boolean preprocessed = false;
 
-	public Mesh(final List<Point3d> vertices, final List<Vector3d> normals,
-			final List<Integer> indices, final double[] u, final double[] v,
+	public Mesh(final Point3d[] vertices, final Vector3d[] normals,
+			final int[] indices, final double[] u, final double[] v,
 			final boolean needsSmoothing) {
 		this.u = u;
 		this.v = v;
@@ -57,11 +57,11 @@ public class Mesh extends GeometricObject {
 		this.triangles = new ArrayList<GeometricObject>();
 		this.faces = new HashMap<Integer, List<MeshTriangle>>();
 
-		final int iterations = this.indices.size() / 3;
+		final int iterations = indices.length / 3;
 		for (int i = 0; i < iterations; i++) {
-			Integer v1 = indices.get(i * 3 + 2);
-			Integer v2 = indices.get(i * 3 + 1);
-			Integer v3 = indices.get(i * 3);
+			Integer v1 = indices[i * 3 + 2];
+			Integer v2 = indices[i * 3 + 1];
+			Integer v3 = indices[i * 3];
 
 			List<MeshTriangle> facesV1 = this.faces.get(v1);
 			List<MeshTriangle> facesV2 = this.faces.get(v2);
@@ -97,7 +97,7 @@ public class Mesh extends GeometricObject {
 	public void preprocess() {
 		if (!preprocessed) {
 			numTriangles += triangles.size();
-			this.numVertices = vertices.size();
+			this.numVertices = vertices.length;
 			this.updateBoundingBox();
 			
 			kdTree = YAFKDTree2.build(this.triangles, this.getBoundingBox());
@@ -124,8 +124,8 @@ public class Mesh extends GeometricObject {
 	}
 
 	private void computeMeshNormals() {
-		this.normals = new ArrayList<Vector3d>(this.vertices.size());
-		for (int i = 0; i < this.vertices.size(); i++) {
+		normals = new Vector3d[vertices.length];
+		for (int i = 0; i < vertices.length; i++) {
 			Vector3d normal = new Vector3d(0, 0, 0);
 			List<MeshTriangle> ts = this.faces.get(i);
 			if (ts != null) {
@@ -134,7 +134,7 @@ public class Mesh extends GeometricObject {
 					normal = normal.add(n);
 				}
 			}
-			this.normals.add(i, normal);
+			normals[i] = normal;
 		}
 	}
 

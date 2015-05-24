@@ -37,7 +37,6 @@ public class PinholeCamera extends CameraAbstract {
 		Color color = new Color(0, 0, 0, 0);
 		ViewPlane viewPlane = rayTracer.getViewPlane();
 		double adjustedPixelSize = viewPlane.pixelSize / zoom;
-		Point2d pp;
 		Ray ray = new Ray(this.eye);
 		final int n = (int) Math.sqrt((double) rayTracer.getNumSamples());
 		final double invNumSamples = 1 / (double) rayTracer.getNumSamples();

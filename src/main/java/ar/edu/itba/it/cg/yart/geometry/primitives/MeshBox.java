@@ -1,9 +1,5 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.mesh.Mesh;
@@ -19,15 +15,7 @@ public class MeshBox extends Mesh {
 	private static double[] vList;
 	
 	public MeshBox() {
-		super(Arrays.asList(p), Arrays.asList(n), convertIndices(), getU(uv), getV(uv), false);
-	}
-	
-	private static List<Integer> convertIndices() {
-		List<Integer> indices = new ArrayList<Integer>(triindices.length);
-		for (int i : triindices) {
-            indices.add(i);
-        }
-		return indices;
+		super(p, n, triindices, getU(uv), getV(uv), false);
 	}
 	
 	private static double[] getU(double[] uvList) {
