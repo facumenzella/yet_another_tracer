@@ -4,11 +4,8 @@ import java.awt.image.BufferedImage;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -377,14 +374,14 @@ public class SceneBuilder {
 				instance = new Instance(referenceBox);
 			}
 			else if (strType.equals("mesh")) {
-				final int[] triIndicesArray = identifier.getIntegers("triindices");
-				final Point3d[] verticesArray = identifier.getPoints("P");
-				final Vector3d[] normalsArray = identifier.getNormals("N", null);
+				final int[] triindices = identifier.getIntegers("triindices");
+				final Point3d[] vertices = identifier.getPoints("P");
+				final Vector3d[] normals = identifier.getNormals("N", null);
 				final double[] uvList = identifier.getDoubles("uv", null);
 				final double[] uList;
 				final double[] vList;
 				
-				final MeshData meshData = new MeshData(triIndicesArray, verticesArray, normalsArray, uvList);
+				final MeshData meshData = new MeshData(triindices, vertices, normals, uvList);
 				
 				Mesh mesh = null;
 				
@@ -392,15 +389,6 @@ public class SceneBuilder {
 				    mesh = meshes.get(meshData);
 				}
 				else {
-					List<Vector3d> normals = null;
-				    List<Point3d> vertices = new ArrayList<Point3d>(Arrays.asList(verticesArray));
-		            List<Integer> indices = new ArrayList<Integer>(triIndicesArray.length);
-		            
-		            // Load normals
-		            if (normalsArray != null) {
-		            	normals = new ArrayList<Vector3d>(Arrays.asList(normalsArray));
-		            }
-		            
 		            // Load UV map
 		            if (uvList != null && uvList.length > 1) {
 		            	int items = (int) Math.ceil(uvList.length / 2);
@@ -416,11 +404,7 @@ public class SceneBuilder {
 		            	vList = null;
 		            }
 		            
-		            for (int i : triIndicesArray) {
-		                indices.add(i);
-		            }
-		            
-		            mesh = new Mesh(vertices, normals, indices, uList, vList, true);
+		            mesh = new Mesh(vertices, normals, triindices, uList, vList, true);
 		            meshes.put(meshData, mesh);
 				}
 				instance = new Instance(mesh);

@@ -18,13 +18,9 @@ public class FlatMeshTriangle extends MeshTriangle {
 			return Double.NEGATIVE_INFINITY;
 		}
 		
-		Point3d v0 = mesh.vertices.get(index0);
-		Point3d v1 = mesh.vertices.get(index1);
-		Point3d v2 = mesh.vertices.get(index2);
-		
-		double a = v0.x - v1.x, b = v0.x - v2.x, c = ray.direction.x, d = v0.x - ray.origin.x; 
-		double e = v0.y - v1.y, f = v0.y - v2.y, g = ray.direction.y, h = v0.y - ray.origin.y;
-		double i = v0.z - v1.z, j = v0.z - v2.z, k = ray.direction.z, l = v0.z - ray.origin.z;
+		double a = p0.x - p1.x, b = p0.x - p2.x, c = ray.direction.x, d = p0.x - ray.origin.x; 
+		double e = p0.y - p1.y, f = p0.y - p2.y, g = ray.direction.y, h = p0.y - ray.origin.y;
+		double i = p0.z - p1.z, j = p0.z - p2.z, k = ray.direction.z, l = p0.z - ray.origin.z;
 			
 		double m = f * k - g * j, n = h * k - g * l, p = f * l - h * j;
 		double q = g * i - e * k, r = e * l - h * i, s = e * j - f * i;
@@ -72,9 +68,9 @@ public class FlatMeshTriangle extends MeshTriangle {
 			return Double.NEGATIVE_INFINITY;
 		}
 		
-		Point3d v0 = mesh.vertices.get(index0);
-		Point3d v1 = mesh.vertices.get(index1);
-		Point3d v2 = mesh.vertices.get(index2);
+		Point3d v0 = mesh.vertices[index0];
+		Point3d v1 = mesh.vertices[index1];
+		Point3d v2 = mesh.vertices[index2];
 		
 		double a = v0.x - v1.x, b = v0.x - v2.x, c = ray.direction.x, d = v0.x - ray.origin.x; 
 		double e = v0.y - v1.y, f = v0.y - v2.y, g = ray.direction.y, h = v0.y - ray.origin.y;
