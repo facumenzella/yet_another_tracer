@@ -212,7 +212,9 @@ public class SceneBuilder {
 				mat.setCr(getColorOrTexture(identifier, "Kr", Color.whiteColor()));
 				mat.setKr(0.5);
 				mat.setIor(ior);
-				mat.setKt(1);
+				mat.setKd(1);
+				mat.setKa(0);
+				mat.setKt(getColorOrTexture(identifier, "Kt", Color.whiteColor()));
 				ret = mat;
 			}
 			else if (type.equals("metal2")) {
@@ -250,6 +252,10 @@ public class SceneBuilder {
 	private Texture getColorOrTexture(Identifier identifier, String property, Color defaultColor) {
 		Texture ret;
 		PropertyType type = identifier.getPropertyType(property);
+		
+		if (!identifier.hasProperty(property)) {
+			return new ConstantColor(defaultColor);
+		}
 		
 		if (type == PropertyType.COLOR) {
 			Color color = identifier.getColor(property, defaultColor);
