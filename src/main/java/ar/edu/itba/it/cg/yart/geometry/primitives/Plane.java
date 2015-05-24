@@ -17,18 +17,35 @@ public class Plane extends GeometricObject {
 		this.normal = normal;
 		updateBoundingBox();
 	}
-	
+
 	public Plane() {
 		this(new Point3d(0, 0, 0), new Normal3d(0, 0, 1));
 	}
 
 	@Override
-	public double hit(final Ray ray, final ShadeRec sr, final Stack stack) {		
-		double t = (p.sub(ray.origin)).dot(normal) / ray.direction.dot(normal);
+	public double hit(final Ray ray, final ShadeRec sr, final Stack stack) {
+		// p.sub(ray.origin)
+		double dx = p.x - ray.origin.x;
+		double dy = p.y - ray.origin.y;
+		double dz = p.z - ray.origin.z;
+		// (p.sub(ray.origin)).dot(normal)
+		dx = dx * normal.x;
+		dy = dy * normal.y;
+		dz = dz * normal.z;
+
+		// ray.direction.dot(normal);
+		final double denominator = ray.direction.x * normal.x + ray.direction.y
+				* normal.y + ray.direction.z * normal.z;
+		double t = (dx + dy + dz) / denominator;
 
 		if (t > EPSILON) {
 			sr.normal = normal;
-			sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
+//			ray.origin.add(ray.direction.scale(t));
+			double x = ray.origin.x + (ray.direction.x * t);
+			double y = ray.origin.y + (ray.direction.y * t);
+			double z = ray.origin.z + (ray.direction.z * t);
+			
+			sr.localHitPoint = new Point3d(x, y, z);
 			return t;
 		} else {
 			return Double.NEGATIVE_INFINITY;
@@ -38,22 +55,22 @@ public class Plane extends GeometricObject {
 	@Override
 	public double shadowHit(final Ray ray, final Stack stack) {
 		// double t = (p.sub(ray.origin)).dot(normal) /
-				// ray.direction.dot(normal);
+		// ray.direction.dot(normal);
 
-				// p.sub(ray.origin)
-				double dx = p.x - ray.origin.x;
-				double dy = p.y - ray.origin.y;
-				double dz = p.z - ray.origin.z;
-				// (p.sub(ray.origin)).dot(normal)
-				dx = dx * normal.x;
-				dy = dy * normal.y;
-				dz = dz * normal.z;
+		// p.sub(ray.origin)
+		double dx = p.x - ray.origin.x;
+		double dy = p.y - ray.origin.y;
+		double dz = p.z - ray.origin.z;
+		// (p.sub(ray.origin)).dot(normal)
+		dx = dx * normal.x;
+		dy = dy * normal.y;
+		dz = dz * normal.z;
 
-				// ray.direction.dot(normal);
-				final double denominator = ray.direction.x * normal.x + ray.direction.y
-						* normal.y + ray.direction.z * normal.z;
+		// ray.direction.dot(normal);
+		final double denominator = ray.direction.x * normal.x + ray.direction.y
+				* normal.y + ray.direction.z * normal.z;
 
-				double t = (dx + dy + dz) / denominator;
+		double t = (dx + dy + dz) / denominator;
 
 		if (t > EPSILON) {
 			return t;
@@ -65,9 +82,10 @@ public class Plane extends GeometricObject {
 	@Override
 	public AABB createBoundingBox() {
 		final double v = Double.MAX_VALUE;
-		return new AABB(new Point3d(-v, v, EPSILON), new Point3d(v, -v, EPSILON));
+		return new AABB(new Point3d(-v, v, EPSILON),
+				new Point3d(v, -v, EPSILON));
 	}
-	
+
 	public double distanceFromRayOrigin(Ray ray) {
 		return (p.sub(ray.origin)).dot(normal) / ray.direction.dot(normal);
 	}
@@ -76,5 +94,5 @@ public class Plane extends GeometricObject {
 	public boolean isFinite() {
 		return false;
 	}
-	
+
 }
