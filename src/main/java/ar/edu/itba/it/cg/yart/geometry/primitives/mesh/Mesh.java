@@ -155,17 +155,11 @@ public class Mesh extends GeometricObject {
 
 	@Override
 	public double hit(Ray ray, ShadeRec sr, final Stack stack) {
-		if (!getBoundingBox().hit(ray)) {
-			return Double.NEGATIVE_INFINITY;
-		}
 		return kdTree.traceRayHit(ray, sr, stack);
 	}
 
 	@Override
 	public double shadowHit(Ray ray, final Stack stack) {
-		if (!getBoundingBox().hit(ray)) {
-			return Double.NEGATIVE_INFINITY;
-		}
 		return kdTree.traceShadowHit(ray, stack);
 	}
 
