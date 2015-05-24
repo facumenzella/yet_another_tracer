@@ -5,6 +5,7 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 import ar.edu.itba.it.cg.yart.transforms.Transformable;
 
+// Chapter 19 - RTFTGU
 public class AABB implements Transformable {
 
 	private static final double EPSILON = 0.0001;
@@ -66,7 +67,7 @@ public class AABB implements Transformable {
 		} else {
 			t0 = ty_min;
 		}
-		if (tz_min > 0) {
+		if (tz_min > t0) {
 			t0 = tz_min;
 		}
 		
