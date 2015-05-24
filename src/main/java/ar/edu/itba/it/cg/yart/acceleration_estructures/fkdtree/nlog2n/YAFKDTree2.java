@@ -52,9 +52,6 @@ public class YAFKDTree2 {
 	private AABB rootAABB;
 
 	public static KDLeafNode emptyLeaf = new KDLeafNode(null);
-	
-	private final double dir[] = new double[3];
-	private final double origin[] = new double[3];
 
 	private static AABB buildRootAABB(final List<GeometricObject> objects) {
 		double minX = Double.MAX_VALUE;
@@ -444,12 +441,8 @@ public class YAFKDTree2 {
 		int top = stack.index;
 		stack.push(root, tNear, tFar);
 		
-		dir[0] = ray.direction.x;
-		dir[1] = ray.direction.y;
-		dir[2] = ray.direction.z;
-		origin[0] = ray.origin.x;
-		origin[1] = ray.origin.y;
-		origin[2] = ray.origin.z;
+		double dir[] = {ray.direction.x, ray.direction.y, ray.direction.z};
+		double origin[] = {ray.origin.x, ray.origin.y, ray.origin.z};
 
 		while (true) {
 			StackElement e = stack.pop();
@@ -544,13 +537,9 @@ public class YAFKDTree2 {
 		int top = stack.index;
 		stack.push(root, tNear, tFar);
 		
-		dir[0] = ray.direction.x;
-		dir[1] = ray.direction.y;
-		dir[2] = ray.direction.z;
-		origin[0] = ray.origin.x;
-		origin[1] = ray.origin.y;
-		origin[2] = ray.origin.z;
-
+		double dir[] = {ray.direction.x, ray.direction.y, ray.direction.z};
+		double origin[] = {ray.origin.x, ray.origin.y, ray.origin.z};
+		
 		while (true) {
 			StackElement e = stack.pop();
 			node = e.node;
@@ -596,17 +585,12 @@ public class YAFKDTree2 {
 			List<GeometricObject> objects = leaf.gObjects;
 			if (ray.depth < AbstractTracer.MAX_DEPTH && objects != null) {
 				double tMin = tFar;
-				boolean hit = false;
 				for (GeometricObject object : objects) {
 					double t = object.shadowHit(ray, stack);
 					if (t != Double.NEGATIVE_INFINITY && t < tMin) {
-						tMin = t;
-						hit = true;
+						stack.index = top;
+						return tMin;
 					}
-				}
-				if (hit) {
-					stack.index = top;
-					return tMin;
 				}
 			}
 			// If stack is empty
@@ -621,13 +605,13 @@ public class YAFKDTree2 {
 		double tNear = 0;
 		double tFar = kTMAX;
 		KDNode node = null;
-		
-		final double dir[] = new double[3];
-		final double origin[] = new double[3];
 
 		int top = stack.index;
 		stack.push(root, tNear, tFar);
 
+		double dir[] = {ray.direction.x, ray.direction.y, ray.direction.z};
+		double origin[] = {ray.origin.x, ray.origin.y, ray.origin.z};
+		
 		while (true) {
 			StackElement e = stack.pop();
 			node = e.node;
