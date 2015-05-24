@@ -13,6 +13,7 @@ import ar.edu.itba.it.cg.yart.parser.SceneParser;
 import ar.edu.itba.it.cg.yart.raytracer.RenderResult;
 import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.AbstractTracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 import ar.edu.itba.it.cg.yart.ui.RenderWindow;
 import ar.edu.itba.it.cg.yart.utils.ImageSaver;
@@ -32,6 +33,7 @@ public class YartApp {
 		
 		RenderResult renderResult = new RenderResult();
 		
+		int rayDepth = 4;
 		int numSamples = 4;
 		int benchmarkRuns = 0;
 		boolean guiRender = false;
@@ -82,6 +84,14 @@ public class YartApp {
 				}
 			}
 			
+			if (cmd.hasOption("d")) {
+				rayDepth = Integer.valueOf(cmd.getOptionValue("d"));
+				
+				if (rayDepth <= 0) {
+					throw new ParseException("Ray depth must be a positive integer");
+				}
+			}
+			
 			if (cmd.hasOption('b')) {
 				benchmarkRuns = Integer.valueOf(cmd.getOptionValue('b'));
 				
@@ -97,6 +107,7 @@ public class YartApp {
 			}
 			
 			// Apply command line parameters
+			AbstractTracer.MAX_DEPTH = rayDepth;
 			RayTracer raytracer = new SimpleRayTracer(renderResult, bucketSize, tMax, distance, zoom, numSamples, cores);
 			if (StringUtils.isEmpty(sceneFile)) {
 				World w = new World();
