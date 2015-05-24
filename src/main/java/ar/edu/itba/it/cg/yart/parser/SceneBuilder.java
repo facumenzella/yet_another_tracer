@@ -22,6 +22,7 @@ import ar.edu.itba.it.cg.yart.geometry.Instance;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
+import ar.edu.itba.it.cg.yart.geometry.primitives.MeshBox;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Plane;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Sphere;
 import ar.edu.itba.it.cg.yart.geometry.primitives.mesh.Mesh;
@@ -68,6 +69,7 @@ public class SceneBuilder {
 	
 	private final Sphere referenceSphere = new Sphere();
 	private final Plane referencePlane = new Plane();
+	private final MeshBox referenceBox = new MeshBox();
 	
 	private Path basePath = Paths.get(".").normalize();
 	
@@ -365,6 +367,14 @@ public class SceneBuilder {
 				double rZ = Math.toDegrees(Math.atan2(normal.y, normal.x));
 				localMatrix = localMatrix.rotateX(rX).rotateY(rY).rotateZ(rZ);
 				instance = new Instance(referencePlane);
+			}
+			else if (strType.equals("box")) {
+				double width = identifier.getDouble("width", 1);
+				double height = identifier.getDouble("height", 1);
+				double depth = identifier.getDouble("depth", 1);
+				
+				localMatrix = localMatrix.scale(width, height, depth);
+				instance = new Instance(referenceBox);
 			}
 			else if (strType.equals("mesh")) {
 				final int[] triIndicesArray = identifier.getIntegers("triindices");
