@@ -53,7 +53,28 @@ public class YAFKDTree2 {
 
 	public static KDLeafNode emptyLeaf = new KDLeafNode(null);
 
+	private static AABB buildInfiniteRootAABB(final List<GeometricObject> objects) {
+		double minX = -Double.MAX_VALUE;
+		double minY = minX, minZ = minX;
+		double maxX = Double.MAX_VALUE;
+		double maxY = maxX, maxZ = maxX;
+
+		return new AABB(new Point3d(minX, maxY, minZ), new Point3d(maxX, minY,
+				maxZ));
+	}
+	
 	private static AABB buildRootAABB(final List<GeometricObject> objects) {
+		boolean allFinite = true;
+		for (GeometricObject geometricObject : objects) {
+			if (!geometricObject.isFinite()) {
+				allFinite = false;
+			}
+		}
+		
+		if (!allFinite) {
+			return YAFKDTree2.buildInfiniteRootAABB(objects);
+		}
+		
 		double minX = Double.MAX_VALUE;
 		double minY = minX, minZ = minX;
 		double maxX = -Double.MAX_VALUE;
@@ -61,19 +82,17 @@ public class YAFKDTree2 {
 
 		for (GeometricObject g : objects) {
 			AABB b = g.getBoundingBox();
-			if (b != null && g.isFinite()) {
 				minX = Math.min(minX, b.p0.x - kEPSILON);
 				minZ = Math.min(minZ, b.p0.z - kEPSILON);
 				minY = Math.min(minY, b.p1.y - kEPSILON);
 				maxX = Math.max(maxX, b.p1.x + kEPSILON);
 				maxY = Math.max(maxY, b.p0.y + kEPSILON);
 				maxZ = Math.max(maxZ, b.p1.z + kEPSILON);
-			}
 		}
 		return new AABB(new Point3d(minX, maxY, minZ), new Point3d(maxX, minY,
 				maxZ));
 	}
-
+ 
 	public static YAFKDTree2 build(final List<GeometricObject> gObjects) {
 		final AABB aabb = YAFKDTree2.buildRootAABB(gObjects);
 		return YAFKDTree2.build(gObjects, aabb);
