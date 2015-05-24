@@ -19,7 +19,6 @@ import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.KDInternalNode;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.KDLeafNode;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.KDNode;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.PlaneCandidate;
-import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.SplitAxis;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.SplitPoint;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack.StackElement;
@@ -176,17 +175,17 @@ public class YAFKDTree2 {
 		AABB leftBox = null;
 		AABB rightBox = null;
 		switch (p.axis) {
-		case X:
+		case 0:
 			leftBox = new AABB(box.p0, new Point3d(p.point, box.p1.y, box.p1.z));
 			rightBox = new AABB(new Point3d(p.point, box.p0.y, box.p0.z),
 					box.p1);
 			break;
-		case Y:
+		case 1:
 			leftBox = new AABB(new Point3d(box.p0.x, p.point, box.p0.z), box.p1);
 			rightBox = new AABB(box.p0,
 					new Point3d(box.p1.x, p.point, box.p1.z));
 			break;
-		case Z:
+		case 2:
 			leftBox = new AABB(box.p0, new Point3d(box.p1.x, box.p1.y, p.point));
 			rightBox = new AABB(new Point3d(box.p0.x, box.p0.y, p.point),
 					box.p1);
@@ -222,18 +221,18 @@ public class YAFKDTree2 {
 
 			Event e = events[i];
 
-			while (i < eventsQty && events[i].axis.value == e.axis.value
+			while (i < eventsQty && events[i].axis == e.axis
 					&& events[i].point == e.point
 					&& events[i].type == EventType.END) {
 				i++;
 				switch (e.splitPoint.axis) {
-				case X:
+				case 0:
 					pENDX++;
 					break;
-				case Y:
+				case 1:
 					pENDY++;
 					break;
-				case Z:
+				case 2:
 					pENDZ++;
 					break;
 				default:
@@ -241,36 +240,36 @@ public class YAFKDTree2 {
 				}
 			}
 
-			while (i < eventsQty && events[i].axis.value == e.axis.value
+			while (i < eventsQty && events[i].axis == e.axis
 					&& events[i].point == e.point
 					&& events[i].type == EventType.START) {
 				i++;
 				switch (e.splitPoint.axis) {
-				case X:
+				case 0:
 					pSTARTX++;
 					break;
-				case Y:
+				case 1:
 					pSTARTY++;
 					break;
-				case Z:
+				case 2:
 					pSTARTZ++;
 					break;
 				default:
 					System.out.println("Holy shit the impossible happened");
 				}
 			}
-			while (i < eventsQty && events[i].axis.value == e.axis.value
+			while (i < eventsQty && events[i].axis == e.axis
 					&& events[i].point == e.point
 					&& events[i].type == EventType.PLANAR) {
 				i++;
 				switch (e.splitPoint.axis) {
-				case X:
+				case 0:
 					pPLANARX++;
 					break;
-				case Y:
+				case 1:
 					pPLANARY++;
 					break;
-				case Z:
+				case 2:
 					pPLANARZ++;
 					break;
 				default:
@@ -280,7 +279,7 @@ public class YAFKDTree2 {
 
 			PlaneCandidate candidate = null;
 			switch (e.splitPoint.axis) {
-			case X:
+			case 0:
 				nPX = pPLANARX;
 				nRX -= pPLANARX;
 				nRX -= pENDX;
@@ -289,7 +288,7 @@ public class YAFKDTree2 {
 				nLX += pPLANARX;
 				nLX += pSTARTX;
 				break;
-			case Y:
+			case 1:
 				nPY = pPLANARY;
 				nRY -= pPLANARY;
 				nRY -= pENDY;
@@ -298,7 +297,7 @@ public class YAFKDTree2 {
 				nLY += pPLANARY;
 				nLY += pSTARTY;
 				break;
-			case Z:
+			case 2:
 				nPZ = pPLANARZ;
 				nRZ -= pPLANARZ;
 				nRZ -= pENDZ;
@@ -371,7 +370,7 @@ public class YAFKDTree2 {
 
 		// 3 because we have 3 dimensions
 		// first x
-		SplitAxis axis = SplitAxis.X;
+		int axis = 0; //x;
 		double[] perfects = null;
 		perfects = perfectSplits.perfectXs;
 		double min = perfects[0];
@@ -397,7 +396,7 @@ public class YAFKDTree2 {
 
 		// then y
 		perfects = null;
-		axis = SplitAxis.Y;
+		axis = 1; //y
 		perfects = perfectSplits.perfectYs;
 
 		min = perfects[0];
@@ -423,7 +422,7 @@ public class YAFKDTree2 {
 
 		// finally z
 		perfects = null;
-		axis = SplitAxis.Z;
+		axis = 2; // z
 		perfects = perfectSplits.perfectZs;
 
 		min = perfects[0];
@@ -478,8 +477,8 @@ public class YAFKDTree2 {
 
 				KDNode near = null, far = null;
 				final double splitPoint = internalNode.splitPoint.point;
-				final double rayDirAxis = dir[internalNode.splitPoint.axis.value];
-				final double rayOriginAxis = origin[internalNode.splitPoint.axis.value];
+				final double rayDirAxis = dir[internalNode.splitPoint.axis];
+				final double rayOriginAxis = origin[internalNode.splitPoint.axis];
 
 				final double diff = splitPoint - rayOriginAxis;
 
@@ -574,8 +573,8 @@ public class YAFKDTree2 {
 
 				KDNode near = null, far = null;
 				final double splitPoint = internalNode.splitPoint.point;
-				final double rayDirAxis = dir[internalNode.splitPoint.axis.value];
-				final double rayOriginAxis = origin[internalNode.splitPoint.axis.value];
+				final double rayDirAxis = dir[internalNode.splitPoint.axis];
+				final double rayOriginAxis = origin[internalNode.splitPoint.axis];
 
 				final double diff = splitPoint - rayOriginAxis;
 
@@ -652,8 +651,8 @@ public class YAFKDTree2 {
 
 				KDNode near = null, far = null;
 				final double splitPoint = internalNode.splitPoint.point;
-				final double rayDirAxis = dir[internalNode.splitPoint.axis.value];
-				final double rayOriginAxis = origin[internalNode.splitPoint.axis.value];
+				final double rayDirAxis = dir[internalNode.splitPoint.axis];
+				final double rayOriginAxis = origin[internalNode.splitPoint.axis];
 
 				final double diff = splitPoint - rayOriginAxis;
 
@@ -771,7 +770,7 @@ public class YAFKDTree2 {
 		public final EventType type;
 		public final GeometricObject object;
 		public final double point;
-		public final SplitAxis axis;
+		public final int axis; // x=0, y=1, z=2
 		public final SplitPoint splitPoint;
 
 		public Event(final EventType type, final GeometricObject object,
@@ -793,7 +792,7 @@ public class YAFKDTree2 {
 				if (axis == o.axis) {
 					return type.value - o.type.value;
 				}
-				return axis.value - o.axis.value;
+				return axis - o.axis;
 			}
 			return 1;
 		}

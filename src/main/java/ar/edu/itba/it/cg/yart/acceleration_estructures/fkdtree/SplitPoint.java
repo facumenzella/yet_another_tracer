@@ -2,13 +2,13 @@ package ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree;
 
 public class SplitPoint {
 	
-	public SplitAxis axis;
+	public int axis; // x = 0, y = 1, z = 2
 	public double point;
 	public double cost;
 	
 	public SplitPoint(){};
 	
-	public SplitPoint(final SplitAxis axis, final double point) {
+	public SplitPoint(final int axis, final double point) {
 		this.axis = axis;
 		this.point = point;
 	}

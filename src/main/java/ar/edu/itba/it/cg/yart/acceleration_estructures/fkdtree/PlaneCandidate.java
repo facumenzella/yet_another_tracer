@@ -32,7 +32,7 @@ public class PlaneCandidate {
 		}
 		if (obj instanceof PlaneCandidate) {
 			PlaneCandidate other = (PlaneCandidate) obj;
-			return other.splitPoint.axis.value == this.splitPoint.axis.value
+			return other.splitPoint.axis == this.splitPoint.axis
 					&&  this.splitPoint.point - other.splitPoint.point < YAFKDTree2.kEPSILON;
 		} else {
 			return false;
