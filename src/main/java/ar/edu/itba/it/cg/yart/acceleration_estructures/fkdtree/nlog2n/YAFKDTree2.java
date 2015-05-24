@@ -51,8 +51,6 @@ public class YAFKDTree2 {
 	private KDNode root;
 	private AABB rootAABB;
 
-	public static KDLeafNode emptyLeaf = new KDLeafNode(null);
-
 	private static AABB buildInfiniteRootAABB(final List<GeometricObject> objects) {
 		double minX = -Double.MAX_VALUE;
 		double minY = minX, minZ = minX;
