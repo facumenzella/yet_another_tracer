@@ -64,8 +64,10 @@ public class PerfectTransmitter extends BTDF {
 		wt.copy(mWo);
 		
 		final double aux = Math.abs(sr.normal.dot(wt));
-		Color c1 = Color.whiteColor().multiplyEquals(aux);
-		return c1.multiply(kt.getColor(sr).multiply(1/etaSquared));
+		final Color c1 = Color.whiteColor();
+		c1.multiplyEquals(kt.getColor(sr).multiply(1/etaSquared));
+		c1.multiplyEquals(1/aux);
+		return c1;
 	}
 
 	@Override
@@ -73,11 +75,11 @@ public class PerfectTransmitter extends BTDF {
 		final Vector3d wo = sr.ray.direction.inverse();
 		final double cosThetai = sr.normal.dot(wo);
 		double eta = ior;
-		if (cosThetai < 0.0) {
+		if (cosThetai < 0.001) {
 			eta = 1 / eta;	
 		}
 		final double aux = 1.0 - (1.0 - cosThetai * cosThetai)/(eta * eta);
-		return (aux < 0.0);
+		return (aux < 0.001);
 	}
 
 }

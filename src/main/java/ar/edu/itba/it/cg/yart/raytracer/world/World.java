@@ -111,8 +111,8 @@ public class World {
 		final Instance earthMirror = new Instance(new Quadrilateral());
 		final Matrix4d earthMirrorTrans = Matrix4d.scaleMatrix(200,100,1).rotateZ(90).rotateY(90).transform(-10,-100,-30);
 		earthMirror.applyTransformation(earthMirrorTrans);
-		final Reflective r1m = new Reflective().setCd(earthMirrorTexture).setKa(0).setKd(1)
-				.setKs(0).setExp(0).setCr(Color.whiteColor()).setKr(earthMirrorReflection);
+		final Transparent r1m = new Transparent().setCd(earthMirrorTexture).setKa(0).setKd(1)
+				.setKs(0).setExp(0).setCr(Color.whiteColor()).setKr(0.5).setIor(1.1).setKt(0.5);
 		earthMirror.setMaterial(r1m);
 		
 		final Instance menzella = new Instance(new Quadrilateral());
@@ -126,7 +126,7 @@ public class World {
 		setBackgroundColor(Color.blackColor());
 
 		final Instance billiardBall = new Instance(new Sphere());
-		final Matrix4d ballTrans = Matrix4d.scaleMatrix(20, 20, 20).rotateY(0).transform(40,30,0);
+		final Matrix4d ballTrans = Matrix4d.scaleMatrix(20, 20, 20).rotateY(0).transform(40,40,-10);
 		billiardBall.applyTransformation(ballTrans);
 		Reflective s1m = new Reflective();
 		s1m.setCd(billiardBallTexture);
@@ -139,18 +139,18 @@ public class World {
 		billiardBall.setMaterial(s1m);
 		
 		final Instance waterGlass = new Instance(new Sphere());
-		final Matrix4d waterGlassTrans = Matrix4d.scaleMatrix(5, 5, 5).transform(70,-25,0);
+		final Matrix4d waterGlassTrans = Matrix4d.scaleMatrix(5, 5, 5).transform(100,-25,-25);
 		waterGlass.applyTransformation(waterGlassTrans);
 		Transparent waterGlassMaterial = new Transparent()
 		.setCd(Color.blackColor())
-		.setKa(0.2)
-		.setKd(0.5)
-		.setKs(0.7)
-		.setExp(100)
+		.setKa(0)
+		.setKd(0)
+		.setKs(0)
+		.setExp(0)
 		.setCr(Color.whiteColor())
-		.setKr(0.2)
-		.setIor(1)
-		.setKt(new Color(0.8, 0.8, 0.8));
+		.setKr(0.5)
+		.setIor(1.02)
+		.setKt(0.5);
 		waterGlass.setMaterial(waterGlassMaterial);
 		
 		final Instance floor = new Instance(new Plane());
