@@ -34,16 +34,16 @@ public class Plane extends GeometricObject {
 		dz = dz * normal.z;
 
 		// ray.direction.dot(normal);
-		final double denominator = ray.direction.x * normal.x + ray.direction.y
-				* normal.y + ray.direction.z * normal.z;
+		final double denominator = ray.direction[0] * normal.x + ray.direction[1]
+				* normal.y + ray.direction[2] * normal.z;
 		double t = (dx + dy + dz) / denominator;
 
 		if (t > EPSILON) {
 			sr.normal = normal;
 //			ray.origin.add(ray.direction.scale(t));
-			double x = ray.origin.x + (ray.direction.x * t);
-			double y = ray.origin.y + (ray.direction.y * t);
-			double z = ray.origin.z + (ray.direction.z * t);
+			double x = ray.origin.x + (ray.direction[0] * t);
+			double y = ray.origin.y + (ray.direction[1] * t);
+			double z = ray.origin.z + (ray.direction[2] * t);
 			
 			sr.localHitPoint = new Point3d(x, y, z);
 			return t;
@@ -67,8 +67,8 @@ public class Plane extends GeometricObject {
 		dz = dz * normal.z;
 
 		// ray.direction.dot(normal);
-		final double denominator = ray.direction.x * normal.x + ray.direction.y
-				* normal.y + ray.direction.z * normal.z;
+		final double denominator = ray.direction[0] * normal.x + ray.direction[1]
+				* normal.y + ray.direction[2] * normal.z;
 
 		double t = (dx + dy + dz) / denominator;
 
@@ -84,10 +84,6 @@ public class Plane extends GeometricObject {
 		final double v = Double.MAX_VALUE;
 		return new AABB(new Point3d(-v, v, EPSILON),
 				new Point3d(v, -v, EPSILON));
-	}
-
-	public double distanceFromRayOrigin(Ray ray) {
-		return (p.sub(ray.origin)).dot(normal) / ray.direction.dot(normal);
 	}
 
 	@Override

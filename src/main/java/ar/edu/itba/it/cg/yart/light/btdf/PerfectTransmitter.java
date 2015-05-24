@@ -70,7 +70,11 @@ public class PerfectTransmitter extends BTDF {
 
 	@Override
 	public boolean tir(ShadeRec sr) {
-		final Vector3d wo = sr.ray.direction.inverse();
+		final double dx = -sr.ray.direction[0];
+		final double dy = -sr.ray.direction[1];
+		final double dz = -sr.ray.direction[2];
+
+		final Vector3d wo = new Vector3d(dx, dy, dz);
 		final double cosThetai = sr.normal.dot(wo);
 		double eta = ior;
 		if (cosThetai < 0.0) {

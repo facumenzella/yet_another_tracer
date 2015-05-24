@@ -467,7 +467,7 @@ public class YAFKDTree2 {
 		int top = stack.index;
 		stack.push(root, tNear, tFar);
 		
-		double dir[] = {ray.direction.x, ray.direction.y, ray.direction.z};
+		double dir[] = ray.direction;
 		double origin[] = {ray.origin.x, ray.origin.y, ray.origin.z};
 
 		while (true) {
@@ -540,6 +540,11 @@ public class YAFKDTree2 {
 					sr.normal = normal;
 					sr.localHitPoint = localHitPoint;
 					sr.ray = ray;
+					final double dx = (m.m00 * sr.localHitPoint.x) + (m.m01 * sr.localHitPoint.y) + (m.m02 * sr.localHitPoint.z) + m.m03;
+					final double dy = (m.m10 * sr.localHitPoint.x) + (m.m11 * sr.localHitPoint.y) + (m.m12 * sr.localHitPoint.z) + m.m13;
+					final double dz = (m.m20 * sr.localHitPoint.x) + (m.m21 * sr.localHitPoint.y) + (m.m22 * sr.localHitPoint.z) + m.m23;
+					sr.hitPoint = new Point3d(dx, dy, dz);
+					
 					sr.u = u;
 					sr.v = v;
 					sr.hitPoint = sr.localHitPoint
@@ -565,7 +570,7 @@ public class YAFKDTree2 {
 		int top = stack.index;
 		stack.push(root, tNear, tFar);
 		
-		double dir[] = {ray.direction.x, ray.direction.y, ray.direction.z};
+		double dir[] = ray.direction;
 		double origin[] = {ray.origin.x, ray.origin.y, ray.origin.z};
 		
 		while (true) {
@@ -637,7 +642,7 @@ public class YAFKDTree2 {
 		int top = stack.index;
 		stack.push(root, tNear, tFar);
 
-		double dir[] = {ray.direction.x, ray.direction.y, ray.direction.z};
+		double dir[] = ray.direction;
 		double origin[] = {ray.origin.x, ray.origin.y, ray.origin.z};
 		
 		while (true) {
@@ -646,13 +651,6 @@ public class YAFKDTree2 {
 			tNear = e.min;
 			tFar = e.max;
 			while (!node.isLeaf()) {
-				dir[0] = ray.direction.x;
-				dir[1] = ray.direction.y;
-				dir[2] = ray.direction.z;
-				origin[0] = ray.origin.x;
-				origin[1] = ray.origin.y;
-				origin[2] = ray.origin.z;
-
 				KDInternalNode internalNode = (KDInternalNode) node;
 
 				KDNode near = null, far = null;

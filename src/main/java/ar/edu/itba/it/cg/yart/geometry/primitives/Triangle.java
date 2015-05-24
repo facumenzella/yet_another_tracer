@@ -37,11 +37,11 @@ public class Triangle extends GeometricObject{
 		// This is too much
 		// Check out Ray Tracing from the ground up (page 367)
 		final double a = this.pointA.x - this.pointB.x, b = this.pointA.x - this.pointC.x;
-		final double c = ray.direction.x,  d = this.pointA.x - ray.origin.x;
+		final double c = ray.direction[0],  d = this.pointA.x - ray.origin.x;
 		final double e = this.pointA.y - this.pointB.y, f = this.pointA.y - this.pointC.y;
-		final double g = ray.direction.y, h = this.pointA.y - ray.origin.y;
+		final double g = ray.direction[1], h = this.pointA.y - ray.origin.y;
 		final double i = this.pointA.z - this.pointB.z, j = this.pointA.z - this.pointC.z;
-		final double k = ray.direction.z, l = this.pointA.z - ray.origin.z;
+		final double k = ray.direction[2], l = this.pointA.z - ray.origin.z;
 		
 		final double m = (f * k) - (g * j), n = (h * k) - (g * l), p = (f * l) - (h * j);
 		final double q = (g * i) - (e * k), s = (e * j) - (f * i);
@@ -74,7 +74,12 @@ public class Triangle extends GeometricObject{
 			return Double.NEGATIVE_INFINITY;
 		}
 		sr.normal = normal;
-		sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
+//		ray.origin.add(ray.direction.scale(t));
+		double x = ray.origin.x + (ray.direction[0] * t);
+		double y = ray.origin.y + (ray.direction[1] * t);
+		double z = ray.origin.z + (ray.direction[2] * t);
+		
+		sr.localHitPoint = new Point3d(x, y, z);
 		return t;
 	}
 	

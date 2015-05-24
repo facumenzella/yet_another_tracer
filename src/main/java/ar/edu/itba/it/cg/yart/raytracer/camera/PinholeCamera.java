@@ -49,7 +49,7 @@ public class PinholeCamera extends CameraAbstract {
 
 		World world = rayTracer.getWorld();
 		ShadeRec sr =  new ShadeRec(world);
-		Vector3d d = new Vector3d(0,0,0);
+		final double[] d = new double[3];
 		
 		int row = yStart;
 		int col = xStart;
@@ -76,9 +76,9 @@ public class PinholeCamera extends CameraAbstract {
 				final double dy = u.y * x + v.y * y - w.y * distance;
 				final double dz = u.z * x + v.z * y - w.z * distance;
 				final double length = Math.sqrt(dx*dx + dy*dy + dz*dz);
-				d.x = dx / length;
-				d.y = dy / length;
-				d.z = dz / length;
+				d[0] = dx / length;
+				d[1] = dy / length;
+				d[2] = dz / length;
 				
 				ray.direction = d;
 				sr.hitObject = false;
