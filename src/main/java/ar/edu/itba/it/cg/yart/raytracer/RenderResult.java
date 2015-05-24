@@ -13,6 +13,8 @@ public class RenderResult {
 	private long preprocessingTime;
 	private ArrayIntegerMatrix pixels;
 	
+	private boolean displayRenderTime = false;
+	
 	public void setPixels(final ArrayIntegerMatrix pixels) {
 		this.pixels = pixels;
 	}
@@ -59,6 +61,14 @@ public class RenderResult {
 
 	public void finishRender() {
 		this.renderTime = getElapsedTime(renderStartTime);
+	}
+	
+	public void setDisplayRenderTime(final boolean display) {
+		this.displayRenderTime = display;
+	}
+	
+	public boolean isDisplayRenderTime() {
+		return displayRenderTime;
 	}
 
 	private long getElapsedTime(final long startTime) {

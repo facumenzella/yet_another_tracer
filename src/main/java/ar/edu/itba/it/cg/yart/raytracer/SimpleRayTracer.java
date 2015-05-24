@@ -34,7 +34,16 @@ public class SimpleRayTracer implements RayTracer {
 	private int bucketSize;
 	private int numSamples;
 	
-	private RaytracerCallbacks callbacks;
+	private RaytracerCallbacks callbacks = new RaytracerCallbacks() {
+		
+		@Override
+		public void onRenderFinished(RenderResult result) {
+		}
+		
+		@Override
+		public void onBucketFinished(Bucket bucket, RenderResult result) {
+		}
+	};
 	private final ExecutorService executor;
 	private Deque<Bucket> buckets;
 	private Camera camera;
@@ -42,9 +51,9 @@ public class SimpleRayTracer implements RayTracer {
 
 	public interface RaytracerCallbacks {
 		public void onBucketFinished(final Bucket bucket,
-				final ArrayIntegerMatrix result);
+				final RenderResult result);
 
-		public void onRenderFinished(final ArrayIntegerMatrix result);
+		public void onRenderFinished(final RenderResult result);
 	}
 
 	
@@ -76,16 +85,11 @@ public class SimpleRayTracer implements RayTracer {
 
 			camera.renderScene(bucket, this, result, this.stacks[0]);
 
-			if (callbacks != null) {
-				callbacks.onBucketFinished(bucket, result);
-			}
+			callbacks.onBucketFinished(bucket, renderResult);
 		}
 
-		if (callbacks != null) {
-			callbacks.onRenderFinished(result);
-		}
-		
 		renderResult.finishRender();
+		callbacks.onRenderFinished(renderResult);
 
 		return renderResult;
 	}
@@ -111,17 +115,15 @@ public class SimpleRayTracer implements RayTracer {
 					result, new RaytracerCallbacks() {
 
 						@Override
-						public void onRenderFinished(ArrayIntegerMatrix result) {
+						public void onRenderFinished(RenderResult result) {
 							// TODO fix this
 							return;
 						}
 
 						@Override
 						public void onBucketFinished(Bucket bucket,
-								ArrayIntegerMatrix result) {
-							if (callbacks != null) {
-								callbacks.onBucketFinished(bucket, result);
-							}
+								RenderResult result) {
+							callbacks.onBucketFinished(bucket, renderResult);
 							latch.countDown();
 						}
 						}, this.stacks[i]));
@@ -132,11 +134,10 @@ public class SimpleRayTracer implements RayTracer {
 		} catch (InterruptedException e) {
 			System.out.println("We fucked up");
 		} finally {
-			if (callbacks != null)
-				callbacks.onRenderFinished(result);
+			renderResult.finishRender();
+			callbacks.onRenderFinished(renderResult);
 		}
-
-		renderResult.finishRender();
+		
 		return renderResult;
 	}
 	

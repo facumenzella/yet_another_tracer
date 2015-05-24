@@ -33,7 +33,7 @@ public class BucketWorker implements Runnable {
 			Bucket bucket = buckets.poll();
 			while (!emptyQueue) {
 				raytracer.getCamera().renderScene(bucket, raytracer, result, stack);
-				callback.onBucketFinished(bucket, result);
+				callback.onBucketFinished(bucket, null);
 				emptyQueue = buckets.isEmpty();
 				if (!emptyQueue) {
 					bucket = buckets.poll();
