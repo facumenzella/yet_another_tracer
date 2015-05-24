@@ -142,15 +142,15 @@ public class World {
 		final Matrix4d waterGlassTrans = Matrix4d.scaleMatrix(5, 5, 5).transform(100,-25,-25);
 		waterGlass.applyTransformation(waterGlassTrans);
 		Transparent waterGlassMaterial = new Transparent()
-		.setCd(Color.blackColor())
+		.setCd(Color.redColor())
 		.setKa(0)
 		.setKd(0)
-		.setKs(0)
-		.setExp(0)
+		.setKs(0.5)
+		.setExp(100)
 		.setCr(Color.whiteColor())
 		.setKr(0.5)
-		.setIor(1.02)
-		.setKt(0.5);
+		.setIor(1.33)
+		.setKt(0.9);
 		waterGlass.setMaterial(waterGlassMaterial);
 		
 		final Instance floor = new Instance(new Plane());
