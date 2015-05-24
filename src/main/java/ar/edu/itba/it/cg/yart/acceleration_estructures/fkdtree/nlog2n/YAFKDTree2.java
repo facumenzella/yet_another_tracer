@@ -434,6 +434,10 @@ public class YAFKDTree2 {
 
 	// Here we trace rays. Work for kids
 	public Color traceRay(final Ray ray, final ShadeRec sr, final Stack stack) {
+		if (!rootAABB.hit(ray)){
+			return sr.world.getBackgroundColor();
+		}
+		
 		double tNear = 0;
 		double tFar = kTMAX;
 		KDNode node = null;
@@ -530,6 +534,10 @@ public class YAFKDTree2 {
 	}
 
 	public double traceShadowHit(final Ray ray, final Stack stack) {
+		if (!rootAABB.hit(ray)){
+			return Double.NEGATIVE_INFINITY;
+		}
+		
 		double tNear = 0;
 		double tFar = kTMAX;
 		KDNode node = null;
@@ -602,6 +610,10 @@ public class YAFKDTree2 {
 
 	public double traceRayHit(final Ray ray, final ShadeRec sr,
 			final Stack stack) {
+		if (!rootAABB.hit(ray)){
+			return Double.NEGATIVE_INFINITY;
+		}
+		
 		double tNear = 0;
 		double tFar = kTMAX;
 		KDNode node = null;
