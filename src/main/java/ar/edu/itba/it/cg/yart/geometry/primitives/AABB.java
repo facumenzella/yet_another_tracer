@@ -25,11 +25,11 @@ public class AABB implements Transformable {
 
 	public boolean hit(final Ray ray) {
 		final double ox = ray.origin.x;
-		final double dx = ray.direction.x;
+		final double dx = ray.direction[0];
 		final double oy = ray.origin.y;
-		final double dy = ray.direction.y;
+		final double dy = ray.direction[1];
 		final double oz = ray.origin.z;
-		final double dz = ray.direction.z;
+		final double dz = ray.direction[2];
 		
 		double tx_min, ty_min, tz_min;
 		double tx_max, ty_max, tz_max;

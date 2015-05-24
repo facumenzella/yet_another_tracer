@@ -19,9 +19,9 @@ public class SmoothMeshTriangle extends MeshTriangle{
 			return Double.NEGATIVE_INFINITY;
 		}
 		
-		double a = p0.x - p1.x, b = p0.x - p2.x, c = ray.direction.x, d = p0.x - ray.origin.x; 
-		double e = p0.y - p1.y, f = p0.y - p2.y, g = ray.direction.y, h = p0.y - ray.origin.y;
-		double i = p0.z - p1.z, j = p0.z - p2.z, k = ray.direction.z, l = p0.z - ray.origin.z;
+		double a = p0.x - p1.x, b = p0.x - p2.x, c = ray.direction[0], d = p0.x - ray.origin.x; 
+		double e = p0.y - p1.y, f = p0.y - p2.y, g = ray.direction[1], h = p0.y - ray.origin.y;
+		double i = p0.z - p1.z, j = p0.z - p2.z, k = ray.direction[2], l = p0.z - ray.origin.z;
 			
 		double m = f * k - g * j, n = h * k - g * l, p = f * l - h * j;
 		double q = g * i - e * k, r = e * l - h * i, s = e * j - f * i;
@@ -55,9 +55,9 @@ public class SmoothMeshTriangle extends MeshTriangle{
 		sr.normal = this.interpolateNormal(beta, gamma);
 		
 //		ray.origin.add(ray.direction.scale(t));
-		double x = ray.origin.x + (ray.direction.x * t);
-		double y = ray.origin.y + (ray.direction.y * t);
-		double z = ray.origin.z + (ray.direction.z * t);
+		double x = ray.origin.x + (ray.direction[0] * t);
+		double y = ray.origin.y + (ray.direction[1] * t);
+		double z = ray.origin.z + (ray.direction[2] * t);
 		
 		sr.localHitPoint = new Point3d(x, y, z);
 		if (mesh.u != null && mesh.v != null) {
@@ -74,9 +74,9 @@ public class SmoothMeshTriangle extends MeshTriangle{
 			return Double.NEGATIVE_INFINITY;
 		}
 		
-		double a = p0.x - p1.x, b = p0.x - p2.x, c = ray.direction.x, d = p0.x - ray.origin.x; 
-		double e = p0.y - p1.y, f = p0.y - p2.y, g = ray.direction.y, h = p0.y - ray.origin.y;
-		double i = p0.z - p1.z, j = p0.z - p2.z, k = ray.direction.z, l = p0.z - ray.origin.z;
+		double a = p0.x - p1.x, b = p0.x - p2.x, c = ray.direction[0], d = p0.x - ray.origin.x; 
+		double e = p0.y - p1.y, f = p0.y - p2.y, g = ray.direction[1], h = p0.y - ray.origin.y;
+		double i = p0.z - p1.z, j = p0.z - p2.z, k = ray.direction[2], l = p0.z - ray.origin.z;
 			
 		double m = f * k - g * j, n = h * k - g * l, p = f * l - h * j;
 		double q = g * i - e * k, r = e * l - h * i, s = e * j - f * i;

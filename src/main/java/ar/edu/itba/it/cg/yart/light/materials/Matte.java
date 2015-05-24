@@ -19,7 +19,11 @@ public class Matte extends MaterialAbstract {
 
 	@Override
 	public Color shade(ShadeRec sr, final Stack stack) {
-		final Vector3d wo = sr.ray.direction.inverse();
+		final double dx = -sr.ray.direction[0];
+		final double dy = -sr.ray.direction[1];
+		final double dz = -sr.ray.direction[2];
+
+		final Vector3d wo = new Vector3d(dx, dy, dz);
 		final Color colorL = diffuseBRDF.rho(sr, wo);
 		colorL.multiplyEquals(sr.world.getAmbientLight().L(sr));
 

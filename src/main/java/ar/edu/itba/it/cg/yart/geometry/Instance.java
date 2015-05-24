@@ -34,7 +34,17 @@ public class Instance extends GeometricObject{
 		Ray invRay = new Ray(ray.origin);
 		// apply the inverse set of transformations to the ray to produce an inverse transformed ray
 		invRay.origin = ray.origin.transformByMatrix(invMatrix);
-		invRay.direction = ray.direction.transformByMatrix(invMatrix);
+		
+		final double dx = (invMatrix.m00 * ray.direction[0]) + (invMatrix.m01 * ray.direction[1]) + (invMatrix.m02 * ray.direction[2]);
+		final double dy = (invMatrix.m10 * ray.direction[0]) + (invMatrix.m11 * ray.direction[1]) + (invMatrix.m12 * ray.direction[2]);
+		final double dz = (invMatrix.m20 * ray.direction[0]) + (invMatrix.m21 * ray.direction[1]) + (invMatrix.m22 * ray.direction[2]);
+		
+		double d[] = new double[3];
+		d[0] = dx;
+		d[1] = dy;
+		d[2] = dz;
+		
+		invRay.direction = d;
 		
 		final double t = object.hit(invRay, sr, stack);
 		if (t != Double.NEGATIVE_INFINITY) {
@@ -53,8 +63,16 @@ public class Instance extends GeometricObject{
 		Ray invRay = new Ray(ray.origin);
 		// apply the inverse set of transformations to the ray to produce an inverse transformed ray
 		invRay.origin = ray.origin.transformByMatrix(invMatrix);
-		invRay.direction = ray.direction.transformByMatrix(invMatrix);
+		final double dx = (invMatrix.m00 * ray.direction[0]) + (invMatrix.m01 * ray.direction[1]) + (invMatrix.m02 * ray.direction[2]);
+		final double dy = (invMatrix.m10 * ray.direction[0]) + (invMatrix.m11 * ray.direction[1]) + (invMatrix.m12 * ray.direction[2]);
+		final double dz = (invMatrix.m20 * ray.direction[0]) + (invMatrix.m21 * ray.direction[1]) + (invMatrix.m22 * ray.direction[2]);
 		
+		double d[] = new double[3];
+		d[0] = dx;
+		d[1] = dy;
+		d[2] = dz;
+		
+		invRay.direction = d;
 		final double t = object.shadowHit(invRay, stack);
 		return t;
 	}

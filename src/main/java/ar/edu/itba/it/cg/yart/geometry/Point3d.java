@@ -30,10 +30,6 @@ public class Point3d {
 		return new Point3d(x + other.x, y + other.y, z + other.z);
 	}
 	
-	public Point3d add(final MutableVector3d other) {
-		return new Point3d(x + other.x, y + other.y, z + other.z);
-	}
-	
 	public double distance(final Point3d other) {
 		return this.sub(other).length;
 	}

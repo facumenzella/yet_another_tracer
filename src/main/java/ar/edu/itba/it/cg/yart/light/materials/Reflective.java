@@ -70,7 +70,11 @@ public class Reflective extends Phong implements Material{
 	@Override
 	public Color shade(ShadeRec sr, final Stack stack) {
 		Color colorL = super.shade(sr, stack);
-		Vector3d wo = sr.ray.direction.inverse();
+		final double dx = -sr.ray.direction[0];
+		final double dy = -sr.ray.direction[1];
+		final double dz = -sr.ray.direction[2];
+
+		final Vector3d wo = new Vector3d(dx, dy, dz);
 		Vector3d wi = new Vector3d(0,0,0);
 		Color fr = reflectiveBRDF.sample_f(sr, wo, wi);
 		Ray reflectedRay = new Ray(sr.hitPoint, wi);

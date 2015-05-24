@@ -21,9 +21,9 @@ public class Disc extends Plane{
 		if (t<= EPSILON) {
 			return Double.NEGATIVE_INFINITY;
 		}
-		final double dx = ray.direction.x;
-		final double dy = ray.direction.y;
-		final double dz = ray.direction.z;
+		final double dx = ray.direction[0];
+		final double dy = ray.direction[1];
+		final double dz = ray.direction[2];
 		final Point3d tmp = new Point3d(t*dx, t*dy, t*dz);
 		final Point3d intersection = ray.origin.add(tmp);
 		
