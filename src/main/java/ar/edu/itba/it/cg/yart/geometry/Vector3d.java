@@ -93,13 +93,6 @@ public class Vector3d {
 		this.length = other.length;
 	}
 	
-	public void copy(final MutableVector3d other) {
-		this.x = other.x;
-		this.y = other.y;
-		this.z = other.z;
-		this.length = other.length;
-	}
-	
 	public Vector3d transformByMatrix(final Matrix4d matrix) {
 		final double dx = (matrix.m00 * this.x) + (matrix.m01 * this.y) + (matrix.m02 * this.z);
 		final double dy = (matrix.m10 * this.x) + (matrix.m11 * this.y) + (matrix.m12 * this.z);

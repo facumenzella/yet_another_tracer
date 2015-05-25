@@ -34,7 +34,7 @@ import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class World {
 
-	private Color backgroundColor;
+	public Color backgroundColor;
 	private List<GeometricObject> objects = new ArrayList<GeometricObject>();
 	private List<Mesh> meshes = new ArrayList<Mesh>();
 	private List<Light> lights = new ArrayList<Light>();
@@ -201,9 +201,9 @@ public class World {
 		backgroundColor = new Color(color.r, color.g, color.b, color.a);
 	}
 	
-	public Color getBackgroundColor() {
-		return ambientLight.getColor();
-	}
+//	public Color getBackgroundColor() {
+//		return ambientLight.getColor();
+//	}
 	
 	public void addObjects(final List<GeometricObject> objects) {
 		for (GeometricObject o : objects) {
