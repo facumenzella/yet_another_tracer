@@ -1,0 +1,32 @@
+# Materials File
+
+Texture "EarthDiffuse" "color" "imagemap"
+	"string filename" ["Textures/earthdiffuse.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["spherical"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+Texture "EarthDiffuse" "color" "imagemap"
+	"string filename" ["Textures/earthreflect.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["spherical"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "Earth"
+	"texture Kd" ["EarthDiffuse"]
+	"texture Kr" ["EarthReflect"]
+	"string type" ["mirror"]
