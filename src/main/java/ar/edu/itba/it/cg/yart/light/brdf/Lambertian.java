@@ -60,5 +60,9 @@ public class Lambertian extends BRDF {
 	public void setCd(final Texture cd) {
 		this.cd = cd;
 	}
+	
+	public Color getCd(ShadeRec sr) {
+		return new Color(cd.getColor(sr));
+	}
 
 }

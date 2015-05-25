@@ -24,9 +24,9 @@ public class Matte extends MaterialAbstract {
 		final double dz = -sr.ray.direction[2];
 
 		final Vector3d wo = new Vector3d(dx, dy, dz);
-		final Color colorL = ambientBRDF.rho(sr, wo);
+		final Color colorL = ambientBRDF.getCd(sr);
 		final Color a = sr.world.getAmbientLight().L(sr);
-		
+
 		colorL.r *= a.r;
 		colorL.g *= a.g;
 		colorL.b *= a.b;
@@ -45,7 +45,7 @@ public class Matte extends MaterialAbstract {
 				aux.r *= li.r * ndotwi;
 				aux.g *= li.g * ndotwi;
 				aux.b *= li.b * ndotwi;
-				
+
 				colorL.r += aux.r;
 				colorL.g += aux.g;
 				colorL.b += aux.b;
@@ -67,7 +67,7 @@ public class Matte extends MaterialAbstract {
 					aux.r *= li.r * ndotwi;
 					aux.g *= li.g * ndotwi;
 					aux.b *= li.b * ndotwi;
-					
+
 					colorL.r += aux.r;
 					colorL.g += aux.g;
 					colorL.b += aux.b;
@@ -87,16 +87,17 @@ public class Matte extends MaterialAbstract {
 		diffuseBRDF.setKd(kd);
 		return this;
 	}
-	
+
 	public Matte setKd(final Color kd) {
 		diffuseBRDF.setKd(kd);
 		return this;
 	}
-	
+
 	public Matte setKd(final Texture kd) {
 		diffuseBRDF.setKd(kd);
 		return this;
 	}
+
 	public Matte setCd(final double cd) {
 		final Color color = new Color(cd);
 		return setCd(color);
