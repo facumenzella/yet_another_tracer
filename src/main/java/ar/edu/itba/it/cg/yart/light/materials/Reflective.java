@@ -81,9 +81,15 @@ public class Reflective extends Phong implements Material{
 		reflectedRay.depth = sr.depth + 1;
 
 		Color c = sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world), stack);
-		fr.multiplyEquals(c);
-		fr.multiplyEquals(sr.normal.dot(wi));
-		colorL.addEquals(fr);
+		
+		final double factor = sr.normal.dot(wi);
+		fr.r *= c.r * factor;
+		fr.g *= c.g * factor;
+		fr.b *= c.b * factor;
+
+		colorL.r += fr.r;
+		colorL.g += fr.g;
+		colorL.b += fr.b;
 		
 		return colorL;
 	}
