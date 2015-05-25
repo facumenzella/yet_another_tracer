@@ -12,9 +12,7 @@ import ar.edu.itba.it.cg.yart.parser.SceneParseException;
 import ar.edu.itba.it.cg.yart.parser.SceneParser;
 import ar.edu.itba.it.cg.yart.raytracer.RenderResult;
 import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer;
-import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.AbstractTracer;
-import ar.edu.itba.it.cg.yart.raytracer.world.World;
 import ar.edu.itba.it.cg.yart.ui.RenderWindow;
 import ar.edu.itba.it.cg.yart.utils.ImageSaver;
 import ar.edu.itba.it.cg.yart.utils.config.YartConfigProvider;
@@ -25,8 +23,6 @@ public class YartApp {
 	
 	public static void main(String[] args) {
 		
-		int cores = configs.getCoresQty();
-		final int bucketSize = configs.getBucketSize();
 		final double tMax = configs.getMaxT();
 		final double distance = configs.getDistance();
 		final int zoom = 2;
@@ -36,6 +32,8 @@ public class YartApp {
 		int rayDepth = 4;
 		int numSamples = 4;
 		int benchmarkRuns = 0;
+		int cores = configs.getCoresQty();
+		int bucketSize = configs.getBucketSize();
 		boolean guiRender = false;
 		String sceneFile = null;
 		String outputFile = null;
@@ -45,14 +43,15 @@ public class YartApp {
 		CommandLine cmd = null;
 		
 		Options options = new Options();
+		options.addOption("th", "threads", true, "Number of threads to be used");
+		options.addOption("bs", "bucketsize", true, "Bucket size to be used");
 		options.addOption("o", "output", true, "Output file's name");
 		options.addOption("i", "input", true, "Input scene file");
-		options.addOption("t", "time", false, "Print render time in output image");
+		options.addOption("t", "time", false, "Print render time and triangle count in output image");
 		options.addOption("aa", "antialiasing", true, "Number of antialiasing samples. Must be a positive number");
 		options.addOption("b", "benchmark", true, "Number of benchmark runs. Must be a positive number");
 		options.addOption("d", "raydepth", true, "Ray depth. Must be a positive number");
 		options.addOption("g", "gui", false, "Display render progress in a window");
-		options.addOption("s", "stats", false, "Print scene statistics in output image");
 		options.addOption("h", "help", false, "Prints this help");
 		
 		parser = new BasicParser();
@@ -99,6 +98,22 @@ public class YartApp {
 				
 				if (benchmarkRuns <= 0) {
 					throw new ParseException("Number of benchmark runs must be a positive integer");
+				}
+			}
+			
+			if (cmd.hasOption("bs")) {
+				bucketSize = Integer.valueOf(cmd.getOptionValue("bs"));
+				
+				if (bucketSize <= 0) {
+					throw new ParseException("Bucket size must be a positive integer");
+				}
+			}
+			
+			if (cmd.hasOption("th")) {
+				cores = Integer.valueOf(cmd.getOptionValue("th"));
+				
+				if (cores <= 0) {
+					throw new ParseException("Number of threads must be a positive integer");
 				}
 			}
 			
