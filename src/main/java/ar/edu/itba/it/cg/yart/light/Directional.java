@@ -12,15 +12,12 @@ public class Directional extends AbstractLight{
 	private final double ls;
 	private final Color color;
 	private Vector3d dir;
-	
-	private Color L;
-	
+		
 	public Directional(final double ls, final Color color, final Vector3d direction) {
 		super();
 		this.ls = ls;
 		this.color = color;
 		this.dir = direction.normalizedVector();
-		this.L = this.mL(null);
 	}
 	
 	@Override
@@ -30,12 +27,12 @@ public class Directional extends AbstractLight{
 
 	@Override
 	public Color L(final ShadeRec sr) {
-		return this.L;
+		final double r = color.r * ls;
+		final double g = color.g * ls;
+		final double b = color.b * ls;
+		return new Color(r, g, b, color.a);
 	}
 	
-	public Color mL(final ShadeRec sr) {
-		return color.multiply(ls);
-	}
 	
 	@Override
 	public boolean inShadow(Ray ray, ShadeRec sr, final Stack stack) {
