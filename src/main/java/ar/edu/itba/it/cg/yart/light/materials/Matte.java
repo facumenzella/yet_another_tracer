@@ -25,7 +25,11 @@ public class Matte extends MaterialAbstract {
 
 		final Vector3d wo = new Vector3d(dx, dy, dz);
 		final Color colorL = ambientBRDF.rho(sr, wo);
-		colorL.multiplyEquals(sr.world.getAmbientLight().L(sr));
+		final Color a = sr.world.getAmbientLight().L(sr);
+		
+		colorL.r *= a.r;
+		colorL.g *= a.g;
+		colorL.b *= a.b;
 
 		final List<Light> castShadowLights = sr.world.getCastShadowLights();
 		final List<Light> doNotCastShadowLights = sr.world
