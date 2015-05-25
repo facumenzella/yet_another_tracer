@@ -38,20 +38,13 @@ public class YAFKDTree2 {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(YartConstants.LOG_FILE);
 
-	private static double kKT = 1;
-	private static double kKI = 1.5;
 	private static int kMAX_DEPTH = 60;
 
 	public static double kEPSILON = 0.00001;
 	private double kTMAX = 1000;
-	private static double kLAMBDA = .8;
-
-	private static int leafs;
 
 	private KDNode root;
 	private AABB rootAABB;
-
-	public static KDLeafNode emptyLeaf = new KDLeafNode(null);
 
 	private static AABB buildInfiniteRootAABB(final List<GeometricObject> objects) {
 		double minX = -Double.MAX_VALUE;
@@ -113,7 +106,7 @@ public class YAFKDTree2 {
 
 		tree.root = buildTree(tree.rootAABB, gObjects, events);
 		
-		LOGGER.info("Tree built in {}ms. Initials: {}. Leaves: {}. ", (System.currentTimeMillis() - start), gObjects.size(), leafs);
+		LOGGER.info("Tree built in {}ms. Initials: {}. ", (System.currentTimeMillis() - start), gObjects.size());
 		return tree;
 	}
 
@@ -126,6 +119,7 @@ public class YAFKDTree2 {
 	private static KDNode buildKDNode(final List<GeometricObject> gObjects,
 			final AABB box, final int currentDepth, Event[] events,
 			final AABB rootAABB, final Set<PlaneCandidate> prevs) {
+		final double kKI = 1.5;
 		final int size = gObjects.size();
 
 		PlaneCandidate bestCandidate = findPlane(size, box, events, rootAABB,
@@ -345,6 +339,9 @@ public class YAFKDTree2 {
 	private static PlaneCandidate sah(final SplitPoint p, final AABB box,
 			final double nl, final double nr, final double np,
 			final AABB rootAABB) {
+		final double kKT = 1;
+		final double kKI = 1.5;
+		final double kLAMBDA = .8;
 		AABB boxes[] = splitAABB(box, p);
 		final AABB boxL = boxes[0];
 		final AABB boxR = boxes[1];
@@ -475,7 +472,7 @@ public class YAFKDTree2 {
 			node = e.node;
 			tNear = e.min;
 			tFar = e.max;
-			while (!node.isLeaf()) {
+			while (node.gObjects == null) {
 
 				KDInternalNode internalNode = (KDInternalNode) node;
 
@@ -547,8 +544,6 @@ public class YAFKDTree2 {
 					
 					sr.u = u;
 					sr.v = v;
-					sr.hitPoint = sr.localHitPoint
-							.transformByMatrix(m);
 					color = sr.material.shade(sr, stack);
 					stack.index = top;
 					return color;
@@ -563,6 +558,9 @@ public class YAFKDTree2 {
 	}
 
 	public double traceShadowHit(final Ray ray, final Stack stack) {
+		if (!rootAABB.hit(ray)){
+			return Double.NEGATIVE_INFINITY;
+		}
 		double tNear = 0;
 		double tFar = kTMAX;
 		KDNode node = null;
@@ -578,7 +576,7 @@ public class YAFKDTree2 {
 			node = e.node;
 			tNear = e.min;
 			tFar = e.max;
-			while (!node.isLeaf()) {
+			while (node.gObjects == null) {
 
 				KDInternalNode internalNode = (KDInternalNode) node;
 
@@ -640,6 +638,9 @@ public class YAFKDTree2 {
 
 	public double traceRayHit(final Ray ray, final ShadeRec sr,
 			final Stack stack) {
+		if (!rootAABB.hit(ray)){
+			return Double.NEGATIVE_INFINITY;
+		}
 		double tNear = 0;
 		double tFar = kTMAX;
 		KDNode node = null;
@@ -655,7 +656,7 @@ public class YAFKDTree2 {
 			node = e.node;
 			tNear = e.min;
 			tFar = e.max;
-			while (!node.isLeaf()) {
+			while (node.gObjects == null) {
 				KDInternalNode internalNode = (KDInternalNode) node;
 
 				KDNode near = null, far = null;
