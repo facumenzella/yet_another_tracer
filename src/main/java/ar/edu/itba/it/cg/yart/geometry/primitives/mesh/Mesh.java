@@ -28,7 +28,7 @@ public class Mesh extends GeometricObject {
 	public List<GeometricObject> triangles;
 	
 	public int numVertices;
-	public static int numTriangles;
+	public int numTriangles;
 	private YAFKDTree2 kdTree;
 
 	private double minX = Double.POSITIVE_INFINITY;
@@ -124,17 +124,19 @@ public class Mesh extends GeometricObject {
 	}
 
 	private void computeMeshNormals() {
-		normals = new Vector3d[vertices.length];
-		for (int i = 0; i < vertices.length; i++) {
-			Vector3d normal = new Vector3d(0, 0, 0);
-			List<MeshTriangle> ts = this.faces.get(i);
-			if (ts != null) {
-				for (MeshTriangle meshTriangle : ts) {
-					Vector3d n = meshTriangle.normal;
-					normal = normal.add(n);
+		if (normals == null) {
+			normals = new Vector3d[vertices.length];
+			for (int i = 0; i < vertices.length; i++) {
+				Vector3d normal = new Vector3d(0, 0, 0);
+				List<MeshTriangle> ts = this.faces.get(i);
+				if (ts != null) {
+					for (MeshTriangle meshTriangle : ts) {
+						Vector3d n = meshTriangle.normal;
+						normal = normal.add(n);
+					}
 				}
+				normals[i] = normal;
 			}
-			normals[i] = normal;
 		}
 	}
 
