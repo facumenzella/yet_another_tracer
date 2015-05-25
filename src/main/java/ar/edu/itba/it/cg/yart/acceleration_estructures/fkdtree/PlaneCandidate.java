@@ -1,6 +1,6 @@
 package ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree;
 
-import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.nlog2n.YAFKDTree2;
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.nlog2n.YAFKDTree;
 import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 
 public class PlaneCandidate {
@@ -33,7 +33,7 @@ public class PlaneCandidate {
 		if (obj instanceof PlaneCandidate) {
 			PlaneCandidate other = (PlaneCandidate) obj;
 			return other.splitPoint.axis == this.splitPoint.axis
-					&&  this.splitPoint.point - other.splitPoint.point < YAFKDTree2.kEPSILON;
+					&&  this.splitPoint.point - other.splitPoint.point < YAFKDTree.kEPSILON;
 		} else {
 			return false;
 		}
