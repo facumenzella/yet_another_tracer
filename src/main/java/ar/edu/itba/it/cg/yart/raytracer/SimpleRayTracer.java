@@ -4,7 +4,12 @@ import java.util.Deque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import ar.edu.itba.it.cg.yart.YartConstants;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
@@ -18,6 +23,8 @@ import ar.edu.itba.it.cg.yart.raytracer.world.World;
 import ar.edu.itba.it.cg.yart.utils.YartExecutorFactory;
 
 public class SimpleRayTracer implements RayTracer {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(YartConstants.LOG_FILE);
 
 	private final int cores;
 	
@@ -70,6 +77,15 @@ public class SimpleRayTracer implements RayTracer {
 		setResolution(800, 600);
 		setNumSamples(numSamples);
 		setCamera(new PinholeCamera(eye, lookat, up, distance, zoom));
+	}
+	
+	public void finishRaytracer() {
+		executor.shutdown();
+		try {
+			executor.awaitTermination(1, TimeUnit.MINUTES);
+		} catch (InterruptedException e) {
+			LOGGER.error("Couldn't terminate threads");
+		}
 	}
 
 	public RenderResult serialRender() {
