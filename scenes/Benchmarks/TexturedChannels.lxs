@@ -21,18 +21,18 @@ PixelFilter "blackmanharris"
 	"float xwidth" [2.000000000000000]
 	"float ywidth" [2.000000000000000]
 
-LookAt 0.000000 -6.507640 5.000000 0.000000 -5.688488 4.426424 0.000000 0.573576 0.819152
+LookAt 7.481132 -6.507640 5.343665 0 0 0 -0.317370 0.312469 0.895343
 
 Camera "perspective"
-	"float fov" [55.223339609454960]
+	"float fov" [49.134342077604479]
 	"float screenwindow" [-1.000000000000000 1.000000000000000 -0.562500000000000 0.562500000000000]
 	"bool autofocus" ["false"]
 	"float shutteropen" [0.000000000000000]
 	"float shutterclose" [0.041666666666667]
 
 Film "fleximage"
-	"integer xresolution" [960]
-	"integer yresolution" [540]
+	"integer xresolution" [640]
+	"integer yresolution" [640]
 	"float gamma" [2.200000000000000]
 	"float colorspace_white" [0.314275000000000 0.329411000000000]
 	"float colorspace_red" [0.630000000000000 0.340000000000000]
@@ -70,6 +70,8 @@ Include "World.lxm"
 Include "../Meshes/Floor.lxo"
 
 AttributeBegin
+	Rotate 90 1 0 0
+	Rotate -45 0 0 1
 	Translate 0 0 1
 	NamedMaterial "Earth"
 	Shape "sphere"
