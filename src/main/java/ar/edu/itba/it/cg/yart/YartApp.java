@@ -94,6 +94,7 @@ public class YartApp {
 			
 			if (cmd.hasOption('b')) {
 				benchmarkRuns = Integer.valueOf(cmd.getOptionValue('b'));
+				renderResult.setBenchmarkRuns(benchmarkRuns);
 				
 				if (benchmarkRuns <= 0) {
 					throw new ParseException("Number of benchmark runs must be a positive integer");
@@ -119,7 +120,7 @@ public class YartApp {
 				SceneParser sceneParser = new SceneParser(sceneFile, raytracer);
 				sceneParser.parse();
 				renderResult.finishSceneLoading();
-				System.out.println("Scene loading time: " + renderResult.getSceneLoadingTime());
+				System.out.println("Scene loading time: " + ImageSaver.getTimeString(renderResult.getSceneLoadingTime()));
 			}
 
 			if (guiRender) {
@@ -132,10 +133,10 @@ public class YartApp {
 			else {
 				renderResult = raytracer.render();
 				System.out.println("Render finished!");
-				System.out.println("Preprocessing time: " + renderResult.getPreprocessingTime());
-				System.out.println("Render time: " + renderResult.getRenderTime());
+				System.out.println("Preprocessing time: " + ImageSaver.getTimeString(renderResult.getPreprocessingTime()));
+				System.out.println("Render time: " + ImageSaver.getTimeString(renderResult.getRenderTime()));
 				System.out.println("-------------------");
-				System.out.println("Total time: " + renderResult.getTotalTime());
+				System.out.println("Total time: " + ImageSaver.getTimeString(renderResult.getTotalTime()));
 			}
 			
 			if (!StringUtils.isEmpty(imageName)) {
@@ -156,23 +157,26 @@ public class YartApp {
 			return;
 		}
 		
+		RenderResult result = null;
 		long times[] = new long[runs];
 		long totalTime = 0;
 		for (int i = 0; i < runs; i++) {
 			long currentTime = 0;
 			System.out.print("Render " + (i+1) + "/" + runs + "... ");
-			RenderResult result = raytracer.render();
+			result = raytracer.render();
 			currentTime = result.getRenderTime();
 			times[i] = currentTime;
 			totalTime += currentTime;
-			System.out.println(currentTime + "ms");
+			System.out.println(ImageSaver.getTimeString(currentTime));
 		}
+		
+		result.setAverageTime((long) Math.ceil(totalTime / times.length));
 		
 		System.out.println("Benchmark finished!");
 		System.out.println("Total runs: " + runs);
-		System.out.println("Average time: " + (long) Math.ceil(totalTime / times.length) + " ms");
+		System.out.println("Average time: " + ImageSaver.getTimeString(result.getAverageTime()));
 		System.out.println("Renders per second: " + runs / (totalTime / 1000.0f));
-		System.out.println("Total time: " + totalTime + " ms");
+		System.out.println("Total time: " + ImageSaver.getTimeString(totalTime));
 	}
 	
 	private static void printHelp(final Options options) {
