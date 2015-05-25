@@ -45,15 +45,17 @@ public class ImageSaver {
 	}
 	
 	public static void printRenderTime(final BufferedImage image, final RenderResult results) {
+		int w = image.getWidth();
 		int h = image.getHeight();
 		
 		if (results != null && results.isDisplayRenderTime()) {
 			String key = "Render time: " + results.getRenderTime() + "ms";
 			Graphics graphics = image.getGraphics();
-			graphics.setColor(Color.LIGHT_GRAY);
+			graphics.setColor(new Color(0.1f, 0.1f, 0.1f, 0.75f));
+			graphics.fillRect(0, h - 30, w, 30);
 	        graphics.setColor(Color.WHITE);
 	        graphics.setFont(new Font("Arial", Font.PLAIN, 16));
-	        graphics.drawString(key, 10, h - 10);
+	        graphics.drawString(key + " | " + results.getTriangles() + " triangles", 10, h - 10);
 		}
 	}
 }

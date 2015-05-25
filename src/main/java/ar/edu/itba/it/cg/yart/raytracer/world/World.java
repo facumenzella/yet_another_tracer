@@ -48,8 +48,16 @@ public class World {
 	 * Creates a sad, empty World.
 	 */
 	public World() {
-		this.ambientLight = new AmbientLight(new Color(0.5, 0.5, 0.5));
+		this.ambientLight = new AmbientLight(Color.blackColor());
 		setBackgroundColor(Color.blackColor());
+	}
+	
+	public int getTriangleCount() {
+		int acc = 0;
+		for (Mesh m : meshes) {
+			acc += m.numTriangles;
+		}
+		return acc;
 	}
 	
 	public void preprocess() {
