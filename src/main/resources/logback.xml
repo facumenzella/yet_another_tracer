@@ -3,7 +3,7 @@
 	<property name="DEFAULT_PATTERN" value="%-5level - %msg %n"
 		scope="CONTEXT" />
 	<appender name="DEBUG-FILE" class="ch.qos.logback.core.FileAppender">
-		<file>debug.log</file>
+		<file>yart.log</file>
 		<level>DEBUG</level>
 		<append>false</append>
 		<encoder>

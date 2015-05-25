@@ -110,7 +110,7 @@ public class YartApp {
 			
 			// Apply command line parameters
 			AbstractTracer.MAX_DEPTH = rayDepth;
-			RayTracer raytracer = new SimpleRayTracer(renderResult, bucketSize, tMax, distance, zoom, numSamples, cores);
+			SimpleRayTracer raytracer = new SimpleRayTracer(renderResult, bucketSize, tMax, distance, zoom, numSamples, cores);
 			if (StringUtils.isEmpty(sceneFile)) {
 				throw new ParseException("You must specify an input scene file");
 			}
@@ -131,6 +131,7 @@ public class YartApp {
 			}
 			else {
 				renderResult = raytracer.render();
+				raytracer.finishRaytracer();
 				System.out.println("Render finished!");
 				System.out.println("Preprocessing time: " + ImageSaver.getTimeString(renderResult.getPreprocessingTime()));
 				System.out.println("Render time: " + ImageSaver.getTimeString(renderResult.getRenderTime()));
@@ -151,7 +152,7 @@ public class YartApp {
 		}
 	}
 	
-	private static void benchmark(final RayTracer raytracer, final int runs) {
+	private static void benchmark(final SimpleRayTracer raytracer, final int runs) {
 		if (raytracer == null || runs < 1) {
 			return;
 		}
@@ -168,7 +169,7 @@ public class YartApp {
 			totalTime += currentTime;
 			System.out.println(ImageSaver.getTimeString(currentTime));
 		}
-		
+		raytracer.finishRaytracer();
 		result.setAverageTime((long) Math.ceil(totalTime / times.length));
 		
 		System.out.println("Benchmark finished!");
