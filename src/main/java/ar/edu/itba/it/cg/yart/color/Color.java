@@ -7,12 +7,12 @@ public class Color {
 	public double b;
 	public double a;
 	
-	private static Color BLACK = new Color(0,0,0,1.0);
-	private static Color RED = new Color(1.0,0,0,1.0);
-	private static Color GREEN = new Color(0,1.0,0,1.0);
-	private static Color BLUE = new Color(0,0,1.0,1.0);
-	private static Color YELLOW = new Color(1.0,1.0,0,1.0);
-	private static Color WHITE = new Color(1.0,1.0,1.0,1.0);
+	public static Color BLACK = new Color(0,0,0,1.0);
+	public static Color RED = new Color(1.0,0,0,1.0);
+	public static Color GREEN = new Color(0,1.0,0,1.0);
+	public static Color BLUE = new Color(0,0,1.0,1.0);
+	public static Color YELLOW = new Color(1.0,1.0,0,1.0);
+	public static Color WHITE = new Color(1.0,1.0,1.0,1.0);
 	
 	public Color(final double c) {
 		this(c,c,c);
