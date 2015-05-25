@@ -28,7 +28,11 @@ public class Phong extends MaterialAbstract {
 
 		final Vector3d wo = new Vector3d(dx, dy, dz);
 		final Color colorL = ambientBRDF.rho(sr, wo);
-		colorL.multiplyEquals(sr.world.getAmbientLight().L(sr));
+		final Color a = sr.world.getAmbientLight().L(sr);
+		
+		colorL.r *= a.r;
+		colorL.g *= a.g;
+		colorL.b *= a.b;
 
 		final List<Light> castShadowLights = sr.world.getCastShadowLights();
 		final List<Light> doNotCastShadowLights = sr.world
@@ -39,11 +43,22 @@ public class Phong extends MaterialAbstract {
 			double ndotwi = sr.normal.dot(wi);
 
 			if (ndotwi > 0.0) {
-				Color aux = diffuseBRDF.f(sr, wo, wi);
-				aux.addEquals(specularBRDF.f(sr, wo, wi));
-				aux.multiplyEquals(light.L(sr));
-				aux.multiplyEquals(ndotwi);
-				colorL.addEquals(aux);
+				final Color aux = diffuseBRDF.f(sr, wo, wi);
+				final Color si = specularBRDF.f(sr, wo, wi);
+
+				aux.r += si.r;
+				aux.g += si.g;
+				aux.b += si.b;
+				
+				final Color li = light.L(sr);
+				
+				aux.r *= li.r * ndotwi;
+				aux.g *= li.g * ndotwi;
+				aux.b *= li.b * ndotwi;
+
+				colorL.r += aux.r;
+				colorL.g += aux.g;
+				colorL.b += aux.b;
 			}
 		}
 
@@ -57,11 +72,22 @@ public class Phong extends MaterialAbstract {
 				Ray shadowRay = new Ray(sr.hitPoint, wi);
 				inShadow = light.inShadow(shadowRay, sr, stack);
 				if (!inShadow) {
-					Color aux = diffuseBRDF.f(sr, wo, wi);
-					aux.addEquals(specularBRDF.f(sr, wo, wi));
-					aux.multiplyEquals(light.L(sr));
-					aux.multiplyEquals(ndotwi);
-					colorL.addEquals(aux);
+					final Color aux = diffuseBRDF.f(sr, wo, wi);
+					final Color si = specularBRDF.f(sr, wo, wi);
+
+					aux.r += si.r;
+					aux.g += si.g;
+					aux.b += si.b;
+					
+					final Color li = light.L(sr);
+					
+					aux.r *= li.r * ndotwi;
+					aux.g *= li.g * ndotwi;
+					aux.b *= li.b * ndotwi;
+
+					colorL.r += aux.r;
+					colorL.g += aux.g;
+					colorL.b += aux.b;
 				}
 			}
 		}
