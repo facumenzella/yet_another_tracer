@@ -1,7 +1,5 @@
 package ar.edu.itba.it.cg.yart.light.materials;
 
-import org.w3c.dom.css.RGBColor;
-
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
@@ -103,7 +101,7 @@ public class Transparent extends Phong implements Material{
 		final Vector3d wo = new Vector3d(dx, dy, dz);
 		final Vector3d wi = new Vector3d(0, 0, 0);
 
-		//final Color fr = reflectiveBRDF.sample_f(sr, wo, wi);
+//		final Color fr = reflectiveBRDF.sample_f(sr, wo, wi); // we do not need this now
 		final Ray reflectedRay = new Ray(sr.hitPoint, wi);
 		reflectedRay.depth = sr.depth + 1;
 		if (specularBTDF.tir(sr)) {
@@ -118,7 +116,12 @@ public class Transparent extends Phong implements Material{
 			double srdotwt = Math.abs(sr.normal.dot(wt));
 			
 			//colorL.addEquals(sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world), stack).multiply(fr).multiply(srdotwi));
-			colorL.addEquals(sr.world.getTree().traceRay(transmittedRay, new ShadeRec(sr.world), stack).multiply(ft).multiply(srdotwt));
+			final Color aux = sr.world.getTree().traceRay(transmittedRay, new ShadeRec(sr.world), stack);
+			
+			colorL.r += aux.r * ft.r * srdotwt;
+			colorL.g += aux.g * ft.r * srdotwt;
+			colorL.b += aux.b * ft.r * srdotwt;
+
 		}
 		
 		return colorL;
