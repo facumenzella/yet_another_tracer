@@ -1,7 +1,6 @@
 package ar.edu.itba.it.cg.yart.light.btdf;
 
 import ar.edu.itba.it.cg.yart.color.Color;
-import ar.edu.itba.it.cg.yart.geometry.MutableVector3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
@@ -42,32 +41,56 @@ public class PerfectTransmitter extends BTDF {
 
 	@Override
 	public Color sample_f(ShadeRec sr, Vector3d wo, Vector3d wt) {
-		MutableVector3d n = new MutableVector3d(sr.normal);
-		double cosThetai = n.dot(wo);
+		double nx = sr.normal.x;
+		double ny = sr.normal.y;
+		double nz = sr.normal.z;
+		
+		double cosThetai = sr.normal.dot(wo);
 		double eta = ior;
 
 		if (cosThetai < 0.0) {
 			cosThetai = -cosThetai;
-			n.inverse();
+			nx = -nx;
+			ny = -ny;
+			nz = -nz;
 			eta = 1.0/eta;
 		}
 		double etaSquared = eta*eta;
 		double temp = 1.0 - (1.0 - cosThetai * cosThetai) / etaSquared;
 		double cosTheta2 = Math.sqrt(temp);
 		
-		MutableVector3d mWo = new MutableVector3d(wo);
+		final double factor = 1.0 / eta;
+		double wox = -wo.x * factor;
+		double woy = -wo.y * factor;
+		double woz = -wo.z * factor;
 		
-		mWo.inverse();
-		mWo.scale(1.0 / eta);
-		n.scale(cosTheta2 - cosThetai / eta);
-		mWo.sub(n);
-		wt.copy(mWo);
+		
+		final double factor2 = cosTheta2 - cosThetai / eta;
+		nx *= factor2;
+		ny *= factor2;
+		nz *= factor2;
+	
+		wox -= nx;
+		woy -= ny;
+		woz -= nz;
+
+		wt.x = wox;
+		wt.y = woy;
+		wt.z = woz;
 		
 		final double aux = Math.abs(sr.normal.dot(wt));
-		final Color c1 = Color.whiteColor();
-		c1.multiplyEquals(kt.getColor(sr).multiply(1/etaSquared));
-		c1.multiplyEquals(1/aux);
-		return c1;
+		
+		final double factor3 = 1.0/etaSquared;
+		final double factor4 = 1.0/aux;
+
+		final Color k = kt.getColor(sr);
+		final Color w = Color.WHITE;
+		
+		final double r = k.r * factor3 * w.r * factor4;
+		final double g = k.g * factor3 * w.g * factor4;
+		final double b = k.b * factor3 * w.b * factor4;
+
+		return new Color(r, g, b, k.a);
 	}
 
 	@Override
