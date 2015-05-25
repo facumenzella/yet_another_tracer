@@ -74,6 +74,7 @@ public class SimpleRayTracer implements RayTracer {
 
 	public RenderResult serialRender() {
 		preprocessWorld();
+		renderResult.setTriangles(world.getTriangleCount());
 		renderResult.startRender();
 		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
 		renderResult.setPixels(result);
@@ -101,6 +102,7 @@ public class SimpleRayTracer implements RayTracer {
 
 	private RenderResult render(final World world) {
 		preprocessWorld();
+		renderResult.setTriangles(world.getTriangleCount());
 		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
 		renderResult.startRender();
 		renderResult.setPixels(result);

@@ -13,6 +13,8 @@ public class RenderResult {
 	private long preprocessingTime;
 	private ArrayIntegerMatrix pixels;
 	
+	private int triangles;
+	
 	private boolean displayRenderTime = false;
 	
 	public void setPixels(final ArrayIntegerMatrix pixels) {
@@ -69,6 +71,14 @@ public class RenderResult {
 	
 	public boolean isDisplayRenderTime() {
 		return displayRenderTime;
+	}
+	
+	public void setTriangles(final int triangles) {
+		this.triangles = triangles;
+	}
+	
+	public int getTriangles() {
+		return triangles;
 	}
 
 	private long getElapsedTime(final long startTime) {
