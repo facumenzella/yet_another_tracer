@@ -14,12 +14,24 @@ public class Lambertian extends BRDF {
 	
 	@Override
 	public Color f(ShadeRec sr, Vector3d wo, Vector3d wi) {
-		return kd.getColor(sr).multiply(cd.getColor(sr)).multiply(invPi);
+		final Color c = cd.getColor(sr);
+		final Color k = kd.getColor(sr);
+		final double r = c.r * k.r * invPi;
+		final double g = c.g * k.g * invPi;
+		final double b = c.b * k.b * invPi;
+
+		return new Color(r, g, b, c.a);
 	}
 
 	@Override
 	public Color rho(ShadeRec sr, Vector3d wo) {
-		return cd.getColor(sr).multiply(kd.getColor(sr));
+		final Color c = cd.getColor(sr);
+		final Color k = kd.getColor(sr);
+		final double r = c.r * k.r;
+		final double g = c.r * k.g;
+		final double b = c.r * k.b;
+
+		return new Color(r, g, b, c.a);
 	}
 
 	@Override
