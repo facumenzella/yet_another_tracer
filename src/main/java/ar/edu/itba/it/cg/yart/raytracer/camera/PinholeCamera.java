@@ -1,5 +1,7 @@
 package ar.edu.itba.it.cg.yart.raytracer.camera;
 
+import java.util.Random;
+
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Point2d;
@@ -23,6 +25,7 @@ public class PinholeCamera extends CameraAbstract {
 	private double minX = -1;
 	private double maxY = 1;
 	private double minY = -1;
+	private final Random random;
 
 	// Default value according to LuxRender specs.
 	private double fov = 90;
@@ -32,6 +35,7 @@ public class PinholeCamera extends CameraAbstract {
 		super(eye, lookat, up);
 		this.distance = distance;
 		this.zoom = zoom;
+		this.random = new Random();
 	}
 
 	@Override
@@ -51,7 +55,7 @@ public class PinholeCamera extends CameraAbstract {
 		int xFinish = xStart + bucket.getWidth();
 		int yStart = bucket.getY();
 		int yFinish = yStart + bucket.getHeight();
-
+		
 		World world = rayTracer.getWorld();
 		ShadeRec sr =  new ShadeRec(world);
 		final double[] d = new double[3];
@@ -71,8 +75,9 @@ public class PinholeCamera extends CameraAbstract {
 				if (n == 1) {
 					distributionX = distributionY = 0;
 				} else {
-					distributionX = (j + Math.random()) / n;
-					distributionY = (i + Math.random()) / n;
+					final double ri = random.nextDouble();
+					distributionX = (j + ri) / n;
+					distributionY = (i + ri) / n;
 				}
 				final double x = adjustedPixelSize
 						* (col - 0.5 * viewPlane.hRes + sp.x + distributionX);
