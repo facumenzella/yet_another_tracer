@@ -27,9 +27,10 @@ public class Phong extends MaterialAbstract {
 		final double dz = -sr.ray.direction[2];
 
 		final Vector3d wo = new Vector3d(dx, dy, dz);
-		final Color colorL = ambientBRDF.rho(sr, wo);
-		colorL.multiplyEquals(sr.world.getAmbientLight().L(sr));
 
+		final Color colorL = ambientBRDF.getCd(sr);
+		colorL.multiplyEquals(sr.world.getAmbientLight().L(sr));
+		
 		final List<Light> castShadowLights = sr.world.getCastShadowLights();
 		final List<Light> doNotCastShadowLights = sr.world
 				.getDoNotCastShadowLights();
