@@ -30,7 +30,6 @@ import ar.edu.itba.it.cg.yart.light.Light;
 import ar.edu.itba.it.cg.yart.light.PointLight;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.light.materials.Matte;
-import ar.edu.itba.it.cg.yart.light.materials.Phong;
 import ar.edu.itba.it.cg.yart.light.materials.Reflective;
 import ar.edu.itba.it.cg.yart.light.materials.Transparent;
 import ar.edu.itba.it.cg.yart.parser.Identifier.IdentifierType;
@@ -219,6 +218,14 @@ public class SceneBuilder {
 			else if (type.equals("metal2")) {
 				double uroughness = identifier.getDouble("uroughness", 0.001);
 				double vroughness = identifier.getDouble("vroughness", 0.001);
+				
+				if (!identifier.hasProperty("uroughness")) {
+					uroughness = vroughness;
+				}
+				else if (!identifier.hasProperty("vroughness")) {
+					vroughness = uroughness;
+				}
+				
 				double finalRoughness = Math.max(uroughness, vroughness);
 				
 				if (finalRoughness <= 0) {

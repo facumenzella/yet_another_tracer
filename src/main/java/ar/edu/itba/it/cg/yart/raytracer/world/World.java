@@ -202,7 +202,7 @@ public class World {
 	}
 	
 	public Color getBackgroundColor() {
-		return backgroundColor;
+		return ambientLight.getColor();
 	}
 	
 	public void addObjects(final List<GeometricObject> objects) {

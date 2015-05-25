@@ -50,5 +50,9 @@ public class AmbientLight extends AbstractLight {
 	public void applyTransformation(Matrix4d matrix) {
 		this.direction = this.direction.transformByMatrix(matrix);
 	}
+	
+	public Color getColor() {
+		return L;
+	}
 
 }
