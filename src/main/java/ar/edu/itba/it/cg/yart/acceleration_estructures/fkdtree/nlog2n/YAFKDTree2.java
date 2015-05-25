@@ -454,7 +454,7 @@ public class YAFKDTree2 {
 	// Here we trace rays. Work for kids
 	public Color traceRay(final Ray ray, final ShadeRec sr, final Stack stack) {
 		if (!rootAABB.hit(ray)) {
-			return sr.world.getBackgroundColor();
+			return sr.world.backgroundColor;
 		}
 
 		double tNear = 0;
@@ -560,7 +560,7 @@ public class YAFKDTree2 {
 
 			// If stack is empty
 			if (stack.peek() == top) {
-				return sr.world.getBackgroundColor();
+				return sr.world.backgroundColor;
 			}
 		}
 	}
