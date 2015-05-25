@@ -19,6 +19,7 @@ public class Ray {
 	
 	public Ray(final Point3d origin) {
 		this.origin = origin;
+		this.direction = new double[3];
 	}
 
 }
