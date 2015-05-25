@@ -5,7 +5,7 @@ public class Stack {
 	
 	public int index;
 	private int kELEMENTS = 1000000; // Danger!!
-	private StackElement[] stack;
+	public StackElement[] stack;
 	
 	public Stack() {
 		stack = new StackElement[kELEMENTS];

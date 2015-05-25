@@ -35,8 +35,9 @@ import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 // This has O(N log N) or at least we hope it does
 
 public class YAFKDTree2 {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(YartConstants.LOG_FILE);
+
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(YartConstants.LOG_FILE);
 
 	private static int kMAX_DEPTH = 60;
 
@@ -46,7 +47,8 @@ public class YAFKDTree2 {
 	private KDNode root;
 	private AABB rootAABB;
 
-	private static AABB buildInfiniteRootAABB(final List<GeometricObject> objects) {
+	private static AABB buildInfiniteRootAABB(
+			final List<GeometricObject> objects) {
 		double minX = -Double.MAX_VALUE;
 		double minY = minX, minZ = minX;
 		double maxX = Double.MAX_VALUE;
@@ -55,7 +57,7 @@ public class YAFKDTree2 {
 		return new AABB(new Point3d(minX, maxY, minZ), new Point3d(maxX, minY,
 				maxZ));
 	}
-	
+
 	private static AABB buildRootAABB(final List<GeometricObject> objects) {
 		boolean allFinite = true;
 		for (GeometricObject geometricObject : objects) {
@@ -63,11 +65,11 @@ public class YAFKDTree2 {
 				allFinite = false;
 			}
 		}
-		
+
 		if (!allFinite) {
 			return YAFKDTree2.buildInfiniteRootAABB(objects);
 		}
-		
+
 		double minX = Double.MAX_VALUE;
 		double minY = minX, minZ = minX;
 		double maxX = -Double.MAX_VALUE;
@@ -75,17 +77,17 @@ public class YAFKDTree2 {
 
 		for (GeometricObject g : objects) {
 			AABB b = g.getBoundingBox();
-				minX = Math.min(minX, b.p0.x - kEPSILON);
-				minZ = Math.min(minZ, b.p0.z - kEPSILON);
-				minY = Math.min(minY, b.p1.y - kEPSILON);
-				maxX = Math.max(maxX, b.p1.x + kEPSILON);
-				maxY = Math.max(maxY, b.p0.y + kEPSILON);
-				maxZ = Math.max(maxZ, b.p1.z + kEPSILON);
+			minX = Math.min(minX, b.p0.x - kEPSILON);
+			minZ = Math.min(minZ, b.p0.z - kEPSILON);
+			minY = Math.min(minY, b.p1.y - kEPSILON);
+			maxX = Math.max(maxX, b.p1.x + kEPSILON);
+			maxY = Math.max(maxY, b.p0.y + kEPSILON);
+			maxZ = Math.max(maxZ, b.p1.z + kEPSILON);
 		}
 		return new AABB(new Point3d(minX, maxY, minZ), new Point3d(maxX, minY,
 				maxZ));
 	}
- 
+
 	public static YAFKDTree2 build(final List<GeometricObject> gObjects) {
 		final AABB aabb = YAFKDTree2.buildRootAABB(gObjects);
 		return YAFKDTree2.build(gObjects, aabb);
@@ -105,8 +107,9 @@ public class YAFKDTree2 {
 		Arrays.sort(events);
 
 		tree.root = buildTree(tree.rootAABB, gObjects, events);
-		
-		LOGGER.info("Tree built in {}ms. Initials: {}. ", (System.currentTimeMillis() - start), gObjects.size());
+
+		LOGGER.info("Tree built in {}ms. Initials: {}. ",
+				(System.currentTimeMillis() - start), gObjects.size());
 		return tree;
 	}
 
@@ -215,10 +218,9 @@ public class YAFKDTree2 {
 
 			Event e = events[i];
 
-//			END(0), PLANAR(1), START(2);
+			// END(0), PLANAR(1), START(2);
 			while (i < eventsQty && events[i].axis == e.axis
-					&& events[i].point == e.point
-					&& events[i].type == 0) {
+					&& events[i].point == e.point && events[i].type == 0) {
 				i++;
 				switch (e.splitPoint.axis) {
 				case 0:
@@ -236,8 +238,7 @@ public class YAFKDTree2 {
 			}
 
 			while (i < eventsQty && events[i].axis == e.axis
-					&& events[i].point == e.point
-					&& events[i].type == 2) {
+					&& events[i].point == e.point && events[i].type == 2) {
 				i++;
 				switch (e.splitPoint.axis) {
 				case 0:
@@ -254,8 +255,7 @@ public class YAFKDTree2 {
 				}
 			}
 			while (i < eventsQty && events[i].axis == e.axis
-					&& events[i].point == e.point
-					&& events[i].type == 1) {
+					&& events[i].point == e.point && events[i].type == 1) {
 				i++;
 				switch (e.splitPoint.axis) {
 				case 0:
@@ -368,14 +368,14 @@ public class YAFKDTree2 {
 
 		// 3 because we have 3 dimensions
 		// first x
-		int axis = 0; //x;
+		int axis = 0; // x;
 		double[] perfects = null;
 		perfects = perfectSplits.perfectXs;
 		double min = perfects[0];
 		double max = perfects[1];
 
 		// if they are the same, they are planar
-//		END(0), PLANAR(1), START(2);
+		// END(0), PLANAR(1), START(2);
 		if (max - min < kEPSILON) {
 			SplitPoint splitPoint = new SplitPoint();
 			splitPoint.axis = axis;
@@ -395,14 +395,14 @@ public class YAFKDTree2 {
 
 		// then y
 		perfects = null;
-		axis = 1; //y
+		axis = 1; // y
 		perfects = perfectSplits.perfectYs;
 
 		min = perfects[0];
 		max = perfects[1];
 
 		// if they are the same, they are planar
-//		END(0), PLANAR(1), START(2);
+		// END(0), PLANAR(1), START(2);
 		if (max - min < kEPSILON) {
 			SplitPoint splitPoint = new SplitPoint();
 			splitPoint.axis = axis;
@@ -429,7 +429,7 @@ public class YAFKDTree2 {
 		max = perfects[1];
 
 		// if they are the same, they are planar
-//		END(0), PLANAR(1), START(2);
+		// END(0), PLANAR(1), START(2);
 		if (max - min < kEPSILON) {
 			SplitPoint splitPoint = new SplitPoint();
 			splitPoint.axis = axis;
@@ -453,22 +453,24 @@ public class YAFKDTree2 {
 
 	// Here we trace rays. Work for kids
 	public Color traceRay(final Ray ray, final ShadeRec sr, final Stack stack) {
-		if (!rootAABB.hit(ray)){
+		if (!rootAABB.hit(ray)) {
 			return sr.world.getBackgroundColor();
 		}
-		
+
 		double tNear = 0;
 		double tFar = kTMAX;
 		KDNode node = null;
 
 		int top = stack.index;
 		stack.push(root, tNear, tFar);
-		
+
 		double dir[] = ray.direction;
-		double origin[] = {ray.origin.x, ray.origin.y, ray.origin.z};
+		double origin[] = { ray.origin.x, ray.origin.y, ray.origin.z };
 
 		while (true) {
-			StackElement e = stack.pop();
+			--stack.index;
+			StackElement e = stack.stack[stack.index];
+
 			node = e.node;
 			tNear = e.min;
 			tFar = e.max;
@@ -537,11 +539,17 @@ public class YAFKDTree2 {
 					sr.normal = normal;
 					sr.localHitPoint = localHitPoint;
 					sr.ray = ray;
-					final double dx = (m.m00 * sr.localHitPoint.x) + (m.m01 * sr.localHitPoint.y) + (m.m02 * sr.localHitPoint.z) + m.m03;
-					final double dy = (m.m10 * sr.localHitPoint.x) + (m.m11 * sr.localHitPoint.y) + (m.m12 * sr.localHitPoint.z) + m.m13;
-					final double dz = (m.m20 * sr.localHitPoint.x) + (m.m21 * sr.localHitPoint.y) + (m.m22 * sr.localHitPoint.z) + m.m23;
+					final double dx = (m.m00 * sr.localHitPoint.x)
+							+ (m.m01 * sr.localHitPoint.y)
+							+ (m.m02 * sr.localHitPoint.z) + m.m03;
+					final double dy = (m.m10 * sr.localHitPoint.x)
+							+ (m.m11 * sr.localHitPoint.y)
+							+ (m.m12 * sr.localHitPoint.z) + m.m13;
+					final double dz = (m.m20 * sr.localHitPoint.x)
+							+ (m.m21 * sr.localHitPoint.y)
+							+ (m.m22 * sr.localHitPoint.z) + m.m23;
 					sr.hitPoint = new Point3d(dx, dy, dz);
-					
+
 					sr.u = u;
 					sr.v = v;
 					color = sr.material.shade(sr, stack);
@@ -558,7 +566,7 @@ public class YAFKDTree2 {
 	}
 
 	public double traceShadowHit(final Ray ray, final Stack stack) {
-		if (!rootAABB.hit(ray)){
+		if (!rootAABB.hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}
 		double tNear = 0;
@@ -567,12 +575,13 @@ public class YAFKDTree2 {
 
 		int top = stack.index;
 		stack.push(root, tNear, tFar);
-		
+
 		double dir[] = ray.direction;
-		double origin[] = {ray.origin.x, ray.origin.y, ray.origin.z};
-		
+		double origin[] = { ray.origin.x, ray.origin.y, ray.origin.z };
+
 		while (true) {
-			StackElement e = stack.pop();
+			--stack.index;
+			StackElement e = stack.stack[stack.index];
 			node = e.node;
 			tNear = e.min;
 			tFar = e.max;
@@ -638,7 +647,7 @@ public class YAFKDTree2 {
 
 	public double traceRayHit(final Ray ray, final ShadeRec sr,
 			final Stack stack) {
-		if (!rootAABB.hit(ray)){
+		if (!rootAABB.hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}
 		double tNear = 0;
@@ -649,10 +658,11 @@ public class YAFKDTree2 {
 		stack.push(root, tNear, tFar);
 
 		double dir[] = ray.direction;
-		double origin[] = {ray.origin.x, ray.origin.y, ray.origin.z};
-		
+		double origin[] = { ray.origin.x, ray.origin.y, ray.origin.z };
+
 		while (true) {
-			StackElement e = stack.pop();
+			--stack.index;
+			StackElement e = stack.stack[stack.index];
 			node = e.node;
 			tNear = e.min;
 			tFar = e.max;
@@ -777,7 +787,7 @@ public class YAFKDTree2 {
 	}
 
 	public static class Event implements Comparable<Event> {
-		public final int type; //END(0), PLANAR(1), START(2);
+		public final int type; // END(0), PLANAR(1), START(2);
 		public final GeometricObject object;
 		public final double point;
 		public final int axis; // x=0, y=1, z=2
@@ -874,17 +884,15 @@ public class YAFKDTree2 {
 			sides.put(o, 3);
 		}
 
-//		END(0), PLANAR(1), START(2);
+		// END(0), PLANAR(1), START(2);
 		for (final Event e : events) {
 			if (e.type == 0 && e.axis == candidate.splitPoint.axis
 					&& e.point <= candidate.splitPoint.point) {
 				sides.put(e.object, 1);
-			} else if (e.type == 2
-					&& e.axis == candidate.splitPoint.axis
+			} else if (e.type == 2 && e.axis == candidate.splitPoint.axis
 					&& e.point >= candidate.splitPoint.point) {
 				sides.put(e.object, 2);
-			} else if (e.type == 1
-					&& e.axis == candidate.splitPoint.axis) {
+			} else if (e.type == 1 && e.axis == candidate.splitPoint.axis) {
 				if (e.point < candidate.splitPoint.point
 						|| (e.point == candidate.splitPoint.point && candidate.left)) {
 					sides.put(e.object, 1);
