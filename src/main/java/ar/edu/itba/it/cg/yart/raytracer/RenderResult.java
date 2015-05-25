@@ -15,6 +15,8 @@ public class RenderResult {
 	
 	private int triangles;
 	
+	private int benchmarkRuns = 0;
+	private long averageTime = 0;
 	private boolean displayRenderTime = false;
 	
 	public void setPixels(final ArrayIntegerMatrix pixels) {
@@ -63,6 +65,22 @@ public class RenderResult {
 
 	public void finishRender() {
 		this.renderTime = getElapsedTime(renderStartTime);
+	}
+	
+	public void setBenchmarkRuns(final int benchmarkRuns) {
+		this.benchmarkRuns = benchmarkRuns;
+	}
+	
+	public int getBenchmarkRuns() {
+		return benchmarkRuns;
+	}
+	
+	public void setAverageTime(final long averageTime) {
+		this.averageTime = averageTime;
+	}
+	
+	public long getAverageTime() {
+		return averageTime;
 	}
 	
 	public void setDisplayRenderTime(final boolean display) {
