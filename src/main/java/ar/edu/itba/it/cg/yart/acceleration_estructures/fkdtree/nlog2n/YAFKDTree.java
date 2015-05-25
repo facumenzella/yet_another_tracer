@@ -34,7 +34,7 @@ import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 // This has O(N log N) or at least we hope it does
 
-public class YAFKDTree2 {
+public class YAFKDTree {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(YartConstants.LOG_FILE);
@@ -67,7 +67,7 @@ public class YAFKDTree2 {
 		}
 
 		if (!allFinite) {
-			return YAFKDTree2.buildInfiniteRootAABB(objects);
+			return YAFKDTree.buildInfiniteRootAABB(objects);
 		}
 
 		double minX = Double.MAX_VALUE;
@@ -88,15 +88,15 @@ public class YAFKDTree2 {
 				maxZ));
 	}
 
-	public static YAFKDTree2 build(final List<GeometricObject> gObjects) {
-		final AABB aabb = YAFKDTree2.buildRootAABB(gObjects);
-		return YAFKDTree2.build(gObjects, aabb);
+	public static YAFKDTree build(final List<GeometricObject> gObjects) {
+		final AABB aabb = YAFKDTree.buildRootAABB(gObjects);
+		return YAFKDTree.build(gObjects, aabb);
 	}
 
-	public static YAFKDTree2 build(final List<GeometricObject> gObjects,
+	public static YAFKDTree build(final List<GeometricObject> gObjects,
 			final AABB aabb) {
 		final long start = System.currentTimeMillis();
-		YAFKDTree2 tree = new YAFKDTree2();
+		YAFKDTree tree = new YAFKDTree();
 
 		final List<Event> eventList = new ArrayList<>();
 		for (final GeometricObject obj : gObjects) {
@@ -849,8 +849,8 @@ public class YAFKDTree2 {
 		for (final Entry<GeometricObject, Integer> entry : tc.sides.entrySet()) {
 			if (entry.getValue() == 3) {
 				final GeometricObject obj = entry.getKey();
-				ebl.addAll(YAFKDTree2.generateEvents(obj, leftBox));
-				ebr.addAll(YAFKDTree2.generateEvents(obj, rightBox));
+				ebl.addAll(YAFKDTree.generateEvents(obj, leftBox));
+				ebr.addAll(YAFKDTree.generateEvents(obj, rightBox));
 			}
 		}
 

@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.nlog2n.YAFKDTree2;
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.nlog2n.YAFKDTree;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Instance;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
@@ -41,7 +41,7 @@ public class World {
 	private List<Light> castShadowLights = new ArrayList<Light>();
 	private List<Light> doNotCastShadowLights = new ArrayList<Light>();
 	private AmbientLight ambientLight;
-	private YAFKDTree2 kdTree;
+	private YAFKDTree kdTree;
 	private boolean preprocessed = false;
 	
 	/**
@@ -62,7 +62,7 @@ public class World {
 	
 	public void preprocess() {
 		if (!preprocessed) {
-			this.kdTree = YAFKDTree2.build(this.objects);
+			this.kdTree = YAFKDTree.build(this.objects);
 			preprocessed = true;
 			
 			for (Mesh m : meshes) {
@@ -238,7 +238,7 @@ public class World {
 		return objects;
 	}
 	
-	public YAFKDTree2 getTree() {
+	public YAFKDTree getTree() {
 		return kdTree;
 	}
 	
