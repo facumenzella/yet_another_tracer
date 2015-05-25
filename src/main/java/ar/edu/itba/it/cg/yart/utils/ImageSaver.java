@@ -81,10 +81,10 @@ public class ImageSaver {
 			ret += hours + "h";
 		}
 		if (minutes > 0) {
-			ret += minutes + "m";
+			ret += (minutes % 60) + "m";
 		}
 		if (seconds > 0) {
-			ret += new DecimalFormat("#.###").format(seconds) + "s";
+			ret += new DecimalFormat("#.###").format((seconds % 60)) + "s";
 		}
 		
 		return ret;

@@ -47,11 +47,12 @@ public class YartApp {
 		Options options = new Options();
 		options.addOption("o", "output", true, "Output file's name");
 		options.addOption("i", "input", true, "Input scene file");
-		options.addOption("t", "time", false, "");
-		options.addOption("aa", "antialiasing", true, "");
-		options.addOption("b", "benchmark", true, "");
-		options.addOption("d", "raydepth", true, "");
-		options.addOption("g", "gui", false, "");
+		options.addOption("t", "time", false, "Print render time in output image");
+		options.addOption("aa", "antialiasing", true, "Number of antialiasing samples. Must be a positive number");
+		options.addOption("b", "benchmark", true, "Number of benchmark runs. Must be a positive number");
+		options.addOption("d", "raydepth", true, "Ray depth. Must be a positive number");
+		options.addOption("g", "gui", false, "Display render progress in a window");
+		options.addOption("s", "stats", false, "Print scene statistics in output image");
 		options.addOption("h", "help", false, "Prints this help");
 		
 		parser = new BasicParser();
@@ -111,9 +112,7 @@ public class YartApp {
 			AbstractTracer.MAX_DEPTH = rayDepth;
 			RayTracer raytracer = new SimpleRayTracer(renderResult, bucketSize, tMax, distance, zoom, numSamples, cores);
 			if (StringUtils.isEmpty(sceneFile)) {
-				World w = new World();
-				w.buildTestWorld();
-				raytracer.setWorld(w);
+				throw new ParseException("You must specify an input scene file");
 			}
 			else {
 				renderResult.startSceneLoading();
