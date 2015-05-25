@@ -15,8 +15,6 @@ public class PointLight extends AbstractLight {
 	private Vector3d location;
 	private Point3d point;
 
-	private Color L;
-	
 	public PointLight(final double ls, final Color color,
 			final Vector3d location) {
 		super();
@@ -24,35 +22,38 @@ public class PointLight extends AbstractLight {
 		this.color = color;
 		this.location = location;
 		this.point = new Point3d(location.x, location.y, location.z);
-		this.L = this.mL(null);
 	}
+
 	public PointLight(final double ls, final Color color) {
-		this(ls, color, new Vector3d(0,0,0));
+		this(ls, color, new Vector3d(0, 0, 0));
 	}
 
 	@Override
 	public Vector3d getDirection(final ShadeRec sr) {
-		return location.sub(sr.hitPoint).normalizedVector();
+		final double dx = location.x - sr.hitPoint.x;
+		final double dy = location.y - sr.hitPoint.y;
+		final double dz = location.z - sr.hitPoint.z;
+		final double length = Math.sqrt(dx * dx + dy * dy + dz * dz);
+		return new Vector3d(dx / length, dy / length, dz / length);
 	}
 
 	@Override
 	public Color L(final ShadeRec sr) {
-		return this.L;
-	}
-	
-	public Color mL(final ShadeRec sr) {
-		return color.multiply(ls);
+		final double r = color.r * ls;
+		final double g = color.g * ls;
+		final double b = color.b * ls;
+		return new Color(r, g, b, color.a);
 	}
 
 	@Override
 	public boolean inShadow(final Ray ray, final ShadeRec sr, final Stack stack) {
 		double t;
-		
+
 		final double dx = point.x - ray.origin.x;
 		final double dy = point.y - ray.origin.y;
 		final double dz = point.z - ray.origin.z;
-		
-		final double d = Math.sqrt(dx*dx + dy*dy + dz*dz);
+
+		final double d = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
 		t = sr.world.getTree().traceShadowHit(ray, stack);
 		if (t != Double.NEGATIVE_INFINITY && t < d) {
