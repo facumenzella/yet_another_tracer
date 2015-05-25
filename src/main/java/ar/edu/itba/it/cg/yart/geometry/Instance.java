@@ -31,10 +31,13 @@ public class Instance extends GeometricObject {
 
 	@Override
 	public double hit(Ray ray, ShadeRec sr, final Stack stack) {
-		Ray invRay = new Ray(ray.origin);
+		Ray invRay = new Ray();
 		// apply the inverse set of transformations to the ray to produce an
 		// inverse transformed ray
-		invRay.origin = ray.origin.transformByMatrix(invMatrix);
+		final double px = (invMatrix.m00 * ray.origin.x) + (invMatrix.m01 * ray.origin.y) + (invMatrix.m02 * ray.origin.z) + invMatrix.m03;
+		final double py = (invMatrix.m10 * ray.origin.x) + (invMatrix.m11 * ray.origin.y) + (invMatrix.m12 * ray.origin.z) + invMatrix.m13;
+		final double pz = (invMatrix.m20 * ray.origin.x) + (invMatrix.m21 * ray.origin.y) + (invMatrix.m22 * ray.origin.z) + invMatrix.m23;
+		invRay.origin = new Point3d(px, py, pz);
 
 		final double dx = (invMatrix.m00 * ray.direction[0])
 				+ (invMatrix.m01 * ray.direction[1])
@@ -66,19 +69,18 @@ public class Instance extends GeometricObject {
 			sr.normal = new Vector3d(nx / length, ny / length, nz / length);
 		}
 
-		// if (!transformTexture) {
-		// sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
-		// }
-
 		return t;
 	}
 
 	@Override
 	public double shadowHit(Ray ray, final Stack stack) {
-		Ray invRay = new Ray(ray.origin);
+		Ray invRay = new Ray();
 		// apply the inverse set of transformations to the ray to produce an
 		// inverse transformed ray
-		invRay.origin = ray.origin.transformByMatrix(invMatrix);
+		final double px = (invMatrix.m00 * ray.origin.x) + (invMatrix.m01 * ray.origin.y) + (invMatrix.m02 * ray.origin.z) + invMatrix.m03;
+		final double py = (invMatrix.m10 * ray.origin.x) + (invMatrix.m11 * ray.origin.y) + (invMatrix.m12 * ray.origin.z) + invMatrix.m13;
+		final double pz = (invMatrix.m20 * ray.origin.x) + (invMatrix.m21 * ray.origin.y) + (invMatrix.m22 * ray.origin.z) + invMatrix.m23;
+		invRay.origin = new Point3d(px, py, pz);
 		final double dx = (invMatrix.m00 * ray.direction[0])
 				+ (invMatrix.m01 * ray.direction[1])
 				+ (invMatrix.m02 * ray.direction[2]);
