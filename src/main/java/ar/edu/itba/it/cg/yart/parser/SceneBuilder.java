@@ -232,12 +232,14 @@ public class SceneBuilder {
 				
 				double exponent = 1 / finalRoughness;
 				
-				Phong mat = new Phong();
-				mat.setCd(getColorOrTexture(identifier, "Kr", Color.whiteColor()));
+				Reflective mat = new Reflective();
+				mat.setCd(getColorOrTexture(identifier, "Kr", Color.blackColor()));
+				mat.setCr(getColorOrTexture(identifier, "Kr", Color.whiteColor()));
 				mat.setKd(1);
-				mat.setKa(0.15);
-				mat.setExp(exponent);
 				mat.setKs(1 - finalRoughness);
+				mat.setKa(0.3);
+				mat.setExp(exponent);
+				mat.setKr((1 - finalRoughness) / 2);
 				ret = mat;
 			}
 		}
@@ -433,7 +435,7 @@ public class SceneBuilder {
 		
 		try {
 			String type = identifier.getParameters()[0];
-			double gain = identifier.getDouble("gain", 1.0f);
+			double gain = identifier.getDouble("gain", 1.0f) * YartConstants.LIGHT_GAIN_MULTIPLIER;
 			if (type.equals("point")) {
 				Point3d from = identifier.getPoint("from", new Point3d(0,0,0));
 				Color l = identifier.getColor("l", Color.whiteColor());
