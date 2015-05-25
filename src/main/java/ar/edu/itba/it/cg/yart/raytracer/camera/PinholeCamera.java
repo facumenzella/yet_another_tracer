@@ -38,7 +38,7 @@ public class PinholeCamera extends CameraAbstract {
 	public void renderScene(final Bucket bucket, RayTracer rayTracer,
 			final ArrayIntegerMatrix result, final Stack stack) {
 
-		Color blackColor = Color.blackColor();
+		Color blackColor = Color.BLACK;
 		Color color = new Color(0, 0, 0, 0);
 		ViewPlane viewPlane = rayTracer.getViewPlane();
 		double adjustedPixelSize = viewPlane.pixelSize / zoom;
@@ -59,7 +59,10 @@ public class PinholeCamera extends CameraAbstract {
 		int row = yStart;
 		int col = xStart;
 		while (row < yFinish) {
-			color.copy(blackColor);
+			color.r = blackColor.r;
+			color.g = blackColor.g;
+			color.b = blackColor.b;
+			color.a = blackColor.a;
 			int i = 0;
 			int j = 0;
 			while (i < n) {
@@ -88,19 +91,39 @@ public class PinholeCamera extends CameraAbstract {
 				ray.direction = d;
 				sr.hitObject = false;
 				Color c = world.getTree().traceRay(ray, sr, stack);
-				color.addEquals(c);
+				
+				color.r += c.r;
+				color.g += c.g;
+				color.b += c.b;
 				j++;
 				if (j == n) {
 					j = 0;
 					i++;
 				}
 			}
-			color.multiplyEquals(invNumSamples);
+			color.r *= invNumSamples;
+			color.g *= invNumSamples;
+			color.b *= invNumSamples;
 
 			// mapping color
-			color.correctColor();
+			double max = Math.max(color.r, Math.max(color.g, color.b));
+			if (max > 1.0) {
+				color.r /= max;
+				color.g /= max;
+				color.b /= max;
+			}
 			// now we display the pixel
-			result.put(col, row, color.toInt());
+			int ret = 0;
+			int alpha = (int) (color.a * 255);
+			int red = (int) (color.r * 255);
+			int green = (int) (color.g * 255);
+			int blue = (int) (color.b * 255);
+			
+			ret = alpha << 24 | red << 16 | green << 8 | blue;
+			
+			final int index =  (row * result.cols) + col;
+			result.matrix[index] = ret;
+			result.put(col, row, ret);
 			col++;
 			if (col == xFinish) {
 				col = xStart;

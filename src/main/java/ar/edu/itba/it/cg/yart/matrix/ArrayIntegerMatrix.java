@@ -3,8 +3,8 @@ package ar.edu.itba.it.cg.yart.matrix;
 public final class ArrayIntegerMatrix {
 
 	public final int[] matrix;
-	private final int cols;
-	private final int rows;
+	public final int cols;
+	public final int rows;
 	
 	public ArrayIntegerMatrix(final int cols, final int rows) {
 		this.cols = cols;
