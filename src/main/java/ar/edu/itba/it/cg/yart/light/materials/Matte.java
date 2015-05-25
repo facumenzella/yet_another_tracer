@@ -37,10 +37,15 @@ public class Matte extends MaterialAbstract {
 
 			if (ndotwi > 0.0) {
 				final Color aux = diffuseBRDF.f(sr, wo, wi);
-				aux.multiplyEquals(light.L(sr));
-				aux.multiplyEquals(ndotwi);
+				final Color li = light.L(sr);
+				aux.r *= li.r * ndotwi;
+				aux.g *= li.g * ndotwi;
+				aux.b *= li.b * ndotwi;
+				
+				colorL.r += aux.r;
+				colorL.g += aux.g;
+				colorL.b += aux.b;
 
-				colorL.addEquals(aux);
 			}
 		}
 
@@ -54,10 +59,14 @@ public class Matte extends MaterialAbstract {
 				inShadow = light.inShadow(shadowRay, sr, stack);
 				if (!inShadow) {
 					final Color aux = diffuseBRDF.f(sr, wo, wi);
-					aux.multiplyEquals(light.L(sr));
-					aux.multiplyEquals(ndotwi);
-
-					colorL.addEquals(aux);
+					final Color li = light.L(sr);
+					aux.r *= li.r * ndotwi;
+					aux.g *= li.g * ndotwi;
+					aux.b *= li.b * ndotwi;
+					
+					colorL.r += aux.r;
+					colorL.g += aux.g;
+					colorL.b += aux.b;
 				}
 			}
 		}
