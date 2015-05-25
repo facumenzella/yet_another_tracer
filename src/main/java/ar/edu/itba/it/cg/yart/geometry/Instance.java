@@ -7,7 +7,7 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
-public class Instance extends GeometricObject{
+public class Instance extends GeometricObject {
 
 	public GeometricObject object; // object to be transformed
 	public boolean transformTexture; // do we transform the texture
@@ -19,7 +19,7 @@ public class Instance extends GeometricObject{
 		this.transposedInvMatrix = this.invMatrix.transpose();
 		updateBoundingBox();
 	}
-	
+
 	@Override
 	public AABB createBoundingBox() {
 		AABB boundingBox = object.createBoundingBox();
@@ -32,28 +32,43 @@ public class Instance extends GeometricObject{
 	@Override
 	public double hit(Ray ray, ShadeRec sr, final Stack stack) {
 		Ray invRay = new Ray(ray.origin);
-		// apply the inverse set of transformations to the ray to produce an inverse transformed ray
+		// apply the inverse set of transformations to the ray to produce an
+		// inverse transformed ray
 		invRay.origin = ray.origin.transformByMatrix(invMatrix);
-		
-		final double dx = (invMatrix.m00 * ray.direction[0]) + (invMatrix.m01 * ray.direction[1]) + (invMatrix.m02 * ray.direction[2]);
-		final double dy = (invMatrix.m10 * ray.direction[0]) + (invMatrix.m11 * ray.direction[1]) + (invMatrix.m12 * ray.direction[2]);
-		final double dz = (invMatrix.m20 * ray.direction[0]) + (invMatrix.m21 * ray.direction[1]) + (invMatrix.m22 * ray.direction[2]);
-		
+
+		final double dx = (invMatrix.m00 * ray.direction[0])
+				+ (invMatrix.m01 * ray.direction[1])
+				+ (invMatrix.m02 * ray.direction[2]);
+		final double dy = (invMatrix.m10 * ray.direction[0])
+				+ (invMatrix.m11 * ray.direction[1])
+				+ (invMatrix.m12 * ray.direction[2]);
+		final double dz = (invMatrix.m20 * ray.direction[0])
+				+ (invMatrix.m21 * ray.direction[1])
+				+ (invMatrix.m22 * ray.direction[2]);
+
 		double d[] = new double[3];
 		d[0] = dx;
 		d[1] = dy;
 		d[2] = dz;
-		
+
 		invRay.direction = d;
-		
+
 		final double t = object.hit(invRay, sr, stack);
 		if (t != Double.NEGATIVE_INFINITY) {
-			sr.normal = sr.normal.transformByMatrix(transposedInvMatrix).normalizedVector();
+			final double nx = (matrix.m00 * sr.normal.x) + (matrix.m01 * sr.normal.y)
+					+ (matrix.m02 * sr.normal.z);
+			final double ny = (matrix.m10 * sr.normal.x) + (matrix.m11 * sr.normal.y)
+					+ (matrix.m12 * sr.normal.z);
+			final double nz = (matrix.m20 * sr.normal.x) + (matrix.m21 * sr.normal.y)
+					+ (matrix.m22 * sr.normal.z);
+			final double length = Math.sqrt(nx*nx + ny*ny + nz*nz);
+			
+			sr.normal = new Vector3d(nx / length, ny / length, nz / length);
 		}
-		
-//		if (!transformTexture) {
-//			sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
-//		}
+
+		// if (!transformTexture) {
+		// sr.localHitPoint = ray.origin.add(ray.direction.scale(t));
+		// }
 
 		return t;
 	}
@@ -61,22 +76,29 @@ public class Instance extends GeometricObject{
 	@Override
 	public double shadowHit(Ray ray, final Stack stack) {
 		Ray invRay = new Ray(ray.origin);
-		// apply the inverse set of transformations to the ray to produce an inverse transformed ray
+		// apply the inverse set of transformations to the ray to produce an
+		// inverse transformed ray
 		invRay.origin = ray.origin.transformByMatrix(invMatrix);
-		final double dx = (invMatrix.m00 * ray.direction[0]) + (invMatrix.m01 * ray.direction[1]) + (invMatrix.m02 * ray.direction[2]);
-		final double dy = (invMatrix.m10 * ray.direction[0]) + (invMatrix.m11 * ray.direction[1]) + (invMatrix.m12 * ray.direction[2]);
-		final double dz = (invMatrix.m20 * ray.direction[0]) + (invMatrix.m21 * ray.direction[1]) + (invMatrix.m22 * ray.direction[2]);
-		
+		final double dx = (invMatrix.m00 * ray.direction[0])
+				+ (invMatrix.m01 * ray.direction[1])
+				+ (invMatrix.m02 * ray.direction[2]);
+		final double dy = (invMatrix.m10 * ray.direction[0])
+				+ (invMatrix.m11 * ray.direction[1])
+				+ (invMatrix.m12 * ray.direction[2]);
+		final double dz = (invMatrix.m20 * ray.direction[0])
+				+ (invMatrix.m21 * ray.direction[1])
+				+ (invMatrix.m22 * ray.direction[2]);
+
 		double d[] = new double[3];
 		d[0] = dx;
 		d[1] = dy;
 		d[2] = dz;
-		
+
 		invRay.direction = d;
 		final double t = object.shadowHit(invRay, stack);
 		return t;
 	}
-	
+
 	@Override
 	public void applyTransformation(Matrix4d matrix) {
 		super.applyTransformation(matrix);
@@ -84,10 +106,10 @@ public class Instance extends GeometricObject{
 	}
 
 	@Override
-	public boolean isFinite(){
+	public boolean isFinite() {
 		return this.object.isFinite();
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.object.getClass().toString();
