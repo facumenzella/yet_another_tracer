@@ -31,6 +31,7 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.AbstractTracer;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
+import ar.edu.itba.it.cg.yart.utils.config.YartConfigProvider;
 
 // This has O(N log N) or at least we hope it does
 
@@ -42,7 +43,7 @@ public class YAFKDTree {
 	private static int kMAX_DEPTH = 60;
 
 	public static double kEPSILON = 0.00001;
-	private double kTMAX = 1000;
+	private static double kTMAX = YartConfigProvider.getInstance().getTFar();
 
 	private KDNode root;
 	private AABB rootAABB;

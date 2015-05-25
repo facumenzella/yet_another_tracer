@@ -21,7 +21,7 @@ import ar.edu.itba.it.cg.yart.utils.config.YartConfigProvider;
 
 public class YartApp {
 
-	private final static YartConfigProvider configs = new YartConfigProvider();
+	private final static YartConfigProvider configs = YartConfigProvider.getInstance();
 	
 	public static void main(String[] args) {
 		
