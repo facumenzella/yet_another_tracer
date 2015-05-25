@@ -1,7 +1,6 @@
 package ar.edu.itba.it.cg.yart.light.brdf;
 
 import ar.edu.itba.it.cg.yart.color.Color;
-import ar.edu.itba.it.cg.yart.geometry.MutableVector3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
@@ -25,19 +24,34 @@ public class PerfectSpecular extends BRDF {
 	@Override
 	public Color sample_f(final ShadeRec sr, final Vector3d wo, Vector3d wi) {
 		final double ndotwo = sr.normal.dot(wo);
-		MutableVector3d mSR = new MutableVector3d(sr.normal);
-		MutableVector3d mWo = new MutableVector3d(wo);
 
-		mSR.scale(ndotwo);
-		mSR.scale(2.0);
+		final double srx = sr.normal.x * ndotwo * 2.0;
+		final double sry = sr.normal.y * ndotwo * 2.0;
+		final double srz = sr.normal.z * ndotwo * 2.0;
+
+		double wox = -wo.x;
+		double woy = -wo.y;
+		double woz = -wo.z;
+
+		wox += srx;
+		woy += sry;
+		woz += srz;
 		
-		mWo.inverse();
-		mWo.add(mSR);
+		wi.x = wox;
+		wi.y = woy;
+		wi.z = woz;
 		
-		wi.copy(mWo); 
 		final double aux = sr.normal.dot(wi);
-		final Color result = cr.getColor(sr).multiply(kr.getColor(sr));
-		return result.multiply(1.0/aux);
+		
+		final Color c = cr.getColor(sr);
+		final Color k = kr.getColor(sr);
+		
+		final double factor = 1.0 / aux;
+		final double r = c.r * k.r * factor;
+		final double g = c.g * k.g * factor;
+		final double b = c.b * k.b * factor;
+
+		return new Color(r, g, b, c.a);
 	}
 	
 	public void setCr(final Color cr) {
