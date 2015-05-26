@@ -4,7 +4,6 @@
 		scope="CONTEXT" />
 	<appender name="DEBUG-FILE" class="ch.qos.logback.core.FileAppender">
 		<file>yart.log</file>
-		<level>DEBUG</level>
 		<append>false</append>
 		<encoder>
 			<pattern>${DEFAULT_PATTERN}
