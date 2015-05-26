@@ -28,8 +28,7 @@ public class ImageSaver {
 		}
 
 		StringBuilder nameBuilder = new StringBuilder();
-		final String base = "./images/";
-		nameBuilder.append(base).append(imageName).append(".").append(imageExtension);
+		nameBuilder.append(imageName).append(".").append(imageExtension);
 		File outputfile = new File(nameBuilder.toString());
 		
 		printRenderTime(image, results);
