@@ -11,12 +11,12 @@ import ar.edu.itba.it.cg.yart.textures.wrappers.Wrapper;
 
 public class ImageTexture extends Texture {
 
-	private BufferedImage image;
-	private byte[] pixels;
+//	private BufferedImage image;
+//	private byte[] pixels;
 	private int hres;
 	private int vres;
 	private Mapping mapping;
-	private boolean hasAlphaChannel;
+//	private boolean hasAlphaChannel;
 	private Wrapper wrapper;
 
 	public ImageTexture(final BufferedImage img, final Mapping mapping,
@@ -32,8 +32,8 @@ public class ImageTexture extends Texture {
 		this.wrapper.setImage(image);
 		vres = image.getHeight();
 		hres = image.getWidth();
-		pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-		hasAlphaChannel = image.getAlphaRaster() != null;
+//		pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+//		hasAlphaChannel = image.getAlphaRaster() != null;
 	}
 
 	@Override
