@@ -1,0 +1,36 @@
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Maven Files #
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+
+# Eclipse Files #
+
+.settings
+.project
+.classpath
+
+# Images #
+
+images/
+
+# Test scenes #
+
+scenes/test
+
+# Logs
+
+*.log
