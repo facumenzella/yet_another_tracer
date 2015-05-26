@@ -60,8 +60,4 @@ java -jar yart.jar -o render.png -i scenes/Benchmarks/MirrorLowReflectivity.lxs 
 - [x] Directional
 - [x] Ambient
 - 
-##Optionals##
--  
-- ~~Material mix~~
-- ~~SpotLights~~ 
 
