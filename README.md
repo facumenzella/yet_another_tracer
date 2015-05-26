@@ -1,5 +1,6 @@
 # Yet another Ray Tracer #
-> Because we needed another one.
+> Because there are not too many.
+>> By Del Giudice, Menzella & Noriega
 ## COMPUTACION GRAFICA ##
 ### ITBA ###
 
@@ -24,25 +25,31 @@ java -jar yartapp [commands]
                             image
  -th,--threads <arg>        Number of threads to be used
 ```
+For example:
+Do you want to see a fancy Mario?
+```
+java -jar yart.jar -o render.png -i scenes/Benchmarks/MirrorLowReflectivity.lxs -d 4 4 -aa 1 -g
+```
+
 
 ##Acceleration structures##
-- [x] SAH KDTree
+- SAH KDTree
 
 ##Geometric Objects##
-- [x] Mesh
-- [x] MeshBox
+- Mesh
+- MeshBox
 
 ##Primitives##
-- [x] Sphere
-- [x] Triangle
-- [x] Plane
-- [x] Disc
+- Sphere
+- Triangle
+- Plane
+- Disc
 
 ##Materials##
-- [x] Matte
-- [x] Mirror
-- [x] Glass
-- [x] Metal2
+- Matte
+- Mirror
+- Glass
+- Metal2
 
 ##Lights##
 - [x] Point
@@ -50,7 +57,7 @@ java -jar yartapp [commands]
 - [x] Ambient
 - 
 ##Optionals##
-- [x] 
-- [] Material mix
-- [] SpotLights 
+-  
+- ~~Material mix~~
+- ~~SpotLights~~ 
 
