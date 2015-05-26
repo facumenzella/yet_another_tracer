@@ -26,6 +26,10 @@ java -jar yartapp [commands]
  -th,--threads <arg>        Number of threads to be used
 ```
 For example:
+Do you want to see something cool?
+```
+java -jar yart.jar -o render.png -i scenes/Yart.lxs -d 4 4 -aa 1 -g
+```
 Do you want to see a fancy Mario?
 ```
 java -jar yart.jar -o render.png -i scenes/Benchmarks/MirrorLowReflectivity.lxs -d 4 4 -aa 1 -g
