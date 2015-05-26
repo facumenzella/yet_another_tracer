@@ -56,8 +56,7 @@ java -jar yart.jar -o render.png -i scenes/Benchmarks/MirrorLowReflectivity.lxs 
 - Metal2
 
 ##Lights##
-- [x] Point
-- [x] Directional
-- [x] Ambient
-- 
+- Point
+- Directional
+- Ambient
 
