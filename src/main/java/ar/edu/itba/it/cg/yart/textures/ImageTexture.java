@@ -28,7 +28,6 @@ public class ImageTexture extends Texture {
 	}
 
 	public void setImage(final BufferedImage image) {
-		this.image = image;
 		this.wrapper.setImage(image);
 		vres = image.getHeight();
 		hres = image.getWidth();
