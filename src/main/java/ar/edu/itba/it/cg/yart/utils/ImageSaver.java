@@ -6,6 +6,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 
 import javax.imageio.ImageIO;
@@ -15,9 +17,13 @@ import ar.edu.itba.it.cg.yart.raytracer.RenderResult;
 
 public class ImageSaver {
 	
+	private static final Path BASE_PATH = Paths.get(".").normalize();
+	
 	public static void saveImage(final ArrayIntegerMatrix pixels, final String imageName, final String imageExtension, final RenderResult results) {
 		int w = pixels.cols();
 		int h = pixels.rows();
+		
+		Path path = Paths.get(imageName);
 		
 		BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 		
@@ -28,8 +34,10 @@ public class ImageSaver {
 		}
 
 		StringBuilder nameBuilder = new StringBuilder();
-		nameBuilder.append(imageName).append(".").append(imageExtension);
-		File outputfile = new File(nameBuilder.toString());
+		final String base = "./images/";
+		nameBuilder.append(base).append(imageName).append(".").append(imageExtension);
+		File outputfile = BASE_PATH.resolve(path).toFile();
+		outputfile.mkdirs();
 		
 		printRenderTime(image, results);
 		
