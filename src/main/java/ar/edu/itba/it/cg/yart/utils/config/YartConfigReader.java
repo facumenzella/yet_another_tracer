@@ -19,7 +19,8 @@ public class YartConfigReader {
 		StringBuilder builder = new StringBuilder();
 		builder.append(BASE).append(PROPERTIES_FILE);
 		try {
-			this.properties.load(new FileInputStream(builder.toString()));
+			this.properties.load(ClassLoader
+					.getSystemResourceAsStream(PROPERTIES_FILE));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
