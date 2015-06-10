@@ -486,7 +486,13 @@ public class YAFKDTree {
 
 				final double diff = splitPoint - rayOriginAxis;
 
-				if (diff > 0) {
+				if (rayOriginAxis < splitPoint) {
+					near = internalNode.left;
+					far = internalNode.right;
+				} else if (rayOriginAxis > splitPoint) {
+					near = internalNode.right;
+					far = internalNode.left;
+				} else if (rayDirAxis < 0) {
 					near = internalNode.left;
 					far = internalNode.right;
 				} else {
@@ -597,13 +603,20 @@ public class YAFKDTree {
 
 				final double diff = splitPoint - rayOriginAxis;
 
-				if (diff > 0) {
+				if (rayOriginAxis < splitPoint) {
+					near = internalNode.left;
+					far = internalNode.right;
+				} else if (rayOriginAxis > splitPoint) {
+					near = internalNode.right;
+					far = internalNode.left;
+				} else if (rayDirAxis < 0) {
 					near = internalNode.left;
 					far = internalNode.right;
 				} else {
 					near = internalNode.right;
 					far = internalNode.left;
 				}
+				
 				final double t = diff / rayDirAxis;
 
 				// This is madness !!
@@ -677,13 +690,20 @@ public class YAFKDTree {
 
 				final double diff = splitPoint - rayOriginAxis;
 
-				if (diff > 0) {
+				if (rayOriginAxis < splitPoint) {
+					near = internalNode.left;
+					far = internalNode.right;
+				} else if (rayOriginAxis > splitPoint) {
+					near = internalNode.right;
+					far = internalNode.left;
+				} else if (rayDirAxis < 0) {
 					near = internalNode.left;
 					far = internalNode.right;
 				} else {
 					near = internalNode.right;
 					far = internalNode.left;
 				}
+				
 				final double t = diff / rayDirAxis;
 
 				// This is madness !!
