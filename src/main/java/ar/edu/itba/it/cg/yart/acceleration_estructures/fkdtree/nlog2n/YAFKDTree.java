@@ -502,13 +502,10 @@ public class YAFKDTree {
 
 				final double t = diff / rayDirAxis;
 
-				// This is madness !!
-				if (t > tFar || t < kEPSILON) {
-					// its on the near node
+				if (t > tFar || t < 0.0) {
 					node = near;
 				} else {
-					if (t < tNear) {
-						// its on the far node
+					if (t <= tNear) {
 						node = far;
 					} else {
 						// the ray might hit in both nodes, so we split the ray
@@ -619,13 +616,10 @@ public class YAFKDTree {
 				
 				final double t = diff / rayDirAxis;
 
-				// This is madness !!
-				if (t > tFar || t < kEPSILON) {
-					// its on the near node
+				if (t > tFar || t < 0.0) {
 					node = near;
 				} else {
-					if (t < tNear) {
-						// its on the far node
+					if (t <= tNear) {
 						node = far;
 					} else {
 						// the ray might hit in both nodes, so we split the ray
@@ -706,13 +700,10 @@ public class YAFKDTree {
 				
 				final double t = diff / rayDirAxis;
 
-				// This is madness !!
-				if (t > tFar || t < kEPSILON) {
-					// its on the near node
+				if (t > tFar || t < 0.0) {
 					node = near;
 				} else {
-					if (t < tNear) {
-						// its on the far node
+					if (t <= tNear) {
 						node = far;
 					} else {
 						// the ray might hit in both nodes, so we split the ray
