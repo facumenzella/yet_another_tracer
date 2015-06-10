@@ -8,7 +8,7 @@ public class PlaneCandidate {
 	public SplitPoint splitPoint;
 	public double cost;
 	public boolean left; // regarding np
-	
+
 	public PlaneCandidate() {
 	};
 
@@ -19,8 +19,17 @@ public class PlaneCandidate {
 		this.cost = cost;
 		this.left = left;
 	}
-	
-	
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		long temp;
+		temp = Double.doubleToLongBits(cost);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((int) splitPoint.point);
+		return result;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -33,22 +42,15 @@ public class PlaneCandidate {
 		if (obj instanceof PlaneCandidate) {
 			PlaneCandidate other = (PlaneCandidate) obj;
 			return other.splitPoint.axis == this.splitPoint.axis
-					&&  this.splitPoint.point - other.splitPoint.point < YAFKDTree.kEPSILON;
+					&& this.splitPoint.point - other.splitPoint.point < YAFKDTree.kEPSILON;
 		} else {
 			return false;
 		}
 	}
 
 	@Override
-	public int hashCode() {
-		int hash = 0;
-		hash = (int) (hash * 3 + splitPoint.point);
-		hash = (int) (hash * 5 + cost);
-		return hash;
-	}
-
-	@Override
 	public String toString() {
-		return "Axis: " + splitPoint.axis + " " + splitPoint.point + " cost: " + cost;
+		return "Axis: " + splitPoint.axis + " " + splitPoint.point + " cost: "
+				+ cost;
 	}
 }
