@@ -128,8 +128,10 @@ public class YAFKDTree {
 
 		PlaneCandidate bestCandidate = findPlane(size, box, events, rootAABB,
 				prevs);
+		if (bestCandidate == null) {
+			return new KDLeafNode(gObjects);
+		}
 		boolean terminate = bestCandidate.cost > (kKI * size);
-
 		if (size == 0 || currentDepth >= kMAX_DEPTH || bestCandidate == null
 				|| terminate || prevs.contains(bestCandidate)) {
 			return new KDLeafNode(gObjects);
@@ -205,7 +207,9 @@ public class YAFKDTree {
 		final int size = objectsSize;
 		final int eventsQty = events.length;
 		double minCost = Double.MAX_VALUE;
-		PlaneCandidate bestCandidate = new PlaneCandidate();
+		SplitPoint splitPoint = null;
+		AABB boxes[] = null;
+		boolean left = false;
 
 		int nLX = 0, nPX = 0, nRX = size;
 		int nLY = 0, nPY = 0, nRY = size;
@@ -310,12 +314,15 @@ public class YAFKDTree {
 
 			if (minCost > candidate.cost) {
 				minCost = candidate.cost;
-				bestCandidate.splitPoint = candidate.splitPoint;
-				bestCandidate.boxes = candidate.boxes;
+				splitPoint = candidate.splitPoint;
+				boxes = candidate.boxes;
+				left = candidate.left;
 			}
 		}
-		bestCandidate.cost = minCost;
-		return bestCandidate;
+		if (minCost != Double.MAX_VALUE) {
+			return new PlaneCandidate(boxes, splitPoint, minCost, left);
+		}
+		return null;
 	}
 
 	public static PerfectSplits perfectSplits(final GeometricObject object,
