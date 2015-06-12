@@ -11,12 +11,14 @@ public class Vector3d {
 	public double x;
 	public double y;
 	public double z;
+	public double w;
 	public double length;
 	
 	public Vector3d(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		this.w = 1;
 		this.length = Math.sqrt(x * x + y * y + z * z);
 	}
 	
@@ -25,6 +27,7 @@ public class Vector3d {
 		this.x = x / length;
 		this.y = y / length;
 		this.z = z / length;
+		this.w = 1 / length;
 	}
 	
 	public static Vector3d xAxis() {
@@ -59,6 +62,7 @@ public class Vector3d {
 		this.x += n;
 		this.y += n;
 		this.z += n;
+		this.w += n;
 		return this;
 	}
 	
@@ -90,6 +94,7 @@ public class Vector3d {
 		this.x = other.x;
 		this.y = other.y;
 		this.z = other.z;
+		this.w = other.w;
 		this.length = other.length;
 	}
 	
@@ -97,6 +102,7 @@ public class Vector3d {
 		final double dx = (matrix.m00 * this.x) + (matrix.m01 * this.y) + (matrix.m02 * this.z);
 		final double dy = (matrix.m10 * this.x) + (matrix.m11 * this.y) + (matrix.m12 * this.z);
 		final double dz = (matrix.m20 * this.x) + (matrix.m21 * this.y) + (matrix.m22 * this.z);
+		final double dw = (matrix.m30 * this.x) + (matrix.m31 * this.y) + (matrix.m32 * this.z);
 		return new Vector3d(dx, dy, dz);
 	}
 	
