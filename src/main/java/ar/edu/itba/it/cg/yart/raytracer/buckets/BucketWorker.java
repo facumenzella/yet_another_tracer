@@ -12,32 +12,32 @@ public class BucketWorker implements Runnable {
 	private final RayTracer raytracer;
 	private final ArrayIntegerMatrix result;
 	private final RaytracerCallbacks callback;
-	private final Deque<Bucket> buckets;
+	private final Bucket[] buckets;
 	private final Stack stack;
+	private final int seed;
+	private final int factor;
 
-	public BucketWorker(final Deque<Bucket> buckets, RayTracer raytracer,
+	public BucketWorker(final Bucket[] buckets, RayTracer raytracer,
 			final ArrayIntegerMatrix result, final RaytracerCallbacks callback,
-			final Stack stack) {
+			final Stack stack, final int seed, final int factor) {
 
 		this.buckets = buckets;
 		this.result = result;
 		this.callback = callback;
 		this.raytracer = raytracer;
 		this.stack = stack;
+		this.seed = seed;
+		this.factor = factor;
 	}
 
 	@Override
 	public void run() {
-		boolean emptyQueue = false;
-		Bucket bucket = buckets.poll();
-		while (!emptyQueue) {
+		int max = buckets.length / this.factor;
+		for (int iterator = 0; iterator < max; iterator++) {
+			Bucket bucket = buckets[iterator * factor + this.seed];
 			raytracer.getCamera().renderScene(bucket, raytracer, result, stack);
 			callback.onBucketFinished(bucket, null);
-			emptyQueue = buckets.isEmpty();
-			if (!emptyQueue) {
-				bucket = buckets.poll();
-			}
+
 		}
 	}
-
 }
