@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,6 +132,8 @@ public class SimpleRayTracer implements RayTracer {
 		int totals = buckets.length;
 		final CountDownLatch latch = new CountDownLatch(totals);
 
+		AtomicInteger index = new AtomicInteger(-1);
+		
 		for (int i = 0; i < this.cores; i++) {
 			executor.submit(new BucketWorker(buckets, this, result,
 					new RaytracerCallbacks() {
@@ -147,7 +150,7 @@ public class SimpleRayTracer implements RayTracer {
 							callbacks.onBucketFinished(bucket, renderResult);
 							latch.countDown();
 						}
-					}, this.stacks[i], i, this.cores));
+					}, this.stacks[i], index));
 		}
 
 		try {

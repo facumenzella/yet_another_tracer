@@ -1,6 +1,6 @@
 package ar.edu.itba.it.cg.yart.raytracer.buckets;
 
-import java.util.Deque;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
@@ -13,31 +13,28 @@ public class BucketWorker implements Runnable {
 	private final ArrayIntegerMatrix result;
 	private final RaytracerCallbacks callback;
 	private final Bucket[] buckets;
+	private AtomicInteger index;
 	private final Stack stack;
-	private final int seed;
-	private final int factor;
 
 	public BucketWorker(final Bucket[] buckets, RayTracer raytracer,
 			final ArrayIntegerMatrix result, final RaytracerCallbacks callback,
-			final Stack stack, final int seed, final int factor) {
+			final Stack stack, final AtomicInteger index) {
 
 		this.buckets = buckets;
 		this.result = result;
 		this.callback = callback;
 		this.raytracer = raytracer;
 		this.stack = stack;
-		this.seed = seed;
-		this.factor = factor;
+		this.index = index;
 	}
 
 	@Override
 	public void run() {
-		int max = buckets.length / this.factor;
-		for (int iterator = 0; iterator < max; iterator++) {
-			Bucket bucket = buckets[iterator * factor + this.seed];
+		int i;
+		while ((i = index.incrementAndGet()) < this.buckets.length) {
+			Bucket bucket = buckets[i];
 			raytracer.getCamera().renderScene(bucket, raytracer, result, stack);
 			callback.onBucketFinished(bucket, null);
-
 		}
 	}
 }
