@@ -531,7 +531,7 @@ public class YAFKDTree {
 				Matrix4d m = null;
 				for (GeometricObject object : objects) {
 					double t = object.hit(ray, sr, stack);
-					if (t != Double.NEGATIVE_INFINITY && t < tMin && t > tNear) {
+					if (t != Double.NEGATIVE_INFINITY && t < tMin) {
 						sr.hitObject = true;
 						sr.material = object.getMaterial();
 						m = object.matrix;
@@ -642,7 +642,7 @@ public class YAFKDTree {
 				boolean hit = false;
 				for (GeometricObject object : objects) {
 					double t = object.shadowHit(ray, stack);
-					if (t != Double.NEGATIVE_INFINITY && t < tMin && t > tNear) {
+					if (t != Double.NEGATIVE_INFINITY && t < tMin) {
 						tMin = t;
 						hit = true;
 					}
@@ -729,7 +729,7 @@ public class YAFKDTree {
 				double u = 0, v = 0;
 				for (GeometricObject object : objects) {
 					double t = object.hit(ray, sr, stack);
-					if (t != Double.NEGATIVE_INFINITY && t < tMin && t > tNear) {
+					if (t != Double.NEGATIVE_INFINITY && t < tMin) {
 						tMin = t;
 						normal = sr.normal;
 						localHitPoint = sr.localHitPoint;
