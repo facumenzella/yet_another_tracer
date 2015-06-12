@@ -29,7 +29,6 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.AbstractTracer;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 import ar.edu.itba.it.cg.yart.utils.config.YartConfigProvider;
 
@@ -521,7 +520,7 @@ public class YAFKDTree {
 			}
 			KDLeafNode leaf = (KDLeafNode) node;
 			List<GeometricObject> objects = leaf.gObjects;
-			if (ray.depth < AbstractTracer.MAX_DEPTH && objects != null) {
+			if (objects != null) {
 				Vector3d normal = null;
 				Point3d localHitPoint = null;
 				double tMin = tFar;
@@ -635,7 +634,7 @@ public class YAFKDTree {
 			}
 			KDLeafNode leaf = (KDLeafNode) node;
 			List<GeometricObject> objects = leaf.gObjects;
-			if (ray.depth < AbstractTracer.MAX_DEPTH && objects != null) {
+			if (objects != null) {
 				double tMin = tFar;
 				boolean hit = false;
 				for (GeometricObject object : objects) {
@@ -719,7 +718,7 @@ public class YAFKDTree {
 			}
 			KDLeafNode leaf = (KDLeafNode) node;
 			List<GeometricObject> objects = leaf.gObjects;
-			if (ray.depth < AbstractTracer.MAX_DEPTH && objects != null) {
+			if (objects != null) {
 				double tMin = tFar;
 				boolean hit = false;
 				Vector3d normal = null;
