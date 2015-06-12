@@ -238,23 +238,7 @@ public class YAFKDTree {
 				}
 			}
 
-			while (i < eventsQty && events[i].axis == e.axis
-					&& events[i].point == e.point && events[i].type == 2) {
-				i++;
-				switch (e.splitPoint.axis) {
-				case 0:
-					pSTARTX++;
-					break;
-				case 1:
-					pSTARTY++;
-					break;
-				case 2:
-					pSTARTZ++;
-					break;
-				default:
-					System.out.println("Holy shit the impossible happened");
-				}
-			}
+			
 			while (i < eventsQty && events[i].axis == e.axis
 					&& events[i].point == e.point && events[i].type == 1) {
 				i++;
@@ -267,6 +251,24 @@ public class YAFKDTree {
 					break;
 				case 2:
 					pPLANARZ++;
+					break;
+				default:
+					System.out.println("Holy shit the impossible happened");
+				}
+			}
+			
+			while (i < eventsQty && events[i].axis == e.axis
+					&& events[i].point == e.point && events[i].type == 2) {
+				i++;
+				switch (e.splitPoint.axis) {
+				case 0:
+					pSTARTX++;
+					break;
+				case 1:
+					pSTARTY++;
+					break;
+				case 2:
+					pSTARTZ++;
 					break;
 				default:
 					System.out.println("Holy shit the impossible happened");
