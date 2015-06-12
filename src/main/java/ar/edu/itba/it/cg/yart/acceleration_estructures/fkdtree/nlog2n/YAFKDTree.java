@@ -344,7 +344,6 @@ public class YAFKDTree {
 			final AABB rootAABB) {
 		final double kKT = 1;
 		final double kKI = 1.5;
-		final double kLAMBDA = .8;
 		AABB boxes[] = splitAABB(box, p);
 		final AABB boxL = boxes[0];
 		final AABB boxR = boxes[1];
@@ -354,10 +353,8 @@ public class YAFKDTree {
 		final double pl = boxL.surfaceArea / area;
 		final double pr = boxR.surfaceArea / area;
 
-		final double cl = ((nr == 0 || nl == 0) ? kLAMBDA : 1)
-				* (kKT + kKI * ((pl * nl + np) + (pr * nr)));
-		final double cr = ((nr == 0 || nl == 0) ? kLAMBDA : 1)
-				* (kKT + kKI * ((pl * nl) + (pr * nr + np)));
+		final double cl = (kKT + kKI * ((pl * nl + np) + (pr * nr)));
+		final double cr = (kKT + kKI * ((pl * nl) + (pr * nr + np)));
 
 		double cost = (cl < cr) ? cl : cr;
 		return new PlaneCandidate(boxes, p, cost, (cl < cr) ? true : false);
