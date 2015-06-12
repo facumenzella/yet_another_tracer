@@ -887,7 +887,7 @@ public class YAFKDTree {
 			this.ebr = ebr;
 		}
 	}
-
+	
 	public static ClassifiedObjects classify(List<GeometricObject> gObjects,
 			final Event[] events, final PlaneCandidate candidate) {
 		// 1: Left
@@ -938,20 +938,5 @@ public class YAFKDTree {
 		}
 
 		return new ClassifiedObjects(tl, tr, sides);
-	}
-
-	public static class ClassifiedObjects {
-
-		final List<GeometricObject> tl, tr;
-		final Map<GeometricObject, Integer> sides;
-
-		public ClassifiedObjects(final List<GeometricObject> tl,
-				final List<GeometricObject> tr,
-				final Map<GeometricObject, Integer> sides) {
-			this.tl = tl;
-			this.tr = tr;
-			this.sides = sides;
-		}
-
 	}
 }
