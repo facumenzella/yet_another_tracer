@@ -126,8 +126,7 @@ public class YAFKDTree {
 		final double kKI = 1.5;
 		final int size = gObjects.size();
 
-		PlaneCandidate bestCandidate = findPlane(size, box, events, rootAABB,
-				prevs);
+		PlaneCandidate bestCandidate = findPlane(size, box, events, rootAABB);
 		if (bestCandidate == null) {
 			return new KDLeafNode(gObjects);
 		}
@@ -200,130 +199,129 @@ public class YAFKDTree {
 	}
 
 	// find a 'good' plane mother fucker!!
-	private static PlaneCandidate findPlane(final int objectsSize,
-			final AABB box, final Event[] events, final AABB rootAABB,
-			Set<PlaneCandidate> prevs) {
+		private static PlaneCandidate findPlane(final int objectsSize,
+				final AABB box, final Event[] events, final AABB rootAABB) {
 
-		final int size = objectsSize;
-		final int eventsQty = events.length;
-		double minCost = Double.MAX_VALUE;
-		SplitPoint splitPoint = null;
-		AABB boxes[] = null;
-		boolean left = false;
+			final int size = objectsSize;
+			final int eventsQty = events.length;
+			double minCost = Double.MAX_VALUE;
+			SplitPoint splitPoint = null;
+			AABB boxes[] = null;
+			boolean left = false;
 
-		int nLX = 0, nPX = 0, nRX = size;
-		int nLY = 0, nPY = 0, nRY = size;
-		int nLZ = 0, nPZ = 0, nRZ = size;
+			int nLX = 0, nPX = 0, nRX = size;
+			int nLY = 0, nPY = 0, nRY = size;
+			int nLZ = 0, nPZ = 0, nRZ = size;
 
-		for (int i = 0; i < eventsQty; i++) {
+			for (int i = 0; i < eventsQty; i++) {
 
-			int pSTARTX = 0, pENDX = 0, pPLANARX = 0;
-			int pSTARTY = 0, pENDY = 0, pPLANARY = 0;
-			int pSTARTZ = 0, pENDZ = 0, pPLANARZ = 0;
+				int pSTARTX = 0, pENDX = 0, pPLANARX = 0;
+				int pSTARTY = 0, pENDY = 0, pPLANARY = 0;
+				int pSTARTZ = 0, pENDZ = 0, pPLANARZ = 0;
 
-			Event e = events[i];
+				Event e = events[i];
 
-			// END(0), PLANAR(1), START(2);
-			while (i < eventsQty && events[i].axis == e.axis
-					&& events[i].point == e.point && events[i].type == 0) {
-				i++;
+				// END(0), PLANAR(1), START(2);
+				while (i < eventsQty && events[i].axis == e.axis
+						&& events[i].point == e.point && events[i].type == 0) {
+					i++;
+					switch (e.splitPoint.axis) {
+					case 0:
+						pENDX++;
+						break;
+					case 1:
+						pENDY++;
+						break;
+					case 2:
+						pENDZ++;
+						break;
+					default:
+						System.out.println("Holy shit the impossible happened");
+					}
+				}
+
+				
+				while (i < eventsQty && events[i].axis == e.axis
+						&& events[i].point == e.point && events[i].type == 1) {
+					i++;
+					switch (e.splitPoint.axis) {
+					case 0:
+						pPLANARX++;
+						break;
+					case 1:
+						pPLANARY++;
+						break;
+					case 2:
+						pPLANARZ++;
+						break;
+					default:
+						System.out.println("Holy shit the impossible happened");
+					}
+				}
+				
+				while (i < eventsQty && events[i].axis == e.axis
+						&& events[i].point == e.point && events[i].type == 2) {
+					i++;
+					switch (e.splitPoint.axis) {
+					case 0:
+						pSTARTX++;
+						break;
+					case 1:
+						pSTARTY++;
+						break;
+					case 2:
+						pSTARTZ++;
+						break;
+					default:
+						System.out.println("Holy shit the impossible happened");
+					}
+				}
+
+				PlaneCandidate candidate = null;
 				switch (e.splitPoint.axis) {
 				case 0:
-					pENDX++;
+					nPX = pPLANARX;
+					nRX -= pPLANARX;
+					nRX -= pENDX;
+					candidate = sah(e.splitPoint, box, nLX, nRX, nPX, rootAABB);
+					nPX = 0;
+					nLX += pPLANARX;
+					nLX += pSTARTX;
 					break;
 				case 1:
-					pENDY++;
+					nPY = pPLANARY;
+					nRY -= pPLANARY;
+					nRY -= pENDY;
+					candidate = sah(e.splitPoint, box, nLY, nRY, nPY, rootAABB);
+					nPY = 0;
+					nLY += pPLANARY;
+					nLY += pSTARTY;
 					break;
 				case 2:
-					pENDZ++;
+					nPZ = pPLANARZ;
+					nRZ -= pPLANARZ;
+					nRZ -= pENDZ;
+					candidate = sah(e.splitPoint, box, nLZ, nRZ, nPZ, rootAABB);
+					nPZ = 0;
+					nLZ += pPLANARZ;
+					nLZ += pSTARTZ;
 					break;
 				default:
 					System.out.println("Holy shit the impossible happened");
 				}
-			}
 
-			
-			while (i < eventsQty && events[i].axis == e.axis
-					&& events[i].point == e.point && events[i].type == 1) {
-				i++;
-				switch (e.splitPoint.axis) {
-				case 0:
-					pPLANARX++;
-					break;
-				case 1:
-					pPLANARY++;
-					break;
-				case 2:
-					pPLANARZ++;
-					break;
-				default:
-					System.out.println("Holy shit the impossible happened");
+				if (minCost > candidate.cost) {
+					minCost = candidate.cost;
+					splitPoint = candidate.splitPoint;
+					boxes = candidate.boxes;
+					left = candidate.left;
 				}
 			}
-			
-			while (i < eventsQty && events[i].axis == e.axis
-					&& events[i].point == e.point && events[i].type == 2) {
-				i++;
-				switch (e.splitPoint.axis) {
-				case 0:
-					pSTARTX++;
-					break;
-				case 1:
-					pSTARTY++;
-					break;
-				case 2:
-					pSTARTZ++;
-					break;
-				default:
-					System.out.println("Holy shit the impossible happened");
-				}
+			if (minCost != Double.MAX_VALUE) {
+				return new PlaneCandidate(boxes, splitPoint, minCost, left);
 			}
-
-			PlaneCandidate candidate = null;
-			switch (e.splitPoint.axis) {
-			case 0:
-				nPX = pPLANARX;
-				nRX -= pPLANARX;
-				nRX -= pENDX;
-				candidate = sah(e.splitPoint, box, nLX, nRX, nPX, rootAABB);
-				nPX = 0;
-				nLX += pPLANARX;
-				nLX += pSTARTX;
-				break;
-			case 1:
-				nPY = pPLANARY;
-				nRY -= pPLANARY;
-				nRY -= pENDY;
-				candidate = sah(e.splitPoint, box, nLY, nRY, nPY, rootAABB);
-				nPY = 0;
-				nLY += pPLANARY;
-				nLY += pSTARTY;
-				break;
-			case 2:
-				nPZ = pPLANARZ;
-				nRZ -= pPLANARZ;
-				nRZ -= pENDZ;
-				candidate = sah(e.splitPoint, box, nLZ, nRZ, nPZ, rootAABB);
-				nPZ = 0;
-				nLZ += pPLANARZ;
-				nLZ += pSTARTZ;
-				break;
-			default:
-				System.out.println("Holy shit the impossible happened");
-			}
-
-			if (minCost > candidate.cost) {
-				minCost = candidate.cost;
-				splitPoint = candidate.splitPoint;
-				boxes = candidate.boxes;
-				left = candidate.left;
-			}
+			return null;
 		}
-		if (minCost != Double.MAX_VALUE) {
-			return new PlaneCandidate(boxes, splitPoint, minCost, left);
-		}
-		return null;
-	}
 
 	public static PerfectSplits perfectSplits(final GeometricObject object,
 			final AABB box) {
