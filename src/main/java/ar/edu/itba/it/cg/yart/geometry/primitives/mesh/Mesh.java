@@ -161,8 +161,8 @@ public class Mesh extends GeometricObject {
 	}
 
 	@Override
-	public double shadowHit(Ray ray, final Stack stack) {
-		return kdTree.traceShadowHit(ray, stack);
+	public double shadowHit(Ray ray, final double tMax,final Stack stack) {
+		return kdTree.traceShadowHit(ray, tMax, stack);
 	}
 
 }

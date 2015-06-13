@@ -73,7 +73,7 @@ public class Instance extends GeometricObject {
 	}
 
 	@Override
-	public double shadowHit(Ray ray, final Stack stack) {
+	public double shadowHit(Ray ray, final double tMax,final Stack stack) {
 		Ray invRay = new Ray();
 		// apply the inverse set of transformations to the ray to produce an
 		// inverse transformed ray
@@ -97,7 +97,7 @@ public class Instance extends GeometricObject {
 		d[2] = dz;
 
 		invRay.direction = d;
-		final double t = object.shadowHit(invRay, stack);
+		final double t = object.shadowHit(invRay, tMax, stack);
 		return t;
 	}
 

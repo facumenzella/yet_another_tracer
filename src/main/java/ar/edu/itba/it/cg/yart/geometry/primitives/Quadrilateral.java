@@ -113,7 +113,7 @@ public class Quadrilateral extends GeometricObject {
 	}
 
 	@Override
-	public double shadowHit(Ray ray, final Stack stack) {
+	public double shadowHit(Ray ray, final double tMax,final Stack stack) {
 
 		// p.sub(ray.origin)
 		double dx = corner.x - ray.origin.x;

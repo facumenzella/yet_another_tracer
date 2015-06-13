@@ -94,7 +94,7 @@ public class Triangle extends GeometricObject{
 	}
 
 	@Override
-	public double shadowHit(final Ray ray, final Stack stack) {
+	public double shadowHit(final Ray ray, final double tMax,final Stack stack) {
 		return Double.NEGATIVE_INFINITY;
 	}
 

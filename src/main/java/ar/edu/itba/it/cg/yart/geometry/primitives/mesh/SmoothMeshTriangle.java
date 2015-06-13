@@ -69,7 +69,7 @@ public class SmoothMeshTriangle extends MeshTriangle{
 	}
 
 	@Override
-	public double shadowHit(Ray ray, final Stack stack) {
+	public double shadowHit(Ray ray, final double tMax,final Stack stack) {
 		if (!getBoundingBox().hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}
