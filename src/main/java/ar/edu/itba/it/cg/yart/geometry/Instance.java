@@ -30,7 +30,7 @@ public class Instance extends GeometricObject {
 	}
 
 	@Override
-	public double hit(Ray ray, ShadeRec sr, final Stack stack) {
+	public double hit(Ray ray, ShadeRec sr, final double tMax, final Stack stack) {
 		Ray invRay = new Ray();
 		// apply the inverse set of transformations to the ray to produce an
 		// inverse transformed ray
@@ -56,7 +56,7 @@ public class Instance extends GeometricObject {
 
 		invRay.direction = d;
 
-		final double t = object.hit(invRay, sr, stack);
+		final double t = object.hit(invRay, sr, tMax, stack);
 		if (t != Double.NEGATIVE_INFINITY) {
 			final double nx = (matrix.m00 * sr.normal.x) + (matrix.m01 * sr.normal.y)
 					+ (matrix.m02 * sr.normal.z);

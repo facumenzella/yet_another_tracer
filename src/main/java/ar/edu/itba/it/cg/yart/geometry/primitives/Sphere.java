@@ -24,7 +24,7 @@ public class Sphere extends GeometricObject {
 	}
 
 	@Override
-	public double hit(final Ray ray, final ShadeRec sr, final Stack stack) {
+	public double hit(final Ray ray, final ShadeRec sr, final double tMax, final Stack stack) {
 		if (!getBoundingBox().hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}
