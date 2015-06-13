@@ -42,7 +42,6 @@ public class YAFKDTree {
 	private static int kMAX_DEPTH = 60;
 
 	public static double kEPSILON = 0.00001;
-	private static double kTMAX = YartConfigProvider.getInstance().getTFar();
 
 	private KDNode root;
 	private AABB rootAABB;
@@ -657,13 +656,12 @@ public class YAFKDTree {
 		}
 	}
 
-	public double traceRayHit(final Ray ray, final ShadeRec sr,
-			final Stack stack) {
+	public double traceRayHit(final Ray ray, final ShadeRec sr, final double tMax, final Stack stack) {
 		if (!rootAABB.hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}
 		double tNear = 0;
-		double tFar = kTMAX;
+		double tFar = tMax;
 		KDNode node = null;
 
 		int top = stack.index;
