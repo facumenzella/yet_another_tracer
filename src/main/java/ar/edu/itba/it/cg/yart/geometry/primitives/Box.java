@@ -99,12 +99,12 @@ public class Box extends GeometricObject {
 	}
 
 	@Override
-	public double shadowHit(Ray ray, final Stack stack) {
+	public double shadowHit(Ray ray, final double t_max,final Stack stack) {
 		double tMax = Double.MAX_VALUE;
 		boolean hitObject = false;
 		double tMin = tMax;
 		for (final GeometricObject face : faces) {
-			double t = face.shadowHit(ray, stack);
+			double t = face.shadowHit(ray, t_max, stack);
 			if (t != Double.NEGATIVE_INFINITY && t < tMin) {
 				hitObject = true;
 				tMin = t;

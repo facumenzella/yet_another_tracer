@@ -53,7 +53,7 @@ public class Plane extends GeometricObject {
 	}
 
 	@Override
-	public double shadowHit(final Ray ray, final Stack stack) {
+	public double shadowHit(final Ray ray, final double tMax,final Stack stack) {
 		// double t = (p.sub(ray.origin)).dot(normal) /
 		// ray.direction.dot(normal);
 

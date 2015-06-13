@@ -55,8 +55,9 @@
 	
 			final double d = Math.sqrt(dx * dx + dy * dy + dz * dz);
 	
-			t = sr.world.getTree().traceShadowHit(ray, stack);
-			if (t != Double.NEGATIVE_INFINITY && t < d) {
+			// TODO check this out
+			t = sr.world.getTree().traceShadowHit(ray, d, stack);
+			if (t != Double.NEGATIVE_INFINITY) {
 				return true;
 			}
 			return false;

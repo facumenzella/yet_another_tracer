@@ -37,7 +37,8 @@ public class Directional extends AbstractLight{
 	@Override
 	public boolean inShadow(Ray ray, ShadeRec sr, final Stack stack) {
 		double t;		
-		t = sr.world.getTree().traceShadowHit(ray, stack);
+		// TODO check this out
+		t = sr.world.getTree().traceShadowHit(ray, Double.POSITIVE_INFINITY, stack);
 		if(t != Double.NEGATIVE_INFINITY) {
 				return true;
 		}

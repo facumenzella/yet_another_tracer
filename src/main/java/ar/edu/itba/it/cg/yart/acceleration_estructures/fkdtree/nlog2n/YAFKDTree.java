@@ -572,12 +572,13 @@ public class YAFKDTree {
 		}
 	}
 
-	public double traceShadowHit(final Ray ray, final Stack stack) {
+	public double traceShadowHit(final Ray ray, final double tMax,final Stack stack) {
 		if (!rootAABB.hit(ray)) {
 			return Double.NEGATIVE_INFINITY;
 		}
+		
 		double tNear = 0;
-		double tFar = kTMAX;
+		double tFar = tMax;
 		KDNode node = null;
 
 		int top = stack.index;
@@ -638,7 +639,7 @@ public class YAFKDTree {
 				double tMin = tFar;
 				boolean hit = false;
 				for (GeometricObject object : objects) {
-					double t = object.shadowHit(ray, stack);
+					double t = object.shadowHit(ray, tMin, stack);
 					if (t != Double.NEGATIVE_INFINITY && t < tMin) {
 						tMin = t;
 						hit = true;

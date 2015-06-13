@@ -51,7 +51,7 @@ public abstract class GeometricObject implements Transformable{
 	
 	public abstract AABB createBoundingBox();
 	public abstract double hit(final Ray ray, final ShadeRec sr, final double tMax, final Stack stack);
-	public abstract double shadowHit(final Ray ray, final Stack stack);
+	public abstract double shadowHit(final Ray ray, final double tMax,final Stack stack);
 	public boolean isFinite() {
 		return true;
 	}
