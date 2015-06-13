@@ -69,13 +69,13 @@ public class Box extends GeometricObject {
 	}
 
 	@Override
-	public double hit(Ray ray, ShadeRec sr, final Stack stack) {
+	public double hit(Ray ray, ShadeRec sr, final double t_max, final Stack stack) {
 		double tMax = Double.MAX_VALUE;
 		Vector3d normal = null;
 		Point3d localHitPoint = null;
 		double tMin = tMax;
 		for (final GeometricObject face : faces) {
-			double t = face.hit(ray, sr, stack);
+			double t = face.hit(ray, sr, t_max, stack);
 			if (t != Double.NEGATIVE_INFINITY && t < tMin) {
 				sr.hitObject = true;
 				sr.material = getMaterial();

@@ -527,7 +527,7 @@ public class YAFKDTree {
 				double u = 0, v = 0;
 				Matrix4d m = null;
 				for (GeometricObject object : objects) {
-					double t = object.hit(ray, sr, stack);
+					double t = object.hit(ray, sr, tMin, stack);
 					if (t != Double.NEGATIVE_INFINITY && t < tMin) {
 						sr.hitObject = true;
 						sr.material = object.getMaterial();
@@ -725,7 +725,7 @@ public class YAFKDTree {
 				Point3d localHitPoint = null;
 				double u = 0, v = 0;
 				for (GeometricObject object : objects) {
-					double t = object.hit(ray, sr, stack);
+					double t = object.hit(ray, sr, tMin, stack);
 					if (t != Double.NEGATIVE_INFINITY && t < tMin) {
 						tMin = t;
 						normal = sr.normal;

@@ -16,8 +16,8 @@ public class Disc extends Plane{
 	}
 	
 	@Override
-	public double hit(final Ray ray, ShadeRec rs, final Stack stack) {
-		double t = super.hit(ray, rs, stack);
+	public double hit(final Ray ray, ShadeRec rs, final double tMax, final Stack stack) {
+		double t = super.hit(ray, rs, tMax, stack);
 		if (t<= EPSILON) {
 			return Double.NEGATIVE_INFINITY;
 		}

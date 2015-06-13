@@ -23,7 +23,7 @@ public class Plane extends GeometricObject {
 	}
 
 	@Override
-	public double hit(final Ray ray, final ShadeRec sr, final Stack stack) {
+	public double hit(final Ray ray, final ShadeRec sr, final double tMax, final Stack stack) {
 		// p.sub(ray.origin)
 		double dx = p.x - ray.origin.x;
 		double dy = p.y - ray.origin.y;
