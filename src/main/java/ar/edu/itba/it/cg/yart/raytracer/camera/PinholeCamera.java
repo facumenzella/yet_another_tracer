@@ -20,6 +20,7 @@ public class PinholeCamera extends CameraAbstract {
 	private final double distance;
 	private final double zoom;
 	private final Point2d sp = new Point2d(0, 0);
+	private double tMax;
 	
 	private double maxX = 1;
 	private double minX = -1;
@@ -31,10 +32,11 @@ public class PinholeCamera extends CameraAbstract {
 	private double fov = 90;
 
 	public PinholeCamera(final Point3d eye, final Point3d lookat,
-			final Vector3d up, final double distance, final double zoom) {
+			final Vector3d up, final double distance, final double zoom, final double tMax) {
 		super(eye, lookat, up);
 		this.distance = distance;
 		this.zoom = zoom;
+		this.tMax = tMax;
 		this.random = new Random();
 	}
 
@@ -95,7 +97,7 @@ public class PinholeCamera extends CameraAbstract {
 				
 				ray.direction = d;
 				sr.hitObject = false;
-				Color c = world.getTree().traceRay(ray, sr, stack);
+				Color c = world.getTree().traceRay(ray, sr, tMax, stack);
 				
 				color.r += c.r;
 				color.g += c.g;
@@ -179,6 +181,10 @@ public class PinholeCamera extends CameraAbstract {
 		this.maxY = maxY;
 		this.minY = minY;
 		invalidateViewPlane();
+	}
+	
+	public void setTMax(final double tMax) {
+		this.tMax = tMax;
 	}
 
 	@Override

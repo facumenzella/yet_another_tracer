@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.light.materials;
 
+import ar.edu.itba.it.cg.yart.YartConstants;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
@@ -14,7 +15,8 @@ public class Transparent extends Phong implements Material{
 
 	private final PerfectSpecular reflectiveBRDF = new PerfectSpecular();
 	private final PerfectTransmitter specularBTDF = new PerfectTransmitter();
-
+	private double tMax = YartConstants.DEFAULT_TMAX;
+	
 	public Transparent setKa(final double ka) {
 		super.setKa(ka);
 		return this;
@@ -90,6 +92,11 @@ public class Transparent extends Phong implements Material{
 		specularBTDF.setKt(kt);
 		return this;
 	}
+	
+	public Transparent setTMax(final double tMax) {
+		this.tMax = tMax;
+		return this;
+	}
 
 	@Override
 	public Color shade(ShadeRec sr, final Stack stack) {
@@ -105,7 +112,7 @@ public class Transparent extends Phong implements Material{
 		final Ray reflectedRay = new Ray(sr.hitPoint, wi);
 		reflectedRay.depth = sr.depth + 1;
 		if (specularBTDF.tir(sr)) {
-			colorL.addEquals(sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world), stack));
+			colorL.addEquals(sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world), this.tMax, stack));
 		} else {
 			final Vector3d wt = new Vector3d(0, 0, 0);
 			final Color ft = specularBTDF.sample_f(sr, wo, wt);
@@ -116,7 +123,7 @@ public class Transparent extends Phong implements Material{
 			double srdotwt = Math.abs(sr.normal.dot(wt));
 			
 			//colorL.addEquals(sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world), stack).multiply(fr).multiply(srdotwi));
-			final Color aux = sr.world.getTree().traceRay(transmittedRay, new ShadeRec(sr.world), stack);
+			final Color aux = sr.world.getTree().traceRay(transmittedRay, new ShadeRec(sr.world), this.tMax, stack);
 			
 			colorL.r += aux.r * ft.r * srdotwt;
 			colorL.g += aux.g * ft.r * srdotwt;

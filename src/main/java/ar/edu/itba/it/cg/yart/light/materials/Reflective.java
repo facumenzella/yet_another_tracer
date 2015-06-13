@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.light.materials;
 
+import ar.edu.itba.it.cg.yart.YartConstants;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
@@ -13,6 +14,9 @@ public class Reflective extends Phong implements Material{
 
 	private final PerfectSpecular reflectiveBRDF = new PerfectSpecular();
 	//private final Vector3d wi = new Vector3d(0,0,0);
+	private double tMax = YartConstants.DEFAULT_TMAX;
+	
+	
 	
 	public Reflective setKa(final double ka) {
 		super.setKa(ka);
@@ -66,6 +70,11 @@ public class Reflective extends Phong implements Material{
 		reflectiveBRDF.setKr(kr);
 		return this;
 	}
+	
+	public Reflective setTMax(final double tMax) {
+		this.tMax = tMax;
+		return this;
+	}
 
 	@Override
 	public Color shade(ShadeRec sr, final Stack stack) {
@@ -80,7 +89,7 @@ public class Reflective extends Phong implements Material{
 		Ray reflectedRay = new Ray(sr.hitPoint, wi);
 		reflectedRay.depth = sr.depth + 1;
 
-		Color c = sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world), stack);
+		Color c = sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world), tMax, stack);
 		
 		final double factor = sr.normal.dot(wi);
 		fr.r *= c.r * factor;
