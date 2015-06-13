@@ -1,5 +1,7 @@
 package ar.edu.itba.it.cg.yart;
 
+import java.io.IOException;
+
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -155,7 +157,11 @@ public class YartApp {
 			}
 			
 			if (!StringUtils.isEmpty(imageName)) {
-				ImageSaver.saveImage(renderResult.getPixels(), imageName, imageExtension, renderResult);
+				try {
+					ImageSaver.saveImage(renderResult.getPixels(), imageName, imageExtension, renderResult);
+				} catch (IOException e) {
+					System.out.println("Failed to save render output: " + e.getMessage());
+				}
 			}
 		} catch (ParseException ex) {
 			System.out.println(ex.getMessage());

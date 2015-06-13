@@ -19,11 +19,11 @@ public class ImageSaver {
 	
 	private static final Path BASE_PATH = Paths.get(".").normalize();
 	
-	public static void saveImage(final ArrayIntegerMatrix pixels, final String imageName, final String imageExtension, final RenderResult results) {
+	public static void saveImage(final ArrayIntegerMatrix pixels, final String imageName, final String imageExtension, final RenderResult results) throws IOException {
 		int w = pixels.cols();
 		int h = pixels.rows();
 		
-		Path path = Paths.get(imageName);
+		Path path = Paths.get(imageName + "." + imageExtension);
 		
 		BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 		
@@ -33,22 +33,15 @@ public class ImageSaver {
 			}
 		}
 
-		StringBuilder nameBuilder = new StringBuilder();
-		final String base = "./images/";
-		nameBuilder.append(base).append(imageName).append(".").append(imageExtension);
-		File outputfile = BASE_PATH.resolve(path).toFile();
-		outputfile.mkdirs();
+		File outputFile = BASE_PATH.resolve(path).toFile();
+		outputFile.mkdirs();
 		
 		printRenderTime(image, results);
 		
-		try {
-			ImageIO.write(image, imageExtension, outputfile);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ImageIO.write(image, imageExtension, outputFile);
 	}
 	
-	public static void saveImage(final ArrayIntegerMatrix pixels, final String imageName, final String imageExtension) {
+	public static void saveImage(final ArrayIntegerMatrix pixels, final String imageName, final String imageExtension) throws IOException {
 		saveImage(pixels, imageName, imageExtension, null);
 	}
 	
