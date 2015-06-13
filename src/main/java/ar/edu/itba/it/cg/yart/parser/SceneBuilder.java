@@ -504,7 +504,7 @@ public class SceneBuilder {
 		
 		try {
 			if (type.equals("perspective")) {
-				PinholeCamera cam = new PinholeCamera(YartConstants.DEFAULT_EYE, YartConstants.DEFAULT_LOOKAT, YartConstants.DEFAULT_UP, 500, 1);
+				PinholeCamera cam = new PinholeCamera(YartConstants.DEFAULT_EYE, YartConstants.DEFAULT_LOOKAT, YartConstants.DEFAULT_UP, 500, 1, YartConstants.DEFAULT_TMAX);
 				double[] defaults = {-1, 1, -1, 1};
 				double[] screenWindow = identifier.getDoubles("screenwindow", defaults);
 				

@@ -1,7 +1,5 @@
 package ar.edu.itba.it.cg.yart.raytracer;
 
-import java.util.Deque;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -79,7 +77,7 @@ public class SimpleRayTracer implements RayTracer {
 
 		setResolution(800, 600);
 		setNumSamples(numSamples);
-		setCamera(new PinholeCamera(eye, lookat, up, distance, zoom));
+		setCamera(new PinholeCamera(eye, lookat, up, distance, zoom, tMax));
 	}
 
 	public void finishRaytracer() {

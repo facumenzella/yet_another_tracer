@@ -456,13 +456,13 @@ public class YAFKDTree {
 	}
 
 	// Here we trace rays. Work for kids
-	public Color traceRay(final Ray ray, final ShadeRec sr, final Stack stack) {
+	public Color traceRay(final Ray ray, final ShadeRec sr, final double tMax, final Stack stack) {
 		if (!rootAABB.hit(ray)) {
 			return sr.world.backgroundColor;
 		}
 
 		double tNear = 0;
-		double tFar = kTMAX;
+		double tFar = tMax;
 		KDNode node = null;
 
 		int top = stack.index;
