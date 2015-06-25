@@ -2,11 +2,8 @@ package ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.nlog2n;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -96,7 +93,7 @@ public class YAFKDTree {
 
 		final List<Event> eventList = new ArrayList<>();
 		for (final GeometricObject obj : gObjects) {
-			eventList.addAll(generateEvents(obj, aabb));
+			eventList.addAll(Event.generateEvents(obj, aabb));
 		}
 		tree.rootAABB = aabb;
 		Event[] events = eventList.toArray(new Event[eventList.size()]);
@@ -337,97 +334,6 @@ public class YAFKDTree {
 
 		double cost = (cl < cr) ? cl : cr;
 		return new PlaneCandidate(boxes, p, cost, (cl < cr) ? true : false);
-	}
-
-	// Here comes the shit
-	public static List<Event> generateEvents(final GeometricObject object,
-			final AABB box) {
-		final List<Event> eventList = new ArrayList<Event>();
-		PerfectSplits perfectSplits = PerfectSplits.perfectSplits(object, box);
-
-		// 3 because we have 3 dimensions
-		// first x
-		int axis = 0; // x;
-		double[] perfects = null;
-		perfects = perfectSplits.perfectXs;
-		double min = perfects[0];
-		double max = perfects[1];
-
-		// if they are the same, they are planar
-		// END(0), PLANAR(1), START(2);
-		if (max - min < kEPSILON) {
-			SplitPoint splitPoint = new SplitPoint();
-			splitPoint.axis = axis;
-			splitPoint.point = min;
-			eventList.add(new Event(1, object, splitPoint));
-		} else if (object.isFinite()) {
-			SplitPoint splitPointStart = new SplitPoint();
-			splitPointStart.axis = axis;
-			splitPointStart.point = min;
-			SplitPoint splitPointEnd = new SplitPoint();
-			splitPointEnd.axis = axis;
-			splitPointEnd.point = max;
-
-			eventList.add(new Event(2, object, splitPointStart));
-			eventList.add(new Event(0, object, splitPointEnd));
-		}
-
-		// then y
-		perfects = null;
-		axis = 1; // y
-		perfects = perfectSplits.perfectYs;
-
-		min = perfects[0];
-		max = perfects[1];
-
-		// if they are the same, they are planar
-		// END(0), PLANAR(1), START(2);
-		if (max - min < kEPSILON) {
-			SplitPoint splitPoint = new SplitPoint();
-			splitPoint.axis = axis;
-			splitPoint.point = min;
-			eventList.add(new Event(1, object, splitPoint));
-		} else if (object.isFinite()) {
-			SplitPoint splitPointStart = new SplitPoint();
-			splitPointStart.axis = axis;
-			splitPointStart.point = min;
-			SplitPoint splitPointEnd = new SplitPoint();
-			splitPointEnd.axis = axis;
-			splitPointEnd.point = max;
-
-			eventList.add(new Event(2, object, splitPointStart));
-			eventList.add(new Event(0, object, splitPointEnd));
-		}
-
-		// finally z
-		perfects = null;
-		axis = 2; // z
-		perfects = perfectSplits.perfectZs;
-
-		min = perfects[0];
-		max = perfects[1];
-
-		// if they are the same, they are planar
-		// END(0), PLANAR(1), START(2);
-		if (max - min < kEPSILON) {
-			SplitPoint splitPoint = new SplitPoint();
-			splitPoint.axis = axis;
-			splitPoint.point = min;
-			eventList.add(new Event(1, object, splitPoint));
-		} else if (object.isFinite()) {
-			SplitPoint splitPointStart = new SplitPoint();
-			splitPointStart.axis = axis;
-			splitPointStart.point = min;
-			SplitPoint splitPointEnd = new SplitPoint();
-			splitPointEnd.axis = axis;
-			splitPointEnd.point = max;
-
-			eventList.add(new Event(2, object, splitPointStart));
-			eventList.add(new Event(0, object, splitPointEnd));
-		}
-
-		return eventList;
-
 	}
 
 	// Here we trace rays. Work for kids

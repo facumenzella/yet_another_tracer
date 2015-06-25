@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.SplitPoint;
+import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 
 public class Event implements Comparable<Event> {
@@ -94,4 +95,95 @@ public class Event implements Comparable<Event> {
 
 		return merged;
 	}
+	
+	// Here comes the shit
+		public static List<Event> generateEvents(final GeometricObject object,
+				final AABB box) {
+			final List<Event> eventList = new ArrayList<Event>();
+			PerfectSplits perfectSplits = PerfectSplits.perfectSplits(object, box);
+
+			// 3 because we have 3 dimensions
+			// first x
+			int axis = 0; // x;
+			double[] perfects = null;
+			perfects = perfectSplits.perfectXs;
+			double min = perfects[0];
+			double max = perfects[1];
+
+			// if they are the same, they are planar
+			// END(0), PLANAR(1), START(2);
+			if (max - min < YAFKDTree.kEPSILON) {
+				SplitPoint splitPoint = new SplitPoint();
+				splitPoint.axis = axis;
+				splitPoint.point = min;
+				eventList.add(new Event(1, object, splitPoint));
+			} else if (object.isFinite()) {
+				SplitPoint splitPointStart = new SplitPoint();
+				splitPointStart.axis = axis;
+				splitPointStart.point = min;
+				SplitPoint splitPointEnd = new SplitPoint();
+				splitPointEnd.axis = axis;
+				splitPointEnd.point = max;
+
+				eventList.add(new Event(2, object, splitPointStart));
+				eventList.add(new Event(0, object, splitPointEnd));
+			}
+
+			// then y
+			perfects = null;
+			axis = 1; // y
+			perfects = perfectSplits.perfectYs;
+
+			min = perfects[0];
+			max = perfects[1];
+
+			// if they are the same, they are planar
+			// END(0), PLANAR(1), START(2);
+			if (max - min < YAFKDTree.kEPSILON) {
+				SplitPoint splitPoint = new SplitPoint();
+				splitPoint.axis = axis;
+				splitPoint.point = min;
+				eventList.add(new Event(1, object, splitPoint));
+			} else if (object.isFinite()) {
+				SplitPoint splitPointStart = new SplitPoint();
+				splitPointStart.axis = axis;
+				splitPointStart.point = min;
+				SplitPoint splitPointEnd = new SplitPoint();
+				splitPointEnd.axis = axis;
+				splitPointEnd.point = max;
+
+				eventList.add(new Event(2, object, splitPointStart));
+				eventList.add(new Event(0, object, splitPointEnd));
+			}
+
+			// finally z
+			perfects = null;
+			axis = 2; // z
+			perfects = perfectSplits.perfectZs;
+
+			min = perfects[0];
+			max = perfects[1];
+
+			// if they are the same, they are planar
+			// END(0), PLANAR(1), START(2);
+			if (max - min < YAFKDTree.kEPSILON) {
+				SplitPoint splitPoint = new SplitPoint();
+				splitPoint.axis = axis;
+				splitPoint.point = min;
+				eventList.add(new Event(1, object, splitPoint));
+			} else if (object.isFinite()) {
+				SplitPoint splitPointStart = new SplitPoint();
+				splitPointStart.axis = axis;
+				splitPointStart.point = min;
+				SplitPoint splitPointEnd = new SplitPoint();
+				splitPointEnd.axis = axis;
+				splitPointEnd.point = max;
+
+				eventList.add(new Event(2, object, splitPointStart));
+				eventList.add(new Event(0, object, splitPointEnd));
+			}
+
+			return eventList;
+
+		}
 }
