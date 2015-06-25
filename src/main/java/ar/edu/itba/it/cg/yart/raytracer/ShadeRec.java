@@ -19,6 +19,11 @@ public class ShadeRec {
 	public double u;						//coordinates for textures
 	public double v;						//coordinates for textures
 	public World world;						//world reference for shading
+
+	// Used by area lights
+	public Vector3d wi = null;
+	public Vector3d sampleNormal = null;
+	public Point3d samplePoint = null;
 	
 	public ShadeRec(final World world) {
 		hitObject = false;

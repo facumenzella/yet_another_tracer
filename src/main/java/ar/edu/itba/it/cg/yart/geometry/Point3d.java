@@ -20,6 +20,10 @@ public class Point3d {
 		return new Vector3d(x - other.x, y - other.y, z - other.z);
 	}
 	
+	public Vector3d sub(final Vector3d other) {
+		return new Vector3d(x - other.x, y - other.y, z - other.z);
+	}
+	
 	public Point3d add(final Point3d other) {
 		return new Point3d(x + other.x, y + other.y, z + other.z);
 	}
