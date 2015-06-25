@@ -47,8 +47,8 @@ public class ClassifiedEvents {
 		for (final Entry<GeometricObject, Integer> entry : tc.sides.entrySet()) {
 			if (entry.getValue() == 3) {
 				final GeometricObject obj = entry.getKey();
-				ebl.addAll(YAFKDTree.generateEvents(obj, leftBox));
-				ebr.addAll(YAFKDTree.generateEvents(obj, rightBox));
+				ebl.addAll(Event.generateEvents(obj, leftBox));
+				ebr.addAll(Event.generateEvents(obj, rightBox));
 			}
 		}
 
