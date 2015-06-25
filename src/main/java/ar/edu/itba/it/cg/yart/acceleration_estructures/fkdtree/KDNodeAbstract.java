@@ -6,7 +6,7 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 
 
-public abstract class KDNode {
+public abstract class KDNodeAbstract {
 	
 		public List<GeometricObject> gObjects;
 		public AABB box;

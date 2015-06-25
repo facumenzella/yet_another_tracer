@@ -1,11 +1,11 @@
 package ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree;
 
-public class KDInternalNode extends KDNode {
+public class KDInternalNode extends KDNodeAbstract {
 
-	public final KDNode left, right;
+	public final KDNodeAbstract left, right;
 	public final SplitPoint splitPoint;
 	
-	public KDInternalNode(final SplitPoint splitPoint, final KDNode left, final KDNode right) {
+	public KDInternalNode(final SplitPoint splitPoint, final KDNodeAbstract left, final KDNodeAbstract right) {
 		this.splitPoint = splitPoint;
 		this.left = left;
 		this.right = right;
