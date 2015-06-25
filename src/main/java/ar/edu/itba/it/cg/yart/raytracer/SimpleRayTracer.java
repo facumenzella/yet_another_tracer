@@ -2,6 +2,7 @@ package ar.edu.itba.it.cg.yart.raytracer;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -14,7 +15,7 @@ import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
-import ar.edu.itba.it.cg.yart.raytracer.buckets.BucketWorker;
+import ar.edu.itba.it.cg.yart.raytracer.buckets.BucketRenderAction;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
@@ -52,6 +53,7 @@ public class SimpleRayTracer implements RayTracer {
 		}
 	};
 	private final ExecutorService executor;
+	private final ForkJoinPool pool;
 	private Bucket[] buckets;
 	private Camera camera;
 	private Stack[] stacks;
@@ -69,6 +71,7 @@ public class SimpleRayTracer implements RayTracer {
 		this.cores = cores;
 		this.bucketSize = bucketSize;
 		this.executor = YartExecutorFactory.newFixedThreadPool(this.cores);
+		this.pool = new ForkJoinPool(this.cores);
 		this.stacks = new Stack[this.cores];
 		for (int i = 0; i < stacks.length; i++) {
 			this.stacks[i] = new Stack();
@@ -131,9 +134,8 @@ public class SimpleRayTracer implements RayTracer {
 		final CountDownLatch latch = new CountDownLatch(totals);
 
 		AtomicInteger index = new AtomicInteger(-1);
-		
 		for (int i = 0; i < this.cores; i++) {
-			executor.submit(new BucketWorker(buckets, this, result,
+			pool.submit(new BucketRenderAction(buckets, this, result,
 					new RaytracerCallbacks() {
 
 						@Override
@@ -148,7 +150,7 @@ public class SimpleRayTracer implements RayTracer {
 							callbacks.onBucketFinished(bucket, renderResult);
 							latch.countDown();
 						}
-					}, this.stacks[i], index));
+					}, this.stacks[i], index, 0, buckets.length));
 		}
 
 		try {
