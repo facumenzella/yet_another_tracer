@@ -10,18 +10,18 @@ public class RenderImageResult extends JComponent {
 
 	private static final long serialVersionUID = 1L;
 	
-	private final BufferedImage bi;
+	private BufferedImage bufferedImage;
 	
-	public RenderImageResult(final BufferedImage bi) {
-		this.bi = bi;
-		
-		setPreferredSize(new Dimension(bi.getWidth(), bi.getHeight()));
+	
+	public void setBufferedImage(final BufferedImage bufferedImage) {
+		this.bufferedImage = bufferedImage;
+		setPreferredSize(new Dimension(bufferedImage.getWidth(), bufferedImage.getHeight()));
 	}
 	
 	@Override
 	public void paint(Graphics g) {
 		super.paint(g);
-		g.drawImage(bi, 0, 0, null);
+		g.drawImage(bufferedImage, 0, 0, null);
 	}
 
 }

@@ -1,7 +1,9 @@
 package ar.edu.itba.it.cg.yart.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridBagLayout;
 import java.awt.image.BufferedImage;
 
@@ -10,6 +12,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import ar.edu.itba.it.cg.yart.parser.SceneParseException;
+import ar.edu.itba.it.cg.yart.parser.SceneParser;
 import ar.edu.itba.it.cg.yart.raytracer.RenderResult;
 import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer.RaytracerCallbacks;
 import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
@@ -22,14 +26,15 @@ public class RenderWindow extends JFrame implements RaytracerCallbacks {
 	
 	private static final int MIN_WIDTH = 320;
 	private static final int MIN_HEIGHT = 240;
-	private static final int MAX_WIDTH = 800;
-	private static final int MAX_HEIGHT = 600;
+	private static final int MAX_WIDTH = 1024;
+	private static final int MAX_HEIGHT = 768;
 	
-	private final BufferedImage bi;
-	private final RayTracer raytracer;
+	private final JScrollPane scrollPane;
+	private final RenderImageResult resultPanel;
+	private final StatusPanel statusPanel;
 	
-	RenderImageResult resultPanel;
-	JScrollPane scrollPane;
+	private BufferedImage bi;
+	private RayTracer raytracer;
 	
 	public RenderWindow(RayTracer raytracer) {
 		int width = raytracer.getHorizontalRes();
@@ -38,8 +43,6 @@ public class RenderWindow extends JFrame implements RaytracerCallbacks {
 		this.raytracer = raytracer;
 		
 		raytracer.setCallbacks(this);
-		
-		bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		
 		BorderLayout borderLayout = new BorderLayout();
 		borderLayout.setHgap(0);
@@ -51,15 +54,50 @@ public class RenderWindow extends JFrame implements RaytracerCallbacks {
 		panel.setLayout(new GridBagLayout());
 		panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		
-		resultPanel = new RenderImageResult(bi);
-		
+		resultPanel = new RenderImageResult();
 		panel.add(resultPanel);
 		
 		scrollPane = new JScrollPane(panel);
 		scrollPane.setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
 		
+		statusPanel = new StatusPanel();
+		
+		setImageSize(width, height);
+		
+		add(scrollPane, BorderLayout.CENTER);
+		//add(statusPanel, BorderLayout.LINE_START);
+		
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
+		setMaximumSize(new Dimension(MAX_WIDTH, MAX_HEIGHT));
+		
+		pack();
+		setLocationRelativeTo(null);
+		
+		setVisible(true);
+	}
+	
+	public void loadScene(final String sceneFile) {
+		RenderResult renderResult = new RenderResult();
+		SceneParser sceneParser = new SceneParser(sceneFile, raytracer);
+		try {
+			renderResult.startSceneLoading();
+			sceneParser.parse();
+			renderResult.finishSceneLoading();
+			statusPanel.setLoadingTime(renderResult.getSceneLoadingTime());
+		} catch (SceneParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void setImageSize(final int width, final int height) {
 		int w = width;
 		int h = height;
+		
+		bi = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		
 		if (width > MAX_WIDTH) {
 			w = MAX_WIDTH;
@@ -79,26 +117,24 @@ public class RenderWindow extends JFrame implements RaytracerCallbacks {
 		h += 10;
 		
 		scrollPane.setPreferredSize(new Dimension(w, h));
-		
-		add(scrollPane, BorderLayout.CENTER);
-		
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
-		setMinimumSize(new Dimension(MIN_WIDTH, MIN_HEIGHT));
-		setMaximumSize(new Dimension(MAX_WIDTH, MAX_HEIGHT));
-		
+		resultPanel.setBufferedImage(bi);
 		pack();
-		setLocationRelativeTo(null);
-		
-		setVisible(true);
+	}
+	
+	@Override
+	public void onBucketStarted(Bucket bucket) {
+		Graphics graphics = bi.getGraphics();
+		graphics.setColor(Color.WHITE);
+		graphics.drawRect(bucket.getX(), bucket.getY(), bucket.getWidth() - 1, bucket.getHeight() - 1);
+		resultPanel.repaint(bucket.getX(), bucket.getY(), bucket.getWidth(), bucket.getHeight());
 	}
 
 	@Override
 	public void onBucketFinished(final Bucket bucket, final RenderResult result) {
-		int xStart = bucket.getX();
-		int xFinish = bucket.getX() + bucket.getWidth();
-		int yStart = bucket.getY();
-		int yFinish = bucket.getY() + bucket.getHeight();
+		final int xStart = bucket.getX();
+		final int xFinish = bucket.getX() + bucket.getWidth();
+		final int yStart = bucket.getY();
+		final int yFinish = bucket.getY() + bucket.getHeight();
 		
 		for (int y = yStart; y < yFinish; y++) {
 			for (int x = xStart; x < xFinish; x++) {
@@ -106,13 +142,16 @@ public class RenderWindow extends JFrame implements RaytracerCallbacks {
 			}
 		}
 		
-		resultPanel.repaint();
+		resultPanel.repaint(bucket.getX(), bucket.getY(), bucket.getWidth(), bucket.getHeight());
 	}
 
 	@Override
 	public void onRenderFinished(RenderResult result) {
 		ImageSaver.printRenderTime(bi, result);
 		resultPanel.repaint();
+		statusPanel.setLoadingTime(result.getSceneLoadingTime());
+		statusPanel.setPreprocessingTime(result.getPreprocessingTime());
+		statusPanel.setRenderTime(result.getRenderTime());
 	}
 
 }
