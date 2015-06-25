@@ -69,8 +69,8 @@ Include "FloorMaterial.lxm"
 Include "../Meshes/Floor.lxo"
 
 Material "metal2"
-	"color Kr" [0.8 0.8 0.2]
-	"float uroughness" [0.01]
+	"color Kr" [0.2 0.2 0.2]
+	"float uroughness" [0.1]
 
 Include "../Meshes/Mario.lxo"
 

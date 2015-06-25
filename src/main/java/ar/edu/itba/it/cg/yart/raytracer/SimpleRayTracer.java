@@ -43,14 +43,9 @@ public class SimpleRayTracer implements RayTracer {
 	private int numSamples;
 
 	private RaytracerCallbacks callbacks = new RaytracerCallbacks() {
-
-		@Override
-		public void onRenderFinished(RenderResult result) {
-		}
-
-		@Override
-		public void onBucketFinished(Bucket bucket, RenderResult result) {
-		}
+		@Override public void onBucketStarted(final Bucket bucket) {}
+		@Override public void onRenderFinished(RenderResult result) {}
+		@Override public void onBucketFinished(Bucket bucket, RenderResult result) {}
 	};
 	private final ExecutorService executor;
 	private final ForkJoinPool pool;
@@ -59,6 +54,7 @@ public class SimpleRayTracer implements RayTracer {
 	private Stack[] stacks;
 
 	public interface RaytracerCallbacks {
+		public void onBucketStarted(final Bucket bucket);
 		public void onBucketFinished(final Bucket bucket,
 				final RenderResult result);
 
@@ -103,7 +99,7 @@ public class SimpleRayTracer implements RayTracer {
 		int i = 0;
 		while (i < buckets.length) {
 			Bucket bucket = buckets[i];
-
+			callbacks.onBucketStarted(bucket);
 			camera.renderScene(bucket, this, result, this.stacks[0]);
 
 			callbacks.onBucketFinished(bucket, renderResult);
@@ -137,12 +133,11 @@ public class SimpleRayTracer implements RayTracer {
 		for (int i = 0; i < this.cores; i++) {
 			pool.submit(new BucketRenderAction(buckets, this, result,
 					new RaytracerCallbacks() {
-
-						@Override
-						public void onRenderFinished(RenderResult result) {
-							// TODO fix this
-							return;
+						@Override public void onBucketStarted(Bucket bucket) {
+							callbacks.onBucketStarted(bucket);
 						}
+						
+						@Override public void onRenderFinished(RenderResult result) {}
 
 						@Override
 						public void onBucketFinished(Bucket bucket,
