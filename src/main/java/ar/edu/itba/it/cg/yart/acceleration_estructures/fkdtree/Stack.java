@@ -22,7 +22,7 @@ public class Stack {
 		return index;
 	}
 	
-	public void push(final KDNode node, final double min, final double max) {
+	public void push(final KDNodeAbstract node, final double min, final double max) {
 		StackElement e = stack[index++];
 		e.node = node;
 		e.min = min;
@@ -34,7 +34,7 @@ public class Stack {
 	}
 	
 	public class StackElement {
-		public KDNode node;
+		public KDNodeAbstract node;
 		public double min;
 		public double max;
 		

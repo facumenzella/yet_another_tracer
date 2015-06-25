@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import ar.edu.itba.it.cg.yart.YartConstants;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.KDInternalNode;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.KDLeafNode;
-import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.KDNode;
+import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.KDNodeAbstract;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.PlaneCandidate;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.SplitPoint;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
@@ -37,7 +37,7 @@ public class YAFKDTree {
 
 	public static double kEPSILON = 0.00001;
 
-	private KDNode root;
+	private KDNodeAbstract root;
 	private AABB rootAABB;
 
 	private static AABB buildInfiniteRootAABB(
@@ -106,13 +106,13 @@ public class YAFKDTree {
 		return tree;
 	}
 
-	private static KDNode buildTree(final AABB rootBox,
+	private static KDNodeAbstract buildTree(final AABB rootBox,
 			final List<GeometricObject> gObjects, final Event[] events) {
-		return buildKDNode(gObjects, rootBox, 0, events, rootBox,
+		return buildKDNodeAbstract(gObjects, rootBox, 0, events, rootBox,
 				new HashSet<PlaneCandidate>());
 	}
 
-	private static KDNode buildKDNode(final List<GeometricObject> gObjects,
+	private static KDNodeAbstract buildKDNodeAbstract(final List<GeometricObject> gObjects,
 			final AABB box, final int currentDepth, Event[] events,
 			final AABB rootAABB, final Set<PlaneCandidate> prevs) {
 		final double kKI = 1.5;
@@ -155,9 +155,9 @@ public class YAFKDTree {
 
 		final int nextDepth = currentDepth + 1;
 
-		return new KDInternalNode(splitPoint, buildKDNode(classifiedObjects.tl,
+		return new KDInternalNode(splitPoint, buildKDNodeAbstract(classifiedObjects.tl,
 				boxes[0], nextDepth, el.toArray(new Event[] {}), rootAABB,
-				prevsPlus), buildKDNode(classifiedObjects.tr, boxes[1],
+				prevsPlus), buildKDNodeAbstract(classifiedObjects.tr, boxes[1],
 				nextDepth, er.toArray(new Event[] {}), rootAABB, prevsPlus));
 	}
 
@@ -344,7 +344,7 @@ public class YAFKDTree {
 
 		double tNear = 0;
 		double tFar = tMax;
-		KDNode node = null;
+		KDNodeAbstract node = null;
 
 		int top = stack.index;
 		stack.push(root, tNear, tFar);
@@ -363,7 +363,7 @@ public class YAFKDTree {
 
 				KDInternalNode internalNode = (KDInternalNode) node;
 
-				KDNode near = null, far = null;
+				KDNodeAbstract near = null, far = null;
 				final double splitPoint = internalNode.splitPoint.point;
 				final double rayDirAxis = dir[internalNode.splitPoint.axis];
 				final double rayOriginAxis = origin[internalNode.splitPoint.axis];
@@ -460,7 +460,7 @@ public class YAFKDTree {
 		
 		double tNear = 0;
 		double tFar = tMax;
-		KDNode node = null;
+		KDNodeAbstract node = null;
 
 		int top = stack.index;
 		stack.push(root, tNear, tFar);
@@ -478,7 +478,7 @@ public class YAFKDTree {
 
 				KDInternalNode internalNode = (KDInternalNode) node;
 
-				KDNode near = null, far = null;
+				KDNodeAbstract near = null, far = null;
 				final double splitPoint = internalNode.splitPoint.point;
 				final double rayDirAxis = dir[internalNode.splitPoint.axis];
 				final double rayOriginAxis = origin[internalNode.splitPoint.axis];
@@ -544,7 +544,7 @@ public class YAFKDTree {
 		}
 		double tNear = 0;
 		double tFar = tMax;
-		KDNode node = null;
+		KDNodeAbstract node = null;
 
 		int top = stack.index;
 		stack.push(root, tNear, tFar);
@@ -561,7 +561,7 @@ public class YAFKDTree {
 			while (node.gObjects == null) {
 				KDInternalNode internalNode = (KDInternalNode) node;
 
-				KDNode near = null, far = null;
+				KDNodeAbstract near = null, far = null;
 				final double splitPoint = internalNode.splitPoint.point;
 				final double rayDirAxis = dir[internalNode.splitPoint.axis];
 				final double rayOriginAxis = origin[internalNode.splitPoint.axis];
