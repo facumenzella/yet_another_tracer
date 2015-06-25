@@ -90,6 +90,16 @@ public class Vector3d {
 		return new Normal3d(this.x, this.y, this.z);
 	}
 	
+	public Vector3d normalizeMe() {
+		this.x = x / length;
+		this.y = y / length;
+		this.z = z / length;
+		this.w = 1 / length;
+		this.length = 1;
+		
+		return this;
+	}
+	
 	public void copy(final Vector3d other) {
 		this.x = other.x;
 		this.y = other.y;
