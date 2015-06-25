@@ -8,7 +8,6 @@ public class SplitPoint {
 	
 	public int axis; // x = 0, y = 1, z = 2
 	public double point;
-	public double cost;
 	
 	public SplitPoint(){};
 	
