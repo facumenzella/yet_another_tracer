@@ -2,10 +2,8 @@ package ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.nlog2n;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,7 +28,6 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
-import ar.edu.itba.it.cg.yart.utils.config.YartConfigProvider;
 
 // This has O(N log N) or at least we hope it does
 
@@ -321,27 +318,6 @@ public class YAFKDTree {
 			return null;
 		}
 
-	public static PerfectSplits perfectSplits(final GeometricObject object,
-			final AABB box) {
-		double[] xs = new double[2];
-		double[] ys = new double[2];
-		double[] zs = new double[2];
-		AABB b = object.getBoundingBox();
-		if (b != null) {
-			b = b.clip(box);
-			// we first find the perfect xs
-			xs[0] = b.p0.x;
-			xs[1] = b.p1.x;
-			// then the ys
-			ys[0] = b.p1.y;
-			ys[1] = b.p0.y;
-			// finally the zs
-			zs[0] = b.p0.z;
-			zs[1] = b.p1.z;
-		}
-		return new PerfectSplits(xs, ys, zs);
-	}
-
 	private static PlaneCandidate sah(final SplitPoint p, final AABB box,
 			final double nl, final double nr, final double np,
 			final AABB rootAABB) {
@@ -367,7 +343,7 @@ public class YAFKDTree {
 	public static List<Event> generateEvents(final GeometricObject object,
 			final AABB box) {
 		final List<Event> eventList = new ArrayList<Event>();
-		PerfectSplits perfectSplits = perfectSplits(object, box);
+		PerfectSplits perfectSplits = PerfectSplits.perfectSplits(object, box);
 
 		// 3 because we have 3 dimensions
 		// first x
