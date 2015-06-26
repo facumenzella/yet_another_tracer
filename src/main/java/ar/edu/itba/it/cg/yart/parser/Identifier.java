@@ -22,6 +22,7 @@ public class Identifier {
 		MAKE_NAMED_MATERIAL("MakeNamedMaterial", 1),
 		TEXTURE("Texture", 3),
 		LIGHT_SOURCE("LightSource", 1),
+		AREA_LIGHT_SOURCE("AreaLightSource", 1),
 		IDENTITY("Identity", 0),
 		TRANSFORM("Transform", 16),
 		TRANSLATE("Translate", 3),
