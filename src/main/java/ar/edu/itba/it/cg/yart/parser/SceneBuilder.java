@@ -25,9 +25,11 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.Sphere;
 import ar.edu.itba.it.cg.yart.geometry.primitives.mesh.Mesh;
 import ar.edu.itba.it.cg.yart.geometry.primitives.mesh.MeshData;
 import ar.edu.itba.it.cg.yart.light.AmbientLight;
+import ar.edu.itba.it.cg.yart.light.AreaLight;
 import ar.edu.itba.it.cg.yart.light.Directional;
 import ar.edu.itba.it.cg.yart.light.Light;
 import ar.edu.itba.it.cg.yart.light.PointLight;
+import ar.edu.itba.it.cg.yart.light.materials.Emissive;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.light.materials.Matte;
 import ar.edu.itba.it.cg.yart.light.materials.Reflective;
@@ -59,6 +61,7 @@ public class SceneBuilder {
 	private Map<String, Texture> textures = new HashMap<String, Texture>();
 	private Map<String, Material> namedMaterials = new HashMap<String, Material>();
 	private Material currentMaterial;
+	private AreaLight currentAreaLight;
 	
 	private Deque<Matrix4d> transformMatrices = new ArrayDeque<Matrix4d>();
 	private Deque<Attribute> attributes = new ArrayDeque<Attribute>();
@@ -109,6 +112,12 @@ public class SceneBuilder {
 			final Light light = buildLight(i);
 			if (light != null) {
 				raytracer.getWorld().addLight(light);
+			}
+			break;
+		case AREA_LIGHT_SOURCE:
+			final AreaLight areaLight = buildAreaLight(i);
+			if (areaLight != null) {
+				raytracer.getWorld().addLight(areaLight);
 			}
 			break;
 		case NAMED_MATERIAL:
@@ -165,6 +174,8 @@ public class SceneBuilder {
 					new Point3d(params[0], params[1], params[2]),
 					new Point3d(params[3], params[4], params[5]),
 					new Vector3d(params[6], params[7], params[8]));
+			break;
+		default:
 			break;
 		}
 		
@@ -429,7 +440,16 @@ public class SceneBuilder {
 		}
 		
 		if (instance != null) {
-			instance.setMaterial(currentMaterial);
+			// If there is an Area Light set, use an Emissive material and set this object as its shape
+			if (currentAreaLight != null) {
+				currentAreaLight.setMaterial(new Emissive());
+				currentAreaLight.setShape(instance);
+				currentAreaLight = null;
+				instance.setMaterial(currentMaterial);
+			}
+			else {
+				instance.setMaterial(currentMaterial);
+			}
 			Matrix4d matrix = transformMatrices.peek();
 			instance.applyTransformation(localMatrix.leftMultiply(matrix));
 		}
@@ -469,6 +489,27 @@ public class SceneBuilder {
 				Color l = identifier.getColor("l", Color.whiteColor());
 				AmbientLight light = new AmbientLight(gain, l);
 				ret = light;
+			}
+			else if (type.equals("area")) {
+				ret = buildAreaLight(identifier);
+			}
+		}
+		catch (Exception e) {
+			LOGGER.warn(e.getMessage());
+		}
+		
+		return ret;
+	}
+	
+	private AreaLight buildAreaLight(final Identifier identifier) {
+		AreaLight ret = null;
+		try {
+			double gain = identifier.getDouble("gain", 1.0f) * YartConstants.LIGHT_GAIN_MULTIPLIER;
+			if (identifier.getParameters()[0].equals("area")) {
+				ret = new AreaLight(gain, identifier.getColor("l", Color.WHITE));
+			}
+			else {
+				LOGGER.warn("AreaLightSource only accepts \"area\" as parameter");
 			}
 		}
 		catch (Exception e) {
