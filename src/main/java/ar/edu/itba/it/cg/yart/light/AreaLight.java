@@ -4,6 +4,7 @@ import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
+import ar.edu.itba.it.cg.yart.light.materials.Emissive;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
@@ -25,8 +26,12 @@ public class AreaLight implements Light {
 		this.geometricObject = geometricObject;
 	}
 	
-	public void setMaterial(final Material material) {
+	public void setMaterial(final Emissive material) {
 		this.material = material;
+		if (material != null) {
+			material.setLs(ls);
+			material.setCe(color);
+		}
 	}
 
 	@Override
