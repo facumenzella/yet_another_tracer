@@ -6,6 +6,7 @@ public class Jittered extends SamplerAbstract {
 
 	public Jittered(int num_samples, int num_sets) {
 		super(num_samples, num_sets);
+		generateSamples();
 	}
 
 	@Override

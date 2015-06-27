@@ -7,6 +7,7 @@ public class MultiJittered extends SamplerAbstract {
 	protected MultiJittered(int num_samples, int num_sets,
 			int[] shuffled_indices, long count, int jump) {
 		super(num_samples, num_sets);
+		generateSamples();
 	}
 
 	@Override
