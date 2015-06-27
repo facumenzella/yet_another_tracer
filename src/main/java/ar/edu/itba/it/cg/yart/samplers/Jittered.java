@@ -1,14 +1,11 @@
 package ar.edu.itba.it.cg.yart.samplers;
 
-import java.util.List;
-
 import ar.edu.itba.it.cg.yart.geometry.Point2d;
 
 public class Jittered extends SamplerAbstract {
-	
-	public Jittered(int num_samples, int num_sets, List<Point2d> samples,
-			int[] shuffled_indices, long count, int jump) {
-		super(num_samples, num_sets, shuffled_indices, count, jump);
+
+	public Jittered(int num_samples, int num_sets) {
+		super(num_samples, num_sets);
 	}
 
 	@Override
