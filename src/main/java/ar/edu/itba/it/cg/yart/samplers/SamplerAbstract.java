@@ -1,6 +1,7 @@
 package ar.edu.itba.it.cg.yart.samplers;
 
-import java.util.List;
+import java.util.Arrays;
+import java.util.Random;
 
 import ar.edu.itba.it.cg.yart.geometry.Point2d;
 
@@ -10,24 +11,49 @@ import ar.edu.itba.it.cg.yart.geometry.Point2d;
 
 public abstract class SamplerAbstract implements Sampler{
 	
+	protected final Random random;
 	final protected int num_samples; // the number of points in a pattern
 	final protected int num_sets; // the number of sample sets (patterns) stored
-	final protected List<Point2d> samples;  // sample points  on a unit square
+	final protected Point2d[] samples;  // sample points  on a unit square
 	final protected int[] shuffled_indices; // shuffled samples array indices
-	final protected long count; // the current number of sample points used
-	final protected int jump; // random index jump
+	protected long count; // the current number of sample points used
+	protected int jump; // random index jump
 	
-	public SamplerAbstract(final int num_samples, final int num_sets,
-			final List<Point2d> samples, final int[] shuffled_indices, final long count, final int jump) {
+	protected SamplerAbstract(final int num_samples, final int num_sets, final int[] shuffled_indices, final long count, final int jump) {
 		this.num_samples = num_samples;
 		this.num_sets = num_sets;
-		this.samples = samples;
-		this.shuffled_indices = shuffled_indices;
+		this.samples = new Point2d[num_samples*num_sets];
+		this.shuffled_indices = setupShuffledIndices();
 		this.count = count;
 		this.jump = jump;
+		this.random = new Random();
 	}
+	
 	public abstract void generateSamples();
-	public abstract void setupShuffledIndices();
-	public abstract void shuffleSamples();
-	public abstract Point2d sampleUnitSquare();
+	 // randomly shuffle  the samples in each pattern
+	
+	 // set up the randomly shuffled indices
+	private int[] setupShuffledIndices() { 
+		final int shuffled_indices[] = new int[num_samples*num_sets];
+		final int[] indices = new int[num_samples*num_sets];
+		
+		for (int i = 0; i < num_samples; i++) {
+			indices[i]= i;
+		}
+		for (int p = 0; p < num_sets; p++) { 
+			Arrays.sort(indices);
+			
+			for (int j = 0; j < num_samples; j++){
+				shuffled_indices[j] = indices[j];
+			}
+		}
+		return shuffled_indices;
+	}
+	
+	public Point2d sampleUnitSquare() {
+		if (count % num_samples == 0) { // start of a new pixel
+			jump = (random.nextInt() % num_sets) * num_samples;
+		}
+		return this.samples[((int) (jump + count++ % num_samples))];
+	}
 }
