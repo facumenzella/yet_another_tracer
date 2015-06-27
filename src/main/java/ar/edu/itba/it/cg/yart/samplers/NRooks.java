@@ -17,7 +17,7 @@ public class NRooks extends SamplerAbstract {
 				final double x = j + random.nextDouble() / num_samples;
 				final double y = j + random.nextDouble() / num_samples;
 				final Point2d point = new Point2d(x,y);
-				samples[i] = point;
+				samples[i++] = point;
 			}		
 
 		shuffle_x_coordinates();
