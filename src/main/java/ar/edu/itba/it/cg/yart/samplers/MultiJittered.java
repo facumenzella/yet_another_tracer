@@ -32,8 +32,8 @@ public class MultiJittered extends SamplerAbstract {
 							* subcell_width + (random.nextDouble() * subcell_width);
 				}
 
-		this.shuffle_x_coordinates();
-		this.shuffle_y_coordinates();
+		this.shuffleXCoordinates();
+		this.shuffleYCoordinates();
 	}
 
 }

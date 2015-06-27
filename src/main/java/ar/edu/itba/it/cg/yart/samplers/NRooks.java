@@ -20,8 +20,8 @@ public class NRooks extends SamplerAbstract {
 				samples[i++] = point;
 			}		
 
-		shuffle_x_coordinates();
-		shuffle_y_coordinates();
+		shuffleXCoordinates();
+		shuffleYCoordinates();
 	}
 
 }
