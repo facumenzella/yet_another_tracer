@@ -52,6 +52,59 @@ public abstract class SamplerAbstract implements Sampler{
 		}
 		return shuffled_indices;
 	}
+		
+	public Point2d sampleUnitSquare() {
+		if (count % num_samples == 0) { // start of a new pixel
+			jump = (random.nextInt() % num_sets) * num_samples;
+		}
+		return this.samples[((int) (jump + count++ % num_samples))];
+	}
+	
+	public Point3d sample_hemisphere() {
+		if (count % num_samples == 0) {
+			jump = (random.nextInt() % num_sets) * num_samples; // start of a new pixel
+		}
+		return (this.hemisphereSamples[jump + shuffled_indices[(int) (jump + count++ % num_samples)]]);		
+	}
+	
+	public Point3d sample_sphere() {
+		if (count % num_samples == 0) {
+			jump = (random.nextInt() % num_sets) * num_samples; // start of a new pixel
+		}
+		return (this.sphereSamples[jump + shuffled_indices[(int) (jump + count++ % num_samples)]]);		
+	}
+	
+	protected void mapSamples2Hemisphere(final double exp) {
+		int size = samples.length;
+		
+		for (int j = 0; j < size; j++) {
+			final double cos_phi = Math.cos(2.0 * Math.PI * samples[j].x);
+			final double sin_phi = Math.sin(2.0 * Math.PI * samples[j].x);	
+			final double cos_theta = Math.pow((1.0 - samples[j].y), 1.0 / (exp + 1.0));
+			final double sin_theta = Math.sqrt(1.0 - cos_theta * cos_theta);
+			final double pu = sin_theta * cos_phi;
+			final double pv = sin_theta * sin_phi;
+			final double pw = cos_theta;
+			this.hemisphereSamples[j] = new Point3d(pu, pv, pw); 
+		}
+	}
+	
+	protected void mapSamples2Sphere() {
+		double r1, r2;
+		double x, y, z;
+		double r, phi;
+			
+		for (int j = 0; j < num_samples * num_sets; j++) {
+			r1 	= samples[j].x;
+	    	r2 	= samples[j].y;
+	    	z 	= 1.0 - 2.0 * r1;
+	    	r 	= Math.sqrt(1.0 - z * z);
+	    	phi = Math.PI * 2 * r2;
+	    	x 	= r * Math.cos(phi);
+	    	y 	= r * Math.sin(phi);
+			this.sphereSamples[j] = new Point3d(x, y, z); 
+		}
+	}
 	
 	protected void shuffleXCoordinates() {
 		for (int p = 0; p < num_sets; p++)
@@ -71,45 +124,5 @@ public abstract class SamplerAbstract implements Sampler{
 				samples[i + p * num_samples + 1].y = samples[target].y;
 				samples[target].y = temp;
 			}	
-	}
-	
-	
-	public Point2d sampleUnitSquare() {
-		if (count % num_samples == 0) { // start of a new pixel
-			jump = (random.nextInt() % num_sets) * num_samples;
-		}
-		return this.samples[((int) (jump + count++ % num_samples))];
-	}
-	
-	public void mapSamples2Hemisphere(final double exp) {
-		int size = samples.length;
-		
-		for (int j = 0; j < size; j++) {
-			final double cos_phi = Math.cos(2.0 * Math.PI * samples[j].x);
-			final double sin_phi = Math.sin(2.0 * Math.PI * samples[j].x);	
-			final double cos_theta = Math.pow((1.0 - samples[j].y), 1.0 / (exp + 1.0));
-			final double sin_theta = Math.sqrt(1.0 - cos_theta * cos_theta);
-			final double pu = sin_theta * cos_phi;
-			final double pv = sin_theta * sin_phi;
-			final double pw = cos_theta;
-			this.hemisphereSamples[j] = new Point3d(pu, pv, pw); 
-		}
-	}
-	
-	public void mapSamples2Sphere() {
-		double r1, r2;
-		double x, y, z;
-		double r, phi;
-			
-		for (int j = 0; j < num_samples * num_sets; j++) {
-			r1 	= samples[j].x;
-	    	r2 	= samples[j].y;
-	    	z 	= 1.0 - 2.0 * r1;
-	    	r 	= Math.sqrt(1.0 - z * z);
-	    	phi = Math.PI * 2 * r2;
-	    	x 	= r * Math.cos(phi);
-	    	y 	= r * Math.sin(phi);
-			this.sphereSamples[j] = new Point3d(x, y, z); 
-		}
 	}
 }
