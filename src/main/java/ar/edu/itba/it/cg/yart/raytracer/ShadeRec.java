@@ -2,6 +2,7 @@ package ar.edu.itba.it.cg.yart.raytracer;
 
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
+import ar.edu.itba.it.cg.yart.light.Sample;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
@@ -22,8 +23,7 @@ public class ShadeRec {
 
 	// Used by area lights
 	public Vector3d wi = null;
-	public Vector3d sampleNormal = null;
-	public Point3d samplePoint = null;
+	public Sample sample = null;
 	
 	public ShadeRec(final World world) {
 		hitObject = false;

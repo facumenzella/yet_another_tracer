@@ -1,9 +1,12 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives.mesh;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
+import ar.edu.itba.it.cg.yart.light.Sample;
 
 public abstract class MeshTriangle extends GeometricObject {
 
@@ -16,9 +19,11 @@ public abstract class MeshTriangle extends GeometricObject {
 	public final Point3d p0;
 	public final Point3d p1;
 	public final Point3d p2;
+	
+	public final double invArea;
+	public final double area;
 
 	protected Vector3d normal;
-	protected double area;
 
 	public MeshTriangle(final int index0, final int index1, final int index2,
 			final Mesh mesh, final boolean reverse) {
@@ -32,6 +37,28 @@ public abstract class MeshTriangle extends GeometricObject {
 		p0 = mesh.vertices[index0];
 		p1 = mesh.vertices[index1];
 		p2 = mesh.vertices[index2];
+		
+		area = Math.abs(p0.sub(p1).cross(p0.sub(p2)).length) / 2;
+		invArea = 1 / area;
+	}
+	
+	@Override
+	public Sample getSample() {
+		double u = ThreadLocalRandom.current().nextDouble();
+		double v = ThreadLocalRandom.current().nextDouble();
+		final Point3d sample = new Point3d(0,0,0);
+		
+		if (u + v > 1) {
+			u = 1 - u;
+			v = 1 - v;
+		}
+
+		sample.x = u * p0.x + v * p1.x + (1 - (u + v)) * p2.x;
+		sample.y = u * p0.y + v * p1.y + (1 - (u + v)) * p2.y;
+		sample.z = u * p0.z + v * p1.z + (1 - (u + v)) * p2.z;
+		sample.w = u * p0.w + v * p1.w + (1 - (u + v)) * p2.w;
+		
+		return new Sample(sample, normal);
 	}
 
 	private void computeNormal(boolean reverse) {

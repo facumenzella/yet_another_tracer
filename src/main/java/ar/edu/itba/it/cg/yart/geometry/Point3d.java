@@ -32,8 +32,18 @@ public class Point3d {
 		return new Point3d(x + other.x, y + other.y, z + other.z);
 	}
 	
+	public double dot(final Point3d other) {
+		return x * other.x + y * other.y + z * other.z;
+	}
+	
 	public double distance(final Point3d other) {
 		return this.sub(other).length;
+	}
+	
+	public double distanceSquared(final Point3d other) {
+		return (	(x - other.x) * (x - other.x) 
+				+ 	(y - other.y) * (y - other.y)
+				+	(z - other.z) * (z - other.z) );
 	}
 	
 	public void copy(final Point3d p) {
@@ -49,6 +59,11 @@ public class Point3d {
 		final double dz = (matrix.m20 * this.x) + (matrix.m21 * this.y) + (matrix.m22 * this.z) + matrix.m23;
 		final double dw = (matrix.m30 * this.x) + (matrix.m31 * this.y) + (matrix.m32 * this.z) + matrix.m33;
 		return new Point3d(dx, dy, dz);
+	}
+	
+	@Override
+	public String toString() {
+		return "(" + x + ", " + y + ", " + z + ")";
 	}
 	
 	@Override

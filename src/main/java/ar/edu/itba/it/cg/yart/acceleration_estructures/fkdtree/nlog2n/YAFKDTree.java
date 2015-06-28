@@ -520,10 +520,12 @@ public class YAFKDTree {
 				double tMin = tFar;
 				boolean hit = false;
 				for (GeometricObject object : objects) {
-					double t = object.shadowHit(ray, tMin, stack);
-					if (t != Double.NEGATIVE_INFINITY && t < tMin) {
-						tMin = t;
-						hit = true;
+					if (object.isCastsShadows()) {
+						double t = object.shadowHit(ray, tMin, stack);
+						if (t != Double.NEGATIVE_INFINITY && t < tMin) {
+							tMin = t;
+							hit = true;
+						}
 					}
 				}
 				if (hit) {

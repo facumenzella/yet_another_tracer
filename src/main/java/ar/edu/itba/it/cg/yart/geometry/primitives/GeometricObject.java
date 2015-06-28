@@ -2,6 +2,7 @@ package ar.edu.itba.it.cg.yart.geometry.primitives;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
+import ar.edu.itba.it.cg.yart.light.Sample;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
@@ -18,6 +19,8 @@ public abstract class GeometricObject implements Transformable{
 	public Matrix4d matrix;
 	public Matrix4d invMatrix;
 	public Matrix4d transposedInvMatrix;
+	
+	private boolean castsShadows = true;
 	
 	public GeometricObject() {
 		color = new Color(1.0f, 1.0f, 1.0f);
@@ -40,6 +43,22 @@ public abstract class GeometricObject implements Transformable{
 	
 	protected void updateBoundingBox() {
 		this.boundingBox = createBoundingBox();
+	}
+	
+	public Sample getSample() {
+		return null;
+	}
+	
+	public double pdf() {
+		return 1;
+	}
+	
+	public void setCastsShadows(final boolean castsShadows) {
+		this.castsShadows = castsShadows;
+	}
+	
+	public boolean isCastsShadows() {
+		return castsShadows;
 	}
 	
 	@Override

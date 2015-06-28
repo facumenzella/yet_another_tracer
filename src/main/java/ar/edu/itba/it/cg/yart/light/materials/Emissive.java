@@ -10,6 +10,15 @@ public class Emissive extends MaterialAbstract {
 	private double ls = 1;
 	private Color ce = Color.WHITE;
 	private Color realCe = ce;
+	private final Material backfaceMaterial;
+	
+	public Emissive(final Material backfaceMaterial) {
+		this.backfaceMaterial = backfaceMaterial;
+	}
+	
+	public Material getBackfaceMaterial() {
+		return backfaceMaterial;
+	}
 	
 	public void setCe(final Color ce) {
 		this.realCe = ce.multiply(ls);
@@ -19,6 +28,14 @@ public class Emissive extends MaterialAbstract {
 		this.ls = ls;
 		setCe(ce);
 	}
+	
+	public Color getCe() {
+		return realCe;
+	}
+	
+	public double getLs() {
+		return ls;
+	}
 
 	@Override
 	public Color shade(ShadeRec sr, Stack stack) {
@@ -26,7 +43,7 @@ public class Emissive extends MaterialAbstract {
 			return realCe;
 		}
 		
-		return Color.BLACK;
+		return backfaceMaterial.shade(sr, stack);
 	}
 
 }
