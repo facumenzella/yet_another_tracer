@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.nlog2n.YAFKDTree;
@@ -11,6 +12,7 @@ import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
+import ar.edu.itba.it.cg.yart.light.Sample;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
@@ -37,6 +39,8 @@ public class Mesh extends GeometricObject {
 	private double maxY = Double.NEGATIVE_INFINITY;
 	private double minZ = Double.POSITIVE_INFINITY;
 	private double maxZ = Double.NEGATIVE_INFINITY;
+	private double totalArea = 0;
+	private double invArea = 0;
 	private boolean needsSmoothing;
 
 	int verticesAmount;
@@ -119,8 +123,16 @@ public class Mesh extends GeometricObject {
 		maxX = Math.max(maxX, b.p1.x);
 		maxY = Math.max(maxY, b.p0.y);
 		maxZ = Math.max(maxZ, b.p1.z);
+		
+		totalArea += t.area;
+		invArea = 1 / totalArea;
 
 		this.triangles.add(t);
+	}
+	
+	@Override
+	public double pdf() {
+		return invArea;
 	}
 
 	private void computeMeshNormals() {
@@ -147,6 +159,11 @@ public class Mesh extends GeometricObject {
 		for (GeometricObject t : triangles) {
 			t.setMaterial(material);
 		}
+	}
+	
+	@Override
+	public Sample getSample() {
+		return triangles.get(ThreadLocalRandom.current().nextInt(triangles.size())).getSample();
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.util.List;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
+import ar.edu.itba.it.cg.yart.light.AreaLight;
 import ar.edu.itba.it.cg.yart.light.Light;
 import ar.edu.itba.it.cg.yart.light.brdf.Lambertian;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
@@ -50,6 +51,34 @@ public class Matte extends MaterialAbstract {
 				colorL.g += aux.g;
 				colorL.b += aux.b;
 
+			}
+		}
+		
+		for (final AreaLight light : sr.world.getAreaLights()) {
+			double pdfAndSamples = light.pdf(sr) * light.getSamplesNumber();
+			for (int i = 0; i < light.getSamplesNumber(); i++) {
+				final Vector3d wi = light.getDirection(sr);
+				double ndotwi = sr.normal.dot(wi);
+
+				if (ndotwi > 0.0) {
+					boolean inShadow = false;
+					Ray shadowRay = new Ray(sr.hitPoint, wi);
+					inShadow = light.inShadow(shadowRay, sr, stack);
+					if (!inShadow) {
+						final Color aux = diffuseBRDF.f(sr, wo, wi);
+						final Color li = light.L(sr);
+						final double g = light.G(sr);
+						final double factor = ndotwi * g / pdfAndSamples;
+						
+						aux.r *= li.r * factor;
+						aux.g *= li.g * factor;
+						aux.b *= li.b * factor;
+
+						colorL.r += aux.r;
+						colorL.g += aux.g;
+						colorL.b += aux.b;
+					}
+				}
 			}
 		}
 

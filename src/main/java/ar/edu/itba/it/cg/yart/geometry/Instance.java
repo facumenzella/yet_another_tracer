@@ -3,6 +3,7 @@ package ar.edu.itba.it.cg.yart.geometry;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
+import ar.edu.itba.it.cg.yart.light.Sample;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
@@ -100,7 +101,30 @@ public class Instance extends GeometricObject {
 		final double t = object.shadowHit(invRay, tMax, stack);
 		return t;
 	}
+	
+	@Override
+	public Sample getSample() {
+		Sample ret = object.getSample();
+		ret.point = ret.point.transformByMatrix(matrix);
+		ret.normal = ret.normal.transformByMatrix(matrix).normalizeMe();
+		return ret;
+	}
+	
+	@Override
+	public double pdf() {
+		return object.pdf() / getBoundingBox().surfaceArea;
+	}
 
+	@Override
+	public void setCastsShadows(boolean castsShadows) {
+		object.setCastsShadows(castsShadows);
+	}
+	
+	@Override
+	public boolean isCastsShadows() {
+		return object.isCastsShadows();
+	}
+	
 	@Override
 	public void applyTransformation(Matrix4d matrix) {
 		super.applyTransformation(matrix);

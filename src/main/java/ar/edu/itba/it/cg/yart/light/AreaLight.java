@@ -14,12 +14,14 @@ public class AreaLight implements Light {
 	private final double ls;
 	private final Color color;
 	private GeometricObject geometricObject;
-	private Material material;
+	private Emissive material;
+	private final int samples;
 	
-	public AreaLight(final double ls, final Color color) {
+	public AreaLight(final double ls, final Color color, final int samples) {
 		super();
 		this.ls = ls;
 		this.color = color;
+		this.samples = samples;
 	}
 	
 	public void setShape(final GeometricObject geometricObject) {
@@ -33,32 +35,48 @@ public class AreaLight implements Light {
 			material.setCe(color);
 		}
 	}
+	
+	public int getSamplesNumber() {
+		return samples;
+	}
 
 	@Override
 	public Vector3d getDirection(ShadeRec sr) {
-		sr.samplePoint = null; // TODO: Sample here
-		sr.sampleNormal = null; // TODO: Get normal at samplePoint in geometricObject
-		sr.wi = sr.samplePoint.sub(sr.sampleNormal);
-		sr.wi.normalizeMe();
-		
+		sr.sample = geometricObject.getSample();
+		sr.wi = sr.sample.point.sub(sr.hitPoint).normalizeMe();
 		return sr.wi;
 	}
 
 	@Override
 	public Color L(ShadeRec sr) {
-		final double r = color.r * ls;
-		final double g = color.g * ls;
-		final double b = color.b * ls;
-		return new Color(r, g, b, color.a);
+		double ndotd = sr.sample.normal.inverse().dot(sr.wi);
+		
+		if (ndotd > 0.0) {
+			return material.getCe();
+		}
+		else {
+			return Color.BLACK;
+		}
+	}
+	
+	public double G(ShadeRec sr) {
+		final double ndotd = sr.sample.normal.inverse().dot(sr.wi);
+		final double d2 = sr.sample.point.distanceSquared(sr.hitPoint);
+		
+		return ndotd / d2;
+	}
+	
+	public double pdf(ShadeRec sr) {
+		return geometricObject.pdf();
 	}
 
 	@Override
 	public boolean inShadow(Ray ray, ShadeRec sr, Stack stack) {
 		double t;
 		
-		final double dx = sr.samplePoint.x - ray.origin.x;
-		final double dy = sr.samplePoint.y - ray.origin.y;
-		final double dz = sr.samplePoint.z - ray.origin.z;
+		final double dx = sr.sample.point.x - ray.origin.x;
+		final double dy = sr.sample.point.y - ray.origin.y;
+		final double dz = sr.sample.point.z - ray.origin.z;
 
 		final double d = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
@@ -84,8 +102,7 @@ public class AreaLight implements Light {
 
 	@Override
 	public boolean castShadows() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }

@@ -18,6 +18,7 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.Quadrilateral;
 import ar.edu.itba.it.cg.yart.geometry.primitives.Sphere;
 import ar.edu.itba.it.cg.yart.geometry.primitives.mesh.Mesh;
 import ar.edu.itba.it.cg.yart.light.AmbientLight;
+import ar.edu.itba.it.cg.yart.light.AreaLight;
 import ar.edu.itba.it.cg.yart.light.Directional;
 import ar.edu.itba.it.cg.yart.light.Light;
 import ar.edu.itba.it.cg.yart.light.PointLight;
@@ -40,6 +41,7 @@ public class World {
 	private List<Light> lights = new ArrayList<Light>();
 	private List<Light> castShadowLights = new ArrayList<Light>();
 	private List<Light> doNotCastShadowLights = new ArrayList<Light>();
+	private List<AreaLight> areaLights = new ArrayList<AreaLight>();
 	private AmbientLight ambientLight;
 	private YAFKDTree kdTree;
 	private boolean preprocessed = false;
@@ -245,6 +247,9 @@ public class World {
 	public void addLight(final Light light) {
 		if (light instanceof AmbientLight) {
 			setAmbientLight((AmbientLight) light);
+		}
+		else if (light instanceof AreaLight) {
+			addAreaLight((AreaLight) light);
 		} else {
 			lights.add(light);
 			if (light.castShadows()) {
@@ -252,6 +257,12 @@ public class World {
 			} else {
 				doNotCastShadowLights.add(light);
 			}
+		}
+	}
+	
+	public void addAreaLight(final AreaLight light) {
+		if (light != null) {
+			areaLights.add(light);
 		}
 	}
 	
@@ -265,6 +276,10 @@ public class World {
 	
 	public List<Light> getDoNotCastShadowLights() {
 		return doNotCastShadowLights;
+	}
+	
+	public List<AreaLight> getAreaLights() {
+		return areaLights;
 	}
 
 }

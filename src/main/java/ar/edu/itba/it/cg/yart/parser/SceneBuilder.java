@@ -190,6 +190,9 @@ public class SceneBuilder {
 		String type = identifier.getParameters()[0];
 		
 		try {
+			if (type.equals("null")) {
+				ret = ParserUtils.defaultMaterial;
+			}
 			if (type.equals("matte")) {
 				Matte mat = new Matte();
 				mat.setCd(getColorOrTexture(identifier, "Kd", Color.whiteColor()));
@@ -394,7 +397,7 @@ public class SceneBuilder {
 				instance = new Instance(referenceBox);
 			}
 			else if (strType.equals("mesh")) {
-				final int[] triindices = identifier.getIntegers("triindices");
+				int[] triindices = identifier.getIntegers("triindices");
 				final Point3d[] vertices = identifier.getPoints("P");
 				final Vector3d[] normals = identifier.getNormals("N", null);
 				final double[] uvList = identifier.getDoubles("uv", null);
@@ -442,10 +445,12 @@ public class SceneBuilder {
 		if (instance != null) {
 			// If there is an Area Light set, use an Emissive material and set this object as its shape
 			if (currentAreaLight != null) {
-				currentAreaLight.setMaterial(new Emissive());
+				final Emissive emissiveMaterial = new Emissive(currentMaterial);
+				currentAreaLight.setMaterial(emissiveMaterial);
 				currentAreaLight.setShape(instance);
 				currentAreaLight = null;
-				instance.setMaterial(currentMaterial);
+				instance.setMaterial(emissiveMaterial);
+				instance.setCastsShadows(false);
 			}
 			else {
 				instance.setMaterial(currentMaterial);
@@ -506,7 +511,7 @@ public class SceneBuilder {
 		try {
 			double gain = identifier.getDouble("gain", 1.0f) * YartConstants.LIGHT_GAIN_MULTIPLIER;
 			if (identifier.getParameters()[0].equals("area")) {
-				ret = new AreaLight(gain, identifier.getColor("l", Color.WHITE));
+				ret = new AreaLight(gain, identifier.getColor("l", Color.WHITE), identifier.getInteger("nsamples", 1));
 			}
 			else {
 				LOGGER.warn("AreaLightSource only accepts \"area\" as parameter");
@@ -516,6 +521,7 @@ public class SceneBuilder {
 			LOGGER.warn(e.getMessage());
 		}
 		
+		currentAreaLight = ret;
 		return ret;
 	}
 	
