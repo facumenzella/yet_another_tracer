@@ -4,6 +4,7 @@ import ar.edu.itba.it.cg.yart.YartConstants;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
+import ar.edu.itba.it.cg.yart.light.brdf.PDF;
 import ar.edu.itba.it.cg.yart.light.brdf.PerfectSpecular;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
@@ -85,7 +86,8 @@ public class Reflective extends Phong implements Material{
 
 		final Vector3d wo = new Vector3d(dx, dy, dz);
 		Vector3d wi = new Vector3d(0,0,0);
-		Color fr = reflectiveBRDF.sample_f(sr, wo, wi);
+		PDF pdf = new PDF();
+		Color fr = reflectiveBRDF.sample_f(sr, wo, wi, pdf);
 		Ray reflectedRay = new Ray(sr.hitPoint, wi);
 		reflectedRay.depth = sr.depth + 1;
 
