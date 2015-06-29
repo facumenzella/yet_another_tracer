@@ -42,7 +42,6 @@ public class YAFKDTree {
 
 	private KDNodeAbstract root;
 	private AABB rootAABB;
-	private Shader pathS = new PathTracerShader();
 
 	private static AABB buildInfiniteRootAABB(
 			final List<GeometricObject> objects) {
@@ -341,11 +340,11 @@ public class YAFKDTree {
 	}
 
 	// Here we trace rays. Work for kids
-	public Color traceRay(final Ray ray, final ShadeRec sr, final double tMax, final Stack stack) {
+	public Color traceRay(final Ray ray, final ShadeRec sr, final double tMax, final Stack stack, final Shader shader) {
 		if (!rootAABB.hit(ray) || ray.depth > AbstractTracer.MAX_DEPTH) {
 			return sr.world.backgroundColor;
 		}
-		System.out.println("cool depth");
+		
 		double tNear = 0;
 		double tFar = tMax;
 		KDNodeAbstract node = null;
@@ -417,6 +416,7 @@ public class YAFKDTree {
 						sr.hitObject = true;
 						sr.material = object.getMaterial();
 						m = object.matrix;
+
 						normal = sr.normal;
 						u = sr.u;
 						v = sr.v;
@@ -426,11 +426,13 @@ public class YAFKDTree {
 				}
 				Color color = null;
 				if (sr.hitObject) {
-					sr.depth = ray.depth;
 					sr.t = tMin;
 					sr.normal = normal;
 					sr.localHitPoint = localHitPoint;
 					sr.ray = ray;
+					if (m == null) {
+						System.out.println("no matrix");
+					}
 					final double dx = (m.m00 * sr.localHitPoint.x)
 							+ (m.m01 * sr.localHitPoint.y)
 							+ (m.m02 * sr.localHitPoint.z) + m.m03;
@@ -445,7 +447,7 @@ public class YAFKDTree {
 					sr.u = u;
 					sr.v = v;
 					try {
-						color = pathS.shade(sr.material, sr, stack);
+						color = shader.shade(sr.material, sr, stack);
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}

@@ -9,6 +9,7 @@ import ar.edu.itba.it.cg.yart.light.brdf.PerfectSpecular;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.shade.PathTracerShader;
+import ar.edu.itba.it.cg.yart.raytracer.shade.RayTracerShader;
 import ar.edu.itba.it.cg.yart.raytracer.shade.Shader;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.Texture;
@@ -16,9 +17,10 @@ import ar.edu.itba.it.cg.yart.textures.Texture;
 public class Reflective extends Phong implements Material{
 
 	private final PerfectSpecular reflectiveBRDF = new PerfectSpecular();
-	//private final Vector3d wi = new Vector3d(0,0,0);
 	private double tMax = YartConstants.DEFAULT_TMAX;
 	private final Shader shader = new PathTracerShader();
+	private final Shader directs = new RayTracerShader();
+	private final int samples = 1;
 	
 	public Reflective setKa(final double ka) {
 		super.setKa(ka);
@@ -90,9 +92,9 @@ public class Reflective extends Phong implements Material{
 		PDF pdf = new PDF();
 		Color fr = reflectiveBRDF.sample_f(sr, wo, wi, pdf);
 		Ray reflectedRay = new Ray(sr.hitPoint, wi);
-		reflectedRay.depth = sr.depth + 1;
-
-		Color c = sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world), tMax, stack, shader);
+		ShadeRec sRec = new ShadeRec(sr.world);
+		sRec.depth = sr.depth + 1;
+		Color c = sr.world.getTree().traceRay(reflectedRay, sRec, tMax, stack, directs);
 		
 		final double factor = sr.normal.dot(wi);
 		fr.r *= c.r * factor;
@@ -103,6 +105,44 @@ public class Reflective extends Phong implements Material{
 		colorL.g += fr.g;
 		colorL.b += fr.b;
 		
+		return colorL;
+	}
+	
+	@Override
+	public Color globalShade(ShadeRec sr, final Stack stack) {		
+		final double dx = -sr.ray.direction[0];
+		final double dy = -sr.ray.direction[1];
+		final double dz = -sr.ray.direction[2];
+		
+		Color colorL = new Color(0);
+		
+		final Vector3d wo = new Vector3d(dx, dy, dz);
+		Vector3d wi = new Vector3d(0,0,0);
+		PDF pdf = new PDF();
+		Color fr = reflectiveBRDF.sample_f(sr, wo, wi, pdf);
+		Ray reflectedRay = new Ray(sr.hitPoint, wi);
+		final double ndotwi = sr.normal.dot(wi);
+		
+		for (int i = 0; i < samples; i++) {
+			Color c;
+			ShadeRec sRec = new ShadeRec(sr.world);
+			if (sr.depth == 0) {
+				sRec.depth = sr.depth + 2;
+				c = sr.world.getTree().traceRay(reflectedRay, sRec, tMax, stack, shader);
+			} else {
+				sRec.depth = sr.depth + 1;
+				c = sr.world.getTree().traceRay(reflectedRay, sRec, tMax, stack, shader);
+			}
+			
+			final double factor = ndotwi / pdf.pdf;
+			c.r *= fr.r * factor / samples;
+			c.g *= fr.g * factor / samples;
+			c.b *= fr.b * factor / samples;
+			
+			colorL.r += c.r;
+			colorL.g += c.g;
+			colorL.b += c.b;
+		}
 		return colorL;
 	}
 }

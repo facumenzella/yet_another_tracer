@@ -24,7 +24,7 @@ public class Matte extends MaterialAbstract {
 	private Lambertian diffuseBRDF;
 	private final double tMax = YartConstants.DEFAULT_TMAX;
 	private final Shader shader = new PathTracerShader();
-	private final int samples = 10;
+	private final int samples = 1;
 
 	public Matte() {
 		this.ambientBRDF = new Lambertian();
@@ -68,10 +68,33 @@ public class Matte extends MaterialAbstract {
 			}
 		}
 
-		Color areaColors = this.shadeAreaLights(sr, stack, wo);
-		colorL.r += areaColors.r;
-		colorL.g += areaColors.g;
-		colorL.b += areaColors.b;
+		for (final AreaLight light : sr.world.getAreaLights()) {
+			double pdfAndSamples = light.pdf(sr) * light.getSamplesNumber();
+			for (int i = 0; i < light.getSamplesNumber(); i++) {
+				final Vector3d wi = light.getDirection(sr);
+				double ndotwi = sr.normal.dot(wi);
+
+				if (ndotwi > 0.0) {
+					boolean inShadow = false;
+					Ray shadowRay = new Ray(sr.hitPoint, wi);
+					inShadow = light.inShadow(shadowRay, sr, stack);
+					if (!inShadow) {
+						final Color aux = diffuseBRDF.f(sr, wo, wi);
+						final Color li = light.L(sr);
+						final double g = light.G(sr);
+						final double factor = ndotwi * g / pdfAndSamples;
+
+						aux.r *= li.r * factor;
+						aux.g *= li.g * factor;
+						aux.b *= li.b * factor;
+
+						colorL.r += aux.r;
+						colorL.g += aux.g;
+						colorL.b += aux.b;
+					}
+				}
+			}
+		}
 
 		for (final Light light : castShadowLights) {
 			final Vector3d wi = light.getDirection(sr);
@@ -98,8 +121,13 @@ public class Matte extends MaterialAbstract {
 		return colorL;
 	}
 
-	private Color shadeAreaLights(final ShadeRec sr, final Stack stack,
-			final Vector3d wo) {
+	@Override
+	public Color globalShade(final ShadeRec sr, final Stack stack) {
+		final double dx = -sr.ray.direction[0];
+		final double dy = -sr.ray.direction[1];
+		final double dz = -sr.ray.direction[2];
+
+		final Vector3d wo = new Vector3d(dx, dy, dz);
 		Color colorL = new Color(0);
 		for (final AreaLight light : sr.world.getAreaLights()) {
 			double pdfAndSamples = light.pdf(sr) * light.getSamplesNumber();
@@ -128,25 +156,11 @@ public class Matte extends MaterialAbstract {
 				}
 			}
 		}
-		return colorL;
-	}
-
-	@Override
-	public Color globalShade(final ShadeRec sr, final Stack stack) {
-		final double dx = -sr.ray.direction[0];
-		final double dy = -sr.ray.direction[1];
-		final double dz = -sr.ray.direction[2];
-
-		final Vector3d wo = new Vector3d(dx, dy, dz);
-		Color L = new Color(0);
-		if (sr.depth == 0) {
-			L = this.shadeAreaLights(sr, stack, wo);
-		}
 		Vector3d wi = new Vector3d(0, 0, 0);
 		PDF pdf = new PDF();
-		ShadeRec sRec = new ShadeRec(sr.world);
-		sRec.depth = sr.depth + 1;
 		for (int i = 0; i < samples; i++) {
+			ShadeRec sRec = new ShadeRec(sr.world);
+			sRec.depth = sr.depth + 1;
 			final Color f = diffuseBRDF.sample_f(sr, wo, wi, pdf);
 			final double ndotwi = sr.normal.dot(wi);
 
@@ -157,16 +171,11 @@ public class Matte extends MaterialAbstract {
 			f.r *= ndotwi / pdf.pdf;
 			f.g *= ndotwi / pdf.pdf;
 			f.b *= ndotwi / pdf.pdf;
-
-			if (reflectedColor == null || f == null) {
-				System.out.println("holy shit");
-			}
-			
-			L.r += reflectedColor.r * f.r;
-			L.g += reflectedColor.g * f.g;
-			L.b += reflectedColor.b * f.b;
+			colorL.r += reflectedColor.r * f.r / samples;
+			colorL.g += reflectedColor.g * f.g / samples;
+			colorL.b += reflectedColor.b * f.b / samples;
 		}
-		return L;
+		return colorL;
 	}
 
 	public Matte setKa(final double ka) {

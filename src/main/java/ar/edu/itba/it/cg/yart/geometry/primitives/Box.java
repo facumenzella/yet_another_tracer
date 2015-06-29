@@ -87,7 +87,6 @@ public class Box extends GeometricObject {
 		}
 
 		if (sr.hitObject) {
-			sr.depth = ray.depth;
 			sr.t = tMin;
 			sr.normal = normal;
 			sr.localHitPoint = localHitPoint;

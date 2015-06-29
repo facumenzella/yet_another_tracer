@@ -7,7 +7,7 @@ public class Ray {
 	
 	public Point3d origin;
 	public double[] direction;
-	public int depth = 0;
+	public int depth;
 	
 	public Ray() {};
 	
