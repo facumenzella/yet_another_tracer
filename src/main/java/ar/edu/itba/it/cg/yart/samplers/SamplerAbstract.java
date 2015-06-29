@@ -66,21 +66,21 @@ public abstract class SamplerAbstract implements Sampler{
 		return this.samples[((int) (jump + count++ % num_samples))];
 	}
 	
-	public Point3d sample_hemisphere() {
+	public Point3d sampleHemisphere() {
 		if (count % num_samples == 0) {
 			jump = (random.nextInt() % num_sets) * num_samples; // start of a new pixel
 		}
 		return (this.hemisphereSamples[jump + shuffled_indices[(int) (jump + count++ % num_samples)]]);		
 	}
 	
-	public Point3d sample_sphere() {
+	public Point3d sampleSphere() {
 		if (count % num_samples == 0) {
 			jump = (random.nextInt() % num_sets) * num_samples; // start of a new pixel
 		}
 		return (this.sphereSamples[jump + shuffled_indices[(int) (jump + count++ % num_samples)]]);		
 	}
 	
-	protected void mapSamples2Hemisphere(final double exp) {
+	public void mapSamples2Hemisphere(final double exp) {
 		int size = samples.length;
 		
 		for (int j = 0; j < size; j++) {

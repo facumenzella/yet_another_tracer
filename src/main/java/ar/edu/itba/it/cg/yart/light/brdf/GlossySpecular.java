@@ -4,6 +4,7 @@ import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.samplers.Sampler;
 
 public class GlossySpecular extends BRDF{
 	
@@ -68,7 +69,7 @@ public class GlossySpecular extends BRDF{
 		u.normalizeMe();
 		Vector3d v = u.cross(w);
 			
-		Point3d sp = sampler.sample_hemisphere();
+		Point3d sp = sampler.sampleHemisphere();
 		wi.copy(u.scale(sp.x).add(v.scale(sp.y)).add(w.scale(sp.z))); // reflected ray direction
 		
 		if (sr.normal.dot(wi) < 0.0) { // reflected ray is below tangent plane
@@ -92,6 +93,11 @@ public class GlossySpecular extends BRDF{
 	
 	public void setKs(final double ks) {
 		this.ks = ks;
+	}
+	
+	public void setSampler(final Sampler sampler) {
+		super.setSampler(sampler);
+		sampler.mapSamples2Hemisphere(exp);
 	}
 
 }
