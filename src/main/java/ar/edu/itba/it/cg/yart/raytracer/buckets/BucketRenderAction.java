@@ -49,6 +49,7 @@ public class BucketRenderAction extends RecursiveAction{
 	        	int i;
 	    		while ((i = index.incrementAndGet()) < this.buckets.length) {
 	    			Bucket bucket = buckets[i];
+	    			callback.onBucketStarted(bucket);
 	    			raytracer.getCamera().renderScene(bucket, raytracer, result, stack);
 	    			callback.onBucketFinished(bucket, null);
 	    		}
