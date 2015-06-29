@@ -11,16 +11,13 @@ public class AABB implements Transformable {
 	private static final double EPSILON = 0.0001;
 	public Point3d p0;
 	public Point3d p1;
-	public final double surfaceArea;
+	public double surfaceArea;
 	
 	public AABB(final Point3d p0, final Point3d p1) {
 		this.p0 = p0;
 		this.p1 = p1;
 
-		final double bottomAndTopArea = Math.abs(p1.x - p0.x) * Math.abs(p0.y - p1.y)
-				* 2;
-		final double sidesArea = Math.abs(p0.y - p1.y) * Math.abs(p1.z - p0.z) * 4;
-		this.surfaceArea = bottomAndTopArea + sidesArea;
+		refreshArea();
 	}
 
 	public boolean hit(final Ray ray) {
@@ -133,6 +130,16 @@ public class AABB implements Transformable {
 		this.p1.x = maxX;
 		this.p1.y = minY;
 		this.p1.z = maxZ;
+		
+		refreshArea();
+	}
+	
+	private void refreshArea() {
+		final double bottomAndTopArea = Math.abs(p1.x - p0.x) * Math.abs(p0.y - p1.y)
+				* 2;
+		final double side1 = Math.abs(p0.y - p1.y) * Math.abs(p1.z - p0.z) * 2;
+		final double side2 = Math.abs(p0.x - p1.x) * Math.abs(p1.z - p0.z) * 2;
+		this.surfaceArea = bottomAndTopArea + side1 + side2;
 	}
 	
 	@Override
