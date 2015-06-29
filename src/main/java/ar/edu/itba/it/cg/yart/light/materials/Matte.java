@@ -24,7 +24,7 @@ public class Matte extends MaterialAbstract {
 	private Lambertian diffuseBRDF;
 	private final double tMax = YartConstants.DEFAULT_TMAX;
 	private final Shader shader = new PathTracerShader();
-	private final int samples = 1;
+	private final int samples = 10;
 
 	public Matte() {
 		this.ambientBRDF = new Lambertian();
@@ -160,11 +160,11 @@ public class Matte extends MaterialAbstract {
 		PDF pdf = new PDF();
 		for (int i = 0; i < samples; i++) {
 			ShadeRec sRec = new ShadeRec(sr.world);
-			sRec.depth = sr.depth + 1;
 			final Color f = diffuseBRDF.sample_f(sr, wo, wi, pdf);
 			final double ndotwi = sr.normal.dot(wi);
 
 			final Ray reflectedRay = new Ray(sr.hitPoint, wi);
+			reflectedRay.depth = sr.ray.depth + 1;
 			Color reflectedColor = sr.world.getTree().traceRay(reflectedRay,
 					sRec, tMax, stack, shader);
 
