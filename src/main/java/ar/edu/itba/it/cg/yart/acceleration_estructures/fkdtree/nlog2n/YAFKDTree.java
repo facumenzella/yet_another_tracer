@@ -24,6 +24,8 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.raytracer.shade.PathTracerShader;
+import ar.edu.itba.it.cg.yart.raytracer.shade.Shader;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.AbstractTracer;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
@@ -40,6 +42,7 @@ public class YAFKDTree {
 
 	private KDNodeAbstract root;
 	private AABB rootAABB;
+	private Shader pathS = new PathTracerShader();
 
 	private static AABB buildInfiniteRootAABB(
 			final List<GeometricObject> objects) {
@@ -441,7 +444,7 @@ public class YAFKDTree {
 
 					sr.u = u;
 					sr.v = v;
-					color = sr.material.shade(sr, stack);
+					color = pathS.shade(sr.material, sr, stack);
 					stack.index = top;
 					return color;
 				}

@@ -68,7 +68,7 @@ public abstract class SamplerAbstract implements Sampler{
 	
 	public Point3d sampleHemisphere() {
 		if (count % num_samples == 0) {
-			jump = (random.nextInt() % num_sets) * num_samples; // start of a new pixel
+			jump = (random.nextInt(num_sets)) * num_samples; // start of a new pixel
 		}
 		return (this.hemisphereSamples[jump + shuffled_indices[(int) (jump + count++ % num_samples)]]);		
 	}

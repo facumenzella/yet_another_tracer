@@ -7,5 +7,5 @@ import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 public interface Material {
 
 	public Color shade(final ShadeRec sr, final Stack stack);
-	
+	public Color globalShade(final ShadeRec sr, final Stack stack);
 }
