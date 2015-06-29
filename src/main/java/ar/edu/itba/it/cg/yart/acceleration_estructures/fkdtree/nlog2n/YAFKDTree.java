@@ -345,7 +345,7 @@ public class YAFKDTree {
 		if (!rootAABB.hit(ray) || ray.depth > AbstractTracer.MAX_DEPTH) {
 			return sr.world.backgroundColor;
 		}
-
+		System.out.println("cool depth");
 		double tNear = 0;
 		double tFar = tMax;
 		KDNodeAbstract node = null;
@@ -444,7 +444,11 @@ public class YAFKDTree {
 
 					sr.u = u;
 					sr.v = v;
-					color = pathS.shade(sr.material, sr, stack);
+					try {
+						color = pathS.shade(sr.material, sr, stack);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
 					stack.index = top;
 					return color;
 				}

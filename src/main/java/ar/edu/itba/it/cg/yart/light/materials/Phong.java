@@ -136,4 +136,9 @@ public class Phong extends MaterialAbstract {
 		specularBRDF.setExp(exp);
 		return this;
 	}
+
+	@Override
+	public Color globalShade(ShadeRec sr, Stack stack) {
+		return shade(sr, stack);
+	}
 }
