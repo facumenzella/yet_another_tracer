@@ -1,7 +1,7 @@
 package ar.edu.itba.it.cg.yart.samplers;
 
-import java.util.Arrays;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import ar.edu.itba.it.cg.yart.geometry.Point2d;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
@@ -23,13 +23,15 @@ public abstract class SamplerAbstract implements Sampler{
 	protected int jump; // random index jump
 	
 	public SamplerAbstract(final int num_samples, final int num_sets) {
+		this.random = ThreadLocalRandom.current();
+		this.jump = 0;
+		this.count = 0;
 		this.num_samples = num_samples;
 		this.num_sets = num_sets;
-		this.samples = new Point2d[num_samples*num_sets];
+		this.samples = new Point2d[num_samples * num_sets];
 		this.hemisphereSamples = new Point3d[num_samples * num_sets];
 		this.sphereSamples = new Point3d[num_samples * num_sets];
 		this.shuffled_indices = setupShuffledIndices();
-		this.random = new Random();
 	}
 	
 	public abstract void generateSamples();
@@ -44,7 +46,11 @@ public abstract class SamplerAbstract implements Sampler{
 			indices[i]= i;
 		}
 		for (int p = 0; p < num_sets; p++) { 
-			Arrays.sort(indices);
+			int index = random.nextInt(p + 1);
+		      // Simple swap
+		      int a = indices[index];
+		      indices[index] = indices[p];
+		      indices[p] = a;
 			
 			for (int j = 0; j < num_samples; j++){
 				shuffled_indices[j] = indices[j];
@@ -55,7 +61,7 @@ public abstract class SamplerAbstract implements Sampler{
 		
 	public Point2d sampleUnitSquare() {
 		if (count % num_samples == 0) { // start of a new pixel
-			jump = (random.nextInt() % num_sets) * num_samples;
+			jump = (random.nextInt(num_sets)) * num_samples;
 		}
 		return this.samples[((int) (jump + count++ % num_samples))];
 	}
@@ -109,7 +115,7 @@ public abstract class SamplerAbstract implements Sampler{
 	protected void shuffleXCoordinates() {
 		for (int p = 0; p < num_sets; p++)
 			for (int i = 0; i <  num_samples - 1; i++) {
-				int target = random.nextInt() % num_samples + p * num_samples;
+				int target = random.nextInt(num_samples) + p * num_samples;
 				double temp = samples[i + p * num_samples + 1].x;
 				samples[i + p * num_samples + 1].x = samples[target].x;
 				samples[target].x = temp;
@@ -119,7 +125,7 @@ public abstract class SamplerAbstract implements Sampler{
 	protected void shuffleYCoordinates() {
 		for (int p = 0; p < num_sets; p++)
 			for (int i = 0; i <  num_samples - 1; i++) {
-				int target = random.nextInt() % num_samples + p * num_samples;
+				int target = random.nextInt(num_samples) + p * num_samples;
 				double temp = samples[i + p * num_samples + 1].y;
 				samples[i + p * num_samples + 1].y = samples[target].y;
 				samples[target].y = temp;

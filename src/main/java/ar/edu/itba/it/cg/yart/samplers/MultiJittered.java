@@ -4,8 +4,7 @@ import ar.edu.itba.it.cg.yart.geometry.Point2d;
 
 public class MultiJittered extends SamplerAbstract {
 
-	protected MultiJittered(int num_samples, int num_sets,
-			int[] shuffled_indices, long count, int jump) {
+	public MultiJittered(int num_samples, int num_sets) {
 		super(num_samples, num_sets);
 		generateSamples();
 	}
