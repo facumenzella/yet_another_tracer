@@ -8,6 +8,8 @@ import ar.edu.itba.it.cg.yart.light.brdf.PDF;
 import ar.edu.itba.it.cg.yart.light.brdf.PerfectSpecular;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.raytracer.shade.PathTracerShader;
+import ar.edu.itba.it.cg.yart.raytracer.shade.Shader;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.Texture;
 
@@ -16,8 +18,7 @@ public class Reflective extends Phong implements Material{
 	private final PerfectSpecular reflectiveBRDF = new PerfectSpecular();
 	//private final Vector3d wi = new Vector3d(0,0,0);
 	private double tMax = YartConstants.DEFAULT_TMAX;
-	
-	
+	private final Shader shader = new PathTracerShader();
 	
 	public Reflective setKa(final double ka) {
 		super.setKa(ka);
@@ -91,7 +92,7 @@ public class Reflective extends Phong implements Material{
 		Ray reflectedRay = new Ray(sr.hitPoint, wi);
 		reflectedRay.depth = sr.depth + 1;
 
-		Color c = sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world), tMax, stack);
+		Color c = sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world), tMax, stack, shader);
 		
 		final double factor = sr.normal.dot(wi);
 		fr.r *= c.r * factor;

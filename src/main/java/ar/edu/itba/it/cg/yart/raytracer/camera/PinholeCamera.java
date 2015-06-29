@@ -13,6 +13,8 @@ import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
+import ar.edu.itba.it.cg.yart.raytracer.shade.RayTracerShader;
+import ar.edu.itba.it.cg.yart.raytracer.shade.Shader;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
 public class PinholeCamera extends CameraAbstract {
@@ -20,6 +22,7 @@ public class PinholeCamera extends CameraAbstract {
 	private final double distance;
 	private final double zoom;
 	private final Point2d sp = new Point2d(0, 0);
+	private final Shader shader;
 	private double tMax;
 	
 	private double maxX = 1;
@@ -37,6 +40,7 @@ public class PinholeCamera extends CameraAbstract {
 		this.distance = distance;
 		this.zoom = zoom;
 		this.tMax = tMax;
+		this.shader = new RayTracerShader();
 		this.random = new Random();
 	}
 
@@ -97,7 +101,7 @@ public class PinholeCamera extends CameraAbstract {
 				
 				ray.direction = d;
 				sr.hitObject = false;
-				Color c = world.getTree().traceRay(ray, sr, tMax, stack);
+				Color c = world.getTree().traceRay(ray, sr, tMax, stack, shader);
 				
 				color.r += c.r;
 				color.g += c.g;

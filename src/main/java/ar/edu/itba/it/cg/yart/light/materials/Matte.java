@@ -12,15 +12,25 @@ import ar.edu.itba.it.cg.yart.light.brdf.Lambertian;
 import ar.edu.itba.it.cg.yart.light.brdf.PDF;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.raytracer.shade.PathTracerShader;
+import ar.edu.itba.it.cg.yart.raytracer.shade.Shader;
+import ar.edu.itba.it.cg.yart.samplers.Jittered;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.Texture;
 
 public class Matte extends MaterialAbstract {
 
-	private Lambertian ambientBRDF = new Lambertian();
-	private Lambertian diffuseBRDF = new Lambertian();
-	private double tMax = YartConstants.DEFAULT_TMAX;
-
+	private final Lambertian ambientBRDF;
+	private Lambertian diffuseBRDF;
+	private final double tMax = YartConstants.DEFAULT_TMAX;
+	private final Shader shader = new PathTracerShader();
+	
+	public Matte() {
+		this.ambientBRDF = new Lambertian();
+		this.diffuseBRDF = new Lambertian();
+		this.diffuseBRDF.setSampler(new Jittered(1, 1000));
+	}
+	
 	@Override
 	public Color shade(ShadeRec sr, final Stack stack) {
 		final double dx = -sr.ray.direction[0];
@@ -130,14 +140,14 @@ public class Matte extends MaterialAbstract {
 		if (sr.depth == 0) {
 			L = this.shadeAreaLights(sr, stack, wo);
 		}
-		Vector3d wi = null;
+		Vector3d wi = new Vector3d(0,0,0);
 		PDF pdf = new PDF();
-		final Color f = diffuseBRDF.sample_f(sr, wo, wi, pdf);
+		final Color f = diffuseBRDF.sample_f(sr, wo, wi, pdf);	
 		final double ndotwi = sr.normal.dot(wi);
 		
 		final Ray reflectedRay = new Ray(sr.hitPoint, wi);
 		reflectedRay.depth = sr.ray.depth + 1;
-		Color reflectedColor = sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world), tMax, stack);
+		Color reflectedColor = sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world), tMax, stack, shader);
 		
 		f.r *= ndotwi / pdf.pdf;
 		f.g *= ndotwi / pdf.pdf;
