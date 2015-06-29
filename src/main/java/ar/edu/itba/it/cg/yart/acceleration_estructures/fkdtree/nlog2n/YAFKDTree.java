@@ -24,6 +24,7 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.AbstractTracer;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 // This has O(N log N) or at least we hope it does
@@ -338,7 +339,7 @@ public class YAFKDTree {
 
 	// Here we trace rays. Work for kids
 	public Color traceRay(final Ray ray, final ShadeRec sr, final double tMax, final Stack stack) {
-		if (!rootAABB.hit(ray)) {
+		if (!rootAABB.hit(ray) || ray.depth > AbstractTracer.MAX_DEPTH) {
 			return sr.world.backgroundColor;
 		}
 
@@ -454,7 +455,7 @@ public class YAFKDTree {
 	}
 
 	public double traceShadowHit(final Ray ray, final double tMax,final Stack stack) {
-		if (!rootAABB.hit(ray)) {
+		if (!rootAABB.hit(ray) || ray.depth > AbstractTracer.MAX_DEPTH) {
 			return Double.NEGATIVE_INFINITY;
 		}
 		
@@ -541,7 +542,7 @@ public class YAFKDTree {
 	}
 
 	public double traceRayHit(final Ray ray, final ShadeRec sr, final double tMax, final Stack stack) {
-		if (!rootAABB.hit(ray)) {
+		if (!rootAABB.hit(ray) || ray.depth > AbstractTracer.MAX_DEPTH) {
 			return Double.NEGATIVE_INFINITY;
 		}
 		double tNear = 0;
