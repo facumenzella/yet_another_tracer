@@ -42,16 +42,13 @@ public class PerfectSpecular extends BRDF {
 		wi.z = woz;
 		
 		pdf.pdf = sr.normal.dot(wi);
-		
-		final double aux = Math.abs(sr.normal.dot(wi));
-		
+				
 		final Color c = cr.getColor(sr);
 		final Color k = kr.getColor(sr);
 		
-		final double factor = 1.0 / aux;
-		final double r = c.r * k.r * factor;
-		final double g = c.g * k.g * factor;
-		final double b = c.b * k.b * factor;
+		final double r = c.r * k.r;
+		final double g = c.g * k.g;
+		final double b = c.b * k.b;
 
 		return new Color(r, g, b, c.a);
 	}

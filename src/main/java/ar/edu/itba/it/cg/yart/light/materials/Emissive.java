@@ -48,7 +48,7 @@ public class Emissive extends MaterialAbstract {
 
 	@Override
 	public Color globalShade(ShadeRec sr, Stack stack) {
-		if (sr.ray.depth == 1) {
+		if (sr.depth == 1) {
 			return Color.BLACK;
 		}
 		Vector3d invSr = sr.normal.inverse();
