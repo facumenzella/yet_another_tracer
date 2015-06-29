@@ -46,4 +46,19 @@ public class Emissive extends MaterialAbstract {
 		return backfaceMaterial.shade(sr, stack);
 	}
 
+	@Override
+	public Color globalShade(ShadeRec sr, Stack stack) {
+		if (sr.ray.depth == 1) {
+			return Color.BLACK;
+		}
+		Vector3d invSr = sr.normal.inverse();
+		
+		final double dot = invSr.x * sr.ray.direction[0] + invSr.y * sr.ray.direction[1] + invSr.z * sr.ray.direction[2];
+		
+		if (dot > 0.0) {
+			return ce;
+		}
+		return Color.BLACK;
+	}
+
 }
