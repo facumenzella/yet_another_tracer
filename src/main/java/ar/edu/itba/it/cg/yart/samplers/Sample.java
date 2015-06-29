@@ -1,4 +1,4 @@
-package ar.edu.itba.it.cg.yart.light;
+package ar.edu.itba.it.cg.yart.samplers;
 
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;

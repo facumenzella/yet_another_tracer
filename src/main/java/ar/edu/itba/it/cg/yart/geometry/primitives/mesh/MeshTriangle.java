@@ -6,7 +6,7 @@ import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
-import ar.edu.itba.it.cg.yart.light.Sample;
+import ar.edu.itba.it.cg.yart.samplers.Sample;
 
 public abstract class MeshTriangle extends GeometricObject {
 

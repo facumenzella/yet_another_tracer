@@ -2,9 +2,9 @@ package ar.edu.itba.it.cg.yart.raytracer;
 
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
-import ar.edu.itba.it.cg.yart.light.Sample;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
+import ar.edu.itba.it.cg.yart.samplers.Sample;
 
 public class ShadeRec {
 	

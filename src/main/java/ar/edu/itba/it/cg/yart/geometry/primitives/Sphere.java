@@ -1,10 +1,13 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.samplers.Sample;
 
 public class Sphere extends GeometricObject {
 
@@ -139,6 +142,25 @@ public class Sphere extends GeometricObject {
 		return new AABB(new Point3d(center.x - radius, center.y + radius,
 				center.z - radius), new Point3d(center.x + radius, center.y
 				- radius, center.z + radius));
+	}
+	
+	@Override
+	public Sample getSample() {
+		final double theta = 2 * Math.PI * ThreadLocalRandom.current().nextDouble();
+		final double phi = Math.acos(2 * ThreadLocalRandom.current().nextDouble() -1.0);
+		
+		final double x = Math.cos(theta) * Math.sin(phi);
+		final double y = Math.sin(theta) * Math.sin(phi);
+		final double z = Math.cos(phi);
+		
+		final Point3d point = new Point3d(x, y, z);
+		
+		return new Sample(point, new Vector3d(point.x, point.y, point.z, 1));
+	}
+	
+	@Override
+	public double pdf() {
+		return 1 / (4 * Math.PI * radius * radius);
 	}
 
 }

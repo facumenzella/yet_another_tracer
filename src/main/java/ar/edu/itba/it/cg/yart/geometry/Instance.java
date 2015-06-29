@@ -3,9 +3,9 @@ package ar.edu.itba.it.cg.yart.geometry;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
-import ar.edu.itba.it.cg.yart.light.Sample;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.samplers.Sample;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class Instance extends GeometricObject {
