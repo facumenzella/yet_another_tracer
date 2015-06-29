@@ -24,7 +24,7 @@ public class Matte extends MaterialAbstract {
 	private Lambertian diffuseBRDF;
 	private final double tMax = YartConstants.DEFAULT_TMAX;
 	private final Shader shader = new PathTracerShader();
-	private final int samples = 10;
+	private final int samples = 2;
 
 	public Matte() {
 		this.ambientBRDF = new Lambertian();
@@ -128,34 +128,8 @@ public class Matte extends MaterialAbstract {
 		final double dz = -sr.ray.direction[2];
 
 		final Vector3d wo = new Vector3d(dx, dy, dz);
-		Color colorL = new Color(0);
-		for (final AreaLight light : sr.world.getAreaLights()) {
-			double pdfAndSamples = light.pdf(sr) * light.getSamplesNumber();
-			for (int i = 0; i < light.getSamplesNumber(); i++) {
-				final Vector3d wi = light.getDirection(sr);
-				double ndotwi = sr.normal.dot(wi);
-
-				if (ndotwi > 0.0) {
-					boolean inShadow = false;
-					Ray shadowRay = new Ray(sr.hitPoint, wi);
-					inShadow = light.inShadow(shadowRay, sr, stack);
-					if (!inShadow) {
-						final Color aux = diffuseBRDF.f(sr, wo, wi);
-						final Color li = light.L(sr);
-						final double g = light.G(sr);
-						final double factor = ndotwi * g / pdfAndSamples;
-
-						aux.r *= li.r * factor;
-						aux.g *= li.g * factor;
-						aux.b *= li.b * factor;
-
-						colorL.r += aux.r;
-						colorL.g += aux.g;
-						colorL.b += aux.b;
-					}
-				}
-			}
-		}
+		Color colorL = this.shade(sr, stack);
+		
 		Vector3d wi = new Vector3d(0, 0, 0);
 		PDF pdf = new PDF();
 		for (int i = 0; i < samples; i++) {
@@ -167,13 +141,13 @@ public class Matte extends MaterialAbstract {
 			reflectedRay.depth = sr.ray.depth + 1;
 			Color reflectedColor = sr.world.getTree().traceRay(reflectedRay,
 					sRec, tMax, stack, shader);
-
-			f.r *= ndotwi / pdf.pdf;
-			f.g *= ndotwi / pdf.pdf;
-			f.b *= ndotwi / pdf.pdf;
-			colorL.r += reflectedColor.r * f.r / samples;
-			colorL.g += reflectedColor.g * f.g / samples;
-			colorL.b += reflectedColor.b * f.b / samples;
+			
+			final double gain = 5;
+			final double factor = ndotwi * gain / (pdf.pdf * samples);
+			
+			colorL.r += reflectedColor.r * f.r * factor;
+			colorL.g += reflectedColor.g * f.g * factor;
+			colorL.b += reflectedColor.b * f.b * factor;
 		}
 		return colorL;
 	}

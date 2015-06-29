@@ -20,7 +20,7 @@ public class Reflective extends Phong implements Material{
 	private double tMax = YartConstants.DEFAULT_TMAX;
 	private final Shader shader = new PathTracerShader();
 	private final Shader directs = new RayTracerShader();
-	private final int samples = 10;
+	private final int samples = 2;
 	
 	public Reflective setKa(final double ka) {
 		super.setKa(ka);
@@ -119,25 +119,27 @@ public class Reflective extends Phong implements Material{
 		final Vector3d wo = new Vector3d(dx, dy, dz);
 		Vector3d wi = new Vector3d(0,0,0);
 		PDF pdf = new PDF();
-		Color fr = reflectiveBRDF.sample_f(sr, wo, wi, pdf);
-		Ray reflectedRay = new Ray(sr.hitPoint, wi);
-		final double ndotwi = sr.normal.dot(wi);
 		
 		for (int i = 0; i < samples; i++) {
+			Color fr = reflectiveBRDF.sample_f(sr, wo, wi, pdf);
+			Ray reflectedRay = new Ray(sr.hitPoint, wi);
+			final double ndotwi = sr.normal.dot(wi);
+			
 			Color c;
 			ShadeRec sRec = new ShadeRec(sr.world);
 			if (sr.depth == 0) {
-				reflectedRay.depth = sr.ray.depth + 1;
+				reflectedRay.depth = sr.ray.depth + 2;
 				c = sr.world.getTree().traceRay(reflectedRay, sRec, tMax, stack, shader);
 			} else {
 				reflectedRay.depth = sr.ray.depth + 1;
 				c = sr.world.getTree().traceRay(reflectedRay, sRec, tMax, stack, shader);
 			}
 			
-			final double factor = ndotwi / pdf.pdf;
-			c.r *= fr.r * factor / samples;
-			c.g *= fr.g * factor / samples;
-			c.b *= fr.b * factor / samples;
+			final double gain = 5;
+			final double factor = ndotwi * gain / (pdf.pdf * samples);
+			c.r *= fr.r * factor;
+			c.g *= fr.g * factor;
+			c.b *= fr.b * factor;
 			
 			colorL.r += c.r;
 			colorL.g += c.g;
