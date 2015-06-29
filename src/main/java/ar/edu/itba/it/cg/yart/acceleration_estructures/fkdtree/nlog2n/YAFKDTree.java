@@ -24,7 +24,6 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.raytracer.shade.PathTracerShader;
 import ar.edu.itba.it.cg.yart.raytracer.shade.Shader;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.AbstractTracer;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
@@ -443,7 +442,7 @@ public class YAFKDTree {
 							+ (m.m21 * sr.localHitPoint.y)
 							+ (m.m22 * sr.localHitPoint.z) + m.m23;
 					sr.hitPoint = new Point3d(dx, dy, dz);
-
+					sr.depth = ray.depth;
 					sr.u = u;
 					sr.v = v;
 					try {

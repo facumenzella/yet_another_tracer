@@ -20,7 +20,7 @@ public class Reflective extends Phong implements Material{
 	private double tMax = YartConstants.DEFAULT_TMAX;
 	private final Shader shader = new PathTracerShader();
 	private final Shader directs = new RayTracerShader();
-	private final int samples = 1;
+	private final int samples = 10;
 	
 	public Reflective setKa(final double ka) {
 		super.setKa(ka);
@@ -93,7 +93,7 @@ public class Reflective extends Phong implements Material{
 		Color fr = reflectiveBRDF.sample_f(sr, wo, wi, pdf);
 		Ray reflectedRay = new Ray(sr.hitPoint, wi);
 		ShadeRec sRec = new ShadeRec(sr.world);
-		sRec.depth = sr.depth + 1;
+		reflectedRay.depth = sr.ray.depth + 1;
 		Color c = sr.world.getTree().traceRay(reflectedRay, sRec, tMax, stack, directs);
 		
 		final double factor = sr.normal.dot(wi);
@@ -127,10 +127,10 @@ public class Reflective extends Phong implements Material{
 			Color c;
 			ShadeRec sRec = new ShadeRec(sr.world);
 			if (sr.depth == 0) {
-				sRec.depth = sr.depth + 2;
+				reflectedRay.depth = sr.ray.depth + 1;
 				c = sr.world.getTree().traceRay(reflectedRay, sRec, tMax, stack, shader);
 			} else {
-				sRec.depth = sr.depth + 1;
+				reflectedRay.depth = sr.ray.depth + 1;
 				c = sr.world.getTree().traceRay(reflectedRay, sRec, tMax, stack, shader);
 			}
 			
