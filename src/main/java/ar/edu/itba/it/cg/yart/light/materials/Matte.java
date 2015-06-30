@@ -15,7 +15,6 @@ import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.shade.PathTracerShader;
 import ar.edu.itba.it.cg.yart.raytracer.shade.Shader;
 import ar.edu.itba.it.cg.yart.samplers.NRooks;
-import ar.edu.itba.it.cg.yart.samplers.SamplerAbstract;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.Texture;
 
@@ -141,29 +140,13 @@ public class Matte extends MaterialAbstract {
 		Color reflectedColor1 = sr.world.getTree().traceRay(reflectedRay1,
 				sRec1, tMax, stack, shader);
 		
-		final double gain = 2;
-		final double factor1 = ndotwi1 * gain / (pdf.pdf * SamplerAbstract.SAMPLES);
+		final double gain = 1;
+		final double factor1 = ndotwi1 * gain / pdf.pdf;
 		
 		colorL.r = reflectedColor1.r * f1.r * factor1;
 		colorL.g = reflectedColor1.g * f1.g * factor1;
 		colorL.b = reflectedColor1.b * f1.b * factor1;
 		
-		for (int i = 1; i < SamplerAbstract.SAMPLES; i++) {
-			ShadeRec sRec = new ShadeRec(sr.world);
-			final Color f = diffuseBRDF.sample_f(sr, wo, wi, pdf);
-			final double ndotwi = sr.normal.dot(wi);
-
-			final Ray reflectedRay = new Ray(sr.hitPoint, wi);
-			reflectedRay.depth = sr.ray.depth + 1;
-			Color reflectedColor = sr.world.getTree().traceRay(reflectedRay,
-					sRec, tMax, stack, shader);
-			
-			final double factor = ndotwi * gain / (pdf.pdf * SamplerAbstract.SAMPLES);
-			
-			colorL.r += reflectedColor.r * f.r * factor;
-			colorL.g += reflectedColor.g * f.g * factor;
-			colorL.b += reflectedColor.b * f.b * factor;
-		}
 		return colorL;
 	}
 
