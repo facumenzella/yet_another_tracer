@@ -38,7 +38,7 @@ public class Lambertian extends BRDF {
 	@Override
 	public Color sample_f(ShadeRec sr, Vector3d wo, Vector3d wi, final PDF pdf) {
 		final Vector3d w = sr.normal;
-		final Vector3d v = new Vector3d(0.0034, 1.0, 0.0071).cross(w);
+		final Vector3d v = new Vector3d(0.034, 1.0, 0.0071).cross(w);
 		v.normalizeMe();
 		final Vector3d u = v.cross(w);
 		Point3d sp = sampler.sampleHemisphere();

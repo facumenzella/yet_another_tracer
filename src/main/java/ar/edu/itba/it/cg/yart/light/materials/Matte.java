@@ -129,7 +129,7 @@ public class Matte extends MaterialAbstract {
 		Vector3d wi = new Vector3d(0, 0, 0);
 		PDF pdf = new PDF();
 		
-		Color colorL = new Color(0);
+		Color colorL = this.shade(sr, stack);
 		final Vector3d wo = new Vector3d(dx, dy, dz);
 		ShadeRec sRec1 = new ShadeRec(sr.world);
 		final Color f1 = diffuseBRDF.sample_f(sr, wo, wi, pdf);

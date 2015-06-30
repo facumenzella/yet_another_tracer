@@ -128,7 +128,7 @@ public class Reflective extends Phong implements Material {
 		final Vector3d wo = new Vector3d(dx, dy, dz);
 		Vector3d wi = new Vector3d(0, 0, 0);
 		PDF pdf = new PDF();
-		Color colorL = new Color(.5);
+		Color colorL = super.shade(sr, stack);
 
 		Color fr1 = reflectiveBRDF.sample_f(sr, wo, wi, pdf);
 		Ray reflectedRay1 = new Ray(sr.hitPoint, wi);
@@ -136,15 +136,9 @@ public class Reflective extends Phong implements Material {
 
 		Color c;
 		ShadeRec sRec1 = new ShadeRec(sr.world);
-		if (sr.ray.depth == 0) {
-			reflectedRay1.depth = sr.ray.depth + 2;
-			c = sr.world.getTree().traceRay(reflectedRay1, sRec1, tMax, stack,
-					shader);
-		} else {
-			reflectedRay1.depth = sr.ray.depth + 1;
-			c = sr.world.getTree().traceRay(reflectedRay1, sRec1, tMax, stack,
-					shader);
-		}
+		reflectedRay1.depth = sr.ray.depth + 1;
+		c = sr.world.getTree().traceRay(reflectedRay1, sRec1, tMax, stack,
+				shader);
 
 		final double gain = 1;
 		final double factor1 = ndotwi1 * gain / pdf.pdf;
