@@ -130,7 +130,7 @@ public class Matte extends MaterialAbstract {
 		Vector3d wi = new Vector3d(0, 0, 0);
 		PDF pdf = new PDF();
 		
-		Color colorL = new Color(.5);
+		Color colorL = new Color(0);
 		final Vector3d wo = new Vector3d(dx, dy, dz);
 		ShadeRec sRec1 = new ShadeRec(sr.world);
 		final Color f1 = diffuseBRDF.sample_f(sr, wo, wi, pdf);
@@ -141,7 +141,7 @@ public class Matte extends MaterialAbstract {
 		Color reflectedColor1 = sr.world.getTree().traceRay(reflectedRay1,
 				sRec1, tMax, stack, shader);
 		
-		final double gain = 1;
+		final double gain = 2;
 		final double factor1 = ndotwi1 * gain / (pdf.pdf * SamplerAbstract.SAMPLES);
 		
 		colorL.r = reflectedColor1.r * f1.r * factor1;
