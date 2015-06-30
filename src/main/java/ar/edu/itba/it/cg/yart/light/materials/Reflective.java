@@ -130,28 +130,52 @@ public class Reflective extends Phong implements Material {
 		PDF pdf = new PDF();
 		Color colorL = new Color(.5);
 
-		for (int i = 0; i < SamplerAbstract.SAMPLES; i++) {
+		Color fr1 = reflectiveBRDF.sample_f(sr, wo, wi, pdf);
+		Ray reflectedRay1 = new Ray(sr.hitPoint, wi);
+		final double ndotwi1 = sr.normal.dot(wi);
+
+		Color c;
+		ShadeRec sRec1 = new ShadeRec(sr.world);
+		if (sr.ray.depth == 0) {
+			reflectedRay1.depth = sr.ray.depth + 2;
+			c = sr.world.getTree().traceRay(reflectedRay1, sRec1, tMax, stack,
+					shader);
+		} else {
+			reflectedRay1.depth = sr.ray.depth + 1;
+			c = sr.world.getTree().traceRay(reflectedRay1, sRec1, tMax, stack,
+					shader);
+		}
+
+		final double gain = 2;
+		final double factor1 = ndotwi1 * gain
+				/ (pdf.pdf * SamplerAbstract.SAMPLES);
+
+		colorL.r = c.r * fr1.r * factor1;
+		colorL.g = c.g * fr1.g * factor1;
+		colorL.b = c.b * fr1.b * factor1;
+		
+		for (int i = 1; i < SamplerAbstract.SAMPLES; i++) {
 			Color fr = reflectiveBRDF.sample_f(sr, wo, wi, pdf);
 			Ray reflectedRay = new Ray(sr.hitPoint, wi);
 			final double ndotwi = sr.normal.dot(wi);
 
-			Color c;
 			ShadeRec sRec = new ShadeRec(sr.world);
+			if (sr.ray.depth == 0) {
+				reflectedRay.depth = sr.ray.depth + 2;
+				c = sr.world.getTree().traceRay(reflectedRay, sRec, tMax, stack,
+						shader);
+			} else {
+				reflectedRay.depth = sr.ray.depth + 1;
+				c = sr.world.getTree().traceRay(reflectedRay, sRec, tMax, stack,
+						shader);
+			}
 
-			reflectedRay.depth = sr.ray.depth + 1;
-			c = sr.world.getTree().traceRay(reflectedRay, sRec, tMax, stack,
-					shader);
-
-			final double gain = 1;
 			final double factor = ndotwi * gain
 					/ (pdf.pdf * SamplerAbstract.SAMPLES);
-			c.r *= fr.r * factor;
-			c.g *= fr.g * factor;
-			c.b *= fr.b * factor;
 
-			colorL.r += c.r;
-			colorL.g += c.g;
-			colorL.b += c.b;
+			colorL.r += c.r * fr.r * factor;
+			colorL.g += c.g * fr.g * factor;
+			colorL.b += c.b * fr.b * factor;
 		}
 		return colorL;
 	}
