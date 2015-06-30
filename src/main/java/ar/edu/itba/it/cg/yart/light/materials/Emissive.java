@@ -51,13 +51,7 @@ public class Emissive extends MaterialAbstract {
 		if (sr.ray.depth == 1) {
 			return Color.BLACK;
 		}
-		Vector3d invSr = sr.normal.inverse();
-		final double dot = invSr.x * sr.ray.direction[0] + invSr.y * sr.ray.direction[1] + invSr.z * sr.ray.direction[2];
-		if (dot > 0.0) {
-			return realCe;
-		}
-		
-		return backfaceMaterial.shade(sr, stack);
+		return this.shade(sr, stack);
 	}
 
 }
