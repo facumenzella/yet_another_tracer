@@ -12,6 +12,7 @@ import ar.edu.itba.it.cg.yart.geometry.Point3d;
 
 public abstract class SamplerAbstract implements Sampler{
 	
+	public static int SAMPLES = 3;
 	protected final Random random;
 	final protected int num_samples; // the number of points in a pattern
 	final protected int num_sets; // the number of sample sets (patterns) stored
