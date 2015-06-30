@@ -14,7 +14,8 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.shade.PathTracerShader;
 import ar.edu.itba.it.cg.yart.raytracer.shade.Shader;
-import ar.edu.itba.it.cg.yart.samplers.Jittered;
+import ar.edu.itba.it.cg.yart.samplers.NRooks;
+import ar.edu.itba.it.cg.yart.samplers.SamplerAbstract;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.Texture;
 
@@ -24,12 +25,11 @@ public class Matte extends MaterialAbstract {
 	private Lambertian diffuseBRDF;
 	private final double tMax = YartConstants.DEFAULT_TMAX;
 	private final Shader shader = new PathTracerShader();
-	private final int samples = 2;
 
 	public Matte() {
 		this.ambientBRDF = new Lambertian();
 		this.diffuseBRDF = new Lambertian();
-		this.diffuseBRDF.setSampler(new Jittered(1, 1000));
+		this.diffuseBRDF.setSampler(new NRooks(1, 1000));
 	}
 
 	@Override
@@ -126,13 +126,29 @@ public class Matte extends MaterialAbstract {
 		final double dx = -sr.ray.direction[0];
 		final double dy = -sr.ray.direction[1];
 		final double dz = -sr.ray.direction[2];
-
-		final Vector3d wo = new Vector3d(dx, dy, dz);
-		Color colorL = this.shade(sr, stack);
 		
 		Vector3d wi = new Vector3d(0, 0, 0);
 		PDF pdf = new PDF();
-		for (int i = 0; i < samples; i++) {
+		
+		Color colorL = new Color(.5);
+		final Vector3d wo = new Vector3d(dx, dy, dz);
+		ShadeRec sRec1 = new ShadeRec(sr.world);
+		final Color f1 = diffuseBRDF.sample_f(sr, wo, wi, pdf);
+		final double ndotwi1 = sr.normal.dot(wi);
+
+		final Ray reflectedRay1 = new Ray(sr.hitPoint, wi);
+		reflectedRay1.depth = sr.ray.depth + 1;
+		Color reflectedColor1 = sr.world.getTree().traceRay(reflectedRay1,
+				sRec1, tMax, stack, shader);
+		
+		final double gain = 1;
+		final double factor1 = ndotwi1 * gain / (pdf.pdf * SamplerAbstract.SAMPLES);
+		
+		colorL.r = reflectedColor1.r * f1.r * factor1;
+		colorL.g = reflectedColor1.g * f1.g * factor1;
+		colorL.b = reflectedColor1.b * f1.b * factor1;
+		
+		for (int i = 1; i < SamplerAbstract.SAMPLES; i++) {
 			ShadeRec sRec = new ShadeRec(sr.world);
 			final Color f = diffuseBRDF.sample_f(sr, wo, wi, pdf);
 			final double ndotwi = sr.normal.dot(wi);
@@ -142,8 +158,7 @@ public class Matte extends MaterialAbstract {
 			Color reflectedColor = sr.world.getTree().traceRay(reflectedRay,
 					sRec, tMax, stack, shader);
 			
-			final double gain = 5;
-			final double factor = ndotwi * gain / (pdf.pdf * samples);
+			final double factor = ndotwi * gain / (pdf.pdf * SamplerAbstract.SAMPLES);
 			
 			colorL.r += reflectedColor.r * f.r * factor;
 			colorL.g += reflectedColor.g * f.g * factor;

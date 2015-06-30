@@ -53,6 +53,7 @@ public class Emissive extends MaterialAbstract {
 		if (dot > 0.0) {
 			return ce;
 		}
+		
 		return Color.BLACK;
 	}
 
