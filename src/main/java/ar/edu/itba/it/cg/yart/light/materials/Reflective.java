@@ -27,7 +27,7 @@ public class Reflective extends Phong implements Material {
 		this.reflectiveBRDF = new PerfectSpecular();
 		this.reflectiveBRDF.setSampler(new NRooks(1, 1000));
 	}
-	
+
 	public Reflective setKa(final double ka) {
 		super.setKa(ka);
 		return this;
@@ -146,37 +146,13 @@ public class Reflective extends Phong implements Material {
 					shader);
 		}
 
-		final double gain = 2;
-		final double factor1 = ndotwi1 * gain
-				/ (pdf.pdf * SamplerAbstract.SAMPLES);
+		final double gain = 1;
+		final double factor1 = ndotwi1 * gain / pdf.pdf;
 
 		colorL.r = c.r * fr1.r * factor1;
 		colorL.g = c.g * fr1.g * factor1;
 		colorL.b = c.b * fr1.b * factor1;
-		
-		for (int i = 1; i < SamplerAbstract.SAMPLES; i++) {
-			Color fr = reflectiveBRDF.sample_f(sr, wo, wi, pdf);
-			Ray reflectedRay = new Ray(sr.hitPoint, wi);
-			final double ndotwi = sr.normal.dot(wi);
 
-			ShadeRec sRec = new ShadeRec(sr.world);
-			if (sr.ray.depth == 0) {
-				reflectedRay.depth = sr.ray.depth + 2;
-				c = sr.world.getTree().traceRay(reflectedRay, sRec, tMax, stack,
-						shader);
-			} else {
-				reflectedRay.depth = sr.ray.depth + 1;
-				c = sr.world.getTree().traceRay(reflectedRay, sRec, tMax, stack,
-						shader);
-			}
-
-			final double factor = ndotwi * gain
-					/ (pdf.pdf * SamplerAbstract.SAMPLES);
-
-			colorL.r += c.r * fr.r * factor;
-			colorL.g += c.g * fr.g * factor;
-			colorL.b += c.b * fr.b * factor;
-		}
 		return colorL;
 	}
 }
