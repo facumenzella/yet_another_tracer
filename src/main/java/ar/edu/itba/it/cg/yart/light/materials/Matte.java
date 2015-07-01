@@ -143,9 +143,9 @@ public class Matte extends MaterialAbstract {
 		final double gain = 1;
 		final double factor1 = ndotwi1 * gain / pdf.pdf;
 		
-		colorL.r = reflectedColor1.r * f1.r * factor1;
-		colorL.g = reflectedColor1.g * f1.g * factor1;
-		colorL.b = reflectedColor1.b * f1.b * factor1;
+		colorL.r += reflectedColor1.r * f1.r * factor1;
+		colorL.g += reflectedColor1.g * f1.g * factor1;
+		colorL.b += reflectedColor1.b * f1.b * factor1;
 		
 		return colorL;
 	}

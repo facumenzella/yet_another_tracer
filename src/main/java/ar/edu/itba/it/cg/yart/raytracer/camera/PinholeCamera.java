@@ -1,6 +1,6 @@
 package ar.edu.itba.it.cg.yart.raytracer.camera;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
@@ -14,7 +14,6 @@ import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
 import ar.edu.itba.it.cg.yart.raytracer.shade.PathTracerShader;
-import ar.edu.itba.it.cg.yart.raytracer.shade.RayTracerShader;
 import ar.edu.itba.it.cg.yart.raytracer.shade.Shader;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
@@ -30,8 +29,7 @@ public class PinholeCamera extends CameraAbstract {
 	private double minX = -1;
 	private double maxY = 1;
 	private double minY = -1;
-	private final Random random;
-
+	
 	// Default value according to LuxRender specs.
 	private double fov = 90;
 
@@ -42,7 +40,6 @@ public class PinholeCamera extends CameraAbstract {
 		this.zoom = zoom;
 		this.tMax = tMax;
 		this.shader = new PathTracerShader();
-		this.random = new Random();
 	}
 
 	@Override
@@ -82,7 +79,7 @@ public class PinholeCamera extends CameraAbstract {
 				if (n == 1) {
 					distributionX = distributionY = 0;
 				} else {
-					final double ri = random.nextDouble();
+					final double ri = ThreadLocalRandom.current().nextDouble();
 					distributionX = (j + ri) / n;
 					distributionY = (i + ri) / n;
 				}
