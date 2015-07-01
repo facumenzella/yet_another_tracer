@@ -112,7 +112,11 @@ public class Instance extends GeometricObject {
 	
 	@Override
 	public double pdf() {
-		return object.pdf() / getBoundingBox().surfaceArea;
+		final double pdf = object.pdf() / getBoundingBox().surfaceArea;
+		if (pdf > 1) {
+			return 1;
+		}
+		return pdf;
 	}
 
 	@Override
