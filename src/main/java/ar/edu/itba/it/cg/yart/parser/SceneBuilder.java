@@ -396,8 +396,14 @@ public class SceneBuilder {
 				localMatrix = localMatrix.scale(width, height, depth);
 				instance = new Instance(referenceBox);
 			}
-			else if (strType.equals("mesh")) {
-				int[] triindices = identifier.getIntegers("triindices");
+			else if (strType.equals("mesh") || strType.equals("trianglemesh")) {
+				int[] triindices = identifier.getIntegers("triindices", null);
+				if (triindices == null) {
+					triindices = identifier.getIntegers("indices", null);
+				}
+				if (triindices == null) {
+					throw new PropertyNotFoundException("triindices", IdentifierType.SHAPE, PropertyType.INTEGER);
+				}
 				final Point3d[] vertices = identifier.getPoints("P");
 				final Vector3d[] normals = identifier.getNormals("N", null);
 				final double[] uvList = identifier.getDoubles("uv", null);
