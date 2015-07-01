@@ -1,5 +1,7 @@
 package ar.edu.itba.it.cg.yart.samplers;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import ar.edu.itba.it.cg.yart.geometry.Point2d;
 
 public class MultiJittered extends SamplerAbstract {
@@ -26,9 +28,9 @@ public class MultiJittered extends SamplerAbstract {
 			for (int i = 0; i < n; i++)
 				for (int j = 0; j < n; j++) {
 					samples[i * n + j + p * num_samples].x = (i * n + j)
-							* subcell_width + (random.nextDouble() * subcell_width);
+							* subcell_width + (ThreadLocalRandom.current().nextDouble() * subcell_width);
 					samples[i * n + j + p * num_samples].y = (j * n + i)
-							* subcell_width + (random.nextDouble() * subcell_width);
+							* subcell_width + (ThreadLocalRandom.current().nextDouble() * subcell_width);
 				}
 
 		this.shuffleXCoordinates();

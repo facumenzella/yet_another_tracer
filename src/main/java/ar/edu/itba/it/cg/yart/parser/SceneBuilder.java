@@ -457,6 +457,7 @@ public class SceneBuilder {
 				currentAreaLight = null;
 				instance.setMaterial(emissiveMaterial);
 				instance.setCastsShadows(false);
+				instance.generateSamples(1000);
 			}
 			else {
 				instance.setMaterial(currentMaterial);

@@ -13,7 +13,7 @@ import ar.edu.itba.it.cg.yart.geometry.Point3d;
 public abstract class SamplerAbstract implements Sampler{
 	
 	public static int SAMPLES = 10;
-	protected final Random random;
+	//protected final Random random;
 	final protected int num_samples; // the number of points in a pattern
 	final protected int num_sets; // the number of sample sets (patterns) stored
 	final protected Point2d[] samples;  // sample points  on a unit square
@@ -24,7 +24,7 @@ public abstract class SamplerAbstract implements Sampler{
 	protected int jump; // random index jump
 	
 	public SamplerAbstract(final int num_samples, final int num_sets) {
-		this.random = ThreadLocalRandom.current();
+		//this.random = ThreadLocalRandom.current();
 		this.jump = 0;
 		this.count = 0;
 		this.num_samples = num_samples;
@@ -47,7 +47,7 @@ public abstract class SamplerAbstract implements Sampler{
 			indices[i]= i;
 		}
 		for (int p = 0; p < num_sets; p++) { 
-			int index = random.nextInt(p + 1);
+			int index = ThreadLocalRandom.current().nextInt(p + 1);
 		      // Simple swap
 		      int a = indices[index];
 		      indices[index] = indices[p];
@@ -62,21 +62,21 @@ public abstract class SamplerAbstract implements Sampler{
 		
 	public Point2d sampleUnitSquare() {
 		if (count % num_samples == 0) { // start of a new pixel
-			jump = (random.nextInt(num_sets)) * num_samples;
+			jump = (ThreadLocalRandom.current().nextInt(num_sets)) * num_samples;
 		}
 		return this.samples[((int) (jump + count++ % num_samples))];
 	}
 	
 	public Point3d sampleHemisphere() {
 		if (count % num_samples == 0) {
-			jump = (random.nextInt(num_sets)) * num_samples; // start of a new pixel
+			jump = (ThreadLocalRandom.current().nextInt(num_sets)) * num_samples; // start of a new pixel
 		}
 		return (this.hemisphereSamples[jump + shuffled_indices[(int) (jump + count++ % num_samples)]]);		
 	}
 	
 	public Point3d sampleSphere() {
 		if (count % num_samples == 0) {
-			jump = (random.nextInt() % num_sets) * num_samples; // start of a new pixel
+			jump = (ThreadLocalRandom.current().nextInt() % num_sets) * num_samples; // start of a new pixel
 		}
 		return (this.sphereSamples[jump + shuffled_indices[(int) (jump + count++ % num_samples)]]);		
 	}
@@ -116,7 +116,7 @@ public abstract class SamplerAbstract implements Sampler{
 	protected void shuffleXCoordinates() {
 		for (int p = 0; p < num_sets; p++)
 			for (int i = 0; i <  num_samples - 1; i++) {
-				int target = random.nextInt(num_samples) + p * num_samples;
+				int target = ThreadLocalRandom.current().nextInt(num_samples) + p * num_samples;
 				double temp = samples[i + p * num_samples + 1].x;
 				samples[i + p * num_samples + 1].x = samples[target].x;
 				samples[target].x = temp;
@@ -126,7 +126,7 @@ public abstract class SamplerAbstract implements Sampler{
 	protected void shuffleYCoordinates() {
 		for (int p = 0; p < num_sets; p++)
 			for (int i = 0; i <  num_samples - 1; i++) {
-				int target = random.nextInt(num_samples) + p * num_samples;
+				int target = ThreadLocalRandom.current().nextInt(num_samples) + p * num_samples;
 				double temp = samples[i + p * num_samples + 1].y;
 				samples[i + p * num_samples + 1].y = samples[target].y;
 				samples[target].y = temp;

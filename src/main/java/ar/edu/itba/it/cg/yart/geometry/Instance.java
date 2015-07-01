@@ -1,5 +1,7 @@
 package ar.edu.itba.it.cg.yart.geometry;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
@@ -12,6 +14,7 @@ public class Instance extends GeometricObject {
 
 	public GeometricObject object; // object to be transformed
 	public boolean transformTexture; // do we transform the texture
+	private Sample[] samples;
 
 	public Instance(final GeometricObject object) {
 		this.object = object;
@@ -102,11 +105,23 @@ public class Instance extends GeometricObject {
 		return t;
 	}
 	
+	public void generateSamples(final int n) {
+		samples = new Sample[n];
+		
+		for (int i = 0; i < n; i++) {
+			samples[i] = object.getSample();
+			samples[i].point = samples[i].point.transformMe(matrix);
+			samples[i].normal = samples[i].normal.transformByMatrix(matrix).normalizeMe();
+		}
+	}
+	
 	@Override
 	public Sample getSample() {
-		Sample ret = object.getSample();
+		/*Sample ret = object.getSample();
 		ret.point = ret.point.transformByMatrix(matrix);
-		ret.normal = ret.normal.transformByMatrix(matrix).normalizeMe();
+		ret.normal = ret.normal.transformByMatrix(matrix).normalizeMe();*/
+		Sample ret = samples[ThreadLocalRandom.current().nextInt(samples.length)];
+		//System.out.println("P: " + ret.point + "-- N: " + ret.normal);
 		return ret;
 	}
 	
@@ -133,6 +148,13 @@ public class Instance extends GeometricObject {
 	public void applyTransformation(Matrix4d matrix) {
 		super.applyTransformation(matrix);
 		updateBoundingBox();
+		
+		if (samples != null) {
+			for (Sample s : samples) {
+				s.point = s.point.transformMe(this.matrix);
+				s.normal = s.normal.transformByMatrix(this.matrix).normalizeMe();
+			}
+		}
 	}
 
 	@Override
