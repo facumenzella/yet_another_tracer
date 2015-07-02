@@ -167,6 +167,7 @@ public class SceneBuilder {
 			}
 			raytracer.setResolution(i.getInteger("xresolution", YartConstants.DEFAULT_XRES),
 					i.getInteger("yresolution", YartConstants.DEFAULT_YRES));
+			raytracer.setGamma(i.getDouble("gamma", 2.2));
 			break;
 		case LOOKAT:
 			double[] params = ParserUtils.parseDoubleArray(i.getParameters());

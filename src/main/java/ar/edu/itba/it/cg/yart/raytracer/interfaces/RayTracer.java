@@ -26,4 +26,7 @@ public interface RayTracer {
 	public void setViewParameters(final Point3d eye, final Point3d lookAt, final Vector3d up);
 	public void setCamera(final Camera camera);
 	public Camera getCamera();
+	public void setGamma(final double gamma);
+	public double getGamma();
+	public double getGammaInv();
 }
