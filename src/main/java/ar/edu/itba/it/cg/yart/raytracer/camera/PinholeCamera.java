@@ -122,9 +122,9 @@ public class PinholeCamera extends CameraAbstract {
 				color.b /= max;
 			}
 
-			color.r = Math.pow(color.r, 1 / 2.2);
-			color.g = Math.pow(color.g, 1 / 2.2);
-			color.b = Math.pow(color.b, 1 / 2.2);
+			color.r = Math.pow(color.r, rayTracer.getGammaInv());
+			color.g = Math.pow(color.g, rayTracer.getGammaInv());
+			color.b = Math.pow(color.b, rayTracer.getGammaInv());
 			
 			// now we display the pixel
 			int ret = 0;
