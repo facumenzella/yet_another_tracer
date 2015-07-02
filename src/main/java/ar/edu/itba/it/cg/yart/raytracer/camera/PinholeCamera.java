@@ -121,6 +121,11 @@ public class PinholeCamera extends CameraAbstract {
 				color.g /= max;
 				color.b /= max;
 			}
+
+			color.r = Math.pow(color.r, 1 / 2.2);
+			color.g = Math.pow(color.g, 1 / 2.2);
+			color.b = Math.pow(color.b, 1 / 2.2);
+			
 			// now we display the pixel
 			int ret = 0;
 			int alpha = (int) (color.a * 255);

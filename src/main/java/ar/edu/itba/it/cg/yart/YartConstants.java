@@ -15,6 +15,6 @@ public class YartConstants {
 	public static final double DEFAULT_FOV = 90;
 	public static final double DEFAULT_TMAX = 1000;
 	
-	public static final float LIGHT_GAIN_MULTIPLIER = 1;
+	public static final float LIGHT_GAIN_MULTIPLIER = 2;
 
 }
