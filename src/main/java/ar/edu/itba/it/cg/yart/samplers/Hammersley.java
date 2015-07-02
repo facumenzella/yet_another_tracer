@@ -1,7 +1,6 @@
-package Hammersley;
+package ar.edu.itba.it.cg.yart.samplers;
 
 import ar.edu.itba.it.cg.yart.geometry.Point2d;
-import ar.edu.itba.it.cg.yart.samplers.SamplerAbstract;
 
 public class Hammersley extends SamplerAbstract {
 
