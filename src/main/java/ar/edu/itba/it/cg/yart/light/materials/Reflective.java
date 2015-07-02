@@ -12,7 +12,6 @@ import ar.edu.itba.it.cg.yart.raytracer.shade.PathTracerShader;
 import ar.edu.itba.it.cg.yart.raytracer.shade.RayTracerShader;
 import ar.edu.itba.it.cg.yart.raytracer.shade.Shader;
 import ar.edu.itba.it.cg.yart.samplers.NRooks;
-import ar.edu.itba.it.cg.yart.samplers.SamplerAbstract;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.Texture;
 
@@ -25,7 +24,7 @@ public class Reflective extends Phong implements Material {
 
 	public Reflective() {
 		this.reflectiveBRDF = new PerfectSpecular();
-		this.reflectiveBRDF.setSampler(new NRooks(1, 1000));
+		this.reflectiveBRDF.setSampler(new NRooks(1, 10000));
 	}
 
 	public Reflective setKa(final double ka) {
