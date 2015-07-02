@@ -28,7 +28,7 @@ public class Matte extends MaterialAbstract {
 	public Matte() {
 		this.ambientBRDF = new Lambertian();
 		this.diffuseBRDF = new Lambertian();
-		this.diffuseBRDF.setSampler(new NRooks(1, 1000));
+		this.diffuseBRDF.setSampler(new NRooks(1, 10000));
 	}
 
 	@Override
