@@ -465,6 +465,7 @@ public class SceneBuilder {
 			}
 			Matrix4d matrix = transformMatrices.peek();
 			instance.applyTransformation(localMatrix.leftMultiply(matrix));
+			currentMaterial = null;
 		}
 		
 		return instance;
