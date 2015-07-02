@@ -167,6 +167,7 @@ public class SceneBuilder {
 			}
 			raytracer.setResolution(i.getInteger("xresolution", YartConstants.DEFAULT_XRES),
 					i.getInteger("yresolution", YartConstants.DEFAULT_YRES));
+			raytracer.setGamma(i.getDouble("gamma", 2.2));
 			break;
 		case LOOKAT:
 			double[] params = ParserUtils.parseDoubleArray(i.getParameters());
@@ -396,8 +397,14 @@ public class SceneBuilder {
 				localMatrix = localMatrix.scale(width, height, depth);
 				instance = new Instance(referenceBox);
 			}
-			else if (strType.equals("mesh")) {
-				int[] triindices = identifier.getIntegers("triindices");
+			else if (strType.equals("mesh") || strType.equals("trianglemesh")) {
+				int[] triindices = identifier.getIntegers("triindices", null);
+				if (triindices == null) {
+					triindices = identifier.getIntegers("indices", null);
+				}
+				if (triindices == null) {
+					throw new PropertyNotFoundException("triindices", IdentifierType.SHAPE, PropertyType.INTEGER);
+				}
 				final Point3d[] vertices = identifier.getPoints("P");
 				final Vector3d[] normals = identifier.getNormals("N", null);
 				final double[] uvList = identifier.getDoubles("uv", null);
@@ -451,12 +458,14 @@ public class SceneBuilder {
 				currentAreaLight = null;
 				instance.setMaterial(emissiveMaterial);
 				instance.setCastsShadows(false);
+				instance.generateSamples(1000);
 			}
 			else {
 				instance.setMaterial(currentMaterial);
 			}
 			Matrix4d matrix = transformMatrices.peek();
 			instance.applyTransformation(localMatrix.leftMultiply(matrix));
+			currentMaterial = null;
 		}
 		
 		return instance;
@@ -472,6 +481,11 @@ public class SceneBuilder {
 				Point3d from = identifier.getPoint("from", new Point3d(0,0,0));
 				Color l = identifier.getColor("l", Color.whiteColor());
 				PointLight light = new PointLight(gain, l, new Vector3d(0, 0, 0));
+				double power = identifier.getDouble("power", 100);
+				double efficacy = identifier.getDouble("efficacy", 17);
+				if (power != 0 && efficacy != 0) {
+					gain *= power * (efficacy / 100);
+				}
 				light.applyTransformation(new Matrix4d().transform(from.x, from.y, from.z).leftMultiply(transformMatrices.peek()));
 				ret = light;
 			}
@@ -511,6 +525,11 @@ public class SceneBuilder {
 		try {
 			double gain = identifier.getDouble("gain", 1.0f) * YartConstants.LIGHT_GAIN_MULTIPLIER;
 			if (identifier.getParameters()[0].equals("area")) {
+				double power = identifier.getDouble("power", 100);
+				double efficacy = identifier.getDouble("efficacy", 17);
+				if (power != 0 && efficacy != 0) {
+					gain *= power * (efficacy / 100);
+				}
 				ret = new AreaLight(gain, identifier.getColor("l", Color.WHITE), identifier.getInteger("nsamples", 1));
 			}
 			else {

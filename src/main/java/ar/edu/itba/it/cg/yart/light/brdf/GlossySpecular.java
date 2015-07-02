@@ -1,12 +1,15 @@
 package ar.edu.itba.it.cg.yart.light.brdf;
 
 import ar.edu.itba.it.cg.yart.color.Color;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.samplers.Sampler;
 
 public class GlossySpecular extends BRDF{
 	
 	private double ks;
+	private double cs;
 	private double exp;
 	
 	@Override
@@ -47,16 +50,54 @@ public class GlossySpecular extends BRDF{
 	}
 	
 	@Override
-	public Color sample_f(ShadeRec sr, Vector3d wo, Vector3d wi) {
-		return Color.blackColor();
+	public Color sample_f(ShadeRec sr, Vector3d wo, Vector3d wi, final PDF pdf) {
+		double ndotwo = sr.normal.dot(wo);
+		
+		final double srx = sr.normal.x * ndotwo * 2.0;
+		final double sry = sr.normal.y * ndotwo * 2.0;
+		final double srz = sr.normal.z * ndotwo * 2.0;
+		double wox = -wo.x;
+		double woy = -wo.y;
+		double woz = -wo.z;
+		wox += srx;
+		woy += sry;
+		woz += srz;
+		Vector3d r = new Vector3d(wox, woy, woz); // direction of mirror reflection
+		
+		Vector3d w = r;								
+		Vector3d u = new Vector3d(0.00424, 1, 0.00764).cross(w); 
+		u.normalizeMe();
+		Vector3d v = u.cross(w);
+			
+		Point3d sp = sampler.sampleHemisphere();
+		wi.copy(u.scale(sp.x).add(v.scale(sp.y)).add(w.scale(sp.z))); // reflected ray direction
+		
+		if (sr.normal.dot(wi) < 0.0) { // reflected ray is below tangent plane
+			wi.copy(u.scale(-sp.x).add(v.scale(-sp.y)).add(w.scale(-sp.z)));
+		}
+			
+		final double phong_lobe = Math.pow(r.dot(wi), exp);
+		pdf.pdf = phong_lobe * (sr.normal.dot(wi));
+
+		final double aux = ks * cs * phong_lobe;
+		return new Color(aux);
 	}
 	
 	public void setExp(final double exp) {
 		this.exp = exp;
 	}
 	
+	public void setCs(final double cs) {
+		this.cs = cs;
+	}
+	
 	public void setKs(final double ks) {
 		this.ks = ks;
+	}
+	
+	public void setSampler(final Sampler sampler) {
+		super.setSampler(sampler);
+		sampler.mapSamples2Hemisphere(exp);
 	}
 
 }

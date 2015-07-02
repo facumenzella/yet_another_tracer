@@ -41,6 +41,8 @@ public class SimpleRayTracer implements RayTracer {
 	private int vRes;
 	private int bucketSize;
 	private int numSamples;
+	private double gamma;
+	private double gammaInv;
 
 	private RaytracerCallbacks callbacks = new RaytracerCallbacks() {
 		@Override public void onBucketStarted(final Bucket bucket) {}
@@ -77,6 +79,7 @@ public class SimpleRayTracer implements RayTracer {
 		setResolution(800, 600);
 		setNumSamples(numSamples);
 		setCamera(new PinholeCamera(eye, lookat, up, distance, zoom, tMax));
+		setGamma(2.2);
 	}
 
 	public void finishRaytracer() {
@@ -273,5 +276,21 @@ public class SimpleRayTracer implements RayTracer {
 		renderResult.startPreprocessing();
 		world.preprocess();
 		renderResult.finishPreprocessing();
+	}
+
+	@Override
+	public void setGamma(final double gamma) {
+		this.gamma = gamma;
+		this.gammaInv = 1 / gamma;
+	}
+
+	@Override
+	public double getGamma() {
+		return gamma;
+	}
+
+	@Override
+	public double getGammaInv() {
+		return gammaInv;
 	}
 }

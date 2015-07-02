@@ -8,14 +8,18 @@ import ar.edu.itba.it.cg.yart.light.brdf.PerfectSpecular;
 import ar.edu.itba.it.cg.yart.light.btdf.PerfectTransmitter;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.raytracer.shade.PathTracerShader;
+import ar.edu.itba.it.cg.yart.raytracer.shade.RayTracerShader;
+import ar.edu.itba.it.cg.yart.raytracer.shade.Shader;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.Texture;
 
-public class Transparent extends Phong implements Material{
+public class Transparent extends Phong{
 
 	private final PerfectSpecular reflectiveBRDF = new PerfectSpecular();
 	private final PerfectTransmitter specularBTDF = new PerfectTransmitter();
 	private double tMax = YartConstants.DEFAULT_TMAX;
+	private final Shader directs = new RayTracerShader();
 	
 	public Transparent setKa(final double ka) {
 		super.setKa(ka);
@@ -112,7 +116,7 @@ public class Transparent extends Phong implements Material{
 		final Ray reflectedRay = new Ray(sr.hitPoint, wi);
 		reflectedRay.depth = sr.depth + 1;
 		if (specularBTDF.tir(sr)) {
-			colorL.addEquals(sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world), this.tMax, stack));
+			colorL.addEquals(sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world), this.tMax, stack, directs));
 		} else {
 			final Vector3d wt = new Vector3d(0, 0, 0);
 			final Color ft = specularBTDF.sample_f(sr, wo, wt);
@@ -123,7 +127,7 @@ public class Transparent extends Phong implements Material{
 			double srdotwt = Math.abs(sr.normal.dot(wt));
 			
 			//colorL.addEquals(sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world), stack).multiply(fr).multiply(srdotwi));
-			final Color aux = sr.world.getTree().traceRay(transmittedRay, new ShadeRec(sr.world), this.tMax, stack);
+			final Color aux = sr.world.getTree().traceRay(transmittedRay, new ShadeRec(sr.world), this.tMax, stack, directs);
 			
 			colorL.r += aux.r * ft.r * srdotwt;
 			colorL.g += aux.g * ft.r * srdotwt;
@@ -133,5 +137,7 @@ public class Transparent extends Phong implements Material{
 		
 		return colorL;
 	}
+	
+	
 
 }

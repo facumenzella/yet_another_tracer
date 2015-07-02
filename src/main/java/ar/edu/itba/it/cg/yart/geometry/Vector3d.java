@@ -116,6 +116,17 @@ public class Vector3d {
 		return new Vector3d(dx, dy, dz);
 	}
 	
+	public Vector3d transformMe(final Matrix4d matrix) {
+		final double dx = (matrix.m00 * this.x) + (matrix.m01 * this.y) + (matrix.m02 * this.z) + matrix.m03;
+		final double dy = (matrix.m10 * this.x) + (matrix.m11 * this.y) + (matrix.m12 * this.z) + matrix.m13;
+		final double dz = (matrix.m20 * this.x) + (matrix.m21 * this.y) + (matrix.m22 * this.z) + matrix.m23;
+		this.x = dx;
+		this.y = dy;
+		this.z = dz;
+		this.length = Math.sqrt(x * x + y * y + z * z);
+		return this;
+	}
+	
 	@Override
 	public String toString() {
 		return "(" + x + ", " + y + ", " + z + ")";

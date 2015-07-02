@@ -24,6 +24,7 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.raytracer.shade.Shader;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.AbstractTracer;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
@@ -338,11 +339,11 @@ public class YAFKDTree {
 	}
 
 	// Here we trace rays. Work for kids
-	public Color traceRay(final Ray ray, final ShadeRec sr, final double tMax, final Stack stack) {
+	public Color traceRay(final Ray ray, final ShadeRec sr, final double tMax, final Stack stack, final Shader shader) {
 		if (!rootAABB.hit(ray) || ray.depth > AbstractTracer.MAX_DEPTH) {
 			return sr.world.backgroundColor;
 		}
-
+		
 		double tNear = 0;
 		double tFar = tMax;
 		KDNodeAbstract node = null;
@@ -414,6 +415,7 @@ public class YAFKDTree {
 						sr.hitObject = true;
 						sr.material = object.getMaterial();
 						m = object.matrix;
+
 						normal = sr.normal;
 						u = sr.u;
 						v = sr.v;
@@ -423,11 +425,13 @@ public class YAFKDTree {
 				}
 				Color color = null;
 				if (sr.hitObject) {
-					sr.depth = ray.depth;
 					sr.t = tMin;
 					sr.normal = normal;
 					sr.localHitPoint = localHitPoint;
 					sr.ray = ray;
+					if (m == null) {
+						System.out.println("no matrix");
+					}
 					final double dx = (m.m00 * sr.localHitPoint.x)
 							+ (m.m01 * sr.localHitPoint.y)
 							+ (m.m02 * sr.localHitPoint.z) + m.m03;
@@ -438,10 +442,14 @@ public class YAFKDTree {
 							+ (m.m21 * sr.localHitPoint.y)
 							+ (m.m22 * sr.localHitPoint.z) + m.m23;
 					sr.hitPoint = new Point3d(dx, dy, dz);
-
+					sr.depth = ray.depth;
 					sr.u = u;
 					sr.v = v;
-					color = sr.material.shade(sr, stack);
+					try {
+						color = shader.shade(sr.material, sr, stack);
+					} catch (Exception ex) {
+						ex.printStackTrace();
+					}
 					stack.index = top;
 					return color;
 				}

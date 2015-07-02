@@ -1,6 +1,7 @@
 package ar.edu.itba.it.cg.yart.light.brdf;
 
 import ar.edu.itba.it.cg.yart.color.Color;
+import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
@@ -35,8 +36,17 @@ public class Lambertian extends BRDF {
 	}
 
 	@Override
-	public Color sample_f(ShadeRec sr, Vector3d wo, Vector3d wi) {
-		return Color.blackColor();
+	public Color sample_f(ShadeRec sr, Vector3d wo, Vector3d wi, final PDF pdf) {
+		final Vector3d w = sr.normal;
+		final Vector3d v = new Vector3d(0.034, 1.0, 0.0071).cross(w);
+		v.normalizeMe();
+		final Vector3d u = v.cross(w);
+		Point3d sp = sampler.sampleHemisphere();
+		wi.copy(u.scale(sp.x).add(v.scale(sp.y)).add(w.scale(sp.z)));
+		
+		wi.normalizeMe();
+		pdf.pdf = sr.normal.dot(wi) * invPi;
+		return 	kd.getColor(sr).multiply(cd.getColor(sr)).multiply(invPi);
 	}
 
 	public Texture getKd() {

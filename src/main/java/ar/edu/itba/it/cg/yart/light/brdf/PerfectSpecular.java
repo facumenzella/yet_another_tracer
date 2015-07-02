@@ -22,7 +22,7 @@ public class PerfectSpecular extends BRDF {
 	}
 
 	@Override
-	public Color sample_f(final ShadeRec sr, final Vector3d wo, Vector3d wi) {
+	public Color sample_f(final ShadeRec sr, final Vector3d wo, Vector3d wi, final PDF pdf) {
 		final double ndotwo = sr.normal.dot(wo);
 
 		final double srx = sr.normal.x * ndotwo * 2.0;
@@ -41,15 +41,14 @@ public class PerfectSpecular extends BRDF {
 		wi.y = woy;
 		wi.z = woz;
 		
-		final double aux = sr.normal.dot(wi);
-		
+		pdf.pdf = sr.normal.dot(wi);
+				
 		final Color c = cr.getColor(sr);
 		final Color k = kr.getColor(sr);
 		
-		final double factor = 1.0 / aux;
-		final double r = c.r * k.r * factor;
-		final double g = c.g * k.g * factor;
-		final double b = c.b * k.b * factor;
+		final double r = c.r * k.r;
+		final double g = c.g * k.g;
+		final double b = c.b * k.b;
 
 		return new Color(r, g, b, c.a);
 	}

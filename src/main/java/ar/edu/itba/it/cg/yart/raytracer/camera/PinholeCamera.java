@@ -1,6 +1,6 @@
 package ar.edu.itba.it.cg.yart.raytracer.camera;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
@@ -13,6 +13,8 @@ import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
+import ar.edu.itba.it.cg.yart.raytracer.shade.PathTracerShader;
+import ar.edu.itba.it.cg.yart.raytracer.shade.Shader;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
 public class PinholeCamera extends CameraAbstract {
@@ -20,14 +22,14 @@ public class PinholeCamera extends CameraAbstract {
 	private final double distance;
 	private final double zoom;
 	private final Point2d sp = new Point2d(0, 0);
+	private final Shader shader;
 	private double tMax;
 	
 	private double maxX = 1;
 	private double minX = -1;
 	private double maxY = 1;
 	private double minY = -1;
-	private final Random random;
-
+	
 	// Default value according to LuxRender specs.
 	private double fov = 90;
 
@@ -37,7 +39,7 @@ public class PinholeCamera extends CameraAbstract {
 		this.distance = distance;
 		this.zoom = zoom;
 		this.tMax = tMax;
-		this.random = new Random();
+		this.shader = new PathTracerShader();
 	}
 
 	@Override
@@ -77,7 +79,7 @@ public class PinholeCamera extends CameraAbstract {
 				if (n == 1) {
 					distributionX = distributionY = 0;
 				} else {
-					final double ri = random.nextDouble();
+					final double ri = ThreadLocalRandom.current().nextDouble();
 					distributionX = (j + ri) / n;
 					distributionY = (i + ri) / n;
 				}
@@ -97,8 +99,8 @@ public class PinholeCamera extends CameraAbstract {
 				
 				ray.direction = d;
 				sr.hitObject = false;
-				Color c = world.getTree().traceRay(ray, sr, tMax, stack);
-				
+				Color c = world.getTree().traceRay(ray, sr, tMax, stack, shader);
+//				System.out.println(c);
 				color.r += c.r;
 				color.g += c.g;
 				color.b += c.b;
@@ -119,6 +121,11 @@ public class PinholeCamera extends CameraAbstract {
 				color.g /= max;
 				color.b /= max;
 			}
+
+			color.r = Math.pow(color.r, rayTracer.getGammaInv());
+			color.g = Math.pow(color.g, rayTracer.getGammaInv());
+			color.b = Math.pow(color.b, rayTracer.getGammaInv());
+			
 			// now we display the pixel
 			int ret = 0;
 			int alpha = (int) (color.a * 255);

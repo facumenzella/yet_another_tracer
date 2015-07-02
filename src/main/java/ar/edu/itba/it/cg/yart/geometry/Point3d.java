@@ -58,7 +58,21 @@ public class Point3d {
 		final double dy = (matrix.m10 * this.x) + (matrix.m11 * this.y) + (matrix.m12 * this.z) + matrix.m13;
 		final double dz = (matrix.m20 * this.x) + (matrix.m21 * this.y) + (matrix.m22 * this.z) + matrix.m23;
 		final double dw = (matrix.m30 * this.x) + (matrix.m31 * this.y) + (matrix.m32 * this.z) + matrix.m33;
-		return new Point3d(dx, dy, dz);
+		final Point3d p = new Point3d(dx, dy, dz);
+		p.w = dw;
+		return p;
+	}
+	
+	public Point3d transformMe(final Matrix4d matrix) {
+		final double dx = (matrix.m00 * this.x) + (matrix.m01 * this.y) + (matrix.m02 * this.z) + matrix.m03;
+		final double dy = (matrix.m10 * this.x) + (matrix.m11 * this.y) + (matrix.m12 * this.z) + matrix.m13;
+		final double dz = (matrix.m20 * this.x) + (matrix.m21 * this.y) + (matrix.m22 * this.z) + matrix.m23;
+		final double dw = (matrix.m30 * this.x) + (matrix.m31 * this.y) + (matrix.m32 * this.z) + matrix.m33;
+		this.x = dx;
+		this.y = dy;
+		this.z = dz;
+		this.w = dw;
+		return this;
 	}
 	
 	@Override
