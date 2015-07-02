@@ -143,9 +143,9 @@ public class Reflective extends Phong implements Material {
 		final double gain = 1;
 		final double factor1 = ndotwi1 * gain / pdf.pdf;
 
-		colorL.r = c.r * fr1.r * factor1;
-		colorL.g = c.g * fr1.g * factor1;
-		colorL.b = c.b * fr1.b * factor1;
+		colorL.r += c.r * fr1.r * factor1;
+		colorL.g += c.g * fr1.g * factor1;
+		colorL.b += c.b * fr1.b * factor1;
 
 		return colorL;
 	}
