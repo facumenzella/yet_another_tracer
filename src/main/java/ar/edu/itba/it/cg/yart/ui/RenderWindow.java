@@ -79,9 +79,9 @@ public class RenderWindow extends JFrame implements TracerCallbacks {
 	}
 	
 	public void loadScene(final String sceneFile) {
-		RenderResult renderResult = new RenderResult();
-		SceneParser sceneParser = new SceneParser(sceneFile, raytracer);
 		try {
+			RenderResult renderResult = new RenderResult();
+			SceneParser sceneParser = new SceneParser(sceneFile, raytracer, null);
 			renderResult.startSceneLoading();
 			sceneParser.parse();
 			renderResult.finishSceneLoading();

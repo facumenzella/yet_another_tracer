@@ -36,6 +36,7 @@ import ar.edu.itba.it.cg.yart.light.materials.Reflective;
 import ar.edu.itba.it.cg.yart.light.materials.Transparent;
 import ar.edu.itba.it.cg.yart.parser.Identifier.IdentifierType;
 import ar.edu.itba.it.cg.yart.parser.Property.PropertyType;
+import ar.edu.itba.it.cg.yart.parser.SceneParser.TracerType;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.ImageTexture;
 import ar.edu.itba.it.cg.yart.textures.Texture;
@@ -49,7 +50,6 @@ import ar.edu.itba.it.cg.yart.textures.wrappers.Wrapper;
 import ar.edu.itba.it.cg.yart.tracer.Tracer;
 import ar.edu.itba.it.cg.yart.tracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.tracer.camera.PinholeCamera;
-import ar.edu.itba.it.cg.yart.tracer.strategy.PathTracingStrategy;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class SceneBuilder {
@@ -71,11 +71,14 @@ public class SceneBuilder {
 	private final Sphere referenceSphere = new Sphere();
 	private final Plane referencePlane = new Plane();
 	private final MeshBox referenceBox = new MeshBox();
+	
+	private final TracerType tracerType;
 
 	private Path basePath = Paths.get(".").normalize();
 
-	public SceneBuilder(final Tracer raytracer) {
+	public SceneBuilder(final Tracer raytracer, final TracerType tracerType) {
 		this.raytracer = raytracer;
+		this.tracerType = tracerType;
 		transformMatrices.push(new Matrix4d());
 	}
 
@@ -574,7 +577,7 @@ public class SceneBuilder {
 				PinholeCamera cam = new PinholeCamera(
 						YartConstants.DEFAULT_EYE,
 						YartConstants.DEFAULT_LOOKAT, YartConstants.DEFAULT_UP,
-						500, 1, YartConstants.DEFAULT_TMAX, new PathTracingStrategy());
+						500, 1, YartConstants.DEFAULT_TMAX, tracerType.getStrategy());
 				double[] defaults = { -1, 1, -1, 1 };
 				double[] screenWindow = identifier.getDoubles("screenwindow",
 						defaults);

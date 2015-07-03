@@ -13,7 +13,6 @@ import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.tracer.Tracer;
 import ar.edu.itba.it.cg.yart.tracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.tracer.buckets.Bucket;
-import ar.edu.itba.it.cg.yart.tracer.strategy.PathTracingStrategy;
 import ar.edu.itba.it.cg.yart.tracer.strategy.TracerStrategy;
 import ar.edu.itba.it.cg.yart.tracer.world.World;
 
@@ -39,7 +38,7 @@ public class PinholeCamera extends CameraAbstract {
 		this.distance = distance;
 		this.zoom = zoom;
 		this.tMax = tMax;
-		this.strategy = new PathTracingStrategy();
+		this.strategy = strategy;
 	}
 
 	@Override
@@ -115,12 +114,16 @@ public class PinholeCamera extends CameraAbstract {
 			color.b *= invNumSamples;
 
 			// mapping color
-			double max = Math.max(color.r, Math.max(color.g, color.b));
+			/*double max = Math.max(color.r, Math.max(color.g, color.b));
 			if (max > 1.0) {
 				color.r /= max;
 				color.g /= max;
 				color.b /= max;
-			}
+			}*/
+			
+			color.r /= 1 + color.r;
+			color.g /= 1 + color.g;
+			color.b /= 1 + color.b;
 
 			color.r = Math.pow(color.r, rayTracer.getGammaInv());
 			color.g = Math.pow(color.g, rayTracer.getGammaInv());

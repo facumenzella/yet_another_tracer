@@ -17,6 +17,9 @@ import ar.edu.itba.it.cg.yart.parser.Attribute.AttributeType;
 import ar.edu.itba.it.cg.yart.parser.Identifier.IdentifierType;
 import ar.edu.itba.it.cg.yart.parser.Property.PropertyType;
 import ar.edu.itba.it.cg.yart.tracer.Tracer;
+import ar.edu.itba.it.cg.yart.tracer.strategy.PathTracingStrategy;
+import ar.edu.itba.it.cg.yart.tracer.strategy.RayTracingStrategy;
+import ar.edu.itba.it.cg.yart.tracer.strategy.TracerStrategy;
 import ar.edu.itba.it.cg.yart.tracer.world.World;
 
 public class SceneParser {
@@ -33,9 +36,28 @@ public class SceneParser {
 	private final Path basePath;
 	private final Path filePath;
 	
-	public SceneParser(final String filePath, final Tracer raytracer) {
+	public enum TracerType {
+		RAY_TRACER(new RayTracingStrategy()),
+		PATH_TRACER(new PathTracingStrategy());
+		
+		private final TracerStrategy strategy;
+		
+		private TracerType(final TracerStrategy strategy) {
+			this.strategy = strategy;
+		}
+		
+		public TracerStrategy getStrategy() {
+			return strategy;
+		}
+	}
+	
+	public SceneParser(final String filePath, final Tracer raytracer, final TracerType tracerType) throws SceneParseException {
+		if (tracerType == null) {
+			throw new SceneParseException("You must supply a Tracer type");
+		}
+		
 		this.raytracer = raytracer;
-		this.sceneBuilder = new SceneBuilder(raytracer);
+		this.sceneBuilder = new SceneBuilder(raytracer, tracerType);
 		this.filePath = Paths.get(filePath).normalize();
 		this.basePath = this.filePath.getParent();
 	}

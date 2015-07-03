@@ -12,6 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import ar.edu.itba.it.cg.yart.parser.SceneParseException;
 import ar.edu.itba.it.cg.yart.parser.SceneParser;
+import ar.edu.itba.it.cg.yart.parser.SceneParser.TracerType;
 import ar.edu.itba.it.cg.yart.tracer.AbstractTracer;
 import ar.edu.itba.it.cg.yart.tracer.RenderResult;
 import ar.edu.itba.it.cg.yart.tracer.YATracer;
@@ -44,10 +45,12 @@ public class YartApp {
 		String imageExtension = "png";
 		CommandLineParser parser = null;
 		CommandLine cmd = null;
+		TracerType tracerType = TracerType.RAY_TRACER;
 		
 		Options options = new Options();
 		options.addOption("th", "threads", true, "Number of threads to be used");
 		options.addOption("bs", "bucketsize", true, "Bucket size to be used");
+		options.addOption("pathtracer", false, "Enable Path Tracing");
 		options.addOption("o", "output", true, "Output file's name");
 		options.addOption("i", "input", true, "Input scene file");
 		options.addOption("t", "time", false, "Print render time and triangle count in output image");
@@ -120,6 +123,10 @@ public class YartApp {
 				}
 			}
 			
+			if (cmd.hasOption("pathtracer")) {
+				tracerType = TracerType.PATH_TRACER;
+			}
+			
 			guiRender = cmd.hasOption('g');
 			
 			if (guiRender && benchmarkRuns >= 1) {
@@ -134,7 +141,7 @@ public class YartApp {
 			}
 			else {
 				renderResult.startSceneLoading();
-				SceneParser sceneParser = new SceneParser(sceneFile, raytracer);
+				SceneParser sceneParser = new SceneParser(sceneFile, raytracer, tracerType);
 				sceneParser.parse();
 				renderResult.finishSceneLoading();
 				System.out.println("Scene loading time: " + ImageSaver.getTimeString(renderResult.getSceneLoadingTime()));
