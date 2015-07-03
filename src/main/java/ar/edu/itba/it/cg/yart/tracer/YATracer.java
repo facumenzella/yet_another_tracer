@@ -31,9 +31,9 @@ public class YATracer implements Tracer {
 	private World world;
 
 	// Default parameters
-	private Point3d eye = new Point3d(200, 0, 0);
-	private Point3d lookat = new Point3d(0, 0, 0);
-	private Vector3d up = new Vector3d(0, 0, 1);
+	private Point3d eye = YartDefaults.DEFAULT_EYE;
+	private Point3d lookat = YartDefaults.DEFAULT_LOOKAT;
+	private Vector3d up = YartDefaults.DEFAULT_UP;
 
 	private int hRes;
 	private int vRes;
