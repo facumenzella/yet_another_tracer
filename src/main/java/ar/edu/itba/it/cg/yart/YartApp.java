@@ -242,7 +242,7 @@ public class YartApp {
 		final int hour = calendar.get(Calendar.HOUR_OF_DAY);
 		final int minute = calendar.get(Calendar.MINUTE);
 		StringBuilder builder = new StringBuilder();
-		builder.append("Starting process at ").append(hour+":").append(minute+":");
+		builder.append("Starting process at ").append(hour+":").append(minute);
 		System.out.println(builder);
 	}
 
