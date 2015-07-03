@@ -34,7 +34,7 @@ public class YartApp {
 		
 		double rayDepth = YartDefaults.DEFAULT_RAY_DEPTH;
 		int maxRayHops = YartDefaults.DEFAULT_MAX_HOPS;
-		int numSamples = 4;
+		int numSamples = YartDefaults.DEFAULT_NUM_SAMPLES;
 		int benchmarkRuns = 0;
 		int cores = configs.getCoresQty();
 		int bucketSize = configs.getBucketSize();
@@ -54,6 +54,7 @@ public class YartApp {
 		options.addOption("o", "output", true, "Output file's name");
 		options.addOption("i", "input", true, "Input scene file");
 		options.addOption("t", "time", false, "Print render time and triangle count in output image");
+		options.addOption("ns", "numSamples", true, "Number of samples for pathtracing. Must be a positive number");
 		options.addOption("aa", "antialiasing", true, "Number of antialiasing samples. Must be a positive number");
 		options.addOption("b", "benchmark", true, "Number of benchmark runs. Must be a positive number");
 		options.addOption("d", "raydepth", true, "Ray depth. Must be a positive number");
@@ -125,14 +126,24 @@ public class YartApp {
 			}
 			
 			if (cmd.hasOption("pathtracer")) {
+				tracerType = TracerType.PATH_TRACER;
 				if (cmd.hasOption("aa")) {
 					throw new ParseException("You must not use antialiasing with pathtracing");
 				}
-				tracerType = TracerType.PATH_TRACER;
+				
+				if (cmd.hasOption("ns")) {
+					numSamples = Integer.valueOf(cmd.getOptionValue("ns"));
+					if (numSamples < 1) {
+						throw new ParseException("Number of samples must be a positive integer");
+					}
+				}
 			}
 			
 			if (cmd.hasOption("hops")) {
 				maxRayHops = Integer.valueOf(cmd.getOptionValue("hops"));
+				if (maxRayHops < 1) {
+					throw new ParseException("Ray hops must be a positive integer");
+				}
 			}
 			
 			guiRender = cmd.hasOption('g');

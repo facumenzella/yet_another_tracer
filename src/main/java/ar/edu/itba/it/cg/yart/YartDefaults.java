@@ -15,6 +15,7 @@ public class YartDefaults {
 	public static final double DEFAULT_FOV = 90;
 	public static final double DEFAULT_RAY_DEPTH = 1000;
 	public static final int DEFAULT_MAX_HOPS = 10;
+	public static final int DEFAULT_NUM_SAMPLES = 4;
 	
 	public static final float LIGHT_GAIN_MULTIPLIER = 2;
 
