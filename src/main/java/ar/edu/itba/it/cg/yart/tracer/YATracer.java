@@ -1,7 +1,6 @@
 package ar.edu.itba.it.cg.yart.tracer;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -19,7 +18,6 @@ import ar.edu.itba.it.cg.yart.tracer.buckets.BucketRenderAction;
 import ar.edu.itba.it.cg.yart.tracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.tracer.camera.PinholeCamera;
 import ar.edu.itba.it.cg.yart.tracer.world.World;
-import ar.edu.itba.it.cg.yart.utils.YartExecutorFactory;
 
 public class YATracer implements Tracer {
 
