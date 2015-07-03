@@ -482,19 +482,38 @@ public class SceneBuilder {
 			double gain = identifier.getDouble("gain", 1.0f)
 					* YartConstants.LIGHT_GAIN_MULTIPLIER;
 			if (type.equals("point")) {
-				Point3d from = identifier
-						.getPoint("from", new Point3d(0, 0, 0));
-				Color l = identifier.getColor("l", Color.whiteColor());
-				PointLight light = new PointLight(gain, l,
-						new Vector3d(0, 0, 0));
+				Color l = identifier.getColor("l", Color.WHITE);
 				double power = identifier.getDouble("power", 100);
 				double efficacy = identifier.getDouble("efficacy", 17);
-				if (power != 0 && efficacy != 0) {
+				if (power != 0 || efficacy != 0) {
 					gain *= power * (efficacy / 100);
 				}
-				light.applyTransformation(new Matrix4d().transform(from.x,
-						from.y, from.z).leftMultiply(transformMatrices.peek()));
-				ret = light;
+				
+				if (tracerType == TracerType.RAY_TRACER) {
+					// In Ray Tracing, create a Point Light as always
+					Point3d from = identifier
+							.getPoint("from", new Point3d(0, 0, 0));
+					
+					PointLight light = new PointLight(gain, l,
+							new Vector3d(0, 0, 0));
+					light.applyTransformation(new Matrix4d().transform(from.x,
+							from.y, from.z).leftMultiply(transformMatrices.peek()));
+					ret = light;
+				}
+				else if (tracerType == TracerType.PATH_TRACER) {
+					// In Path Tracing, create a similar Spherical Area Light instead
+					final Instance pointLightInstance = new Instance(referenceSphere);
+					final AreaLight areaLight = new AreaLight(gain, l, 1);
+					final Emissive emissive = new Emissive(ParserUtils.defaultMaterial);
+					pointLightInstance.applyTransformation(new Matrix4d().scale(0.05, 0.05, 0.05).leftMultiply(transformMatrices.peek()));
+					pointLightInstance.setMaterial(emissive);
+					pointLightInstance.setCastsShadows(false);
+					pointLightInstance.generateSamples(1000);
+					areaLight.setMaterial(emissive);
+					areaLight.setShape(pointLightInstance);
+					raytracer.getWorld().addObject(pointLightInstance);
+					ret = areaLight;					
+				}
 			} else if (type.equals("distant")) {
 				Color l = identifier.getColor("l", Color.whiteColor());
 				Point3d from = identifier
@@ -533,7 +552,7 @@ public class SceneBuilder {
 			if (identifier.getParameters()[0].equals("area")) {
 				double power = identifier.getDouble("power", 100);
 				double efficacy = identifier.getDouble("efficacy", 17);
-				if (power != 0 && efficacy != 0) {
+				if (power != 0 || efficacy != 0) {
 					gain *= power * (efficacy / 100);
 				}
 				ret = new AreaLight(gain,
