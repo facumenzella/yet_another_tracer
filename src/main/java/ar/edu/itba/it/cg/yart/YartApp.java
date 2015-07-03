@@ -45,6 +45,8 @@ public class YartApp {
 		String imageExtension = "png";
 		CommandLineParser parser = null;
 		CommandLine cmd = null;
+		
+		// We make the ray tracing the default type
 		TracerType tracerType = TracerType.RAY_TRACER;
 		
 		Options options = new Options();
