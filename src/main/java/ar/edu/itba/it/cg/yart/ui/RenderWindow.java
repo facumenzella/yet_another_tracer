@@ -15,12 +15,12 @@ import javax.swing.JScrollPane;
 import ar.edu.itba.it.cg.yart.parser.SceneParseException;
 import ar.edu.itba.it.cg.yart.parser.SceneParser;
 import ar.edu.itba.it.cg.yart.raytracer.RenderResult;
-import ar.edu.itba.it.cg.yart.raytracer.YATracer.RaytracerCallbacks;
 import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
 import ar.edu.itba.it.cg.yart.raytracer.interfaces.Tracer;
+import ar.edu.itba.it.cg.yart.raytracer.interfaces.Tracer.TracerCallbacks;
 import ar.edu.itba.it.cg.yart.utils.ImageSaver;
 
-public class RenderWindow extends JFrame implements RaytracerCallbacks {
+public class RenderWindow extends JFrame implements TracerCallbacks {
 
 	private static final long serialVersionUID = 1L;
 	

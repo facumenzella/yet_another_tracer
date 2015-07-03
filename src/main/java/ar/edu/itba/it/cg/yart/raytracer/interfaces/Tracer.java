@@ -4,7 +4,7 @@ import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.raytracer.RenderResult;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
-import ar.edu.itba.it.cg.yart.raytracer.YATracer.RaytracerCallbacks;
+import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
@@ -17,7 +17,7 @@ public interface Tracer {
 	public int getHorizontalRes();
 	public int getVerticalRes();
 	public int getBucketSize();
-	public void setCallbacks(final RaytracerCallbacks callbacks);
+	public void setCallbacks(final TracerCallbacks callbacks);
 	
 	public ViewPlane getViewPlane();
 	public int getNumSamples();
@@ -29,4 +29,12 @@ public interface Tracer {
 	public void setGamma(final double gamma);
 	public double getGamma();
 	public double getGammaInv();
+	
+	public interface TracerCallbacks {
+		public void onBucketStarted(final Bucket bucket);
+		public void onBucketFinished(final Bucket bucket,
+				final RenderResult result);
+
+		public void onRenderFinished(final RenderResult result);
+	}
 }

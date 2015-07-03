@@ -44,7 +44,7 @@ public class YATracer implements Tracer {
 	private double gamma;
 	private double gammaInv;
 
-	private RaytracerCallbacks callbacks = new RaytracerCallbacks() {
+	private TracerCallbacks callbacks = new TracerCallbacks() {
 		@Override public void onBucketStarted(final Bucket bucket) {}
 		@Override public void onRenderFinished(RenderResult result) {}
 		@Override public void onBucketFinished(Bucket bucket, RenderResult result) {}
@@ -54,14 +54,6 @@ public class YATracer implements Tracer {
 	private Bucket[] buckets;
 	private Camera camera;
 	private Stack[] stacks;
-
-	public interface RaytracerCallbacks {
-		public void onBucketStarted(final Bucket bucket);
-		public void onBucketFinished(final Bucket bucket,
-				final RenderResult result);
-
-		public void onRenderFinished(final RenderResult result);
-	}
 
 	public YATracer(final RenderResult renderResult,
 			final int bucketSize, final double tMax, final double distance,
@@ -135,7 +127,7 @@ public class YATracer implements Tracer {
 		AtomicInteger index = new AtomicInteger(-1);
 		for (int i = 0; i < this.cores; i++) {
 			pool.submit(new BucketRenderAction(buckets, this, result,
-					new RaytracerCallbacks() {
+					new TracerCallbacks() {
 						@Override public void onBucketStarted(Bucket bucket) {
 							callbacks.onBucketStarted(bucket);
 						}
@@ -174,7 +166,7 @@ public class YATracer implements Tracer {
 	}
 
 	@Override
-	public void setCallbacks(final RaytracerCallbacks callbacks) {
+	public void setCallbacks(final TracerCallbacks callbacks) {
 		this.callbacks = callbacks;
 	}
 
