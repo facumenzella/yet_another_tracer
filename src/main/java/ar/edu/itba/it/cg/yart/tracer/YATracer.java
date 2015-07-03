@@ -48,7 +48,7 @@ public class YATracer implements Tracer {
 		@Override public void onRenderFinished(RenderResult result) {}
 		@Override public void onBucketFinished(Bucket bucket, RenderResult result) {}
 	};
-	private final ExecutorService executor;
+	
 	private final ForkJoinPool pool;
 	private Bucket[] buckets;
 	private Camera camera;
@@ -59,7 +59,6 @@ public class YATracer implements Tracer {
 			final int zoom, final int numSamples, final int cores) {
 		this.cores = cores;
 		this.bucketSize = bucketSize;
-		this.executor = YartExecutorFactory.newFixedThreadPool(this.cores);
 		this.pool = new ForkJoinPool(this.cores);
 		this.stacks = new Stack[this.cores];
 		for (int i = 0; i < stacks.length; i++) {
@@ -74,9 +73,9 @@ public class YATracer implements Tracer {
 	}
 
 	public void finishRaytracer() {
-		executor.shutdown();
+		pool.shutdown();
 		try {
-			executor.awaitTermination(1, TimeUnit.MINUTES);
+			pool.awaitTermination(1, TimeUnit.MINUTES);
 		} catch (InterruptedException e) {
 			LOGGER.error("Couldn't terminate threads");
 		}
