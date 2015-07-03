@@ -596,7 +596,7 @@ public class SceneBuilder {
 				PinholeCamera cam = new PinholeCamera(
 						YartConstants.DEFAULT_EYE,
 						YartConstants.DEFAULT_LOOKAT, YartConstants.DEFAULT_UP,
-						500, 1, YartConstants.DEFAULT_TMAX, tracerType.getStrategy());
+						500, 1, YartConstants.DEFAULT_RAY_DEPTH, tracerType.getStrategy());
 				double[] defaults = { -1, 1, -1, 1 };
 				double[] screenWindow = identifier.getDoubles("screenwindow",
 						defaults);

@@ -4,9 +4,7 @@ public final class YartConfigProvider {
 
 	private static final String CORES_QTY_KEY = "cores";
 	private static final String BUCKET_SIZE_KEY = "bucketSize";
-	private static final String MAX_T_KEY = "maxT";
 	private static final String DISTANCE_KEY = "distance";
-	private static final String TFAR_KEY = "raydepth";
 
 	private final YartConfigReader reader;
 
@@ -33,19 +31,9 @@ public final class YartConfigProvider {
 		return Integer.valueOf(size);
 	}
 
-	public int getMaxT() {
-		final String maxT = this.reader.getKey(MAX_T_KEY);
-		return Integer.valueOf(maxT);
-	}
-
 	public int getDistance() {
 		final String distance = this.reader.getKey(DISTANCE_KEY);
 		return Integer.valueOf(distance);
-	}
-
-	public double getTFar() {
-		final String distance = this.reader.getKey(TFAR_KEY);
-		return Double.valueOf(distance);
 	}
 
 }

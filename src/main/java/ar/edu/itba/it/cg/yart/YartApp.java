@@ -27,13 +27,13 @@ public class YartApp {
 	
 	public static void main(String[] args) {
 		
-		final double tMax = configs.getMaxT();
 		final double distance = configs.getDistance();
 		final int zoom = 2;
 		
 		RenderResult renderResult = new RenderResult();
 		
-		int rayDepth = 4;
+		double rayDepth = YartConstants.DEFAULT_RAY_DEPTH;
+		int maxRayHops = YartConstants.DEFAULT_MAX_HOPS;
 		int numSamples = 4;
 		int benchmarkRuns = 0;
 		int cores = configs.getCoresQty();
@@ -57,6 +57,7 @@ public class YartApp {
 		options.addOption("aa", "antialiasing", true, "Number of antialiasing samples. Must be a positive number");
 		options.addOption("b", "benchmark", true, "Number of benchmark runs. Must be a positive number");
 		options.addOption("d", "raydepth", true, "Ray depth. Must be a positive number");
+		options.addOption("hops", true, "Ray hops. Must be a positive integer number");
 		options.addOption("g", "gui", false, "Display render progress in a window");
 		options.addOption("h", "help", false, "Prints this help");
 		
@@ -91,7 +92,7 @@ public class YartApp {
 			}
 			
 			if (cmd.hasOption("d")) {
-				rayDepth = Integer.valueOf(cmd.getOptionValue("d"));
+				rayDepth = Double.valueOf(cmd.getOptionValue("d"));
 				
 				if (rayDepth <= 0) {
 					throw new ParseException("Ray depth must be a positive integer");
@@ -127,6 +128,10 @@ public class YartApp {
 				tracerType = TracerType.PATH_TRACER;
 			}
 			
+			if (cmd.hasOption("hops")) {
+				maxRayHops = Integer.valueOf(cmd.getOptionValue("hops"));
+			}
+			
 			guiRender = cmd.hasOption('g');
 			
 			if (guiRender && benchmarkRuns >= 1) {
@@ -134,8 +139,8 @@ public class YartApp {
 			}
 			
 			// Apply command line parameters
-			AbstractTracer.MAX_DEPTH = rayDepth;
-			YATracer raytracer = new YATracer(renderResult, bucketSize, tMax, distance, zoom, numSamples, cores, new PathTracingStrategy());
+			AbstractTracer.HOPS = maxRayHops;
+			YATracer raytracer = new YATracer(renderResult, bucketSize, rayDepth, distance, zoom, numSamples, cores, new PathTracingStrategy());
 			if (StringUtils.isEmpty(sceneFile)) {
 				throw new ParseException("You must specify an input scene file");
 			}

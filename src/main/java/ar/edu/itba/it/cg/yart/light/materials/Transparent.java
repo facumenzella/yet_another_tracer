@@ -17,7 +17,7 @@ public class Transparent extends Phong{
 
 	private final PerfectSpecular reflectiveBRDF = new PerfectSpecular();
 	private final PerfectTransmitter specularBTDF = new PerfectTransmitter();
-	private double tMax = YartConstants.DEFAULT_TMAX;
+	private double tMax = YartConstants.DEFAULT_RAY_DEPTH;
 	private final TracerStrategy directs = new RayTracingStrategy();
 	
 	public Transparent setKa(final double ka) {

@@ -22,7 +22,7 @@ public class Matte extends MaterialAbstract {
 
 	private final Lambertian ambientBRDF;
 	private Lambertian diffuseBRDF;
-	private final double tMax = YartConstants.DEFAULT_TMAX;
+	private final double tMax = YartConstants.DEFAULT_RAY_DEPTH;
 	private final TracerStrategy shader = new PathTracingStrategy();
 
 	public Matte() {

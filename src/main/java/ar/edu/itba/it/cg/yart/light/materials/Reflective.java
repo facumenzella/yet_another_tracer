@@ -18,7 +18,7 @@ import ar.edu.itba.it.cg.yart.tracer.strategy.TracerStrategy;
 public class Reflective extends Phong implements Material {
 
 	private final PerfectSpecular reflectiveBRDF;
-	private double tMax = YartConstants.DEFAULT_TMAX;
+	private double tMax = YartConstants.DEFAULT_RAY_DEPTH;
 	private final TracerStrategy shader = new PathTracingStrategy();
 	private final TracerStrategy directs = new RayTracingStrategy();
 

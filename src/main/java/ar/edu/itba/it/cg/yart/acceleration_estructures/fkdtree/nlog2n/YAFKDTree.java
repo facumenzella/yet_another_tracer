@@ -340,7 +340,7 @@ public class YAFKDTree {
 
 	// Here we trace rays. Work for kids
 	public Color traceRay(final Ray ray, final ShadeRec sr, final double tMax, final Stack stack, final TracerStrategy strategy) {
-		if (!rootAABB.hit(ray) || ray.depth > AbstractTracer.MAX_DEPTH) {
+		if (!rootAABB.hit(ray) || ray.depth > AbstractTracer.HOPS) {
 			return sr.world.backgroundColor;
 		}
 		
@@ -463,7 +463,7 @@ public class YAFKDTree {
 	}
 
 	public double traceShadowHit(final Ray ray, final double tMax,final Stack stack) {
-		if (!rootAABB.hit(ray) || ray.depth > AbstractTracer.MAX_DEPTH) {
+		if (!rootAABB.hit(ray) || ray.depth > AbstractTracer.HOPS) {
 			return Double.NEGATIVE_INFINITY;
 		}
 		
@@ -550,7 +550,7 @@ public class YAFKDTree {
 	}
 
 	public double traceRayHit(final Ray ray, final ShadeRec sr, final double tMax, final Stack stack) {
-		if (!rootAABB.hit(ray) || ray.depth > AbstractTracer.MAX_DEPTH) {
+		if (!rootAABB.hit(ray) || ray.depth > AbstractTracer.HOPS) {
 			return Double.NEGATIVE_INFINITY;
 		}
 		double tNear = 0;
