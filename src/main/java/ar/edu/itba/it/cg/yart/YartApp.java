@@ -13,7 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import ar.edu.itba.it.cg.yart.parser.SceneParseException;
 import ar.edu.itba.it.cg.yart.parser.SceneParser;
 import ar.edu.itba.it.cg.yart.raytracer.RenderResult;
-import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer;
+import ar.edu.itba.it.cg.yart.raytracer.YATracer;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.AbstractTracer;
 import ar.edu.itba.it.cg.yart.ui.RenderWindow;
 import ar.edu.itba.it.cg.yart.utils.ImageSaver;
@@ -127,7 +127,7 @@ public class YartApp {
 			
 			// Apply command line parameters
 			AbstractTracer.MAX_DEPTH = rayDepth;
-			SimpleRayTracer raytracer = new SimpleRayTracer(renderResult, bucketSize, tMax, distance, zoom, numSamples, cores);
+			YATracer raytracer = new YATracer(renderResult, bucketSize, tMax, distance, zoom, numSamples, cores);
 			if (StringUtils.isEmpty(sceneFile)) {
 				throw new ParseException("You must specify an input scene file");
 			}
@@ -173,7 +173,7 @@ public class YartApp {
 		}
 	}
 	
-	private static void benchmark(final SimpleRayTracer raytracer, final int runs) {
+	private static void benchmark(final YATracer raytracer, final int runs) {
 		if (raytracer == null || runs < 1) {
 			return;
 		}

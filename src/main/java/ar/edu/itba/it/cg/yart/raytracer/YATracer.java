@@ -22,7 +22,7 @@ import ar.edu.itba.it.cg.yart.raytracer.interfaces.Tracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 import ar.edu.itba.it.cg.yart.utils.YartExecutorFactory;
 
-public class SimpleRayTracer implements Tracer {
+public class YATracer implements Tracer {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(YartConstants.LOG_FILE);
@@ -63,7 +63,7 @@ public class SimpleRayTracer implements Tracer {
 		public void onRenderFinished(final RenderResult result);
 	}
 
-	public SimpleRayTracer(final RenderResult renderResult,
+	public YATracer(final RenderResult renderResult,
 			final int bucketSize, final double tMax, final double distance,
 			final int zoom, final int numSamples, final int cores) {
 		this.cores = cores;
@@ -293,4 +293,5 @@ public class SimpleRayTracer implements Tracer {
 	public double getGammaInv() {
 		return gammaInv;
 	}
+
 }
