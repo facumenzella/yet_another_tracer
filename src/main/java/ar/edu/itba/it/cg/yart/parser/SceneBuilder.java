@@ -13,7 +13,7 @@ import javax.imageio.ImageIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ar.edu.itba.it.cg.yart.YartConstants;
+import ar.edu.itba.it.cg.yart.YartDefaults;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Instance;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
@@ -55,7 +55,7 @@ import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 public class SceneBuilder {
 
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(YartConstants.LOG_FILE);
+			.getLogger(YartDefaults.LOG_FILE);
 
 	private Map<MeshData, Mesh> meshes = new HashMap<MeshData, Mesh>();
 	private final Tracer raytracer;
@@ -170,8 +170,8 @@ public class SceneBuilder {
 				LOGGER.warn("Only fleximage Film type is supported");
 			}
 			raytracer.setResolution(
-					i.getInteger("xresolution", YartConstants.DEFAULT_XRES),
-					i.getInteger("yresolution", YartConstants.DEFAULT_YRES));
+					i.getInteger("xresolution", YartDefaults.DEFAULT_XRES),
+					i.getInteger("yresolution", YartDefaults.DEFAULT_YRES));
 			raytracer.setGamma(i.getDouble("gamma", 2.2));
 			break;
 		case LOOKAT:
@@ -480,7 +480,7 @@ public class SceneBuilder {
 		try {
 			String type = identifier.getParameters()[0];
 			double gain = identifier.getDouble("gain", 1.0f)
-					* YartConstants.LIGHT_GAIN_MULTIPLIER;
+					* YartDefaults.LIGHT_GAIN_MULTIPLIER;
 			if (type.equals("point")) {
 				Color l = identifier.getColor("l", Color.WHITE);
 				double power = identifier.getDouble("power", 100);
@@ -548,7 +548,7 @@ public class SceneBuilder {
 		AreaLight ret = null;
 		try {
 			double gain = identifier.getDouble("gain", 1.0f)
-					* YartConstants.LIGHT_GAIN_MULTIPLIER;
+					* YartDefaults.LIGHT_GAIN_MULTIPLIER;
 			if (identifier.getParameters()[0].equals("area")) {
 				double power = identifier.getDouble("power", 100);
 				double efficacy = identifier.getDouble("efficacy", 17);
@@ -594,9 +594,9 @@ public class SceneBuilder {
 		try {
 			if (type.equals("perspective")) {
 				PinholeCamera cam = new PinholeCamera(
-						YartConstants.DEFAULT_EYE,
-						YartConstants.DEFAULT_LOOKAT, YartConstants.DEFAULT_UP,
-						500, 1, YartConstants.DEFAULT_RAY_DEPTH, tracerType.getStrategy());
+						YartDefaults.DEFAULT_EYE,
+						YartDefaults.DEFAULT_LOOKAT, YartDefaults.DEFAULT_UP,
+						500, 1, YartDefaults.DEFAULT_RAY_DEPTH, tracerType.getStrategy());
 				double[] defaults = { -1, 1, -1, 1 };
 				double[] screenWindow = identifier.getDoubles("screenwindow",
 						defaults);
@@ -608,7 +608,7 @@ public class SceneBuilder {
 				cam.setScreenWindow(screenWindow[0], screenWindow[1],
 						screenWindow[2], screenWindow[3]);
 				cam.setFov(identifier.getDouble("fov",
-						YartConstants.DEFAULT_FOV));
+						YartDefaults.DEFAULT_FOV));
 				ret = cam;
 			} else {
 				LOGGER.warn("Camera type \"{}\" unsupported", type);

@@ -32,8 +32,8 @@ public class YartApp {
 		
 		RenderResult renderResult = new RenderResult();
 		
-		double rayDepth = YartConstants.DEFAULT_RAY_DEPTH;
-		int maxRayHops = YartConstants.DEFAULT_MAX_HOPS;
+		double rayDepth = YartDefaults.DEFAULT_RAY_DEPTH;
+		int maxRayHops = YartDefaults.DEFAULT_MAX_HOPS;
 		int numSamples = 4;
 		int benchmarkRuns = 0;
 		int cores = configs.getCoresQty();

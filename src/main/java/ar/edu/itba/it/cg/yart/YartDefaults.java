@@ -3,7 +3,7 @@ package ar.edu.itba.it.cg.yart;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 
-public class YartConstants {
+public class YartDefaults {
 	
 	public static final String LOG_FILE = "yart.log";
 	

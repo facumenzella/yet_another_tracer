@@ -12,7 +12,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ar.edu.itba.it.cg.yart.YartConstants;
+import ar.edu.itba.it.cg.yart.YartDefaults;
 import ar.edu.itba.it.cg.yart.parser.Attribute.AttributeType;
 import ar.edu.itba.it.cg.yart.parser.Identifier.IdentifierType;
 import ar.edu.itba.it.cg.yart.parser.Property.PropertyType;
@@ -24,7 +24,7 @@ import ar.edu.itba.it.cg.yart.tracer.world.World;
 
 public class SceneParser {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(YartConstants.LOG_FILE);
+	private static final Logger LOGGER = LoggerFactory.getLogger(YartDefaults.LOG_FILE);
 
 	private final Tracer raytracer;
 	private final SceneBuilder sceneBuilder;

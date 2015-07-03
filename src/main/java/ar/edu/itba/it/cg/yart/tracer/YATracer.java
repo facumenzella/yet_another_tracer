@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ar.edu.itba.it.cg.yart.YartConstants;
+import ar.edu.itba.it.cg.yart.YartDefaults;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
@@ -23,7 +23,7 @@ import ar.edu.itba.it.cg.yart.tracer.world.World;
 public class YATracer implements Tracer {
 
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(YartConstants.LOG_FILE);
+			.getLogger(YartDefaults.LOG_FILE);
 
 	private final int cores;
 

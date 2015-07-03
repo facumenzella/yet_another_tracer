@@ -2,7 +2,7 @@ package ar.edu.itba.it.cg.yart.light.materials;
 
 import java.util.List;
 
-import ar.edu.itba.it.cg.yart.YartConstants;
+import ar.edu.itba.it.cg.yart.YartDefaults;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
@@ -22,7 +22,7 @@ public class Matte extends MaterialAbstract {
 
 	private final Lambertian ambientBRDF;
 	private Lambertian diffuseBRDF;
-	private final double tMax = YartConstants.DEFAULT_RAY_DEPTH;
+	private final double tMax = YartDefaults.DEFAULT_RAY_DEPTH;
 	private final TracerStrategy shader = new PathTracingStrategy();
 
 	public Matte() {

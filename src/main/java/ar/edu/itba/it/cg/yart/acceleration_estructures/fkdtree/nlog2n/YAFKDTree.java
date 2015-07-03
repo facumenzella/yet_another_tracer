@@ -9,7 +9,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ar.edu.itba.it.cg.yart.YartConstants;
+import ar.edu.itba.it.cg.yart.YartDefaults;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.KDInternalNode;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.KDLeafNode;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.KDNodeAbstract;
@@ -33,7 +33,7 @@ import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 public class YAFKDTree {
 
 	private static final Logger LOGGER = LoggerFactory
-			.getLogger(YartConstants.LOG_FILE);
+			.getLogger(YartDefaults.LOG_FILE);
 
 	private static int kMAX_DEPTH = 60;
 

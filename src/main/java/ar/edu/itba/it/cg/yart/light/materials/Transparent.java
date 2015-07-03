@@ -1,6 +1,6 @@
 package ar.edu.itba.it.cg.yart.light.materials;
 
-import ar.edu.itba.it.cg.yart.YartConstants;
+import ar.edu.itba.it.cg.yart.YartDefaults;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
@@ -17,7 +17,7 @@ public class Transparent extends Phong{
 
 	private final PerfectSpecular reflectiveBRDF = new PerfectSpecular();
 	private final PerfectTransmitter specularBTDF = new PerfectTransmitter();
-	private double tMax = YartConstants.DEFAULT_RAY_DEPTH;
+	private double tMax = YartDefaults.DEFAULT_RAY_DEPTH;
 	private final TracerStrategy directs = new RayTracingStrategy();
 	
 	public Transparent setKa(final double ka) {
