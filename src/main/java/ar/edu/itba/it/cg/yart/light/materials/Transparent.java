@@ -8,9 +8,8 @@ import ar.edu.itba.it.cg.yart.light.brdf.PerfectSpecular;
 import ar.edu.itba.it.cg.yart.light.btdf.PerfectTransmitter;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.raytracer.shade.PathTracerShader;
 import ar.edu.itba.it.cg.yart.raytracer.shade.RayTracerShader;
-import ar.edu.itba.it.cg.yart.raytracer.shade.Shader;
+import ar.edu.itba.it.cg.yart.raytracer.shade.TracerStrategy;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.Texture;
 
@@ -19,7 +18,7 @@ public class Transparent extends Phong{
 	private final PerfectSpecular reflectiveBRDF = new PerfectSpecular();
 	private final PerfectTransmitter specularBTDF = new PerfectTransmitter();
 	private double tMax = YartConstants.DEFAULT_TMAX;
-	private final Shader directs = new RayTracerShader();
+	private final TracerStrategy directs = new RayTracerShader();
 	
 	public Transparent setKa(final double ka) {
 		super.setKa(ka);

@@ -24,7 +24,7 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.raytracer.shade.Shader;
+import ar.edu.itba.it.cg.yart.raytracer.shade.TracerStrategy;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.AbstractTracer;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
@@ -339,7 +339,7 @@ public class YAFKDTree {
 	}
 
 	// Here we trace rays. Work for kids
-	public Color traceRay(final Ray ray, final ShadeRec sr, final double tMax, final Stack stack, final Shader shader) {
+	public Color traceRay(final Ray ray, final ShadeRec sr, final double tMax, final Stack stack, final TracerStrategy strategy) {
 		if (!rootAABB.hit(ray) || ray.depth > AbstractTracer.MAX_DEPTH) {
 			return sr.world.backgroundColor;
 		}
@@ -446,7 +446,7 @@ public class YAFKDTree {
 					sr.u = u;
 					sr.v = v;
 					try {
-						color = shader.shade(sr.material, sr, stack);
+						color = strategy.shade(sr.material, sr, stack);
 					} catch (Exception ex) {
 						ex.printStackTrace();
 					}
