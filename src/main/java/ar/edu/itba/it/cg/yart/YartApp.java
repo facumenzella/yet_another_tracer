@@ -15,6 +15,7 @@ import ar.edu.itba.it.cg.yart.parser.SceneParser;
 import ar.edu.itba.it.cg.yart.tracer.AbstractTracer;
 import ar.edu.itba.it.cg.yart.tracer.RenderResult;
 import ar.edu.itba.it.cg.yart.tracer.YATracer;
+import ar.edu.itba.it.cg.yart.tracer.strategy.PathTracingStrategy;
 import ar.edu.itba.it.cg.yart.ui.RenderWindow;
 import ar.edu.itba.it.cg.yart.utils.ImageSaver;
 import ar.edu.itba.it.cg.yart.utils.config.YartConfigProvider;
@@ -127,7 +128,7 @@ public class YartApp {
 			
 			// Apply command line parameters
 			AbstractTracer.MAX_DEPTH = rayDepth;
-			YATracer raytracer = new YATracer(renderResult, bucketSize, tMax, distance, zoom, numSamples, cores);
+			YATracer raytracer = new YATracer(renderResult, bucketSize, tMax, distance, zoom, numSamples, cores, new PathTracingStrategy());
 			if (StringUtils.isEmpty(sceneFile)) {
 				throw new ParseException("You must specify an input scene file");
 			}

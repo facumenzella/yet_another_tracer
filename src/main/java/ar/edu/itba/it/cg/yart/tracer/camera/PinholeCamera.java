@@ -22,7 +22,7 @@ public class PinholeCamera extends CameraAbstract {
 	private final double distance;
 	private final double zoom;
 	private final Point2d sp = new Point2d(0, 0);
-	private final TracerStrategy shader;
+	private final TracerStrategy strategy;
 	private double tMax;
 	
 	private double maxX = 1;
@@ -34,12 +34,12 @@ public class PinholeCamera extends CameraAbstract {
 	private double fov = 90;
 
 	public PinholeCamera(final Point3d eye, final Point3d lookat,
-			final Vector3d up, final double distance, final double zoom, final double tMax) {
+			final Vector3d up, final double distance, final double zoom, final double tMax, final TracerStrategy strategy) {
 		super(eye, lookat, up);
 		this.distance = distance;
 		this.zoom = zoom;
 		this.tMax = tMax;
-		this.shader = new PathTracingStrategy();
+		this.strategy = new PathTracingStrategy();
 	}
 
 	@Override
@@ -99,7 +99,7 @@ public class PinholeCamera extends CameraAbstract {
 				
 				ray.direction = d;
 				sr.hitObject = false;
-				Color c = world.getTree().traceRay(ray, sr, tMax, stack, shader);
+				Color c = world.getTree().traceRay(ray, sr, tMax, stack, strategy);
 //				System.out.println(c);
 				color.r += c.r;
 				color.g += c.g;

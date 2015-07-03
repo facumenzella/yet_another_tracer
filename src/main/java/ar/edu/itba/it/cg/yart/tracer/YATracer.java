@@ -17,6 +17,7 @@ import ar.edu.itba.it.cg.yart.tracer.buckets.Bucket;
 import ar.edu.itba.it.cg.yart.tracer.buckets.BucketRenderAction;
 import ar.edu.itba.it.cg.yart.tracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.tracer.camera.PinholeCamera;
+import ar.edu.itba.it.cg.yart.tracer.strategy.TracerStrategy;
 import ar.edu.itba.it.cg.yart.tracer.world.World;
 
 public class YATracer implements Tracer {
@@ -54,7 +55,7 @@ public class YATracer implements Tracer {
 
 	public YATracer(final RenderResult renderResult,
 			final int bucketSize, final double tMax, final double distance,
-			final int zoom, final int numSamples, final int cores) {
+			final int zoom, final int numSamples, final int cores, final TracerStrategy strategy) {
 		this.cores = cores;
 		this.bucketSize = bucketSize;
 		this.pool = new ForkJoinPool(this.cores);
@@ -66,7 +67,7 @@ public class YATracer implements Tracer {
 
 		setResolution(800, 600);
 		setNumSamples(numSamples);
-		setCamera(new PinholeCamera(eye, lookat, up, distance, zoom, tMax));
+		setCamera(new PinholeCamera(eye, lookat, up, distance, zoom, tMax, strategy));
 		setGamma(2.2);
 	}
 
