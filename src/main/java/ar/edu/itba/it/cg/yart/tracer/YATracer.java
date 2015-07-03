@@ -65,7 +65,7 @@ public class YATracer implements Tracer {
 		}
 		this.renderResult = renderResult;
 
-		setResolution(800, 600);
+		setResolution(YartDefaults.DEFAULT_XRES, YartDefaults.DEFAULT_YRES);
 		setNumSamples(numSamples);
 		setCamera(new PinholeCamera(eye, lookat, up, distance, zoom, tMax, strategy));
 		setGamma(2.2);
