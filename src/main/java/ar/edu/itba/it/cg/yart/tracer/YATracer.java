@@ -1,4 +1,4 @@
-package ar.edu.itba.it.cg.yart.raytracer.tracer;
+package ar.edu.itba.it.cg.yart.tracer;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -14,13 +14,11 @@ import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
-import ar.edu.itba.it.cg.yart.raytracer.RenderResult;
-import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
-import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
-import ar.edu.itba.it.cg.yart.raytracer.buckets.BucketRenderAction;
-import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
-import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
-import ar.edu.itba.it.cg.yart.raytracer.world.World;
+import ar.edu.itba.it.cg.yart.tracer.buckets.Bucket;
+import ar.edu.itba.it.cg.yart.tracer.buckets.BucketRenderAction;
+import ar.edu.itba.it.cg.yart.tracer.camera.Camera;
+import ar.edu.itba.it.cg.yart.tracer.camera.PinholeCamera;
+import ar.edu.itba.it.cg.yart.tracer.world.World;
 import ar.edu.itba.it.cg.yart.utils.YartExecutorFactory;
 
 public class YATracer implements Tracer {

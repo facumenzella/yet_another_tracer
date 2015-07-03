@@ -1,4 +1,4 @@
-package ar.edu.itba.it.cg.yart.raytracer.world;
+package ar.edu.itba.it.cg.yart.tracer.world;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

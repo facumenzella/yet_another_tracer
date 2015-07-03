@@ -1,7 +1,7 @@
 package ar.edu.itba.it.cg.yart.geometry.primitives;
 
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
-import ar.edu.itba.it.cg.yart.raytracer.Ray;
+import ar.edu.itba.it.cg.yart.tracer.Ray;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 import ar.edu.itba.it.cg.yart.transforms.Transformable;
 

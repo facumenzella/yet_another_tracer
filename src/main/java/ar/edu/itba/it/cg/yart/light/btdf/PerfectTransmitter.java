@@ -2,9 +2,9 @@ package ar.edu.itba.it.cg.yart.light.btdf;
 
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
-import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.Texture;
+import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
 
 public class PerfectTransmitter extends BTDF {
 

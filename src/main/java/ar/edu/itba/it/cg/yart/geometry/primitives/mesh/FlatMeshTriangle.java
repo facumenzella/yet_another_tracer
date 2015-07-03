@@ -2,8 +2,8 @@ package ar.edu.itba.it.cg.yart.geometry.primitives.mesh;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
-import ar.edu.itba.it.cg.yart.raytracer.Ray;
-import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.tracer.Ray;
+import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
 
 public class FlatMeshTriangle extends MeshTriangle {
 

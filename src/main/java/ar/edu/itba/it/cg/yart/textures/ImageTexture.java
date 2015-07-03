@@ -5,9 +5,9 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 
 import ar.edu.itba.it.cg.yart.color.Color;
-import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.textures.mapping.Mapping;
 import ar.edu.itba.it.cg.yart.textures.wrappers.Wrapper;
+import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
 
 public class ImageTexture extends Texture {
 

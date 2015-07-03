@@ -1,7 +1,7 @@
 package ar.edu.itba.it.cg.yart.textures;
 
 import ar.edu.itba.it.cg.yart.color.Color;
-import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
 
 public class ConstantColor extends Texture{
 	

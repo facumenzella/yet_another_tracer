@@ -9,10 +9,10 @@ import ar.edu.itba.it.cg.yart.light.AreaLight;
 import ar.edu.itba.it.cg.yart.light.Light;
 import ar.edu.itba.it.cg.yart.light.brdf.GlossySpecular;
 import ar.edu.itba.it.cg.yart.light.brdf.Lambertian;
-import ar.edu.itba.it.cg.yart.raytracer.Ray;
-import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.Texture;
+import ar.edu.itba.it.cg.yart.tracer.Ray;
+import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
 
 public class Phong extends MaterialAbstract {
 

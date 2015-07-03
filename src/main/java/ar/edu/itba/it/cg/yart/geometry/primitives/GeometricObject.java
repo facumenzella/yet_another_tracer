@@ -3,9 +3,9 @@ package ar.edu.itba.it.cg.yart.geometry.primitives;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
-import ar.edu.itba.it.cg.yart.raytracer.Ray;
-import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.samplers.Sample;
+import ar.edu.itba.it.cg.yart.tracer.Ray;
+import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 import ar.edu.itba.it.cg.yart.transforms.Transformable;
 

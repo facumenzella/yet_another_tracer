@@ -1,12 +1,10 @@
-package ar.edu.itba.it.cg.yart.raytracer.tracer;
+package ar.edu.itba.it.cg.yart.tracer;
 
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
-import ar.edu.itba.it.cg.yart.raytracer.RenderResult;
-import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
-import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
-import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
-import ar.edu.itba.it.cg.yart.raytracer.world.World;
+import ar.edu.itba.it.cg.yart.tracer.buckets.Bucket;
+import ar.edu.itba.it.cg.yart.tracer.camera.Camera;
+import ar.edu.itba.it.cg.yart.tracer.world.World;
 
 public interface Tracer {
 	

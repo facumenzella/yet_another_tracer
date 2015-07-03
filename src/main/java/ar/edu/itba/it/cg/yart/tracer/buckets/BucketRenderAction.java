@@ -1,4 +1,4 @@
-package ar.edu.itba.it.cg.yart.raytracer.buckets;
+package ar.edu.itba.it.cg.yart.tracer.buckets;
 
 import static java.util.Arrays.asList;
 
@@ -7,8 +7,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer.TracerCallbacks;
+import ar.edu.itba.it.cg.yart.tracer.Tracer;
+import ar.edu.itba.it.cg.yart.tracer.Tracer.TracerCallbacks;
 
 public class BucketRenderAction extends RecursiveAction{
 

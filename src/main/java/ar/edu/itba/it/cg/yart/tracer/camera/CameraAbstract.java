@@ -1,8 +1,8 @@
-package ar.edu.itba.it.cg.yart.raytracer.camera;
+package ar.edu.itba.it.cg.yart.tracer.camera;
 
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
-import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
+import ar.edu.itba.it.cg.yart.tracer.ViewPlane;
 
 
 public abstract class CameraAbstract implements Camera {

@@ -1,4 +1,4 @@
-package ar.edu.itba.it.cg.yart.raytracer.tracer;
+package ar.edu.itba.it.cg.yart.tracer;
 
 public abstract class AbstractTracer{
 

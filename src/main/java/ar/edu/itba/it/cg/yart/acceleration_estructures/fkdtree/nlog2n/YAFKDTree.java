@@ -22,10 +22,10 @@ import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
-import ar.edu.itba.it.cg.yart.raytracer.Ray;
-import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.raytracer.shade.TracerStrategy;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.AbstractTracer;
+import ar.edu.itba.it.cg.yart.tracer.AbstractTracer;
+import ar.edu.itba.it.cg.yart.tracer.Ray;
+import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.tracer.shade.TracerStrategy;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 // This has O(N log N) or at least we hope it does

@@ -13,9 +13,9 @@ import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
-import ar.edu.itba.it.cg.yart.raytracer.Ray;
-import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.samplers.Sample;
+import ar.edu.itba.it.cg.yart.tracer.Ray;
+import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
 
 public class Mesh extends GeometricObject {
 

@@ -1,4 +1,4 @@
-package ar.edu.itba.it.cg.yart.raytracer.buckets;
+package ar.edu.itba.it.cg.yart.tracer.buckets;
 
 public class Bucket {
 

@@ -1,4 +1,4 @@
-package ar.edu.itba.it.cg.yart.raytracer.camera;
+package ar.edu.itba.it.cg.yart.tracer.camera;
 
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -8,14 +8,14 @@ import ar.edu.itba.it.cg.yart.geometry.Point2d;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
-import ar.edu.itba.it.cg.yart.raytracer.Ray;
-import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
-import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
-import ar.edu.itba.it.cg.yart.raytracer.shade.PathTracerShader;
-import ar.edu.itba.it.cg.yart.raytracer.shade.TracerStrategy;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
-import ar.edu.itba.it.cg.yart.raytracer.world.World;
+import ar.edu.itba.it.cg.yart.tracer.Ray;
+import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.tracer.Tracer;
+import ar.edu.itba.it.cg.yart.tracer.ViewPlane;
+import ar.edu.itba.it.cg.yart.tracer.buckets.Bucket;
+import ar.edu.itba.it.cg.yart.tracer.shade.PathTracerShader;
+import ar.edu.itba.it.cg.yart.tracer.shade.TracerStrategy;
+import ar.edu.itba.it.cg.yart.tracer.world.World;
 
 public class PinholeCamera extends CameraAbstract {
 

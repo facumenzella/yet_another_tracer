@@ -3,9 +3,9 @@ package ar.edu.itba.it.cg.yart.light.brdf;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
-import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.Texture;
+import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
 
 public class Lambertian extends BRDF {
 

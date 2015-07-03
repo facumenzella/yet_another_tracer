@@ -36,9 +36,6 @@ import ar.edu.itba.it.cg.yart.light.materials.Reflective;
 import ar.edu.itba.it.cg.yart.light.materials.Transparent;
 import ar.edu.itba.it.cg.yart.parser.Identifier.IdentifierType;
 import ar.edu.itba.it.cg.yart.parser.Property.PropertyType;
-import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
-import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.ImageTexture;
 import ar.edu.itba.it.cg.yart.textures.Texture;
@@ -49,6 +46,9 @@ import ar.edu.itba.it.cg.yart.textures.wrappers.ClampWrap;
 import ar.edu.itba.it.cg.yart.textures.wrappers.ColorWrap;
 import ar.edu.itba.it.cg.yart.textures.wrappers.RepeatWrap;
 import ar.edu.itba.it.cg.yart.textures.wrappers.Wrapper;
+import ar.edu.itba.it.cg.yart.tracer.Tracer;
+import ar.edu.itba.it.cg.yart.tracer.camera.Camera;
+import ar.edu.itba.it.cg.yart.tracer.camera.PinholeCamera;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class SceneBuilder {

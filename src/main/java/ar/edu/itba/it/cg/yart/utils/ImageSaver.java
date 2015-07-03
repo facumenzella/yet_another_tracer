@@ -13,7 +13,7 @@ import java.text.DecimalFormat;
 import javax.imageio.ImageIO;
 
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
-import ar.edu.itba.it.cg.yart.raytracer.RenderResult;
+import ar.edu.itba.it.cg.yart.tracer.RenderResult;
 
 public class ImageSaver {
 	

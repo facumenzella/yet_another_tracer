@@ -14,10 +14,10 @@ import javax.swing.JScrollPane;
 
 import ar.edu.itba.it.cg.yart.parser.SceneParseException;
 import ar.edu.itba.it.cg.yart.parser.SceneParser;
-import ar.edu.itba.it.cg.yart.raytracer.RenderResult;
-import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
-import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer.TracerCallbacks;
+import ar.edu.itba.it.cg.yart.tracer.RenderResult;
+import ar.edu.itba.it.cg.yart.tracer.Tracer;
+import ar.edu.itba.it.cg.yart.tracer.Tracer.TracerCallbacks;
+import ar.edu.itba.it.cg.yart.tracer.buckets.Bucket;
 import ar.edu.itba.it.cg.yart.utils.ImageSaver;
 
 public class RenderWindow extends JFrame implements TracerCallbacks {

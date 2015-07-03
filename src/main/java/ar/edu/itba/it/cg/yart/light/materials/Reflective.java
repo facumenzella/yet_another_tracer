@@ -6,14 +6,14 @@ import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.light.brdf.PDF;
 import ar.edu.itba.it.cg.yart.light.brdf.PerfectSpecular;
-import ar.edu.itba.it.cg.yart.raytracer.Ray;
-import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.raytracer.shade.PathTracerShader;
-import ar.edu.itba.it.cg.yart.raytracer.shade.RayTracerShader;
-import ar.edu.itba.it.cg.yart.raytracer.shade.TracerStrategy;
 import ar.edu.itba.it.cg.yart.samplers.NRooks;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.Texture;
+import ar.edu.itba.it.cg.yart.tracer.Ray;
+import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.tracer.shade.PathTracerShader;
+import ar.edu.itba.it.cg.yart.tracer.shade.RayTracerShader;
+import ar.edu.itba.it.cg.yart.tracer.shade.TracerStrategy;
 
 public class Reflective extends Phong implements Material {
 
