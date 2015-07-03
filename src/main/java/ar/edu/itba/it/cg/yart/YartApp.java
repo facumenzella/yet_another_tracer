@@ -129,6 +129,7 @@ public class YartApp {
 			
 			if (cmd.hasOption("pathtracer")) {
 				tracerType = TracerType.PATH_TRACER;
+				// no aa if using pathtracer
 				if (cmd.hasOption("aa")) {
 					throw new ParseException("You must not use antialiasing with pathtracing");
 				}
