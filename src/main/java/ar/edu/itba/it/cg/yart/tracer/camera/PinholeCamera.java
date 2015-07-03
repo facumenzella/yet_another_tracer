@@ -13,8 +13,8 @@ import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.tracer.Tracer;
 import ar.edu.itba.it.cg.yart.tracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.tracer.buckets.Bucket;
-import ar.edu.itba.it.cg.yart.tracer.shade.PathTracerShader;
-import ar.edu.itba.it.cg.yart.tracer.shade.TracerStrategy;
+import ar.edu.itba.it.cg.yart.tracer.strategy.PathTracerShader;
+import ar.edu.itba.it.cg.yart.tracer.strategy.TracerStrategy;
 import ar.edu.itba.it.cg.yart.tracer.world.World;
 
 public class PinholeCamera extends CameraAbstract {

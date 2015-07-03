@@ -15,8 +15,8 @@ import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.Texture;
 import ar.edu.itba.it.cg.yart.tracer.Ray;
 import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.tracer.shade.PathTracerShader;
-import ar.edu.itba.it.cg.yart.tracer.shade.TracerStrategy;
+import ar.edu.itba.it.cg.yart.tracer.strategy.PathTracerShader;
+import ar.edu.itba.it.cg.yart.tracer.strategy.TracerStrategy;
 
 public class Matte extends MaterialAbstract {
 

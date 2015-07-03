@@ -25,7 +25,7 @@ import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
 import ar.edu.itba.it.cg.yart.tracer.AbstractTracer;
 import ar.edu.itba.it.cg.yart.tracer.Ray;
 import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.tracer.shade.TracerStrategy;
+import ar.edu.itba.it.cg.yart.tracer.strategy.TracerStrategy;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 // This has O(N log N) or at least we hope it does

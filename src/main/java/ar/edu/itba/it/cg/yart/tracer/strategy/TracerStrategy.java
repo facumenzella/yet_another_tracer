@@ -1,4 +1,4 @@
-package ar.edu.itba.it.cg.yart.tracer.shade;
+package ar.edu.itba.it.cg.yart.tracer.strategy;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
