@@ -13,7 +13,7 @@ import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
 import ar.edu.itba.it.cg.yart.raytracer.shade.PathTracerShader;
-import ar.edu.itba.it.cg.yart.raytracer.shade.Shader;
+import ar.edu.itba.it.cg.yart.raytracer.shade.TracerStrategy;
 import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
@@ -22,7 +22,7 @@ public class PinholeCamera extends CameraAbstract {
 	private final double distance;
 	private final double zoom;
 	private final Point2d sp = new Point2d(0, 0);
-	private final Shader shader;
+	private final TracerStrategy shader;
 	private double tMax;
 	
 	private double maxX = 1;
