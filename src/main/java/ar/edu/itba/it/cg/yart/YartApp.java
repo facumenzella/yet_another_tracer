@@ -1,6 +1,7 @@
 package ar.edu.itba.it.cg.yart;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 import org.apache.commons.cli.BasicParser;
 import org.apache.commons.cli.CommandLine;
@@ -24,6 +25,7 @@ import ar.edu.itba.it.cg.yart.utils.config.YartConfigProvider;
 public class YartApp {
 
 	private final static YartConfigProvider configs = YartConfigProvider.getInstance();
+	private final static Calendar calendar = Calendar.getInstance();
 	
 	public static void main(String[] args) {
 		
@@ -177,6 +179,7 @@ public class YartApp {
 				benchmark(raytracer, benchmarkRuns);
 			}
 			else {
+				logStartTime();
 				renderResult = raytracer.render();
 				raytracer.finishRaytracer();
 				System.out.println("Render finished!");
@@ -233,6 +236,14 @@ public class YartApp {
 	private static void printHelp(final Options options) {
 		new HelpFormatter().printHelp("Main", options);
 		System.exit(0);
+	}
+	
+	private static void logStartTime() {
+		final int hour = calendar.get(Calendar.HOUR_OF_DAY);
+		final int minute = calendar.get(Calendar.MINUTE);
+		StringBuilder builder = new StringBuilder();
+		builder.append("Starting process at ").append(hour+":").append(minute+":");
+		System.out.println(builder);
 	}
 
 }
