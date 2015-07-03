@@ -12,7 +12,7 @@ import ar.edu.itba.it.cg.yart.raytracer.Ray;
 import ar.edu.itba.it.cg.yart.raytracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
-import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
+import ar.edu.itba.it.cg.yart.raytracer.interfaces.Tracer;
 import ar.edu.itba.it.cg.yart.raytracer.shade.PathTracerShader;
 import ar.edu.itba.it.cg.yart.raytracer.shade.Shader;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
@@ -43,7 +43,7 @@ public class PinholeCamera extends CameraAbstract {
 	}
 
 	@Override
-	public void renderScene(final Bucket bucket, RayTracer rayTracer,
+	public void renderScene(final Bucket bucket, Tracer rayTracer,
 			final ArrayIntegerMatrix result, final Stack stack) {
 
 		Color blackColor = Color.BLACK;

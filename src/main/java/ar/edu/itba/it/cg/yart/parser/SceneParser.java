@@ -16,14 +16,14 @@ import ar.edu.itba.it.cg.yart.YartConstants;
 import ar.edu.itba.it.cg.yart.parser.Attribute.AttributeType;
 import ar.edu.itba.it.cg.yart.parser.Identifier.IdentifierType;
 import ar.edu.itba.it.cg.yart.parser.Property.PropertyType;
-import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
+import ar.edu.itba.it.cg.yart.raytracer.interfaces.Tracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
 public class SceneParser {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(YartConstants.LOG_FILE);
 
-	private final RayTracer raytracer;
+	private final Tracer raytracer;
 	private final SceneBuilder sceneBuilder;
 	
 	private Identifier currentIdentifier;
@@ -33,7 +33,7 @@ public class SceneParser {
 	private final Path basePath;
 	private final Path filePath;
 	
-	public SceneParser(final String filePath, final RayTracer raytracer) {
+	public SceneParser(final String filePath, final Tracer raytracer) {
 		this.raytracer = raytracer;
 		this.sceneBuilder = new SceneBuilder(raytracer);
 		this.filePath = Paths.get(filePath).normalize();

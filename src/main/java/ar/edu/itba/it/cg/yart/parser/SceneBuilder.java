@@ -38,7 +38,7 @@ import ar.edu.itba.it.cg.yart.parser.Identifier.IdentifierType;
 import ar.edu.itba.it.cg.yart.parser.Property.PropertyType;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
-import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
+import ar.edu.itba.it.cg.yart.raytracer.interfaces.Tracer;
 import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.ImageTexture;
 import ar.edu.itba.it.cg.yart.textures.Texture;
@@ -56,7 +56,7 @@ public class SceneBuilder {
 	private static final Logger LOGGER = LoggerFactory.getLogger(YartConstants.LOG_FILE);
 	
 	private Map<MeshData, Mesh> meshes = new HashMap<MeshData, Mesh>();
-	private final RayTracer raytracer;
+	private final Tracer raytracer;
 	
 	private Map<String, Texture> textures = new HashMap<String, Texture>();
 	private Map<String, Material> namedMaterials = new HashMap<String, Material>();
@@ -72,7 +72,7 @@ public class SceneBuilder {
 	
 	private Path basePath = Paths.get(".").normalize();
 	
-	public SceneBuilder(final RayTracer raytracer) {
+	public SceneBuilder(final Tracer raytracer) {
 		this.raytracer = raytracer;
 		transformMatrices.push(new Matrix4d());
 	}

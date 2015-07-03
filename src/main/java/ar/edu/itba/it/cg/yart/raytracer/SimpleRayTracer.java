@@ -18,11 +18,11 @@ import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
 import ar.edu.itba.it.cg.yart.raytracer.buckets.BucketRenderAction;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.camera.PinholeCamera;
-import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
+import ar.edu.itba.it.cg.yart.raytracer.interfaces.Tracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 import ar.edu.itba.it.cg.yart.utils.YartExecutorFactory;
 
-public class SimpleRayTracer implements RayTracer {
+public class SimpleRayTracer implements Tracer {
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(YartConstants.LOG_FILE);

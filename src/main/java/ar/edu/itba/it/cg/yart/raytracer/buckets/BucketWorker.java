@@ -5,18 +5,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer.RaytracerCallbacks;
-import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
+import ar.edu.itba.it.cg.yart.raytracer.interfaces.Tracer;
 
 public class BucketWorker implements Runnable {
 
-	private final RayTracer raytracer;
+	private final Tracer raytracer;
 	private final ArrayIntegerMatrix result;
 	private final RaytracerCallbacks callback;
 	private final Bucket[] buckets;
 	private AtomicInteger index;
 	private final Stack stack;
 
-	public BucketWorker(final Bucket[] buckets, RayTracer raytracer,
+	public BucketWorker(final Bucket[] buckets, Tracer raytracer,
 			final ArrayIntegerMatrix result, final RaytracerCallbacks callback,
 			final Stack stack, final AtomicInteger index) {
 

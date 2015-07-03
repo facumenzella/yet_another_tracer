@@ -17,7 +17,7 @@ import ar.edu.itba.it.cg.yart.parser.SceneParser;
 import ar.edu.itba.it.cg.yart.raytracer.RenderResult;
 import ar.edu.itba.it.cg.yart.raytracer.SimpleRayTracer.RaytracerCallbacks;
 import ar.edu.itba.it.cg.yart.raytracer.buckets.Bucket;
-import ar.edu.itba.it.cg.yart.raytracer.interfaces.RayTracer;
+import ar.edu.itba.it.cg.yart.raytracer.interfaces.Tracer;
 import ar.edu.itba.it.cg.yart.utils.ImageSaver;
 
 public class RenderWindow extends JFrame implements RaytracerCallbacks {
@@ -34,9 +34,9 @@ public class RenderWindow extends JFrame implements RaytracerCallbacks {
 	private final StatusPanel statusPanel;
 	
 	private BufferedImage bi;
-	private RayTracer raytracer;
+	private Tracer raytracer;
 	
-	public RenderWindow(RayTracer raytracer) {
+	public RenderWindow(Tracer raytracer) {
 		int width = raytracer.getHorizontalRes();
 		int height = raytracer.getVerticalRes();
 		

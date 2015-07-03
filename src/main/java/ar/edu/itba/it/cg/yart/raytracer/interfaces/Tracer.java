@@ -8,7 +8,7 @@ import ar.edu.itba.it.cg.yart.raytracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.raytracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
-public interface RayTracer {
+public interface Tracer {
 	
 	public RenderResult render();
 	public RenderResult serialRender();
