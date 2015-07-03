@@ -5,7 +5,7 @@ import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
 
-public class RayTracerShader implements TracerStrategy{
+public class RayTracingStrategy implements TracerStrategy{
 
 	@Override
 	public Color shade(final Material material, final ShadeRec sr, final Stack stack) {

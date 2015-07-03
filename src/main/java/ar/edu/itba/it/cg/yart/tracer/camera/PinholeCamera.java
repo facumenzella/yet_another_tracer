@@ -13,7 +13,7 @@ import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.tracer.Tracer;
 import ar.edu.itba.it.cg.yart.tracer.ViewPlane;
 import ar.edu.itba.it.cg.yart.tracer.buckets.Bucket;
-import ar.edu.itba.it.cg.yart.tracer.strategy.PathTracerShader;
+import ar.edu.itba.it.cg.yart.tracer.strategy.PathTracingStrategy;
 import ar.edu.itba.it.cg.yart.tracer.strategy.TracerStrategy;
 import ar.edu.itba.it.cg.yart.tracer.world.World;
 
@@ -39,7 +39,7 @@ public class PinholeCamera extends CameraAbstract {
 		this.distance = distance;
 		this.zoom = zoom;
 		this.tMax = tMax;
-		this.shader = new PathTracerShader();
+		this.shader = new PathTracingStrategy();
 	}
 
 	@Override

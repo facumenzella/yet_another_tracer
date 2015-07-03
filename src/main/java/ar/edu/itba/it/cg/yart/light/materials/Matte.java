@@ -15,7 +15,7 @@ import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.Texture;
 import ar.edu.itba.it.cg.yart.tracer.Ray;
 import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.tracer.strategy.PathTracerShader;
+import ar.edu.itba.it.cg.yart.tracer.strategy.PathTracingStrategy;
 import ar.edu.itba.it.cg.yart.tracer.strategy.TracerStrategy;
 
 public class Matte extends MaterialAbstract {
@@ -23,7 +23,7 @@ public class Matte extends MaterialAbstract {
 	private final Lambertian ambientBRDF;
 	private Lambertian diffuseBRDF;
 	private final double tMax = YartConstants.DEFAULT_TMAX;
-	private final TracerStrategy shader = new PathTracerShader();
+	private final TracerStrategy shader = new PathTracingStrategy();
 
 	public Matte() {
 		this.ambientBRDF = new Lambertian();

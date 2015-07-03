@@ -11,16 +11,16 @@ import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.Texture;
 import ar.edu.itba.it.cg.yart.tracer.Ray;
 import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
-import ar.edu.itba.it.cg.yart.tracer.strategy.PathTracerShader;
-import ar.edu.itba.it.cg.yart.tracer.strategy.RayTracerShader;
+import ar.edu.itba.it.cg.yart.tracer.strategy.PathTracingStrategy;
+import ar.edu.itba.it.cg.yart.tracer.strategy.RayTracingStrategy;
 import ar.edu.itba.it.cg.yart.tracer.strategy.TracerStrategy;
 
 public class Reflective extends Phong implements Material {
 
 	private final PerfectSpecular reflectiveBRDF;
 	private double tMax = YartConstants.DEFAULT_TMAX;
-	private final TracerStrategy shader = new PathTracerShader();
-	private final TracerStrategy directs = new RayTracerShader();
+	private final TracerStrategy shader = new PathTracingStrategy();
+	private final TracerStrategy directs = new RayTracingStrategy();
 
 	public Reflective() {
 		this.reflectiveBRDF = new PerfectSpecular();
