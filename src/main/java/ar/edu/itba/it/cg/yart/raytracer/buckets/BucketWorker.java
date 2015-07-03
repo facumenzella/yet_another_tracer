@@ -4,8 +4,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
-import ar.edu.itba.it.cg.yart.raytracer.Tracer;
-import ar.edu.itba.it.cg.yart.raytracer.Tracer.TracerCallbacks;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer.TracerCallbacks;
 
 public class BucketWorker implements Runnable {
 

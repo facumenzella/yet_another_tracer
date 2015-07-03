@@ -16,7 +16,7 @@ import ar.edu.itba.it.cg.yart.YartConstants;
 import ar.edu.itba.it.cg.yart.parser.Attribute.AttributeType;
 import ar.edu.itba.it.cg.yart.parser.Identifier.IdentifierType;
 import ar.edu.itba.it.cg.yart.parser.Property.PropertyType;
-import ar.edu.itba.it.cg.yart.raytracer.Tracer;
+import ar.edu.itba.it.cg.yart.raytracer.tracer.Tracer;
 import ar.edu.itba.it.cg.yart.raytracer.world.World;
 
 public class SceneParser {
