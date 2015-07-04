@@ -32,6 +32,7 @@ import ar.edu.itba.it.cg.yart.light.PointLight;
 import ar.edu.itba.it.cg.yart.light.materials.Emissive;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.light.materials.Matte;
+import ar.edu.itba.it.cg.yart.light.materials.Metal2;
 import ar.edu.itba.it.cg.yart.light.materials.Reflective;
 import ar.edu.itba.it.cg.yart.light.materials.Transparent;
 import ar.edu.itba.it.cg.yart.parser.Identifier.IdentifierType;
@@ -230,37 +231,23 @@ public class SceneBuilder {
 				ret = mat;
 			}
 			else if (type.equals("metal2")) {
-				double uroughness = identifier.getDouble("uroughness", 0.001);
-				double vroughness = identifier.getDouble("vroughness", 0.001);
+				double roughness = identifier.getDouble("uroughness", 0.001);
 				
-				if (!identifier.hasProperty("uroughness")) {
-					uroughness = vroughness;
-				}
-				else if (!identifier.hasProperty("vroughness")) {
-					vroughness = uroughness;
-				}
 				
-				double finalRoughness = Math.max(uroughness, vroughness);
-				
-				if (finalRoughness <= 0) {
+				if (roughness <= 0) {
 					LOGGER.warn("Metal roughness must be a number between 0 and 1");
-					finalRoughness = 0.001;
+					roughness = 0.001;
 				}
-				else if (finalRoughness > 1) {
+				else if (roughness > 1) {
 					LOGGER.warn("Metal roughness must be a number between 0 and 1");
-					finalRoughness = 1;
+					roughness = 1;
 				}
 				
-				double exponent = 1 / finalRoughness;
+				Color fresnel = identifier.getColor("fresnel", new Color(0.5));
 				
-				Reflective mat = new Reflective();
-				mat.setCd(getColorOrTexture(identifier, "Kr", Color.blackColor()));
-				mat.setCr(getColorOrTexture(identifier, "Kr", Color.whiteColor()));
-				mat.setKd(1);
-				mat.setKs(1 - finalRoughness);
-				mat.setKa(0.3);
-				mat.setExp(exponent);
-				mat.setKr((1 - finalRoughness) / 2);
+				Metal2 mat = new Metal2();
+				mat.setFresnel(fresnel);
+				mat.setRoughness(roughness);
 				ret = mat;
 			}
 		}

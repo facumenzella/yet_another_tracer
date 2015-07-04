@@ -9,5 +9,5 @@ public interface Sampler {
 	public Point3d sampleHemisphere();
 	public Point3d sampleSphere();
 	public void mapSamples2Hemisphere(final double exp);
-
+	public Point3d oneHemisphereSample(final double e);
 }

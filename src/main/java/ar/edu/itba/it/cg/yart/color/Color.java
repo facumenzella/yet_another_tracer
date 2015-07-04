@@ -118,6 +118,17 @@ public class Color {
 		return new Color(1.0,1.0,0,1.0);
 	}
 	
+	public Color complementMe() {
+		this.r = 1 - r;
+		this.g= 1 - g;
+		this.b = 1 - b;
+		return this;
+	}
+	
+	public Color complement() {
+		return new Color(1-r, 1-g, 1- b);
+	}
+	
 	public void correctColor() {
 		double max = Math.max(r, Math.max(g, b));
 		if (max > 1.0) {
