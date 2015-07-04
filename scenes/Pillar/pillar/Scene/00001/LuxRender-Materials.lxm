@@ -1,0 +1,13 @@
+# Materials File
+
+MakeNamedMaterial "Area"
+	"string type" ["null"]
+
+MakeNamedMaterial "metal"
+	"color Kr" [0.2 0.2 0.2]
+	"float uroughness" [0.5]
+	"string type" ["metal2"]
+
+MakeNamedMaterial "red"
+	"color Kd" [1 0 0]
+	"string type" ["matte"]
