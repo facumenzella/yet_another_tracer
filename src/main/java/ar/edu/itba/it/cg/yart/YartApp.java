@@ -16,7 +16,9 @@ import ar.edu.itba.it.cg.yart.parser.SceneParser;
 import ar.edu.itba.it.cg.yart.parser.SceneParser.TracerType;
 import ar.edu.itba.it.cg.yart.tracer.AbstractTracer;
 import ar.edu.itba.it.cg.yart.tracer.RenderResult;
+import ar.edu.itba.it.cg.yart.tracer.Tracer.TracerCallbacks;
 import ar.edu.itba.it.cg.yart.tracer.YATracer;
+import ar.edu.itba.it.cg.yart.tracer.buckets.Bucket;
 import ar.edu.itba.it.cg.yart.tracer.strategy.PathTracingStrategy;
 import ar.edu.itba.it.cg.yart.ui.RenderWindow;
 import ar.edu.itba.it.cg.yart.utils.ImageSaver;
@@ -41,6 +43,7 @@ public class YartApp {
 		int cores = configs.getCoresQty();
 		int bucketSize = configs.getBucketSize();
 		boolean guiRender = false;
+		boolean heartBeat = false;
 		String sceneFile = null;
 		String outputFile = null;
 		String imageName = null;
@@ -64,6 +67,7 @@ public class YartApp {
 		options.addOption("d", "raydepth", true, "Ray depth. Must be a positive number");
 		options.addOption("tr", "trace-depth", true, "Ray hops. Must be a positive integer number");
 		options.addOption("g", "gui", false, "Display render progress in a window");
+		options.addOption("hb", "heart-beat", false, "In normal, non-gui mode, display a character each time a bucket has finished");
 		options.addOption("h", "help", false, "Prints this help");
 		
 		parser = new BasicParser();
@@ -174,11 +178,30 @@ public class YartApp {
 			if (guiRender) {
 				new RenderWindow(raytracer);
 			}
+			
+			heartBeat = cmd.hasOption("hb");
 
 			if (benchmarkRuns >= 1) {
 				benchmark(raytracer, benchmarkRuns);
 			}
 			else {
+				if (!guiRender && heartBeat) {
+					raytracer.setCallbacks(new TracerCallbacks() {
+						
+						@Override
+						public void onRenderFinished(RenderResult result) {
+							System.out.println();
+						}
+						
+						@Override
+						public void onBucketStarted(Bucket bucket) {}
+						
+						@Override
+						public void onBucketFinished(Bucket bucket, RenderResult result) {
+							System.out.print(".");
+						}
+					});
+				}
 				logStartTime();
 				renderResult = raytracer.render();
 				raytracer.finishRaytracer();
