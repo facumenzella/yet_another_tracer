@@ -10,6 +10,7 @@ import ar.edu.itba.it.cg.yart.textures.ConstantColor;
 import ar.edu.itba.it.cg.yart.textures.Texture;
 import ar.edu.itba.it.cg.yart.tracer.Ray;
 import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
+import ar.edu.itba.it.cg.yart.tracer.strategy.PathTracingStrategy;
 import ar.edu.itba.it.cg.yart.tracer.strategy.RayTracingStrategy;
 import ar.edu.itba.it.cg.yart.tracer.strategy.TracerStrategy;
 
@@ -19,6 +20,7 @@ public class Transparent extends Phong{
 	private final PerfectTransmitter specularBTDF = new PerfectTransmitter();
 	private double tMax = YartDefaults.DEFAULT_RAY_DEPTH;
 	private final TracerStrategy directs = new RayTracingStrategy();
+	private final TracerStrategy paths = new PathTracingStrategy();
 	
 	public Transparent setKa(final double ka) {
 		super.setKa(ka);
@@ -137,6 +139,40 @@ public class Transparent extends Phong{
 		return colorL;
 	}
 	
-	
+	@Override
+	public Color globalShade(ShadeRec sr, final Stack stack) {
+		Color colorL = super.shade(sr, stack);
+		final double dx = -sr.ray.direction[0];
+		final double dy = -sr.ray.direction[1];
+		final double dz = -sr.ray.direction[2];
+
+		final Vector3d wo = new Vector3d(dx, dy, dz);
+		final Vector3d wi = new Vector3d(0, 0, 0);
+
+//		final Color fr = reflectiveBRDF.sample_f(sr, wo, wi); // we do not need this now
+		final Ray reflectedRay = new Ray(sr.hitPoint, wi);
+		reflectedRay.depth = sr.depth + 1;
+		if (specularBTDF.tir(sr)) {
+			colorL.addEquals(sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world), this.tMax, stack, paths));
+		} else {
+			final Vector3d wt = new Vector3d(0, 0, 0);
+			final Color ft = specularBTDF.sample_f(sr, wo, wt);
+			final Ray transmittedRay = new Ray(sr.hitPoint, wt);
+			transmittedRay.depth = sr.depth + 1;
+			
+			//double srdotwi = Math.abs(sr.normal.dot(wi));
+			double srdotwt = Math.abs(sr.normal.dot(wt));
+			
+			//colorL.addEquals(sr.world.getTree().traceRay(reflectedRay, new ShadeRec(sr.world), stack).multiply(fr).multiply(srdotwi));
+			final Color aux = sr.world.getTree().traceRay(transmittedRay, new ShadeRec(sr.world), this.tMax, stack, paths);
+			
+			colorL.r += aux.r * ft.r * srdotwt;
+			colorL.g += aux.g * ft.r * srdotwt;
+			colorL.b += aux.b * ft.r * srdotwt;
+
+		}
+		
+		return colorL;
+	}
 
 }

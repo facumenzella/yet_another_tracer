@@ -4,6 +4,7 @@ import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.tracer.buckets.Bucket;
 import ar.edu.itba.it.cg.yart.tracer.camera.Camera;
+import ar.edu.itba.it.cg.yart.tracer.tonemapper.ToneMapper;
 import ar.edu.itba.it.cg.yart.tracer.world.World;
 
 public interface Tracer {
@@ -27,6 +28,8 @@ public interface Tracer {
 	public void setGamma(final double gamma);
 	public double getGamma();
 	public double getGammaInv();
+	public void setToneMapper(final ToneMapper toneMapper);
+	public ToneMapper getToneMapper();
 	
 	public interface TracerCallbacks {
 		public void onBucketStarted(final Bucket bucket);
