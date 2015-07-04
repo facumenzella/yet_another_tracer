@@ -19,11 +19,17 @@ java -jar yartapp [commands]
  -d,--raydepth <arg>        Ray depth. Must be a positive number
  -g,--gui                   Display render progress in a window
  -h,--help                  Prints this help
+ -hb,--heart-beat           In normal, non-gui mode, display a character
+                            each time a bucket has finished
  -i,--input <arg>           Input scene file
  -o,--output <arg>          Output file's name
+ -pathtracer                Enable Path Tracing
+ -s,--samples <arg>         Number of samples for pathtracing. Must be a
+                            positive number
  -t,--time                  Print render time and triangle count in output
                             image
  -th,--threads <arg>        Number of threads to be used
+ -tr,--trace-depth <arg>    Ray hops. Must be a positive integer number
 ```
 For example:
 Do you want to see something cool?
@@ -59,4 +65,3 @@ java -jar yart.jar -o render.png -i scenes/Benchmarks/MirrorLowReflectivity.lxs 
 - Point
 - Directional
 - Ambient
-
