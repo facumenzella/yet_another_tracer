@@ -1,0 +1,226 @@
+# Materials File
+
+MakeNamedMaterial "Material.002"
+	"color Kd" [0.20265649 0.14026324 0.84120393]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "Texture.001_color" "color" "imagemap"
+	"string filename" ["textures/732f1f6a.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "Hair1"
+	"texture Kd" ["Texture.001_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "Texture.005_color" "color" "imagemap"
+	"string filename" ["textures/7aabb596.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "Vest2"
+	"texture Kd" ["Texture.005_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "Texture.008_color" "color" "imagemap"
+	"string filename" ["textures/ede6472c.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "Hands"
+	"texture Kd" ["Texture.008_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "Texture_color" "color" "imagemap"
+	"string filename" ["textures/029d014a.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "Face"
+	"texture Kd" ["Texture_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "Texture.012_color" "color" "imagemap"
+	"string filename" ["textures/aa93fed6.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "Arm2"
+	"texture Kd" ["Texture.012_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "Texture.009_color" "color" "imagemap"
+	"string filename" ["textures/aa93fed6.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "Chest"
+	"texture Kd" ["Texture.009_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "Texture.007_color" "color" "imagemap"
+	"string filename" ["textures/fbce52a3.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "Arm1"
+	"texture Kd" ["Texture.007_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+MakeNamedMaterial "18d679fb_dds"
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "Texture.006_color" "color" "imagemap"
+	"string filename" ["textures/aa9d0f99.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "Boots"
+	"texture Kd" ["Texture.006_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "Texture.004_color" "color" "imagemap"
+	"string filename" ["textures/61286add.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "Pants"
+	"texture Kd" ["Texture.004_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "Texture.002_color" "color" "imagemap"
+	"string filename" ["textures/732f1f6a.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "Hair2"
+	"texture Kd" ["Texture.002_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "Texture.003_color" "color" "imagemap"
+	"string filename" ["textures/9ad243c9.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "Vest1"
+	"texture Kd" ["Texture.003_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+MakeNamedMaterial "Material"
+	"color Kd" [0.63999999 0.01495065 0.00802194]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+MakeNamedMaterial "Material.003"
+	"color Kd" [0.69999999 0.69999999 0.69999999]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+MakeNamedMaterial "Material.001"
+	"color Kd" [0.02509283 0.36723840 0.01424591]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+MakeNamedMaterial "Area"
+	"string type" ["null"]
