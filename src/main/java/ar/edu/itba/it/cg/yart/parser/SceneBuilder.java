@@ -52,6 +52,7 @@ import ar.edu.itba.it.cg.yart.tracer.Tracer;
 import ar.edu.itba.it.cg.yart.tracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.tracer.camera.PinholeCamera;
 import ar.edu.itba.it.cg.yart.tracer.tonemapper.LinearToneMapper;
+import ar.edu.itba.it.cg.yart.tracer.tonemapper.OutOfGamutToneMapper;
 import ar.edu.itba.it.cg.yart.tracer.tonemapper.ReinhardToneMapper;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
@@ -181,6 +182,9 @@ public class SceneBuilder {
 			}
 			else if (tonemapper.equals("reinhard")) {
 				raytracer.setToneMapper(new ReinhardToneMapper());
+			}
+			else if (tonemapper.equals("outofgamut")) {
+				raytracer.setToneMapper(new OutOfGamutToneMapper(i.getColor("outofgamut_color", Color.redColor())));
 			}
 			else {
 				LOGGER.warn("Tone Mapping kernel \"{}\" unsupported. Defaulting to linear.", tonemapper);
@@ -381,6 +385,10 @@ public class SceneBuilder {
 				instance = new Instance(referenceSphere);
 				localMatrix = localMatrix.scale(radius, radius, radius);
 			} else if (strType.equals("plane")) {
+				if (currentAreaLight != null) {
+					LOGGER.warn("Infinite planes Area Light is currently unsupported");
+					currentAreaLight = null;
+				}
 				Vector3d normal = identifier.getNormal("n",
 						new Vector3d(0, 0, 1)).normalizedVector();
 				if (normal.x == 0 && normal.y == 0 && normal.z == 0) {
