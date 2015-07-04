@@ -18,6 +18,8 @@ import ar.edu.itba.it.cg.yart.tracer.buckets.BucketRenderAction;
 import ar.edu.itba.it.cg.yart.tracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.tracer.camera.PinholeCamera;
 import ar.edu.itba.it.cg.yart.tracer.strategy.TracerStrategy;
+import ar.edu.itba.it.cg.yart.tracer.tonemapper.LinearToneMapper;
+import ar.edu.itba.it.cg.yart.tracer.tonemapper.ToneMapper;
 import ar.edu.itba.it.cg.yart.tracer.world.World;
 
 public class YATracer implements Tracer {
@@ -29,6 +31,7 @@ public class YATracer implements Tracer {
 
 	private final RenderResult renderResult;
 	private World world;
+	private ToneMapper toneMapper;
 
 	// Default parameters
 	private Point3d eye = YartDefaults.DEFAULT_EYE;
@@ -69,6 +72,7 @@ public class YATracer implements Tracer {
 		setNumSamples(numSamples);
 		setCamera(new PinholeCamera(eye, lookat, up, distance, zoom, tMax, strategy));
 		setGamma(2.2);
+		setToneMapper(new LinearToneMapper());
 	}
 
 	public void finishRaytracer() {
@@ -281,6 +285,16 @@ public class YATracer implements Tracer {
 	@Override
 	public double getGammaInv() {
 		return gammaInv;
+	}
+
+	@Override
+	public void setToneMapper(ToneMapper toneMapper) {
+		this.toneMapper = toneMapper;
+	}
+
+	@Override
+	public ToneMapper getToneMapper() {
+		return toneMapper;
 	}
 
 }

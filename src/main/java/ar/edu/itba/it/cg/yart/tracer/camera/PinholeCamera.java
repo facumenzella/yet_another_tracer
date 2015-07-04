@@ -113,17 +113,7 @@ public class PinholeCamera extends CameraAbstract {
 			color.g *= invNumSamples;
 			color.b *= invNumSamples;
 
-			// mapping color
-			/*double max = Math.max(color.r, Math.max(color.g, color.b));
-			if (max > 1.0) {
-				color.r /= max;
-				color.g /= max;
-				color.b /= max;
-			}*/
-			
-			color.r /= 1 + color.r;
-			color.g /= 1 + color.g;
-			color.b /= 1 + color.b;
+			rayTracer.getToneMapper().mapColor(color);
 
 			color.r = Math.pow(color.r, rayTracer.getGammaInv());
 			color.g = Math.pow(color.g, rayTracer.getGammaInv());

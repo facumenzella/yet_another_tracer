@@ -50,6 +50,8 @@ import ar.edu.itba.it.cg.yart.textures.wrappers.Wrapper;
 import ar.edu.itba.it.cg.yart.tracer.Tracer;
 import ar.edu.itba.it.cg.yart.tracer.camera.Camera;
 import ar.edu.itba.it.cg.yart.tracer.camera.PinholeCamera;
+import ar.edu.itba.it.cg.yart.tracer.tonemapper.LinearToneMapper;
+import ar.edu.itba.it.cg.yart.tracer.tonemapper.ReinhardToneMapper;
 import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class SceneBuilder {
@@ -173,6 +175,17 @@ public class SceneBuilder {
 					i.getInteger("xresolution", YartDefaults.DEFAULT_XRES),
 					i.getInteger("yresolution", YartDefaults.DEFAULT_YRES));
 			raytracer.setGamma(i.getDouble("gamma", 2.2));
+			String tonemapper = i.getString("tonemapkernel", "linear");
+			if (tonemapper.equals("linear")) {
+				raytracer.setToneMapper(new LinearToneMapper());
+			}
+			else if (tonemapper.equals("reinhard")) {
+				raytracer.setToneMapper(new ReinhardToneMapper());
+			}
+			else {
+				LOGGER.warn("Tone Mapping kernel \"{}\" unsupported. Defaulting to linear.", tonemapper);
+				raytracer.setToneMapper(new LinearToneMapper());
+			}
 			break;
 		case LOOKAT:
 			double[] params = ParserUtils.parseDoubleArray(i.getParameters());
