@@ -1,10 +1,10 @@
 # Yet another Ray Tracer #
-> Because there are not too many.
+> Because there are not too many. It traces paths as well.
 >> By Del Giudice, Menzella & Noriega
 ## COMPUTACION GRAFICA ##
 ### ITBA ###
 
-Check the commit: **c824fcb**
+Check the commit: **23a8b93**
 
 You may be wondering how do I run this app?
 It's easy:
