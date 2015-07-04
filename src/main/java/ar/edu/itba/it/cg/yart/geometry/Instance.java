@@ -1,7 +1,5 @@
 package ar.edu.itba.it.cg.yart.geometry;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.geometry.primitives.AABB;
 import ar.edu.itba.it.cg.yart.geometry.primitives.GeometricObject;
@@ -117,11 +115,9 @@ public class Instance extends GeometricObject {
 	
 	@Override
 	public Sample getSample() {
-		/*Sample ret = object.getSample();
+		Sample ret = object.getSample();
 		ret.point = ret.point.transformByMatrix(matrix);
-		ret.normal = ret.normal.transformByMatrix(matrix).normalizeMe();*/
-		Sample ret = samples[ThreadLocalRandom.current().nextInt(samples.length)];
-		//System.out.println("P: " + ret.point + "-- N: " + ret.normal);
+		ret.normal = ret.normal.transformByMatrix(matrix).normalizeMe();
 		return ret;
 	}
 	

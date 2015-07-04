@@ -50,7 +50,7 @@ public class YATracer implements Tracer {
 		@Override public void onRenderFinished(RenderResult result) {}
 		@Override public void onBucketFinished(Bucket bucket, RenderResult result) {}
 	};
-	
+
 	private final ForkJoinPool pool;
 	private Bucket[] buckets;
 	private Camera camera;

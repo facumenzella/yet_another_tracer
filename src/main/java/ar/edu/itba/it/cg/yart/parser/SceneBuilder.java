@@ -32,6 +32,7 @@ import ar.edu.itba.it.cg.yart.light.PointLight;
 import ar.edu.itba.it.cg.yart.light.materials.Emissive;
 import ar.edu.itba.it.cg.yart.light.materials.Material;
 import ar.edu.itba.it.cg.yart.light.materials.Matte;
+import ar.edu.itba.it.cg.yart.light.materials.Metal2;
 import ar.edu.itba.it.cg.yart.light.materials.Reflective;
 import ar.edu.itba.it.cg.yart.light.materials.Transparent;
 import ar.edu.itba.it.cg.yart.parser.Identifier.IdentifierType;
@@ -66,7 +67,6 @@ public class SceneBuilder {
 	private Map<String, Material> namedMaterials = new HashMap<String, Material>();
 	private Material currentMaterial;
 	private AreaLight currentAreaLight;
-
 	private Deque<Matrix4d> transformMatrices = new ArrayDeque<Matrix4d>();
 	private Deque<Attribute> attributes = new ArrayDeque<Attribute>();
 
@@ -249,38 +249,24 @@ public class SceneBuilder {
 				mat.setKt(getColorOrTexture(identifier, "Kt",
 						Color.whiteColor()));
 				ret = mat;
-			} else if (type.equals("metal2")) {
-				double uroughness = identifier.getDouble("uroughness", 0.001);
-				double vroughness = identifier.getDouble("vroughness", 0.001);
-
-				if (!identifier.hasProperty("uroughness")) {
-					uroughness = vroughness;
-				} else if (!identifier.hasProperty("vroughness")) {
-					vroughness = uroughness;
-				}
-
-				double finalRoughness = Math.max(uroughness, vroughness);
-
-				if (finalRoughness <= 0) {
+			}
+			else if (type.equals("metal2")) {
+				double roughness = identifier.getDouble("uroughness", 0.001);
+				
+				if (roughness <= 0) {
 					LOGGER.warn("Metal roughness must be a number between 0 and 1");
-					finalRoughness = 0.001;
-				} else if (finalRoughness > 1) {
-					LOGGER.warn("Metal roughness must be a number between 0 and 1");
-					finalRoughness = 1;
+					roughness = 0.001;
 				}
-
-				double exponent = 1 / finalRoughness;
-
-				Reflective mat = new Reflective();
-				mat.setCd(getColorOrTexture(identifier, "Kr",
-						Color.blackColor()));
-				mat.setCr(getColorOrTexture(identifier, "Kr",
-						Color.whiteColor()));
-				mat.setKd(1);
-				mat.setKs(1 - finalRoughness);
-				mat.setKa(0.3);
-				mat.setExp(exponent);
-				mat.setKr((1 - finalRoughness) / 2);
+				else if (roughness > 1) {
+					LOGGER.warn("Metal roughness must be a number between 0 and 1");
+					roughness = 1;
+				}
+				
+				Color fresnel = identifier.getColor("fresnel", new Color(0.5));
+				
+				Metal2 mat = new Metal2();
+				mat.setFresnel(fresnel);
+				mat.setRoughness(roughness);
 				ret = mat;
 			}
 		} catch (Exception e) {
@@ -577,7 +563,6 @@ public class SceneBuilder {
 		} catch (Exception e) {
 			LOGGER.warn(e.getMessage());
 		}
-
 		currentAreaLight = ret;
 		return ret;
 	}

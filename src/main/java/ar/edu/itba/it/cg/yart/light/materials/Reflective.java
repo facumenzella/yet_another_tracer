@@ -1,5 +1,6 @@
 package ar.edu.itba.it.cg.yart.light.materials;
 
+
 import ar.edu.itba.it.cg.yart.YartDefaults;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;

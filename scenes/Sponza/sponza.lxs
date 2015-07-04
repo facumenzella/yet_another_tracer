@@ -78,6 +78,7 @@ NamedMaterial "Area"
 
 AreaLightSource "area"
 	"float importance" [1.000000000000000]
+<<<<<<< HEAD
 	"float power" [100.000000000000000]
 	"float efficacy" [25.000000000000000]
 	"color L" [1.00000000 0.96562189 0.72305512]
@@ -86,6 +87,16 @@ AreaLightSource "area"
 
 Shape "trianglemesh"
 	"integer indices" [2 1 0 3 2 0]
+=======
+	"float power" [5000.000000000000000]
+	"float efficacy" [25.000000000000000]
+	"color L" [1.00000000 0.96562189 0.72305512]
+	"integer nsamples" [1]
+	"float gain" [15.000000000000000]
+
+Shape "trianglemesh"
+	"integer indices" [0 1 2 0 2 3]
+>>>>>>> e1784594386e844fb8f8afa399d8595bdf1cb20c
 	"point P" [-0.188999995589256 0.050000000745058 0.000000000000000 0.188999995589256 0.050000000745058 0.000000000000000 0.188999995589256 -0.050000000745058 0.000000000000000 -0.188999995589256 -0.050000000745058 0.000000000000000]
 	"string name" ["Area.001"]
 

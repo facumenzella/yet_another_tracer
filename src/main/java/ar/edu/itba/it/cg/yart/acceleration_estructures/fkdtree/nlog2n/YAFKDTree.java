@@ -114,9 +114,10 @@ public class YAFKDTree {
 				new HashSet<PlaneCandidate>());
 	}
 
-	private static KDNodeAbstract buildKDNodeAbstract(final List<GeometricObject> gObjects,
-			final AABB box, final int currentDepth, Event[] events,
-			final AABB rootAABB, final Set<PlaneCandidate> prevs) {
+	private static KDNodeAbstract buildKDNodeAbstract(
+			final List<GeometricObject> gObjects, final AABB box,
+			final int currentDepth, Event[] events, final AABB rootAABB,
+			final Set<PlaneCandidate> prevs) {
 		final double kKI = 1.5;
 		final int size = gObjects.size();
 
@@ -135,11 +136,11 @@ public class YAFKDTree {
 		AABB[] boxes = bestCandidate.boxes;
 
 		// We classify the objects with the events (left, right, both)
-		ClassifiedObjects classifiedObjects = ClassifiedObjects.classify(gObjects, events,
-				bestCandidate);
+		ClassifiedObjects classifiedObjects = ClassifiedObjects.classify(
+				gObjects, events, bestCandidate);
 		// We classify the events in left and right
-		final ClassifiedEvents classifiedEvents = ClassifiedEvents.splice(events,
-				classifiedObjects, boxes[0], boxes[1]);
+		final ClassifiedEvents classifiedEvents = ClassifiedEvents.splice(
+				events, classifiedObjects, boxes[0], boxes[1]);
 
 		final Event[] ebl = classifiedEvents.ebl.toArray(new Event[0]);
 		final Event[] ebr = classifiedEvents.ebr.toArray(new Event[0]);
@@ -157,10 +158,11 @@ public class YAFKDTree {
 
 		final int nextDepth = currentDepth + 1;
 
-		return new KDInternalNode(splitPoint, buildKDNodeAbstract(classifiedObjects.tl,
-				boxes[0], nextDepth, el.toArray(new Event[] {}), rootAABB,
-				prevsPlus), buildKDNodeAbstract(classifiedObjects.tr, boxes[1],
-				nextDepth, er.toArray(new Event[] {}), rootAABB, prevsPlus));
+		return new KDInternalNode(splitPoint, buildKDNodeAbstract(
+				classifiedObjects.tl, boxes[0], nextDepth,
+				el.toArray(new Event[] {}), rootAABB, prevsPlus),
+				buildKDNodeAbstract(classifiedObjects.tr, boxes[1], nextDepth,
+						er.toArray(new Event[] {}), rootAABB, prevsPlus));
 	}
 
 	private static AABB[] splitAABB(final AABB box, SplitPoint p) {
@@ -193,129 +195,128 @@ public class YAFKDTree {
 	}
 
 	// find a 'good' plane mother fucker!!
-		private static PlaneCandidate findPlane(final int objectsSize,
-				final AABB box, final Event[] events, final AABB rootAABB) {
+	private static PlaneCandidate findPlane(final int objectsSize,
+			final AABB box, final Event[] events, final AABB rootAABB) {
 
-			final int size = objectsSize;
-			final int eventsQty = events.length;
-			double minCost = Double.MAX_VALUE;
-			SplitPoint splitPoint = null;
-			AABB boxes[] = null;
-			boolean left = false;
+		final int size = objectsSize;
+		final int eventsQty = events.length;
+		double minCost = Double.MAX_VALUE;
+		SplitPoint splitPoint = null;
+		AABB boxes[] = null;
+		boolean left = false;
 
-			int nLX = 0, nPX = 0, nRX = size;
-			int nLY = 0, nPY = 0, nRY = size;
-			int nLZ = 0, nPZ = 0, nRZ = size;
+		int nLX = 0, nPX = 0, nRX = size;
+		int nLY = 0, nPY = 0, nRY = size;
+		int nLZ = 0, nPZ = 0, nRZ = size;
 
-			for (int i = 0; i < eventsQty; i++) {
+		for (int i = 0; i < eventsQty; i++) {
 
-				int pSTARTX = 0, pENDX = 0, pPLANARX = 0;
-				int pSTARTY = 0, pENDY = 0, pPLANARY = 0;
-				int pSTARTZ = 0, pENDZ = 0, pPLANARZ = 0;
+			int pSTARTX = 0, pENDX = 0, pPLANARX = 0;
+			int pSTARTY = 0, pENDY = 0, pPLANARY = 0;
+			int pSTARTZ = 0, pENDZ = 0, pPLANARZ = 0;
 
-				Event e = events[i];
+			Event e = events[i];
 
-				// END(0), PLANAR(1), START(2);
-				while (i < eventsQty && events[i].axis == e.axis
-						&& events[i].point == e.point && events[i].type == 0) {
-					i++;
-					switch (e.splitPoint.axis) {
-					case 0:
-						pENDX++;
-						break;
-					case 1:
-						pENDY++;
-						break;
-					case 2:
-						pENDZ++;
-						break;
-					default:
-						System.out.println("Holy shit the impossible happened");
-					}
-				}
-
-				
-				while (i < eventsQty && events[i].axis == e.axis
-						&& events[i].point == e.point && events[i].type == 1) {
-					i++;
-					switch (e.splitPoint.axis) {
-					case 0:
-						pPLANARX++;
-						break;
-					case 1:
-						pPLANARY++;
-						break;
-					case 2:
-						pPLANARZ++;
-						break;
-					default:
-						System.out.println("Holy shit the impossible happened");
-					}
-				}
-				
-				while (i < eventsQty && events[i].axis == e.axis
-						&& events[i].point == e.point && events[i].type == 2) {
-					i++;
-					switch (e.splitPoint.axis) {
-					case 0:
-						pSTARTX++;
-						break;
-					case 1:
-						pSTARTY++;
-						break;
-					case 2:
-						pSTARTZ++;
-						break;
-					default:
-						System.out.println("Holy shit the impossible happened");
-					}
-				}
-
-				PlaneCandidate candidate = null;
+			// END(0), PLANAR(1), START(2);
+			while (i < eventsQty && events[i].axis == e.axis
+					&& events[i].point == e.point && events[i].type == 0) {
+				i++;
 				switch (e.splitPoint.axis) {
 				case 0:
-					nPX = pPLANARX;
-					nRX -= pPLANARX;
-					nRX -= pENDX;
-					candidate = sah(e.splitPoint, box, nLX, nRX, nPX, rootAABB);
-					nPX = 0;
-					nLX += pPLANARX;
-					nLX += pSTARTX;
+					pENDX++;
 					break;
 				case 1:
-					nPY = pPLANARY;
-					nRY -= pPLANARY;
-					nRY -= pENDY;
-					candidate = sah(e.splitPoint, box, nLY, nRY, nPY, rootAABB);
-					nPY = 0;
-					nLY += pPLANARY;
-					nLY += pSTARTY;
+					pENDY++;
 					break;
 				case 2:
-					nPZ = pPLANARZ;
-					nRZ -= pPLANARZ;
-					nRZ -= pENDZ;
-					candidate = sah(e.splitPoint, box, nLZ, nRZ, nPZ, rootAABB);
-					nPZ = 0;
-					nLZ += pPLANARZ;
-					nLZ += pSTARTZ;
+					pENDZ++;
 					break;
 				default:
 					System.out.println("Holy shit the impossible happened");
 				}
+			}
 
-				if (minCost > candidate.cost) {
-					minCost = candidate.cost;
-					splitPoint = candidate.splitPoint;
-					boxes = candidate.boxes;
-					left = candidate.left;
+			while (i < eventsQty && events[i].axis == e.axis
+					&& events[i].point == e.point && events[i].type == 1) {
+				i++;
+				switch (e.splitPoint.axis) {
+				case 0:
+					pPLANARX++;
+					break;
+				case 1:
+					pPLANARY++;
+					break;
+				case 2:
+					pPLANARZ++;
+					break;
+				default:
+					System.out.println("Holy shit the impossible happened");
 				}
 			}
-			if (minCost != Double.MAX_VALUE) {
-				return new PlaneCandidate(boxes, splitPoint, minCost, left);
+
+			while (i < eventsQty && events[i].axis == e.axis
+					&& events[i].point == e.point && events[i].type == 2) {
+				i++;
+				switch (e.splitPoint.axis) {
+				case 0:
+					pSTARTX++;
+					break;
+				case 1:
+					pSTARTY++;
+					break;
+				case 2:
+					pSTARTZ++;
+					break;
+				default:
+					System.out.println("Holy shit the impossible happened");
+				}
 			}
-			return null;
+
+			PlaneCandidate candidate = null;
+			switch (e.splitPoint.axis) {
+			case 0:
+				nPX = pPLANARX;
+				nRX -= pPLANARX;
+				nRX -= pENDX;
+				candidate = sah(e.splitPoint, box, nLX, nRX, nPX, rootAABB);
+				nPX = 0;
+				nLX += pPLANARX;
+				nLX += pSTARTX;
+				break;
+			case 1:
+				nPY = pPLANARY;
+				nRY -= pPLANARY;
+				nRY -= pENDY;
+				candidate = sah(e.splitPoint, box, nLY, nRY, nPY, rootAABB);
+				nPY = 0;
+				nLY += pPLANARY;
+				nLY += pSTARTY;
+				break;
+			case 2:
+				nPZ = pPLANARZ;
+				nRZ -= pPLANARZ;
+				nRZ -= pENDZ;
+				candidate = sah(e.splitPoint, box, nLZ, nRZ, nPZ, rootAABB);
+				nPZ = 0;
+				nLZ += pPLANARZ;
+				nLZ += pSTARTZ;
+				break;
+			default:
+				System.out.println("Holy shit the impossible happened");
+			}
+
+			if (minCost > candidate.cost) {
+				minCost = candidate.cost;
+				splitPoint = candidate.splitPoint;
+				boxes = candidate.boxes;
+				left = candidate.left;
+			}
 		}
+		if (minCost != Double.MAX_VALUE) {
+			return new PlaneCandidate(boxes, splitPoint, minCost, left);
+		}
+		return null;
+	}
 
 	private static PlaneCandidate sah(final SplitPoint p, final AABB box,
 			final double nl, final double nr, final double np,
@@ -339,11 +340,12 @@ public class YAFKDTree {
 	}
 
 	// Here we trace rays. Work for kids
-	public Color traceRay(final Ray ray, final ShadeRec sr, final double tMax, final Stack stack, final TracerStrategy strategy) {
+	public Color traceRay(final Ray ray, final ShadeRec sr, final double tMax,
+			final Stack stack, final TracerStrategy strategy) {
 		if (!rootAABB.hit(ray) || ray.depth > AbstractTracer.HOPS) {
 			return sr.world.backgroundColor;
 		}
-		
+
 		double tNear = 0;
 		double tFar = tMax;
 		KDNodeAbstract node = null;
@@ -445,11 +447,7 @@ public class YAFKDTree {
 					sr.depth = ray.depth;
 					sr.u = u;
 					sr.v = v;
-					try {
-						color = strategy.shade(sr.material, sr, stack);
-					} catch (Exception ex) {
-						ex.printStackTrace();
-					}
+					color = strategy.shade(sr.material, sr, stack);
 					stack.index = top;
 					return color;
 				}
@@ -462,11 +460,12 @@ public class YAFKDTree {
 		}
 	}
 
-	public double traceShadowHit(final Ray ray, final double tMax,final Stack stack) {
+	public double traceShadowHit(final Ray ray, final double tMax,
+			final Stack stack) {
 		if (!rootAABB.hit(ray) || ray.depth > AbstractTracer.HOPS) {
 			return Double.NEGATIVE_INFINITY;
 		}
-		
+
 		double tNear = 0;
 		double tFar = tMax;
 		KDNodeAbstract node = null;
@@ -507,7 +506,7 @@ public class YAFKDTree {
 					near = internalNode.right;
 					far = internalNode.left;
 				}
-				
+
 				final double t = diff / rayDirAxis;
 
 				if (t > tFar || t < 0.0) {
@@ -549,7 +548,8 @@ public class YAFKDTree {
 		}
 	}
 
-	public double traceRayHit(final Ray ray, final ShadeRec sr, final double tMax, final Stack stack) {
+	public double traceRayHit(final Ray ray, final ShadeRec sr,
+			final double tMax, final Stack stack) {
 		if (!rootAABB.hit(ray) || ray.depth > AbstractTracer.HOPS) {
 			return Double.NEGATIVE_INFINITY;
 		}
@@ -592,7 +592,7 @@ public class YAFKDTree {
 					near = internalNode.right;
 					far = internalNode.left;
 				}
-				
+
 				final double t = diff / rayDirAxis;
 
 				if (t > tFar || t < 0.0) {

@@ -21,10 +21,13 @@ MakeNamedMaterial "Material.005"
 	"color Kr" [0.69999999 0.69999999 0.69999999]
 	"string type" ["mirror"]
 
+<<<<<<< HEAD
 MakeNamedMaterial "Material.006"
 	"color Kd" [0.6 0.6 0.6]
 	"float sigma" [0.000000000000000]
 	"string type" ["matte"]
 
+=======
+>>>>>>> e1784594386e844fb8f8afa399d8595bdf1cb20c
 MakeNamedMaterial "Area"
 	"string type" ["null"]

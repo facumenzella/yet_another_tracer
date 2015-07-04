@@ -1,6 +1,5 @@
 package ar.edu.itba.it.cg.yart.samplers;
 
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import ar.edu.itba.it.cg.yart.geometry.Point2d;
@@ -12,8 +11,6 @@ import ar.edu.itba.it.cg.yart.geometry.Point3d;
 
 public abstract class SamplerAbstract implements Sampler{
 	
-	public static int SAMPLES = 10;
-	//protected final Random random;
 	final protected int num_samples; // the number of points in a pattern
 	final protected int num_sets; // the number of sample sets (patterns) stored
 	final protected Point2d[] samples;  // sample points  on a unit square
@@ -24,7 +21,6 @@ public abstract class SamplerAbstract implements Sampler{
 	protected int jump; // random index jump
 	
 	public SamplerAbstract(final int num_samples, final int num_sets) {
-		//this.random = ThreadLocalRandom.current();
 		this.jump = 0;
 		this.count = 0;
 		this.num_samples = num_samples;
@@ -92,10 +88,23 @@ public abstract class SamplerAbstract implements Sampler{
 			final double pu = sin_theta * cos_phi;
 			final double pv = sin_theta * sin_phi;
 			final double pw = cos_theta;
-			this.hemisphereSamples[j] = new Point3d(pu, pv, pw); 
+			this.hemisphereSamples[j] = new Point3d(pu, pv, pw);
 		}
 	}
-	
+
+	public Point3d oneHemisphereSample(final double e) {
+		final Point2d sample = new Point2d(Math.random(), Math.random());
+		double cos_phi = Math.cos(2.0 * Math.PI * sample.x);
+		double sin_phi = Math.sin(2.0 * Math.PI * sample.x);
+		double cos_theta = Math.pow((1.0 - sample.y), 1.0 / (e + 1.0));
+		double sin_theta = Math.sqrt(1.0 - cos_theta * cos_theta);
+		double pu = sin_theta * cos_phi;
+		double pv = sin_theta * sin_phi;
+		double pw = cos_theta;
+
+		return new Point3d(pu, pv, pw);
+	}
+
 	protected void mapSamples2Sphere() {
 		double r1, r2;
 		double x, y, z;

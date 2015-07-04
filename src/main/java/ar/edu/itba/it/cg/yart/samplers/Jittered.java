@@ -1,7 +1,6 @@
 package ar.edu.itba.it.cg.yart.samplers;
 
 import java.util.concurrent.ThreadLocalRandom;
-
 import ar.edu.itba.it.cg.yart.geometry.Point2d;
 
 public class Jittered extends SamplerAbstract {

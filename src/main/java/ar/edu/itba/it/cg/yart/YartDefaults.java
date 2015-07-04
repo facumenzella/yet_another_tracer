@@ -17,6 +17,6 @@ public class YartDefaults {
 	public static final int DEFAULT_MAX_HOPS = 10;
 	public static final int DEFAULT_NUM_SAMPLES = 4;
 	
-	public static final float LIGHT_GAIN_MULTIPLIER = 2;
+	public static final float LIGHT_GAIN_MULTIPLIER = 1;
 
 }
