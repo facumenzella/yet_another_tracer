@@ -39,3 +39,7 @@ scenes/test
 # Logs
 
 *.log
+
+# Mac #
+
+*DS_Store
