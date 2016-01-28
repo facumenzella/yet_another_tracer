@@ -23,6 +23,11 @@ dependency-reduced-pom.xml
 .project
 .classpath
 
+# IntelliJ Files #
+
+*.iml
+.idea/
+
 # Images #
 
 images/render.png
