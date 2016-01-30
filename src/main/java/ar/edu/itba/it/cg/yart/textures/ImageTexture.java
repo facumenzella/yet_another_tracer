@@ -42,8 +42,8 @@ public class ImageTexture extends Texture {
 			mapping.getTexetlCoordinates(sr.localHitPoint, hres, vres,
 					coordinates);
 		} else {
-			int x = (int) (sr.v * (vres - 1));
-			int y = (int) (sr.u * (hres - 1));
+			int x = (int) (sr.v * (hres - 1));
+			int y = (int) (sr.u * (vres - 1));
 			coordinates.setLocation(x, y);
 		}
 //		int row = (int) coordinates.getX();
