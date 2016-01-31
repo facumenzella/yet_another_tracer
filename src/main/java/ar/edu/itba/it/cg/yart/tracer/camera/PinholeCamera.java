@@ -2,12 +2,13 @@ package ar.edu.itba.it.cg.yart.tracer.camera;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+import ar.edu.itba.it.cg.yart.YartDefaults;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Point2d;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
-import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
+import ar.edu.itba.it.cg.yart.matrix.ArrayColorMatrix;
 import ar.edu.itba.it.cg.yart.samplers.DiskSampler;
 import ar.edu.itba.it.cg.yart.tracer.Ray;
 import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
@@ -29,11 +30,10 @@ public class PinholeCamera extends CameraAbstract {
 	private double minX = -1;
 	private double maxY = 1;
 	private double minY = -1;
-	
-	// Default value according to LuxRender specs.
-	private double fov = 90;
-	private double lensRadius = 0.00625;
-	private double focalDistance = 0;
+
+	private double fov = YartDefaults.DEFAULT_FOV;
+	private double lensRadius = YartDefaults.DEFAULT_LENS_RADIUS;
+	private double focalDistance = YartDefaults.DEFAULT_FOCAL_DISTANCE;
 
 	private DiskSampler lensSampler;
 
@@ -48,17 +48,16 @@ public class PinholeCamera extends CameraAbstract {
 
 	@Override
 	public void renderScene(final Bucket bucket, Tracer rayTracer,
-			final ArrayIntegerMatrix result, final Stack stack) {
+							final ArrayColorMatrix result, final Stack stack) {
 
 		Color blackColor = Color.BLACK;
-		Color color = new Color(0, 0, 0, 0);
 		ViewPlane viewPlane = rayTracer.getViewPlane();
 		double adjustedPixelSize = viewPlane.pixelSize / zoom;
+		final Color color = new Color(Color.BLACK);
 		Ray ray = new Ray(new Point3d(0, 0, 0));
 		Vector3d focusPoint = new Vector3d(0, 0, 0);
 		final int n = (int) Math.sqrt((double) rayTracer.getNumSamples());
 		final double invNumSamples = 1 / (double) rayTracer.getNumSamples();
-
 		
 		int xStart = bucket.getX();
 		int xFinish = xStart + bucket.getWidth();
@@ -72,12 +71,9 @@ public class PinholeCamera extends CameraAbstract {
 		int row = yStart;
 		int col = xStart;
 		while (row < yFinish) {
-			color.r = blackColor.r;
-			color.g = blackColor.g;
-			color.b = blackColor.b;
-			color.a = blackColor.a;
 			int i = 0;
 			int j = 0;
+			color.set(Color.BLACK);
 			while (i < n) {
 				final double distributionX;
 				final double distributionY;
@@ -136,24 +132,26 @@ public class PinholeCamera extends CameraAbstract {
 			color.g *= invNumSamples;
 			color.b *= invNumSamples;
 
-			rayTracer.getToneMapper().mapColor(color);
+			/*rayTracer.getToneMapper().mapMe(color);
 
 			color.r = Math.pow(color.r, rayTracer.getGammaInv());
 			color.g = Math.pow(color.g, rayTracer.getGammaInv());
 			color.b = Math.pow(color.b, rayTracer.getGammaInv());
-			
+
 			// now we display the pixel
 			int ret = 0;
 			int alpha = (int) (color.a * 255);
 			int red = (int) (color.r * 255);
 			int green = (int) (color.g * 255);
 			int blue = (int) (color.b * 255);
-			
+
 			ret = alpha << 24 | red << 16 | green << 8 | blue;
-			
+
 			final int index =  (row * result.cols) + col;
 			result.matrix[index] = ret;
-			result.put(col, row, ret);
+			result.put(col, row, ret);*/
+
+			result.put((row * result.cols) + col, color);
 			col++;
 			if (col == xFinish) {
 				col = xStart;

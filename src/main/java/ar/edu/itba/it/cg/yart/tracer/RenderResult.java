@@ -1,6 +1,7 @@
 package ar.edu.itba.it.cg.yart.tracer;
 
-import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
+import ar.edu.itba.it.cg.yart.color.Color;
+import ar.edu.itba.it.cg.yart.matrix.ArrayColorMatrix;
 
 public class RenderResult {
 
@@ -11,7 +12,7 @@ public class RenderResult {
 	private long renderTime;
 	private long sceneLoadingTime;
 	private long preprocessingTime;
-	private ArrayIntegerMatrix pixels;
+	private ArrayColorMatrix pixels;
 	
 	private int triangles;
 	
@@ -19,11 +20,11 @@ public class RenderResult {
 	private long averageTime = 0;
 	private boolean displayRenderTime = false;
 	
-	public void setPixels(final ArrayIntegerMatrix pixels) {
+	public void setPixels(final ArrayColorMatrix pixels) {
 		this.pixels = pixels;
 	}
 
-	public ArrayIntegerMatrix getPixels() {
+	public ArrayColorMatrix getPixels() {
 		return pixels;
 	}
 

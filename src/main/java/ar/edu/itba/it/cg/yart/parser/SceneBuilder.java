@@ -175,7 +175,6 @@ public class SceneBuilder {
 			raytracer.setResolution(
 					i.getInteger("xresolution", YartDefaults.DEFAULT_XRES),
 					i.getInteger("yresolution", YartDefaults.DEFAULT_YRES));
-			raytracer.setGamma(i.getDouble("gamma", 2.2));
 			String tonemapper = i.getString("tonemapkernel", "linear");
 			if (tonemapper.equals("linear")) {
 				raytracer.setToneMapper(new LinearToneMapper());
@@ -190,6 +189,7 @@ public class SceneBuilder {
 				LOGGER.warn("Tone Mapping kernel \"{}\" unsupported. Defaulting to linear.", tonemapper);
 				raytracer.setToneMapper(new LinearToneMapper());
 			}
+			raytracer.getToneMapper().setGamma(i.getDouble("gamma", YartDefaults.GAMMA));
 			break;
 		case LOOKAT:
 			double[] params = ParserUtils.parseDoubleArray(i.getParameters());
@@ -430,7 +430,7 @@ public class SceneBuilder {
 				if (meshes.containsKey(meshData)) {
 					mesh = meshes.get(meshData);
 				} else {
-					// Load UV map
+					// Load UV mapMe
 					if (uvList != null && uvList.length > 1) {
 						int items = (int) Math.ceil(uvList.length / 2);
 						uList = new double[items];

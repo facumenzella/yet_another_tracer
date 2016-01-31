@@ -5,6 +5,7 @@ import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import ar.edu.itba.it.cg.yart.matrix.ArrayColorMatrix;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +13,6 @@ import ar.edu.itba.it.cg.yart.YartDefaults;
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
-import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
 import ar.edu.itba.it.cg.yart.tracer.buckets.Bucket;
 import ar.edu.itba.it.cg.yart.tracer.buckets.BucketRenderAction;
 import ar.edu.itba.it.cg.yart.tracer.camera.Camera;
@@ -71,7 +71,6 @@ public class YATracer implements Tracer {
 		setResolution(YartDefaults.DEFAULT_XRES, YartDefaults.DEFAULT_YRES);
 		setNumSamples(numSamples);
 		setCamera(new PinholeCamera(eye, lookat, up, distance, zoom, tMax, strategy));
-		setGamma(2.2);
 		setToneMapper(new LinearToneMapper());
 	}
 
@@ -88,7 +87,7 @@ public class YATracer implements Tracer {
 		preprocessWorld();
 		renderResult.setTriangles(world.getTriangleCount());
 		renderResult.startRender();
-		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
+		ArrayColorMatrix result = new ArrayColorMatrix(hRes, vRes);
 		renderResult.setPixels(result);
 
 		this.buckets = getBuckets(bucketSize, bucketSize);
@@ -116,7 +115,7 @@ public class YATracer implements Tracer {
 	private RenderResult render(final World world) {
 		preprocessWorld();
 		renderResult.setTriangles(world.getTriangleCount());
-		ArrayIntegerMatrix result = new ArrayIntegerMatrix(hRes, vRes);
+		ArrayColorMatrix result = new ArrayColorMatrix(hRes, vRes);
 		renderResult.startRender();
 		renderResult.setPixels(result);
 
@@ -269,22 +268,6 @@ public class YATracer implements Tracer {
 		renderResult.startPreprocessing();
 		world.preprocess();
 		renderResult.finishPreprocessing();
-	}
-
-	@Override
-	public void setGamma(final double gamma) {
-		this.gamma = gamma;
-		this.gammaInv = 1 / gamma;
-	}
-
-	@Override
-	public double getGamma() {
-		return gamma;
-	}
-
-	@Override
-	public double getGammaInv() {
-		return gammaInv;
 	}
 
 	@Override

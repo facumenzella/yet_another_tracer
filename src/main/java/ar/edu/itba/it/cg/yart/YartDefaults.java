@@ -9,6 +9,8 @@ public class YartDefaults {
 	
 	public static final int DEFAULT_XRES = 800;
 	public static final int DEFAULT_YRES = 600;
+	public static final double GAMMA = 2.2;
+	public static final double INV_GAMMA = 1 / GAMMA;
 	public static final Point3d DEFAULT_EYE = new Point3d(200, 0, 0);
 	public static final Point3d DEFAULT_LOOKAT = new Point3d(0, 0, 0);
 	public static final Vector3d DEFAULT_UP = new Vector3d(0, 0, 1);
