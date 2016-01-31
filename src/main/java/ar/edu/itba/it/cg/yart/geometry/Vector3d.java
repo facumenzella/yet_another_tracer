@@ -65,6 +65,46 @@ public class Vector3d {
 		this.w += n;
 		return this;
 	}
+
+	public Vector3d set(final Vector3d other) {
+		this.x = other.x;
+		this.y = other.y;
+		this.z = other.z;
+		this.w = other.w;
+		return this;
+	}
+
+	public Vector3d set(final double[] values) {
+		this.x = values[0];
+		this.y = values[1];
+		this.z = values[2];
+		this.w = 0;
+		return this;
+	}
+
+	public Vector3d scaleMe(final double factor) {
+		this.x *= factor;
+		this.y *= factor;
+		this.z *= factor;
+		this.w *= factor;
+		return this;
+	}
+
+	public Vector3d addMe(final Vector3d other) {
+		this.x += other.x;
+		this.y += other.y;
+		this.z += other.z;
+		this.w += other.w;
+		return this;
+	}
+
+	public Vector3d addMe(final Point3d other) {
+		this.x += other.x;
+		this.y += other.y;
+		this.z += other.z;
+		this.w += other.w;
+		return this;
+	}
 	
 	public Vector3d sub(final Vector3d other) {
 		return new Vector3d(x - other.x, y - other.y, z - other.z);

@@ -615,6 +615,10 @@ public class SceneBuilder {
 						screenWindow[2], screenWindow[3]);
 				cam.setFov(identifier.getDouble("fov",
 						YartDefaults.DEFAULT_FOV));
+				cam.setLensRadius(identifier.getDouble("lensradius",
+						YartDefaults.DEFAULT_LENS_RADIUS));
+				cam.setFocalDistance(identifier.getDouble("focaldistance",
+						YartDefaults.DEFAULT_FOCAL_DISTANCE));
 				ret = cam;
 			} else {
 				LOGGER.warn("Camera type \"{}\" unsupported", type);

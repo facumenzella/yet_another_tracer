@@ -9,7 +9,9 @@ public class Ray {
 	public double[] direction;
 	public int depth;
 	
-	public Ray() {};
+	public Ray() {
+
+	};
 	
 	public Ray(final Point3d origin, final Vector3d direction) {
 		this.origin = origin;

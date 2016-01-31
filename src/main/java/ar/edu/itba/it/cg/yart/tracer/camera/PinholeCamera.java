@@ -8,6 +8,7 @@ import ar.edu.itba.it.cg.yart.geometry.Point2d;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
+import ar.edu.itba.it.cg.yart.samplers.DiskSampler;
 import ar.edu.itba.it.cg.yart.tracer.Ray;
 import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.tracer.Tracer;
@@ -31,6 +32,10 @@ public class PinholeCamera extends CameraAbstract {
 	
 	// Default value according to LuxRender specs.
 	private double fov = 90;
+	private double lensRadius = 0.00625;
+	private double focalDistance = 0;
+
+	private DiskSampler lensSampler;
 
 	public PinholeCamera(final Point3d eye, final Point3d lookat,
 			final Vector3d up, final double distance, final double zoom, final double tMax, final TracerStrategy strategy) {
@@ -49,7 +54,8 @@ public class PinholeCamera extends CameraAbstract {
 		Color color = new Color(0, 0, 0, 0);
 		ViewPlane viewPlane = rayTracer.getViewPlane();
 		double adjustedPixelSize = viewPlane.pixelSize / zoom;
-		Ray ray = new Ray(this.eye);
+		Ray ray = new Ray(new Point3d(0, 0, 0));
+		Vector3d focusPoint = new Vector3d(0, 0, 0);
 		final int n = (int) Math.sqrt((double) rayTracer.getNumSamples());
 		final double invNumSamples = 1 / (double) rayTracer.getNumSamples();
 
@@ -95,8 +101,25 @@ public class PinholeCamera extends CameraAbstract {
 				d[0] = dx / length;
 				d[1] = dy / length;
 				d[2] = dz / length;
-				
+
 				ray.direction = d;
+				ray.origin.set(this.eye);
+
+				// Apply depth of field, if enabled
+				if (lensRadius > 0 && focalDistance > 0 && lensSampler != null) {
+					focusPoint.set(ray.direction).scaleMe(focalDistance).addMe(ray.origin);
+					Point2d sample = lensSampler.getSample();
+					ray.origin.x += sample.x;
+					ray.origin.z += sample.y;
+					ray.direction[0] = focusPoint.x - ray.origin.x;
+					ray.direction[1] = focusPoint.y - ray.origin.y;
+					ray.direction[2] = focusPoint.z - ray.origin.z;
+					double length2 = ray.direction[0] * ray.direction[0] + ray.direction[1] * ray.direction[1] + ray.direction[2] * ray.direction[2];
+					ray.direction[0] /= length2;
+					ray.direction[1] /= length2;
+					ray.direction[2] /= length2;
+				}
+
 				sr.hitObject = false;
 				Color c = world.getTree().traceRay(ray, sr, tMax, stack, strategy);
 //				System.out.println(c);
@@ -153,6 +176,28 @@ public class PinholeCamera extends CameraAbstract {
 		this.fov = fov;
 
 		invalidateViewPlane();
+	}
+
+	public double getLensRadius() {
+		return lensRadius;
+	}
+
+	/**
+	 * Sets the lens radius. Pre-generates samples to retrieve them efficiently during rendering, so this is an
+	 * expensive operation.
+	 * @param lensRadius The lens radius. Must be a non-zero number. Negative numbers are made positive.
+	 */
+	public void setLensRadius(final double lensRadius) {
+		this.lensRadius = Math.abs(lensRadius);
+		lensSampler = new DiskSampler(1000, lensRadius);
+	}
+
+	public double getFocalDistance() {
+		return focalDistance;
+	}
+	
+	public void setFocalDistance(final double focalDistance) {
+		this.focalDistance = Math.abs(focalDistance);
 	}
 	
 	private double getPixelSize(final int hRes, final int vRes) {
