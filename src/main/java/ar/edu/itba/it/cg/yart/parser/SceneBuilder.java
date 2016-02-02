@@ -1,6 +1,7 @@
 package ar.edu.itba.it.cg.yart.parser;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayDeque;
@@ -517,7 +518,7 @@ public class SceneBuilder {
 					areaLight.setMaterial(emissive);
 					areaLight.setShape(pointLightInstance);
 					raytracer.getWorld().addObject(pointLightInstance);
-					ret = areaLight;					
+					ret = areaLight;
 				}
 			} else if (type.equals("distant")) {
 				Color l = identifier.getColor("l", Color.whiteColor());
@@ -536,8 +537,26 @@ public class SceneBuilder {
 				Directional light = new Directional(gain, l, result);
 				ret = light;
 			} else if (type.equals("infinite")) {
-				Color l = identifier.getColor("l", Color.whiteColor());
-				AmbientLight light = new AmbientLight(gain, l);
+				AmbientLight light = null;
+				if (identifier.hasProperty("mapname")) {
+					String filename = identifier.getString("mapname");
+					try {
+						String mapping = identifier.getString("mapping", null);
+						if (mapping != null && !mapping.equalsIgnoreCase(mapping)) {
+							LOGGER.warn("Environment mapping type \"{}\" unsupported. Only \"latlong\" is supported.",
+							mapping);
+						}
+						BufferedImage environmentMap = ImageIO.read(basePath.resolve(filename).toFile());
+						light = new AmbientLight(environmentMap);
+					}
+					catch (IOException e) {
+						LOGGER.warn("Couldn't load environment map \"{}\": {}", filename, e.getMessage());
+					}
+				}
+				if (light == null) {
+					Color l = identifier.getColor("l", Color.whiteColor());
+					light = new AmbientLight(gain, l);
+				}
 				ret = light;
 			} else if (type.equals("area")) {
 				ret = buildAreaLight(identifier);

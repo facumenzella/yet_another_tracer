@@ -35,7 +35,6 @@ import ar.edu.itba.it.cg.yart.transforms.Matrix4d;
 
 public class World {
 
-	public Color backgroundColor;
 	private List<GeometricObject> objects = new ArrayList<GeometricObject>();
 	private List<Mesh> meshes = new ArrayList<Mesh>();
 	private List<Light> lights = new ArrayList<Light>();
@@ -51,7 +50,6 @@ public class World {
 	 */
 	public World() {
 		this.ambientLight = new AmbientLight(Color.blackColor());
-		setBackgroundColor(Color.blackColor());
 	}
 	
 	public int getTriangleCount() {
@@ -130,10 +128,6 @@ public class World {
 		menzella.applyTransformation(menzellaTrans);
 		final Matte menzellaMaterial = new Matte().setCd(menzellaTexture).setKa(0).setKd(1);
 		menzella.setMaterial(menzellaMaterial);
-		
-		
-		
-		setBackgroundColor(Color.blackColor());
 
 		final Instance billiardBall = new Instance(new Sphere());
 		final Matrix4d ballTrans = Matrix4d.scaleMatrix(20, 20, 20).rotateY(0).transform(40,40,-10);
@@ -199,13 +193,9 @@ public class World {
 		this.ambientLight = ambientLight;
 	}
 	
-	public void setBackgroundColor(final Color color) {
-		backgroundColor = new Color(color.r, color.g, color.b, color.a);
+	public Color getBackgroundColor(final Vector3d direction) {
+		return ambientLight.getColor(direction);
 	}
-	
-//	public Color getBackgroundColor() {
-//		return ambientLight.getColor();
-//	}
 	
 	public void addObjects(final List<GeometricObject> objects) {
 		for (GeometricObject o : objects) {
