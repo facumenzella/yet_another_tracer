@@ -265,11 +265,9 @@ public class SceneBuilder {
 					LOGGER.warn("Metal roughness must be a number between 0 and 1");
 					roughness = 1;
 				}
-				
-				Color fresnel = identifier.getColor("fresnel", new Color(0.5));
-				
+
 				Metal2 mat = new Metal2();
-				mat.setFresnel(fresnel);
+				mat.setFresnel(getColorOrTexture(identifier, "fresnel", new Color(0.5)));
 				mat.setRoughness(roughness);
 				ret = mat;
 			}
