@@ -87,7 +87,7 @@ public class AmbientLight extends AbstractLight {
 		double u = (Math.PI + phi) / (2 * Math.PI);
 		double v = theta / Math.PI;
 
-		int color = environmentMap.getRGB((int) (u * environmentMap.getWidth()), (int) (v * environmentMap.getHeight()));
+		int color = environmentMap.getRGB((int) (u * (environmentMap.getWidth() - 1)), (int) (v * (environmentMap.getHeight() - 1)));
 		int r = (color >> 16) & 0xFF;
 		int g = (color >> 8) & 0xFF;
 		int b = (color) & 0xFF;
