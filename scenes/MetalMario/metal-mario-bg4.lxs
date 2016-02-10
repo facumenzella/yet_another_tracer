@@ -94,7 +94,7 @@ AttributeEnd # ""
 AttributeBegin
 
 LightSource "infinite"
-	"string mapname" ["backgrounds/bg01.jpg"]
+	"string mapname" ["backgrounds/bg04.jpg"]
 AttributeEnd
 
 WorldEnd
