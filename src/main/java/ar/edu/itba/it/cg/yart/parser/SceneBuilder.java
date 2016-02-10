@@ -272,6 +272,50 @@ public class SceneBuilder {
 				mat.setRoughness(roughness);
 				ret = mat;
 			}
+			else if (type.equals("glossy")) {
+				double uroughness = identifier.getDouble("uroughness", 0.001);
+				double vroughness = identifier.getDouble("vroughness", 0.001);
+				double ks = identifier.getDouble("ks", 0.5);
+
+				if (!identifier.hasProperty("uroughness")) {
+					uroughness = vroughness;
+				}
+				else if (!identifier.hasProperty("vroughness")) {
+					vroughness = uroughness;
+				}
+
+				double finalRoughness = Math.max(uroughness, vroughness);
+
+				if (finalRoughness <= 0) {
+					LOGGER.warn("Glossy roughness must be a number between 0 and 1");
+					finalRoughness = 0.001;
+				}
+				else if (finalRoughness > 1) {
+					LOGGER.warn("Glossy roughness must be a number between 0 and 1");
+					finalRoughness = 1;
+				}
+
+				if (ks < 0) {
+					LOGGER.warn("Ks must be a number between 0 and 1");
+					ks = 0;
+				}
+				else if (ks > 1) {
+					LOGGER.warn("Ks must be a number between 0 and 1");
+					ks = 1;
+				}
+
+				double exponent = 1 / finalRoughness;
+
+				Reflective mat = new Reflective();
+				mat.setCd(getColorOrTexture(identifier, "Kd", Color.blackColor()));
+				mat.setCr(getColorOrTexture(identifier, "Kd", Color.whiteColor()));
+				mat.setKd(1);
+				mat.setKs(ks);
+				mat.setKa(0.3);
+				mat.setExp(exponent);
+				mat.setKr(1 - finalRoughness);
+				ret = mat;
+			}
 		} catch (Exception e) {
 			LOGGER.warn(e.getMessage());
 		}
