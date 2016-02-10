@@ -90,4 +90,11 @@ Shape "trianglemesh"
 	"string name" ["Lamp"]
 
 AttributeEnd # ""
+
+AttributeBegin
+
+LightSource "infinite"
+	"string mapname" ["02.jpg"]
+AttributeEnd
+
 WorldEnd
