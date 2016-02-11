@@ -186,8 +186,13 @@ public class PinholeCamera extends CameraAbstract {
 	 * @param lensRadius The lens radius. Must be a non-zero number. Negative numbers are made positive.
 	 */
 	public void setLensRadius(final double lensRadius) {
-		this.lensRadius = Math.abs(lensRadius);
-		lensSampler = new DiskSampler(1000, lensRadius);
+		if (lensRadius == 0) {
+			lensSampler = null;
+		}
+		else {
+			this.lensRadius = Math.abs(lensRadius);
+			lensSampler = new DiskSampler(1000, lensRadius);
+		}
 	}
 
 	public double getFocalDistance() {
