@@ -1,0 +1,34 @@
+# Materials File
+
+Texture "FloorTexture" "color" "imagemap"
+	"string filename" ["Textures/checkerboard.png"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["planar"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "Floor"
+	"texture Kd" ["FloorTexture"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+MakeNamedMaterial "Lamp"
+	"string type" ["null"]
+
+MakeNamedMaterial "FarSphere"
+	"color Kd" [0.8 0.1 0.1]
+	"string type" ["matte"]
+
+MakeNamedMaterial "Sphere"
+	"color Kd" [0.1 0.8 0.1]
+	"string type" ["matte"]
+
+MakeNamedMaterial "NearSphere"
+	"color Kd" [0.1 0.1 0.8]
+	"string type" ["matte"]
