@@ -51,6 +51,7 @@ import ar.edu.itba.it.cg.yart.textures.wrappers.RepeatWrap;
 import ar.edu.itba.it.cg.yart.textures.wrappers.Wrapper;
 import ar.edu.itba.it.cg.yart.tracer.Tracer;
 import ar.edu.itba.it.cg.yart.tracer.camera.Camera;
+import ar.edu.itba.it.cg.yart.tracer.camera.FishEyeCamera;
 import ar.edu.itba.it.cg.yart.tracer.camera.PinholeCamera;
 import ar.edu.itba.it.cg.yart.tracer.tonemapper.LinearToneMapper;
 import ar.edu.itba.it.cg.yart.tracer.tonemapper.OutOfGamutToneMapper;
@@ -659,28 +660,39 @@ public class SceneBuilder {
 		final String type = identifier.getParameters()[0];
 
 		try {
+			double[] defaults = { -1, 1, -1, 1 };
+			double[] screenWindow = identifier.getDoubles("screenwindow",
+					defaults);
+			double fov = identifier.getDouble("fov",
+					YartDefaults.DEFAULT_FOV);
+			
+			if (screenWindow.length < 4) {
+				LOGGER.warn("Screen Window needs 4 floats. Using default value");
+				screenWindow = defaults;
+			}
+			
 			if (type.equals("perspective")) {
 				PinholeCamera cam = new PinholeCamera(
 						YartDefaults.DEFAULT_EYE,
 						YartDefaults.DEFAULT_LOOKAT, YartDefaults.DEFAULT_UP,
 						500, 1, YartDefaults.DEFAULT_RAY_DEPTH, tracerType.getStrategy());
-				double[] defaults = { -1, 1, -1, 1 };
-				double[] screenWindow = identifier.getDoubles("screenwindow",
-						defaults);
-
-				if (screenWindow.length < 4) {
-					LOGGER.warn("Screen Window needs 4 floats. Using default value");
-					screenWindow = defaults;
-				}
+				
 				cam.setScreenWindow(screenWindow[0], screenWindow[1],
 						screenWindow[2], screenWindow[3]);
-				cam.setFov(identifier.getDouble("fov",
-						YartDefaults.DEFAULT_FOV));
+				cam.setFov(fov);
 				cam.setLensRadius(identifier.getDouble("lensradius",
 						YartDefaults.DEFAULT_LENS_RADIUS));
 				cam.setFocalDistance(identifier.getDouble("focaldistance",
 						YartDefaults.DEFAULT_FOCAL_DISTANCE));
 				ret = cam;
+			} else if (type.equals("fisheye")) {
+				FishEyeCamera cam = new FishEyeCamera(
+						YartDefaults.DEFAULT_EYE,
+						YartDefaults.DEFAULT_LOOKAT, YartDefaults.DEFAULT_UP,
+						1, YartDefaults.DEFAULT_RAY_DEPTH, fov, tracerType.getStrategy());
+				cam.setFov(fov);
+				cam.setScreenWindow(screenWindow[0], screenWindow[1],
+						screenWindow[2], screenWindow[3]);
 			} else {
 				LOGGER.warn("Camera type \"{}\" unsupported", type);
 			}

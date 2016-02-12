@@ -168,6 +168,14 @@ public class FishEyeCamera extends CameraAbstract {
 
 		invalidateViewPlane();
 	}
+	
+	public void setScreenWindow(final double minX, final double maxX, final double minY, final double maxY) {
+		this.maxX = maxX;
+		this.minX = minX;
+		this.maxY = maxY;
+		this.minY = minY;
+		invalidateViewPlane();
+	}
 
 	private double getPixelSize(final int hRes, final int vRes) {
 		double pixelSize = 1;
