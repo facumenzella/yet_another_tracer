@@ -16,7 +16,10 @@ import ar.edu.itba.it.cg.yart.geometry.Vector3d;
 import ar.edu.itba.it.cg.yart.tracer.buckets.Bucket;
 import ar.edu.itba.it.cg.yart.tracer.buckets.BucketRenderAction;
 import ar.edu.itba.it.cg.yart.tracer.camera.Camera;
+import ar.edu.itba.it.cg.yart.tracer.camera.FishEyeCamera;
 import ar.edu.itba.it.cg.yart.tracer.camera.PinholeCamera;
+import ar.edu.itba.it.cg.yart.tracer.strategy.PathTracingStrategy;
+import ar.edu.itba.it.cg.yart.tracer.strategy.RayTracingStrategy;
 import ar.edu.itba.it.cg.yart.tracer.strategy.TracerStrategy;
 import ar.edu.itba.it.cg.yart.tracer.tonemapper.LinearToneMapper;
 import ar.edu.itba.it.cg.yart.tracer.tonemapper.ToneMapper;
@@ -71,6 +74,7 @@ public class YATracer implements Tracer {
 		setResolution(YartDefaults.DEFAULT_XRES, YartDefaults.DEFAULT_YRES);
 		setNumSamples(numSamples);
 		setCamera(new PinholeCamera(eye, lookat, up, distance, zoom, tMax, strategy));
+
 		setToneMapper(new LinearToneMapper());
 	}
 
