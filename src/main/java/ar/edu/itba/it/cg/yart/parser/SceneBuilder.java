@@ -693,6 +693,7 @@ public class SceneBuilder {
 				cam.setFov(fov);
 				cam.setScreenWindow(screenWindow[0], screenWindow[1],
 						screenWindow[2], screenWindow[3]);
+				ret = cam;
 			} else {
 				LOGGER.warn("Camera type \"{}\" unsupported", type);
 			}
