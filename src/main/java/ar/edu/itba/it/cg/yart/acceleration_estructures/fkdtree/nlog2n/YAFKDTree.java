@@ -343,7 +343,7 @@ public class YAFKDTree {
 	public Color traceRay(final Ray ray, final ShadeRec sr, final double tMax,
 			final Stack stack, final TracerStrategy strategy) {
 		if (!rootAABB.hit(ray) || ray.depth > AbstractTracer.HOPS) {
-			return sr.world.backgroundColor;
+			return sr.world.getBackgroundColor(new Vector3d(ray.direction[0], ray.direction[1], ray.direction[2]));
 		}
 
 		double tNear = 0;
@@ -455,7 +455,7 @@ public class YAFKDTree {
 
 			// If stack is empty
 			if (stack.peek() == top) {
-				return sr.world.backgroundColor;
+				return sr.world.getBackgroundColor(new Vector3d(ray.direction[0], ray.direction[1], ray.direction[2]));
 			}
 		}
 	}

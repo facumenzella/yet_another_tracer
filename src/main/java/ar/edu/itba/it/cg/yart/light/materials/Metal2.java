@@ -10,6 +10,7 @@ import ar.edu.itba.it.cg.yart.light.AreaLight;
 import ar.edu.itba.it.cg.yart.light.Light;
 import ar.edu.itba.it.cg.yart.light.brdf.CookTorrance;
 import ar.edu.itba.it.cg.yart.light.brdf.PDF;
+import ar.edu.itba.it.cg.yart.textures.Texture;
 import ar.edu.itba.it.cg.yart.tracer.Ray;
 import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
 import ar.edu.itba.it.cg.yart.tracer.strategy.PathTracingStrategy;
@@ -133,7 +134,7 @@ public class Metal2 extends MaterialAbstract {
             return colorL;
     }      
    
-    public Metal2 setFresnel(final Color fresnel) {
+    public Metal2 setFresnel(final Texture fresnel) {
             specularBRDF.setFresnel(fresnel);
             return this;
     }

@@ -3,12 +3,13 @@ package ar.edu.itba.it.cg.yart.light.brdf;
 import ar.edu.itba.it.cg.yart.color.Color;
 import ar.edu.itba.it.cg.yart.geometry.Point3d;
 import ar.edu.itba.it.cg.yart.geometry.Vector3d;
+import ar.edu.itba.it.cg.yart.textures.Texture;
 import ar.edu.itba.it.cg.yart.tracer.ShadeRec;
 
 public class CookTorrance extends BRDF {
 	 
-    private Color ks;
-    private Color kd;
+    private Texture ks;
+    private Texture kd;
     private double roughness;
     private final double pi = Math.PI;
     private final double invPi = 1 / pi;
@@ -19,6 +20,8 @@ public class CookTorrance extends BRDF {
              * wi is light direction wo is eye direction;
              */
             Vector3d normal = sr.normal;
+            final Color ks2 = ks.getColor(sr);
+            final Color kd2 = kd.getColor(sr);
 
             double rSquared = roughness * roughness;
 
@@ -46,15 +49,15 @@ public class CookTorrance extends BRDF {
 
             /* We calculate fresnel Schlick aproximation */
             double aux = Math.pow(1.0 - VdotH, 5.0);
-            Color F = ks.complement();
+            Color F = ks2.complement();
             F.multiplyEquals(aux);
-            F.addEquals(ks);
+            F.addEquals(ks2);
 
             double aux2 = (G * D) / (NdotV * NdotL * pi);
-            F.multiplyEquals(aux2).multiplyEquals(ks).multiplyEquals(NdotL);
+            F.multiplyEquals(aux2).multiplyEquals(ks2).multiplyEquals(NdotL);
 
-            kd.multiplyEquals(NdotL);
-            return kd.add(F);
+            kd2.multiplyEquals(NdotL);
+            return kd2.add(F);
     }
 
     @Override
@@ -94,7 +97,7 @@ public class CookTorrance extends BRDF {
             wi.normalizeMe();
             final double rdotwi= (r.dot(wi));
             pdf.pdf = rdotwi * (sr.normal.dot(wi));
-            return ks.multiply(rdotwi);
+            return ks.getColor(sr).multiply(rdotwi);
 
     }
 
@@ -102,7 +105,7 @@ public class CookTorrance extends BRDF {
             this.roughness = roughness;
     }
 
-    public void setFresnel(final Color fresnel) {
+    public void setFresnel(final Texture fresnel) {
             this.ks = fresnel;
             this.kd = fresnel.complement();
     }

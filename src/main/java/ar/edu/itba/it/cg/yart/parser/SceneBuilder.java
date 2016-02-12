@@ -1,6 +1,7 @@
 package ar.edu.itba.it.cg.yart.parser;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayDeque;
@@ -265,12 +266,54 @@ public class SceneBuilder {
 					LOGGER.warn("Metal roughness must be a number between 0 and 1");
 					roughness = 1;
 				}
-				
-				Color fresnel = identifier.getColor("fresnel", new Color(0.5));
-				
+
 				Metal2 mat = new Metal2();
-				mat.setFresnel(fresnel);
+				mat.setFresnel(getColorOrTexture(identifier, "fresnel", new Color(0.5)));
 				mat.setRoughness(roughness);
+				ret = mat;
+			}
+			else if (type.equals("glossy")) {
+				double uroughness = identifier.getDouble("uroughness", 0.001);
+				double vroughness = identifier.getDouble("vroughness", 0.001);
+				double ks = identifier.getDouble("ks", 0.5);
+
+				if (!identifier.hasProperty("uroughness")) {
+					uroughness = vroughness;
+				}
+				else if (!identifier.hasProperty("vroughness")) {
+					vroughness = uroughness;
+				}
+
+				double finalRoughness = Math.max(uroughness, vroughness);
+
+				if (finalRoughness <= 0) {
+					LOGGER.warn("Glossy roughness must be a number between 0 and 1");
+					finalRoughness = 0.001;
+				}
+				else if (finalRoughness > 1) {
+					LOGGER.warn("Glossy roughness must be a number between 0 and 1");
+					finalRoughness = 1;
+				}
+
+				if (ks < 0) {
+					LOGGER.warn("Ks must be a number between 0 and 1");
+					ks = 0;
+				}
+				else if (ks > 1) {
+					LOGGER.warn("Ks must be a number between 0 and 1");
+					ks = 1;
+				}
+
+				double exponent = 1 / finalRoughness;
+
+				Reflective mat = new Reflective();
+				mat.setCd(getColorOrTexture(identifier, "Kd", Color.blackColor()));
+				mat.setCr(getColorOrTexture(identifier, "Kd", Color.whiteColor()));
+				mat.setKd(1);
+				mat.setKs(ks);
+				mat.setKa(0.3);
+				mat.setExp(exponent);
+				mat.setKr(1 - finalRoughness);
 				ret = mat;
 			}
 		} catch (Exception e) {
@@ -519,7 +562,7 @@ public class SceneBuilder {
 					areaLight.setMaterial(emissive);
 					areaLight.setShape(pointLightInstance);
 					raytracer.getWorld().addObject(pointLightInstance);
-					ret = areaLight;					
+					ret = areaLight;
 				}
 			} else if (type.equals("distant")) {
 				Color l = identifier.getColor("l", Color.whiteColor());
@@ -538,8 +581,26 @@ public class SceneBuilder {
 				Directional light = new Directional(gain, l, result);
 				ret = light;
 			} else if (type.equals("infinite")) {
-				Color l = identifier.getColor("l", Color.whiteColor());
-				AmbientLight light = new AmbientLight(gain, l);
+				AmbientLight light = null;
+				if (identifier.hasProperty("mapname")) {
+					String filename = identifier.getString("mapname");
+					try {
+						String mapping = identifier.getString("mapping", null);
+						if (mapping != null && !mapping.equalsIgnoreCase(mapping)) {
+							LOGGER.warn("Environment mapping type \"{}\" unsupported. Only \"latlong\" is supported.",
+							mapping);
+						}
+						BufferedImage environmentMap = ImageIO.read(basePath.resolve(filename).toFile());
+						light = new AmbientLight(environmentMap);
+					}
+					catch (IOException e) {
+						LOGGER.warn("Couldn't load environment map \"{}\": {}", filename, e.getMessage());
+					}
+				}
+				if (light == null) {
+					Color l = identifier.getColor("l", Color.whiteColor());
+					light = new AmbientLight(gain, l);
+				}
 				ret = light;
 			} else if (type.equals("area")) {
 				ret = buildAreaLight(identifier);
