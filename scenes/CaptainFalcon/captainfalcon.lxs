@@ -33,8 +33,8 @@ Camera "perspective"
 	"float shutterclose" [0.041666666666667]
 
 Film "fleximage"
-	"integer xresolution" [960]
-	"integer yresolution" [540]
+	"integer xresolution" [1920]
+	"integer yresolution" [1080]
 	"float gamma" [2.200000000000000]
 	"float colorspace_white" [0.314275000000000 0.329411000000000]
 	"float colorspace_red" [0.630000000000000 0.340000000000000]
@@ -94,4 +94,11 @@ Shape "sphere"
 	"string name" ["Lamp"]
 
 AttributeEnd # ""
+
+AttributeBegin
+
+LightSource "infinite"
+	"string mapname" ["textures/background.jpg"]
+AttributeEnd
+
 WorldEnd
