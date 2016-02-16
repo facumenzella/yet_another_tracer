@@ -2,10 +2,10 @@ package ar.edu.itba.it.cg.yart.tracer.tonemapper;
 
 import ar.edu.itba.it.cg.yart.color.Color;
 
-public class LinearToneMapper implements ToneMapper {
+public class LinearToneMapper extends AbstractToneMapper {
 
 	@Override
-	public Color mapColor(Color color) {
+	public Color mapMe(Color color) {
 		double max = Math.max(color.r, Math.max(color.g, color.b));
 		if (max > 1.0) {
 			color.r /= max;
@@ -13,7 +13,7 @@ public class LinearToneMapper implements ToneMapper {
 			color.b /= max;
 		}
 		
-		return color;
+		return super.mapMe(color);
 	}
 
 }

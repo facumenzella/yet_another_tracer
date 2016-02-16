@@ -1,0 +1,188 @@
+# Materials File
+
+MakeNamedMaterial "Room"
+	"color Kd" [0.63999999 0.63999999 0.63999999]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "Cockpit_color" "color" "imagemap"
+	"string filename" ["textures/Material__1.JPG"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "Cockpit"
+	"texture Kd" ["Cockpit_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "BlueFalcon01_color" "color" "imagemap"
+	"string filename" ["textures/M_05___Default1.JPG"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "BlueFalcon01"
+	"texture Kd" ["BlueFalcon01_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "BlueFalcon02_color" "color" "imagemap"
+	"string filename" ["textures/M_06___Default1.JPG"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "BlueFalcon02"
+	"texture Kd" ["BlueFalcon02_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+MakeNamedMaterial "Windshield"
+	"bool architectural" ["false"]
+	"float cauchyb" [0.000000000000000]
+	"float film" [0.000000000000000]
+	"float filmindex" [1.333299994468689]
+	"float index" [1.519999980926514]
+	"color Kr" [1 1 1]
+	"color Kt" [1.00000000 1.00000000 1.00000000]
+	"string type" ["glass"]
+
+Texture "Body_color" "color" "imagemap"
+	"string filename" ["textures/cap_body.png"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "Buttons"
+	"texture Kd" ["Body_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "Equipment_color" "color" "imagemap"
+	"string filename" ["textures/cap_equipment.png"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "Equipment"
+	"texture Kd" ["Equipment_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+MakeNamedMaterial "Eyes.001"
+	"color Kd" [1.00000000 1.00000000 1.00000000]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "Helmet_color" "color" "imagemap"
+	"string filename" ["textures/cap_helmet.png"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "Helmet"
+	"texture Kd" ["Helmet_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+MakeNamedMaterial "ShoulderPad"
+	"texture Kd" ["Helmet_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+MakeNamedMaterial "Body"
+	"texture Kd" ["Body_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "Scarf_color" "color" "imagemap"
+	"string filename" ["textures/cap_scarf.png"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "Scarf"
+	"texture Kd" ["Scarf_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+MakeNamedMaterial "Buckle"
+	"texture Kd" ["Equipment_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "Face_color" "color" "imagemap"
+	"string filename" ["textures/cap_face.png"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "Head"
+	"texture Kd" ["Face_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+MakeNamedMaterial "Visor"
+	"color Kd" [0.05 0.05 0.05]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+MakeNamedMaterial "Lamp"
+	"string type" ["null"]

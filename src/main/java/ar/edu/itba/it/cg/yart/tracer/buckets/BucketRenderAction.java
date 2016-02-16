@@ -6,7 +6,7 @@ import java.util.concurrent.RecursiveAction;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import ar.edu.itba.it.cg.yart.acceleration_estructures.fkdtree.Stack;
-import ar.edu.itba.it.cg.yart.matrix.ArrayIntegerMatrix;
+import ar.edu.itba.it.cg.yart.matrix.ArrayColorMatrix;
 import ar.edu.itba.it.cg.yart.tracer.Tracer;
 import ar.edu.itba.it.cg.yart.tracer.Tracer.TracerCallbacks;
 
@@ -15,7 +15,7 @@ public class BucketRenderAction extends RecursiveAction{
 	private static final long serialVersionUID = -3222014814746266629L;
 	
 	private final Tracer raytracer;
-	private final ArrayIntegerMatrix result;
+	private final ArrayColorMatrix result;
 	private final TracerCallbacks callback;
 	private final Bucket[] buckets;
 	private AtomicInteger index;
@@ -24,8 +24,8 @@ public class BucketRenderAction extends RecursiveAction{
 	private final int min, max;
 	
 	public BucketRenderAction(final Bucket[] buckets, Tracer raytracer,
-			final ArrayIntegerMatrix result, final TracerCallbacks callback,
-			final Stack stack, final AtomicInteger index, int min, int max) {
+							  final ArrayColorMatrix result, final TracerCallbacks callback,
+							  final Stack stack, final AtomicInteger index, int min, int max) {
 		this.buckets = buckets;
 		this.result = result;
 		this.callback = callback;

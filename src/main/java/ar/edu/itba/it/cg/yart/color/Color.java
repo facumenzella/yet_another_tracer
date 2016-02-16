@@ -7,12 +7,12 @@ public class Color {
 	public double b;
 	public double a;
 	
-	public static Color BLACK = new Color(0,0,0,1.0);
-	public static Color RED = new Color(1.0,0,0,1.0);
-	public static Color GREEN = new Color(0,1.0,0,1.0);
-	public static Color BLUE = new Color(0,0,1.0,1.0);
-	public static Color YELLOW = new Color(1.0,1.0,0,1.0);
-	public static Color WHITE = new Color(1.0,1.0,1.0,1.0);
+	public static final Color BLACK =	new Color(0.0, 0.0, 0.0);
+	public static final Color RED =		new Color(1.0, 0.0, 0.0);
+	public static final Color GREEN =	new Color(0.0, 1.0, 0.0);
+	public static final Color BLUE =	new Color(0.0, 0.0, 1.0);
+	public static final Color YELLOW =	new Color(1.0, 1.0, 0.0);
+	public static final Color WHITE =	new Color(1.0, 1.0, 1.0);
 	
 	public Color(final double c) {
 		this(c,c,c);
@@ -25,7 +25,7 @@ public class Color {
 	public Color(final Color c) {
 		this.r = c.r;
 		this.g = c.g;
-		this.b = c.g;
+		this.b = c.b;
 		this.a = c.a;
 	}
 	
@@ -34,6 +34,13 @@ public class Color {
 		this.g = g;
 		this.b = b;
 		this.a = a;
+	}
+
+	public void set(final Color other) {
+		this.r = other.r;
+		this.g = other.g;
+		this.b = other.b;
+		this.a = other.a;
 	}
 	
 	public int toInt() {

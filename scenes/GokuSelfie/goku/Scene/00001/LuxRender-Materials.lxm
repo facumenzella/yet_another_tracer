@@ -1,0 +1,333 @@
+# Materials File
+
+Texture "GokuArm_color" "color" "imagemap"
+	"string filename" ["Textures/f664140d.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "GokuBiceps"
+	"texture Kd" ["GokuArm_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "GokuHair_color" "color" "imagemap"
+	"string filename" ["Textures/6fcfa7ef.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "GokuHair3"
+	"texture Kd" ["GokuHair_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "GokuClothes_color" "color" "imagemap"
+	"string filename" ["Textures/691524bf.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "GokuClothes1"
+	"texture Kd" ["GokuClothes_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "GokuPants_color" "color" "imagemap"
+	"string filename" ["Textures/30ccb2c6.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "GokuPants"
+	"texture Kd" ["GokuPants_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "Texture.001_color" "color" "imagemap"
+	"string filename" ["Textures/ae6dcce1.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "GokuClothes2"
+	"texture Kd" ["Texture.001_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+MakeNamedMaterial "GokuArms"
+	"texture Kd" ["GokuArm_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "GokuChest_color" "color" "imagemap"
+	"string filename" ["Textures/774b1982.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "GokuChest"
+	"texture Kd" ["GokuChest_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "GokuHand_color" "color" "imagemap"
+	"string filename" ["Textures/c071add4.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "GokuHand"
+	"texture Kd" ["GokuHand_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "GokuFace_color" "color" "imagemap"
+	"string filename" ["Textures/3378c10d.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "GokuFace"
+	"texture Kd" ["GokuFace_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "GokuShoes_color" "color" "imagemap"
+	"string filename" ["Textures/772d019a.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "GokuShoes"
+	"texture Kd" ["GokuShoes_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "Texture.003_color" "color" "imagemap"
+	"string filename" ["Textures/e4ceea6d.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "FriezaFace"
+	"texture Kd" ["Texture.003_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "FriezaFoot_color" "color" "imagemap"
+	"string filename" ["Textures/7cded41a.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "FriezaFoot"
+	"texture Kd" ["FriezaFoot_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "FriezaTail_color" "color" "imagemap"
+	"string filename" ["Textures/66a5d825.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "FriezaTail"
+	"texture Kd" ["FriezaTail_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "FriezaEars_color" "color" "imagemap"
+	"string filename" ["Textures/abc07f39.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "FriezaEars"
+	"texture Kd" ["FriezaEars_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "FriezaChest1_color" "color" "imagemap"
+	"string filename" ["Textures/7c15aec7.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "FriezaChest"
+	"texture Kd" ["FriezaChest1_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "FriezaArm_color" "color" "imagemap"
+	"string filename" ["Textures/e5507c23.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "FriezaArm"
+	"texture Kd" ["FriezaArm_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "FriezaPurple_color" "color" "imagemap"
+	"string filename" ["Textures/f5cffb41.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "FriezaPurple"
+	"texture Kd" ["FriezaPurple_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "FriezaHands_color" "color" "imagemap"
+	"string filename" ["Textures/b57f589b.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "FriezaHands"
+	"texture Kd" ["FriezaHands_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+Texture "FriezaEyes_color" "color" "imagemap"
+	"string filename" ["Textures/ac9f17fb.jpg"]
+	"integer discardmipmaps" [0]
+	"float gain" [1.000000000000000]
+	"float gamma" [2.200000047683716]
+	"float maxanisotropy" [8.000000000000000]
+	"string wrap" ["repeat"]
+	"string mapping" ["uv"]
+	"float uscale" [1.000000000000000]
+	"float vscale" [-1.000000000000000]
+	"float udelta" [0.000000000000000]
+	"float vdelta" [1.000000000000000]
+
+MakeNamedMaterial "FriezaEyes"
+	"texture Kd" ["FriezaEyes_color"]
+	"float sigma" [0.000000000000000]
+	"string type" ["matte"]
+
+MakeNamedMaterial "Lamp"
+	"string type" ["null"]

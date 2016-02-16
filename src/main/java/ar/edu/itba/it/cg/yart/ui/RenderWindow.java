@@ -87,7 +87,6 @@ public class RenderWindow extends JFrame implements TracerCallbacks {
 			renderResult.finishSceneLoading();
 			statusPanel.setLoadingTime(renderResult.getSceneLoadingTime());
 		} catch (SceneParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -138,7 +137,7 @@ public class RenderWindow extends JFrame implements TracerCallbacks {
 		
 		for (int y = yStart; y < yFinish; y++) {
 			for (int x = xStart; x < xFinish; x++) {
-				bi.setRGB(x, y, result.getPixels().get(x, y));
+				bi.setRGB(x, y, raytracer.getToneMapper().map(result.getPixels().get(x, y)).toInt());
 			}
 		}
 		

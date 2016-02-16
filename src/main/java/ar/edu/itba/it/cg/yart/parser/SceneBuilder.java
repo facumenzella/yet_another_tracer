@@ -1,6 +1,7 @@
 package ar.edu.itba.it.cg.yart.parser;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayDeque;
@@ -50,6 +51,7 @@ import ar.edu.itba.it.cg.yart.textures.wrappers.RepeatWrap;
 import ar.edu.itba.it.cg.yart.textures.wrappers.Wrapper;
 import ar.edu.itba.it.cg.yart.tracer.Tracer;
 import ar.edu.itba.it.cg.yart.tracer.camera.Camera;
+import ar.edu.itba.it.cg.yart.tracer.camera.FishEyeCamera;
 import ar.edu.itba.it.cg.yart.tracer.camera.PinholeCamera;
 import ar.edu.itba.it.cg.yart.tracer.tonemapper.LinearToneMapper;
 import ar.edu.itba.it.cg.yart.tracer.tonemapper.OutOfGamutToneMapper;
@@ -175,7 +177,6 @@ public class SceneBuilder {
 			raytracer.setResolution(
 					i.getInteger("xresolution", YartDefaults.DEFAULT_XRES),
 					i.getInteger("yresolution", YartDefaults.DEFAULT_YRES));
-			raytracer.setGamma(i.getDouble("gamma", 2.2));
 			String tonemapper = i.getString("tonemapkernel", "linear");
 			if (tonemapper.equals("linear")) {
 				raytracer.setToneMapper(new LinearToneMapper());
@@ -190,6 +191,7 @@ public class SceneBuilder {
 				LOGGER.warn("Tone Mapping kernel \"{}\" unsupported. Defaulting to linear.", tonemapper);
 				raytracer.setToneMapper(new LinearToneMapper());
 			}
+			raytracer.getToneMapper().setGamma(i.getDouble("gamma", YartDefaults.GAMMA));
 			break;
 		case LOOKAT:
 			double[] params = ParserUtils.parseDoubleArray(i.getParameters());
@@ -265,12 +267,54 @@ public class SceneBuilder {
 					LOGGER.warn("Metal roughness must be a number between 0 and 1");
 					roughness = 1;
 				}
-				
-				Color fresnel = identifier.getColor("fresnel", new Color(0.5));
-				
+
 				Metal2 mat = new Metal2();
-				mat.setFresnel(fresnel);
+				mat.setFresnel(getColorOrTexture(identifier, "fresnel", new Color(0.5)));
 				mat.setRoughness(roughness);
+				ret = mat;
+			}
+			else if (type.equals("glossy")) {
+				double uroughness = identifier.getDouble("uroughness", 0.001);
+				double vroughness = identifier.getDouble("vroughness", 0.001);
+				double ks = identifier.getDouble("ks", 0.5);
+
+				if (!identifier.hasProperty("uroughness")) {
+					uroughness = vroughness;
+				}
+				else if (!identifier.hasProperty("vroughness")) {
+					vroughness = uroughness;
+				}
+
+				double finalRoughness = Math.max(uroughness, vroughness);
+
+				if (finalRoughness <= 0) {
+					LOGGER.warn("Glossy roughness must be a number between 0 and 1");
+					finalRoughness = 0.001;
+				}
+				else if (finalRoughness > 1) {
+					LOGGER.warn("Glossy roughness must be a number between 0 and 1");
+					finalRoughness = 1;
+				}
+
+				if (ks < 0) {
+					LOGGER.warn("Ks must be a number between 0 and 1");
+					ks = 0;
+				}
+				else if (ks > 1) {
+					LOGGER.warn("Ks must be a number between 0 and 1");
+					ks = 1;
+				}
+
+				double exponent = 1 / finalRoughness;
+
+				Reflective mat = new Reflective();
+				mat.setCd(getColorOrTexture(identifier, "Kd", Color.blackColor()));
+				mat.setCr(getColorOrTexture(identifier, "Kd", Color.whiteColor()));
+				mat.setKd(1);
+				mat.setKs(ks);
+				mat.setKa(0.3);
+				mat.setExp(exponent);
+				mat.setKr(1 - finalRoughness);
 				ret = mat;
 			}
 		} catch (Exception e) {
@@ -430,7 +474,7 @@ public class SceneBuilder {
 				if (meshes.containsKey(meshData)) {
 					mesh = meshes.get(meshData);
 				} else {
-					// Load UV map
+					// Load UV mapMe
 					if (uvList != null && uvList.length > 1) {
 						int items = (int) Math.ceil(uvList.length / 2);
 						uList = new double[items];
@@ -519,7 +563,7 @@ public class SceneBuilder {
 					areaLight.setMaterial(emissive);
 					areaLight.setShape(pointLightInstance);
 					raytracer.getWorld().addObject(pointLightInstance);
-					ret = areaLight;					
+					ret = areaLight;
 				}
 			} else if (type.equals("distant")) {
 				Color l = identifier.getColor("l", Color.whiteColor());
@@ -538,8 +582,26 @@ public class SceneBuilder {
 				Directional light = new Directional(gain, l, result);
 				ret = light;
 			} else if (type.equals("infinite")) {
-				Color l = identifier.getColor("l", Color.whiteColor());
-				AmbientLight light = new AmbientLight(gain, l);
+				AmbientLight light = null;
+				if (identifier.hasProperty("mapname")) {
+					String filename = identifier.getString("mapname");
+					try {
+						String mapping = identifier.getString("mapping", null);
+						if (mapping != null && !mapping.equalsIgnoreCase(mapping)) {
+							LOGGER.warn("Environment mapping type \"{}\" unsupported. Only \"latlong\" is supported.",
+							mapping);
+						}
+						BufferedImage environmentMap = ImageIO.read(basePath.resolve(filename).toFile());
+						light = new AmbientLight(environmentMap);
+					}
+					catch (IOException e) {
+						LOGGER.warn("Couldn't load environment map \"{}\": {}", filename, e.getMessage());
+					}
+				}
+				if (light == null) {
+					Color l = identifier.getColor("l", Color.whiteColor());
+					light = new AmbientLight(gain, l);
+				}
 				ret = light;
 			} else if (type.equals("area")) {
 				ret = buildAreaLight(identifier);
@@ -598,23 +660,39 @@ public class SceneBuilder {
 		final String type = identifier.getParameters()[0];
 
 		try {
+			double[] defaults = { -1, 1, -1, 1 };
+			double[] screenWindow = identifier.getDoubles("screenwindow",
+					defaults);
+			double fov = identifier.getDouble("fov",
+					YartDefaults.DEFAULT_FOV);
+			
+			if (screenWindow.length < 4) {
+				LOGGER.warn("Screen Window needs 4 floats. Using default value");
+				screenWindow = defaults;
+			}
+			
 			if (type.equals("perspective")) {
 				PinholeCamera cam = new PinholeCamera(
 						YartDefaults.DEFAULT_EYE,
 						YartDefaults.DEFAULT_LOOKAT, YartDefaults.DEFAULT_UP,
 						500, 1, YartDefaults.DEFAULT_RAY_DEPTH, tracerType.getStrategy());
-				double[] defaults = { -1, 1, -1, 1 };
-				double[] screenWindow = identifier.getDoubles("screenwindow",
-						defaults);
-
-				if (screenWindow.length < 4) {
-					LOGGER.warn("Screen Window needs 4 floats. Using default value");
-					screenWindow = defaults;
-				}
+				
 				cam.setScreenWindow(screenWindow[0], screenWindow[1],
 						screenWindow[2], screenWindow[3]);
-				cam.setFov(identifier.getDouble("fov",
-						YartDefaults.DEFAULT_FOV));
+				cam.setFov(fov);
+				cam.setLensRadius(identifier.getDouble("lensradius",
+						YartDefaults.DEFAULT_LENS_RADIUS));
+				cam.setFocalDistance(identifier.getDouble("focaldistance",
+						YartDefaults.DEFAULT_FOCAL_DISTANCE));
+				ret = cam;
+			} else if (type.equals("fisheye")) {
+				FishEyeCamera cam = new FishEyeCamera(
+						YartDefaults.DEFAULT_EYE,
+						YartDefaults.DEFAULT_LOOKAT, YartDefaults.DEFAULT_UP,
+						1, YartDefaults.DEFAULT_RAY_DEPTH, fov, tracerType.getStrategy());
+				cam.setFov(fov);
+				cam.setScreenWindow(screenWindow[0], screenWindow[1],
+						screenWindow[2], screenWindow[3]);
 				ret = cam;
 			} else {
 				LOGGER.warn("Camera type \"{}\" unsupported", type);

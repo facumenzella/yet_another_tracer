@@ -46,11 +46,12 @@ public class Point3d {
 				+	(z - other.z) * (z - other.z) );
 	}
 	
-	public void copy(final Point3d p) {
+	public Point3d set(final Point3d p) {
 		this.x = p.x;
 		this.y = p.y;
 		this.z = p.z;
 		this.w = p.w;
+		return this;
 	}
 
 	public Point3d transformByMatrix(final Matrix4d matrix) {

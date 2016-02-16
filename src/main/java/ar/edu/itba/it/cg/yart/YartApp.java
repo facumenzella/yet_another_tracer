@@ -214,7 +214,7 @@ public class YartApp {
 			
 			if (!StringUtils.isEmpty(imageName)) {
 				try {
-					ImageSaver.saveImage(renderResult.getPixels(), imageName, imageExtension, renderResult);
+					ImageSaver.saveImage(renderResult.getPixels(), imageName, imageExtension, raytracer.getToneMapper(), renderResult);
 				} catch (IOException e) {
 					System.out.println("Failed to save render output: " + e.getMessage());
 				}

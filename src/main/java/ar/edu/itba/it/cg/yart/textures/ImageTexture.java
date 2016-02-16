@@ -18,19 +18,29 @@ public class ImageTexture extends Texture {
 	private Mapping mapping;
 //	private boolean hasAlphaChannel;
 	private Wrapper wrapper;
+	private ImageTexture complement;
+	private final boolean isComplement;
 
 	public ImageTexture(final BufferedImage img, final Mapping mapping,
 			final Wrapper wrapper) {
 		this.mapping = mapping;
 		this.wrapper = wrapper;
 		setImage(img);
+		isComplement = false;
+	}
 
+	private ImageTexture(final ImageTexture other) {
+		this.complement = other;
+		this.mapping = other.mapping;
+		this.wrapper = other.wrapper;
+		isComplement = true;
 	}
 
 	public void setImage(final BufferedImage image) {
 		this.wrapper.setImage(image);
 		vres = image.getHeight();
 		hres = image.getWidth();
+		complement = new ImageTexture(this);
 //		pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
 //		hasAlphaChannel = image.getAlphaRaster() != null;
 	}
@@ -42,8 +52,8 @@ public class ImageTexture extends Texture {
 			mapping.getTexetlCoordinates(sr.localHitPoint, hres, vres,
 					coordinates);
 		} else {
-			int x = (int) (sr.v * (vres - 1));
-			int y = (int) (sr.u * (hres - 1));
+			int x = (int) (sr.v * (hres - 1));
+			int y = (int) (sr.u * (vres - 1));
 			coordinates.setLocation(x, y);
 		}
 //		int row = (int) coordinates.getX();
@@ -67,7 +77,18 @@ public class ImageTexture extends Texture {
 //			green = (((int) pixels[row+column + 1]))/255.0; // green
 //			red = (((int) pixels[row+column + 2]))/255.0; // red
 //	}
-		return wrapper.wrap(coordinates.getX(), coordinates.getY());
+		Color ret = wrapper.wrap(coordinates.getX(), coordinates.getY());
+		if (isComplement) {
+			ret.r = 1 - ret.r;
+			ret.g = 1 - ret.g;
+			ret.b = 1 - ret.b;
+		}
+		return ret;
+	}
+
+	@Override
+	public Texture complement() {
+		return complement;
 	}
 
 }
