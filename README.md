@@ -4,7 +4,7 @@
 ## COMPUTACION GRAFICA ##
 ### ITBA ###
 
-Check the commit: **27f52ac**
+Check the commit: **176895f**
 
 You may be wondering how do I run this app?
 It's easy:
