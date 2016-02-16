@@ -42,7 +42,7 @@ java -jar yart.jar -o render.png -i scenes/Benchmarks/MirrorLowReflectivity.lxs 
 ```
 Do you want to see a pretty cool Captain Falcon?
 ```
-java -jar yart.jar -i scenes/CaptainFalcon/captainfalcon.lxs -o images/render.png -d 2 -th 4 -bs 32 -pathtracer -s 1000 -tr 10
+java -jar yart.jar -i scenes/CaptainFalcon/captainfalcon.lxs -o images/render.png -d 2 -th 4 -bs 32 -pathtracer -s 1000 -tr 10 -g
 ```
 
 ##Acceleration structures##
