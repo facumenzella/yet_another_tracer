@@ -44,6 +44,7 @@ Do you want to see a pretty cool Captain Falcon?
 ```
 java -jar yart.jar -i scenes/CaptainFalcon/captainfalcon.lxs -o images/render.png -d 2 -th 4 -bs 32 -pathtracer -s 1000 -tr 10 -g
 ```
+![alt tag](https://cloud.githubusercontent.com/assets/1125252/13339303/74d9d260-dc06-11e5-9139-9e824511ac01.png)
 
 ##Acceleration structures##
 - SAH KDTree
