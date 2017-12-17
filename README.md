@@ -1,3 +1,5 @@
+[![Beerpay](https://beerpay.io/facumenzella/yet_another_tracer/badge.svg?style=plastic)](https://beerpay.io/facumenzella/yet_another_tracer)
+
 # Yet another Ray Tracer #
 > Because there are not too many. It traces paths as well.
 >> By Del Giudice, Menzella & Noriega
